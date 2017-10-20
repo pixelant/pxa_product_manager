@@ -1,0 +1,32 @@
+# Mapping
+config.tx_extbase {
+    persistence {
+        classes {
+            Pixelant\PxaProductManager\Domain\Model\Image {
+                mapping {
+                    tableName = sys_file_reference
+
+                    columns {
+                        pxapm_use_in_listing.mapOnProperty = useInListing
+                        pxapm_main_image.mapOnProperty = mainImage
+                    }
+                }
+            }
+
+            Pixelant\PxaProductManager\Domain\Model\Category {
+                mapping {
+                    tableName = sys_category
+
+                    columns {
+                        pxapm_attributes_sets.mapOnProperty = attributeSets
+                        pxapm_description.mapOnProperty = description
+                        pxapm_image.mapOnProperty = image
+                    }
+                }
+            }
+        }
+    }
+}
+
+module.tx_pxaproductmanager.persistence.updateReferenceIndex = 1
+plugin.tx_pxaproductmanager.persistence.updateReferenceIndex = 1

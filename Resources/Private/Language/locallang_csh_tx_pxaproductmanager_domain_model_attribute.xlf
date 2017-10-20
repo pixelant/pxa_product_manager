@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z"
+          product-name="pxa_product_manager">
+        <header/>
+        <body>
+            <trans-unit id="type.description">
+                <source>Attributes can have different types</source>
+            </trans-unit>
+            <trans-unit id="required.description">
+                <source>IF attributes is required for product</source>
+            </trans-unit>
+            <trans-unit id="show_in_attribute_listing.description">
+                <source>If attribute be visible on product single view</source>
+            </trans-unit>
+            <trans-unit id="show_in_compare.description">
+                <source>If attribute visible when comparing products</source>
+            </trans-unit>
+            <trans-unit id="identifier.description">
+                <source>Unique identifier</source>
+            </trans-unit>
+            <trans-unit id="options.description">
+                <source>Select box options</source>
+            </trans-unit>
+            <trans-unit id="label_checked.description">
+                <source>Displayed if flag is set on product single view</source>
+            </trans-unit>
+            <trans-unit id="label_unchecked.description">
+                <source>Displayed if flag is not set on product single view</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

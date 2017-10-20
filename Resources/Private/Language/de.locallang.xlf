@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z" product-name="pxa_product_manager">
+		<header/>
+		<body>
+            <trans-unit id="fe.no_products_found">
+                <target>Keine Produkte gefunden</target>
+            </trans-unit>
+            <trans-unit id="fe.number_of_results_found">
+                <target>gefundene Produkte</target>
+            </trans-unit>
+            <trans-unit id="fe.clear_filter">
+                <target>Leeren</target>
+            </trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -1,0 +1,40 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<div class="element-browser-panel element-browser-main">
+    <div class="element-browser-main-sidebar">
+        <div class="element-browser-body">
+            <f:format.raw>{tree}</f:format.raw>
+        </div>
+    </div>
+    <div class="element-browser-main-content">
+        <div class="element-browser-body">
+            <div class="link-browser-section link-browser-tab-content-product-manager">
+                <f:if condition="{expandActivePage}">
+                    <h3><f:translate key="LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager.be.select_{tableName}" /></h3>
+                    <ul class="list-tree list-tree-root list-tree-root-clean">
+                        <li class="list-tree-control-open">
+						<span class="list-tree-group">
+							<span class="list-tree-icon">{activePageIcon -> f:format.raw()}</span>
+							<span class="list-tree-title">{activePageTitle -> f:format.raw()}</span>
+						</span>
+                            <ul>
+                                <f:for each="{records}" as="record">
+                                    <li class="{f:if(condition: record.isSelected, then: 'active')}">
+                                    <span class="list-tree-group">
+										<span class="list-tree-icon">{record.icon -> f:format.raw()}</span>
+										<span class="list-tree-title">
+											<a href="{record.url}" class="t3js-recordLink">
+												{record.title -> f:format.raw()}
+											</a>
+										</span>
+									</span>
+                                    </li>
+                                </f:for>
+                            </ul>
+                        </li>
+                    </ul>
+                </f:if>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

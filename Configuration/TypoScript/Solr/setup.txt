@@ -1,0 +1,87 @@
+### Override solr results template to modify how product record look
+plugin.tx_solr.templateFiles.results = EXT:pxa_product_manager/Resources/Private/Extensions/Solr/results.htm
+
+plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product = 1
+plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product {
+    table = tx_pxaproductmanager_domain_model_product
+    additionalPageIds = {$plugin.tx_pxaproductmanager.persistence.storagePid}
+    fields {
+        title = name
+        subTitle = sku
+        content = SOLR_CONTENT
+        content.value = {field:description}
+        content.trim = 1
+        content.insertData = 1
+        description < .content
+        abstract = teaser
+
+        url = TEXT
+        url {
+            typolink.parameter = {$plugin.tx_pxaproductmanager.settings.pagePid}
+            typolink.additionalParams = &tx_pxaproductmanager_pi1[product]={field:uid}&L={field:__solr_index_language}
+            typolink.additionalParams.insertData = 1
+            typolink.returnLast = url
+            typolink.useCacheHash = 1
+        }
+
+        image_main_url_stringS = USER
+        image_main_url_stringS {
+            userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductMainImagePublicUrl
+            uid.data = field:uid
+        }
+
+        image_thumbnail_url_stringS < .image_main_url_stringS
+        image_thumbnail_url_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductThumbnailImagePublicUrl
+
+        image_main_reference_uid_stringS < .image_main_url_stringS
+        image_main_reference_uid_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductMainImageReferenceUid
+
+        image_thumbnail_reference_uid_stringS < .image_main_url_stringS
+        image_thumbnail_reference_uid_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductThumbnailImageReferenceUid
+
+
+        attribute_values_stringM = SOLR_RELATION
+        attribute_values_stringM {
+            localField = attribute_values
+            multiValue = 1
+        }
+
+        # index single attribute value example
+        #attribute_rsk_stringS = USER
+        #attribute_rsk_stringS {
+        #    userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexSingleAttributeValue->getSingleAttributeValue
+        #    identifier = rsk
+        #}
+
+        category_stringM = SOLR_RELATION
+        category_stringM {
+            localField = categories
+            multiValue = 1
+        }
+
+        attachments = 1
+        attachments {
+            fields = fal_links
+            fileExtensions = *
+        }
+    }
+}
+
+plugin.tx_solr.search.faceting.facets.type {
+    renderingInstruction {
+        # products
+        tx_pxaproductmanager_domain_model_product = TEXT
+        tx_pxaproductmanager_domain_model_product.value = Products
+        tx_pxaproductmanager_domain_model_product.insertData = 1
+    }
+}
+
+plugin {
+    tx_pxaproductmanager {
+        settings {
+            solr {
+                productManagerTypes = tx_pxaproductmanager_domain_model_product
+            }
+        }
+    }
+}

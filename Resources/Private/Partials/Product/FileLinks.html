@@ -1,0 +1,28 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:comment><!-- File links --></f:comment>
+
+<f:if condition="{files}">
+    <f:for each="{files}" as="file">
+        <li class="product-related-file">
+            <f:link.typolink parameter="{file.originalResource.publicUrl} _blank">
+                <f:if condition="{f:uri.image(src: 'EXT:pxa_product_manager/Resources/Public/Icons/FileIcons/{file.originalResource.properties.extension}.svg')}">
+                    <f:then>
+                        <ppm:svg source="{f:uri.resource(path: 'Icons/FileIcons/{file.originalResource.properties.extension}.svg')}"/>
+                    </f:then>
+                    <f:else>
+                        <ppm:svg source="{f:uri.resource(path: 'Icons/FileIcons/default.svg')}"/>
+                    </f:else>
+                </f:if>
+                <f:if condition="{file.originalResource.properties.title}">
+                    <f:then>
+                        <span>{file.originalResource.properties.title}</span>
+                    </f:then>
+                    <f:else>
+                        <span>{file.originalResource.properties.name}</span>
+                    </f:else>
+                </f:if>
+            </f:link.typolink>
+        </li>
+    </f:for>
+</f:if>
+</html>

@@ -1,0 +1,20 @@
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="../../.Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTestsBootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertWarningsToExceptions="true"
+         forceCoversAnnotation="false"
+         processIsolation="true"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         strict="false"
+         verbose="false">
+    <testsuites>
+        <testsuite name="EXT:pxa_product_manager tests">
+            <directory>../Functional/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

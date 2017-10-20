@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <sys_category>
+        <uid>1</uid>
+        <pid>1</pid>
+        <parent>0</parent>
+        <title>Root category</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>2</uid>
+        <pid>1</pid>
+        <parent>1</parent>
+        <title>Category 1</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>3</uid>
+        <pid>1</pid>
+        <parent>2</parent>
+        <title>Active category</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>4</uid>
+        <pid>1</pid>
+        <parent>3</parent>
+        <title>Sub category of active category</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>6</uid>
+        <pid>1</pid>
+        <parent>4</parent>
+        <title>Sub Sub category of active category</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>5</uid>
+        <pid>1</pid>
+        <parent>1</parent>
+        <title>Another category</title>
+    </sys_category>
+
+
+    <sys_category_record_mm>
+        <uid_local>4</uid_local>
+        <uid_foreign>1</uid_foreign>
+        <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+        <fieldname>categories</fieldname>
+    </sys_category_record_mm>
+
+    <sys_category_record_mm>
+        <uid_local>5</uid_local>
+        <uid_foreign>2</uid_foreign>
+        <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+        <fieldname>categories</fieldname>
+    </sys_category_record_mm>
+
+    <sys_category_record_mm>
+        <uid_local>6</uid_local>
+        <uid_foreign>3</uid_foreign>
+        <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+        <fieldname>categories</fieldname>
+    </sys_category_record_mm>
+
+    <sys_category_record_mm>
+        <uid_local>1</uid_local>
+        <uid_foreign>4</uid_foreign>
+        <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+        <fieldname>categories</fieldname>
+    </sys_category_record_mm>
+</dataset>

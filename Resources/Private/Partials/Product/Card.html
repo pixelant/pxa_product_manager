@@ -1,0 +1,50 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:if condition="{title}">
+    <div class="item-title">
+        <h4>{title}</h4>
+    </div>
+</f:if>
+
+<f:if condition="{product.disableSingleView}">
+    <f:then>
+        <f:render section="item" arguments="{_all}"/>
+    </f:then>
+    <f:else>
+        <ppm:link pageUid="{settings.pagePid}" category="{category}" product="{product}">
+            <f:render section="item" arguments="{_all}"/>
+        </ppm:link>
+    </f:else>
+</f:if>
+
+<f:section name="item">
+    <div class="item">
+        <!-- Image -->
+        <f:render partial="Product/ListImage" arguments="{image: image, title: '{f:if(condition: title, then: title, else: product.name)}'}"/>
+
+        <!-- Options bar -->
+        <f:if condition="{product}">
+            <!-- Item body -->
+            <div class="item-body">
+
+                <!-- Title -->
+                <div class="item-title">
+                    <h4>{product.name}</h4>
+                </div>
+
+                <f:if condition="{settings.wishList.enable} || {settings.compareList.enable}">
+                    <div class="item-options-bar">
+                        <f:if condition="{settings.wishList.enable}">
+                            <f:render partial="Product/OptionsBar/WishListButton" arguments="{uid: product.uid}"/>
+                        </f:if>
+                        <f:if condition="{settings.compareList.enable}">
+                            <f:render partial="Product/OptionsBar/CompareListButton" arguments="{uid: product.uid}"/>
+                        </f:if>
+                    </div>
+                    <div style="clear: both;"></div>
+                </f:if>
+            </div>
+        </f:if>
+    </div>
+</f:section>
+</html>

@@ -1,0 +1,132 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default"/>
+
+<f:section name="main">
+    <f:if condition="{product.disableSingleView}">
+        <f:then>
+            <div class="alert alert-danger">
+                <f:translate key="fe.single_view_disabled"/>
+            </div>
+        </f:then>
+        <f:else>
+            <ppm:setPageTitle><f:if condition="{product.alternativeTitle}" then="{product.alternativeTitle}" else="{product.name}"/></ppm:setPageTitle>
+
+            <div class="row">
+                <f:if condition="{treeData}">
+                    <f:then>
+                        <div class="col-md-3">
+                            <f:if condition="{treeData.subItems}">
+                                <div class="products-navigation">
+                                    <div class="list-group">
+                                        <f:render partial="Navigation/Menu" arguments="{items: treeData.subItems, level: '{treeData.level}'}"/>
+                                    </div>
+                                </div>
+                            </f:if>
+                        </div>
+                        <div class="col-md-9">
+                            <f:render section="singleView" arguments="{_all}"/>
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <div class="col-md-12">
+                            <f:render section="singleView" arguments="{_all}"/>
+                        </div>
+                    </f:else>
+                </f:if>
+            </div>
+        </f:else>
+    </f:if>
+</f:section>
+
+<f:section name="singleView">
+    <div class="single-product-wrapper" data-gallery-mode="{settings.images.singleView.showNavigationButtons}">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12 product-name">
+                        <h1>{product.name}</h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="content">
+                            <f:if condition="{product.description}">
+                                <f:format.html>{product.description}</f:format.html>
+                            </f:if>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="single-product-gallery">
+                            <div class="single-product-gallery__items">
+                                <f:for each="{product.imagesSorted}" as="image">
+                                    <f:alias map="{sizes: settings.images.singleView}">
+                                        <a href="{f:uri.image(image: image, maxWidth:'1920', maxHeight:'1080')}">
+                                            <f:image
+                                                    maxWidth="{sizes.mainMaxWidth}"
+                                                    maxHeight="{sizes.mainMaxHeight}"
+                                                    image="{image}"
+                                                    alt="{image.title}"
+                                                    data="{description: image.description}"/>
+                                        </a>
+                                    </f:alias>
+                                </f:for>
+                            </div>
+                            <f:if condition="{settings.showGalleryPagination}">
+                                <div class="single-product-gallery__pagination"></div>
+                            </f:if>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-{f:if(condition: '{product.links -> f:count()} || {product.falLinks -> f:count()}', then: '8', else: '12')}">
+                        <div class="single-product-table">
+                            <f:render partial="Product/AttributeListing"
+                                      arguments="{product: product}"/>
+                        </div>
+                    </div>
+                    <f:if condition="{product.links -> f:count()} || {product.falLinks -> f:count()}">
+                        <div class="col-md-4">
+                            <div class="single-product-gallery__links">
+                                <h3 class="single-product-related-title">
+                                    <f:translate key="fe.related_links"/>
+                                </h3>
+                                <ul>
+                                    <f:if condition="{product.links}">
+                                        <f:render partial="Product/Links" arguments="{links: product.links}"/>
+                                    </f:if>
+
+                                    <f:if condition="{product.falLinks}">
+                                        <f:render partial="Product/FileLinks"
+                                                  arguments="{files: product.falLinks}"/>
+                                    </f:if>
+                                </ul>
+                            </div>
+                        </div>
+                    </f:if>
+                </div>
+            </div>
+        </div>
+
+        <f:comment><!-- Related products --></f:comment>
+        <f:if condition="{product.relatedProducts}">
+            <f:render partial="Product/Related"
+                      arguments="{relatedProducts: product.relatedProducts, headerTranslationIndex: 'fe.related_products'}"/>
+        </f:if>
+
+        <f:comment><!-- Sub products --></f:comment>
+        <f:if condition="{product.subProducts}">
+            <f:render partial="Product/Related"
+                      arguments="{relatedProducts: product.subProducts, headerTranslationIndex: 'fe.sub_products'}"/>
+        </f:if>
+
+        <f:comment><!-- Lates products --></f:comment>
+        <f:if condition="{latestVisitedProducts}">
+            <f:render partial="Product/Related"
+                      arguments="{relatedProducts: latestVisitedProducts, headerTranslationIndex: 'fe.latest_visited_products'}"/>
+        </f:if>
+    </div>
+</f:section>
+</html>

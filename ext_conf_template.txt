@@ -1,0 +1,5 @@
+# cat=basic/enable/107; type=options[LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:yes=1]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.dontCheckPidForSysCategory
+dontCheckPidForSysCategory = 0
+
+# cat=basic/enable/110; type=options[LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:yes=1]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.includeSkuInRealurlConfiguration
+includeSkuInRealurlConfiguration = 1

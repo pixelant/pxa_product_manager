@@ -1,0 +1,67 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:if condition="{product.attributes}">
+    <h3>
+        <f:translate key="fe.attributes"/>
+    </h3>
+
+    <table class="table">
+        <f:if condition="{settings.attributes.includeSkuInAttributeListing} && {product.sku}">
+            <tr>
+                <th>
+                    <f:translate key="fe.sku"/>
+                </th>
+                <td>
+                    {product.sku}
+                </td>
+            </tr>
+        </f:if>
+
+        <f:if condition="{settings.attributes.divideAttributesBySets}">
+            <f:then>
+                <f:for each="{product.attributesGroupedBySets}" as="attributesGroupedBySet">
+                    <tr>
+                        <th>
+                            {attributesGroupedBySet.name}
+                        </th>
+                        <td></td>
+                    </tr>
+                    <f:render section="attributes" arguments="{attributes: attributesGroupedBySet.attributes}"/>
+                </f:for>
+            </f:then>
+            <f:else>
+                <f:render section="attributes" arguments="{attributes: product.attributes}"/>
+            </f:else>
+        </f:if>
+    </table>
+</f:if>
+
+<f:section name="attributes">
+    <f:for each="{attributes}" as="attribute">
+        <f:if condition="{attribute.showInAttributeListing}">
+            <f:comment>Label need to output only value</f:comment>
+            <f:switch expression="{attribute.type}">
+                <f:case value="8">
+                    <f:if condition="{attribute.value}">
+                        <tr>
+                            <td colspan="2">
+                                <h4>{attribute.value}</h4>
+                            </td>
+                        </tr>
+                    </f:if>
+                </f:case>
+                <f:case default="TRUE">
+                    <tr>
+                        <th>
+                            {attribute.name}
+                        </th>
+                        <td>
+                            <f:render partial="Product/Attribute/Type{attribute.type}"
+                                      arguments="{attribute: attribute}"/>
+                        </td>
+                    </tr>
+                </f:case>
+            </f:switch>
+        </f:if>
+    </f:for>
+</f:section>
+</html>

@@ -1,0 +1,20 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default"/>
+
+<f:section name="main">
+	<f:link.page pageUid="{settings.compareList.pagePid}">
+		<span id="pxa-pm-compare-list-cart">
+		<ppm:svg
+				width="32"
+				height="32"
+				source="{settings.compareList.cartIcon}"/>
+		<span id="pxa-pm-compare-list-cart__counter"></span>
+	</span>
+	</f:link.page>
+	<f:if condition="{settings.compareList.pagePid} == false">
+		Compare list page is not set {$plugin.tx_pxaproductmanager.settings.compareList.pagePid}
+	</f:if>
+</f:section>
+</html>

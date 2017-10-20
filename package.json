@@ -1,0 +1,30 @@
+{
+  "name": "pxa_product_manager",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "php:codesniffer": ".Build/bin/phpcs -n --colors --standard=PSR2 --extensions=php --ignore=*./.Build/* .",
+    "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c Tests/Build/UnitTests.xml",
+    "php:functionaltests": "export typo3DatabaseName=pm_test typo3DatabaseHost=localhost typo3DatabaseUsername=root typo3DatabasePassword=root TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml",
+    "build:suite": "npm run php:codesniffer && npm run php:unittests && npm run php:functionaltests",
+    "build:suite_no_functional": "npm run php:codesniffer && npm run php:unittests",
+    "build:extension": "npm run add:resource:select2 && npm run add:resource:jquery.TosRUs",
+    "add:resource:select2": "NODE_ENV=production npm install && cp -a ./node_modules/select2 ./Resources/Public/JavaScript",
+    "add:resource:jquery.TosRUs": "NODE_ENV=production npm install && cp -a ./node_modules/jquery.TosRUs ./Resources/Public/JavaScript",
+    "watch:css": "node_modules/.bin/watch-less -d Resources/Private/Less/Main/ -r Resources/Public/Css/ -e css"
+  },
+  "dependencies": {
+    "jquery.TosRUs": "git+https://github.com/FrDH/jQuery.TosRUs.git",
+    "select2": "4.0.3"
+  },
+  "devDependencies": {
+    "watch-less": "0.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/pixelant/pxa_product_manager.git"
+  },
+  "author": "Pixelant",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/pixelant/pxa_product_manager"
+}

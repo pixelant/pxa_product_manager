@@ -1,0 +1,14 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:comment>Link</f:comment>
+<f:if condition="{links}">
+    <f:for each="{links}" as="link">
+        <li class=product-related-link>
+            <f:link.typolink parameter="{link.link}"
+                             title="{link.name}">
+                <ppm:svg source="{f:uri.resource(path: 'Icons/FileIcons/arrow-right.svg')}"/>
+                <span>{link.name}</span>
+            </f:link.typolink>
+        </li>
+    </f:for>
+</f:if>
+</html>

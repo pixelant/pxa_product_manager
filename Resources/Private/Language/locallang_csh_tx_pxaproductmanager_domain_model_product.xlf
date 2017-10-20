@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z"
+          product-name="pxa_product_manager">
+        <header/>
+        <body>
+            <trans-unit id="name.description">
+                <source>Product name</source>
+            </trans-unit>
+            <trans-unit id="sku.description">
+                <source>Product identifier</source>
+            </trans-unit>
+            <trans-unit id="description.description">
+                <source>Product description text</source>
+            </trans-unit>
+            <trans-unit id="disable_single_view.description">
+                <source>Disable single view</source>
+            </trans-unit>
+            <trans-unit id="related_products.description">
+                <source>Related products list</source>
+            </trans-unit>
+            <trans-unit id="images.description">
+                <source>Product images (list view, main image, gallery)</source>
+            </trans-unit>
+            <trans-unit id="links.description">
+                <source>Additional links</source>
+            </trans-unit>
+            <trans-unit id="fal_links.description">
+                <source>Files links</source>
+            </trans-unit>
+            <trans-unit id="sub_products.description">
+                <source>Sub-products</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

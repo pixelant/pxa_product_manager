@@ -1,0 +1,129 @@
+plugin.tx_pxaproductmanager {
+    view {
+        # cat=plugin.tx_pxaproductmanager/file; type=string; label=Path to template root (FE)
+        templateRootPath = EXT:pxa_product_manager/Resources/Private/Templates/
+        # cat=plugin.tx_pxaproductmanager/file; type=string; label=Path to template partials (FE)
+        partialRootPath = EXT:pxa_product_manager/Resources/Private/Partials/
+        # cat=plugin.tx_pxaproductmanager/file; type=string; label=Path to template layouts (FE)
+        layoutRootPath = EXT:pxa_product_manager/Resources/Private/Layouts/
+    }
+
+    persistence {
+        # cat=plugin.tx_pxaproductmanager//a; type=string; label=Default storage PID
+        storagePid =
+
+        # cat=plugin.tx_pxaproductmanager//b; type=int; label=Recursive
+        recursive = 0
+    }
+
+    # customsubcategory=pxaproductmanager_main=General settings
+    settings {
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/010; type=int; label=Latest visited products limit
+        latestVisitedProductsLimit = 4
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/020; type=options[Yes=1,No=0]; label=Show products in categories list
+        showCategoriesWithProducts = 0
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/030; type=options[Yes=1,No=0]; label=Hide categories without products in navigation
+        doNotShowEmptyCategoriesInNavigation = 0
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/040; type=options[Yes=1,No=0]; label=Disable product canonical url
+        disableProductCanonicalUrl = 0
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/050; type=options[Yes=1,No=0]; label=Include SKU in attribute listing
+        attributes.includeSkuInAttributeListing = 1
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/060; type=string; label=Date format
+        attributes.dateFormat = %B %d %Y
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/070; type=options[Yes=1,No=0]; label=Divide attributes by attribute sets
+        attributes.divideAttributesBySets = 0
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/080; type=options[Yes=1,No=0]; label=Include default styling
+        includeDefaultStyling = 1
+    }
+
+    # customsubcategory=pxaproductmanager_pid=Pid settings
+    settings {
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pid/010; type=int; label=Product main page
+        pagePid =
+    }
+
+    # customsubcategory=pxaproductmanager_single_view=Single view settings
+    settings {
+        images {
+            singleView {
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_single_view/010; type=string; label=Main image max image width
+                mainMaxWidth = 600
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_single_view/020; type=string; label=Main image max image height
+                mainMaxHeight = 600
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_single_view/030; type=string; label=Attribute max image width
+                attributeMaxWidth = 300
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_single_view/040; type=options[Yes=1,No=0]; label=Show gallery navigation buttons
+                showNavigationButtons = 1
+            }
+        }
+    }
+
+    # customsubcategory=pxaproductmanager_list_view=List view settings
+    settings {
+        images {
+            listView {
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/010; type=string; label=Image max width
+                maxWidth = 265
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/020; type=string; label=Image max height
+                maxHeight = 265
+            }
+        }
+    }
+
+    # customsubcategory=pxaproductmanager_compare_view=Compare view settings
+    settings {
+        images {
+            compareView {
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_view/010; type=string; label=Image max width
+                maxWidth = 220
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_view/020; type=string; label=Image max height
+                maxHeight = 220
+            }
+        }
+    }
+
+    # customsubcategory=pxaproductmanager_lazy_loading=Lazy loading list settings
+    settings {
+        lazyLoading {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_lazy_loading/010; type=options[On scroll=1,Button=2]; label=Lazy loading type
+            loadMoreType = 1
+        }
+    }
+
+    # customsubcategory=pxaproductmanager_wish_list=Wish list
+    settings {
+        wishList {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/010; type=options[Enable=1,Disable=0]; label=Wish list state
+            enable = 0
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/020; type=int; label=Limit
+            limit = 10
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/030; type=int; label=Wish list page Pid
+            pagePid =
+        }
+    }
+
+    # customsubcategory=pxaproductmanager_compare_list=Compare list
+    settings {
+        compareList {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_list/010; type=options[Enable=1,Disable=0]; label=Compare list state
+            enable = 0
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_list/020; type=int; label=Compare pre-view page Pid
+            pagePid =
+        }
+    }
+}

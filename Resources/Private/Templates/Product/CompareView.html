@@ -1,0 +1,109 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default"/>
+
+<f:section name="main">
+    <f:if condition="{products}">
+        <f:then>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td class="red-rows">
+                        <span class="red-rows-cub">
+                            <b><f:translate key="fe.red_rows_indicates_differences"/></b>
+                        </span>
+                    </td>
+                    <f:for each="{products}" as="product">
+                        <td>
+                            <f:if condition="{product.disableSingleView}">
+                                <f:then>
+                                    <f:render section="item" arguments="{product: product}"/>
+                                </f:then>
+                                <f:else>
+                                    <ppm:link pageUid="{settings.pagePid}" product="{product}">
+                                        <f:render section="item" arguments="{product: product}"/>
+                                    </ppm:link>
+                                </f:else>
+                            </f:if>
+                        </td>
+                    </f:for>
+                </tr>
+                <f:for each="{diffData}" as="diffDataSet">
+                    <tr class="product-compare-label">
+                        <td>{diffDataSet.attributeSet.name}</td>
+                        <f:render section="attributeSetFirstRowProductsLinks" arguments="{products: products}"/>
+                    </tr>
+                    <f:for each="{diffDataSet.attributesListDiff}" as="attributeDiffRow">
+                        <tr class="{f:if(condition: '{attributeDiffRow.isDifferent}', then: 'danger')}">
+                            <td>{attributeDiffRow.label}</td>
+                            <f:render section="attributes" arguments="{attributes: attributeDiffRow.attributesList}"/>
+                        </tr>
+                    </f:for>
+                </f:for>
+                </tbody>
+            </table>
+        </f:then>
+        <f:else>
+            <div class="list-no-products-found">
+                0 -
+                <f:translate key="fe.number_of_results_found"/>
+            </div>
+        </f:else>
+    </f:if>
+</f:section>
+
+<f:section name="attributes">
+    <f:for each="{attributes}" as="attribute">
+        <f:if condition="{attribute}">
+            <f:then>
+                <td>
+                    <f:render partial="Product/Attribute/Type{attribute.type}"
+                              arguments="{attribute: attribute}"/>
+                </td>
+            </f:then>
+            <f:else>
+                <td>-</td>
+            </f:else>
+        </f:if>
+    </f:for>
+</f:section>
+
+<f:section name="attributeSetFirstRowProductsLinks">
+    <f:for each="{products}" as="product">
+        <td>
+            <f:if condition="{product.disableSingleView}">
+                <f:then>{product.name}</f:then>
+                <f:else>
+                    <ppm:link pageUid="{settings.pagePid}" product="{product}">
+                        {product.name}
+                    </ppm:link>
+                </f:else>
+            </f:if>
+        </td>
+    </f:for>
+</f:section>
+
+<f:section name="item">
+    <f:if condition="{product.thumbnail}">
+        <f:then>
+            <div class="item-img">
+                <f:image maxWidth="{settings.images.compareView.maxWidth}"
+                         maxHeight="{settings.images.compareView.maxHeight}"
+                         image="{product.thumbnail}"
+                         title="{product.name}"
+                         alt="{product.name}"/>
+            </div>
+        </f:then>
+        <f:else>
+            <div class="item-img centered">
+                <f:image src="{settings.images.pathNoImage}"
+                         width="{settings.images.listView.maxWidth}"
+                         height="{settings.images.listView.maxHeight}"
+                         title="{product.name}"
+                         alt="{product.name}"/>
+            </div>
+        </f:else>
+    </f:if>
+</f:section>
+</html>

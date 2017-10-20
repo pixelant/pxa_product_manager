@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <tx_pxaproductmanager_domain_model_product>
+        <uid>1</uid>
+        <pid>1</pid>
+        <name>Test product</name>
+        <sku>123</sku>
+        <categories>1</categories>
+    </tx_pxaproductmanager_domain_model_product>
+
+    <sys_category_record_mm>
+        <uid_local>3</uid_local>
+        <uid_foreign>1</uid_foreign>
+        <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+        <fieldname>categories</fieldname>
+        <sorting>0</sorting>
+        <sorting_foreign>1</sorting_foreign>
+    </sys_category_record_mm>
+</dataset>

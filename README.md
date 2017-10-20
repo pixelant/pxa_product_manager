@@ -1,0 +1,73 @@
+# Pixelant
+
+## Pixelant Product Manager (pxa_product_manager)
+This is an extension that shows products with a lot of filter and sorting possibilities.
+
+https://docs.google.com/document/d/1WuOBeH5oJ8b_yLczXVZkPRhiR12IjCa6ltb4IBuvvDk/edit
+
+## Changelog
+# Version ~ 2
+- Full extension rebuild
+- Use new hook to generate TCA data, no need to clear cache anymore
+- Attribute type with FAL files support
+- CKEditor products and categories linking
+- Improvements for Solr search
+- Support of product links with category tree in URL "category1/sub-category/product/product-name"
+- Wish list
+- Compare list
+- Breadcrumbs
+- Divide TCA tabs according to attribute sets
+- Functional tests
+- Support of TYPO3 >= 8.7
+- PHP version >= 7.0
+
+## Installation
+
+We rely on node.js for a lot of our tooling. So if you haven't got it installed(shame on you!!) go to http://nodejs.org/ and fetch it.
+
+To install tooling dependencies, run:
+
+    npm install
+
+Then install the composer dependencies:
+
+    composer install
+
+## Workflow
+
+It's not allowed to push directly to master branch.
+All feature implementing and bugs fixing should be done using pull request.  
+
+### Test
+
+For working with the extension, the following can be run to accomplish common tasks.
+
+To run the PHP codesniffer run the following command:
+
+    npm run php:codesniffer
+
+To run the PHP Unit tests run the following command:
+
+    npm run php:unittests
+
+To run the PHP Functional tests run the following command:
+
+    npm run php:functionaltests
+    
+To simulate the build process without functional tests locally, then run this packaged command:
+    
+    npm run build:suite_no_functional --silent
+    
+To simulate the full build process locally, then run this packaged command:
+
+    npm run build:suite --silent
+
+To watch and compile the main .less file to .css:
+
+    npm run watch:css
+
+When using t3kit and themes with the less compiler, three variables needs to be set (otherwise, the .less file will not be compiled):
+  @main-color
+  @main-text-color
+  @border-color
+

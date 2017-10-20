@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2017-09-17T13:07:47Z"
+          product-name="pxa_product_manager">
+        <header/>
+        <body>
+            <!--New content element wizard labels:START-->
+            <trans-unit id="be.extension.name">
+                <source>Product manager</source>
+            </trans-unit>
+            <trans-unit id="be.extension.description">
+                <source>Product managment system</source>
+            </trans-unit>
+            <!--New content element wizard labels:END-->
+
+            <!--Link handler:START-->
+            <trans-unit id="be.product_link_handler">
+                <source>Products (PM)</source>
+            </trans-unit>
+            <trans-unit id="be.category_link_handler">
+                <source>Category (PM)</source>
+            </trans-unit>
+            <!--Link handler:END-->
+
+            <!--Extension info hook:START-->
+            <trans-unit id="be.extension_info.none">
+                <source>none</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.checkbox_yes">
+                <source>Yes</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.checkbox_no">
+                <source>No</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.name">
+                <source>Product manager</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.mode.not_configured">
+                <source>Not configured</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.compare_pid">
+                <source>Compare Pid</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.page_pid">
+                <source>Product single view page</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.hide_compare_icon">
+                <source>Hide compare icon (Could be override by TS)</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.hide_wish_icon">
+                <source>Hide wish icon (Could be override by TS)</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.no_title">
+                <source>[NO TITLE]</source>
+            </trans-unit>
+            <!--Extension info hook:END-->
+
+            <!--FlexForm:START-->
+            <trans-unit id="flexform.sheet_title">
+                <source>Settings</source>
+            </trans-unit>
+            <trans-unit id="flexform.navigation_category">
+                <source>Start category</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode">
+                <source>Plugin mode</source>
+            </trans-unit>
+
+            <trans-unit id="flexform.limit">
+                <source>Limit</source>
+            </trans-unit>
+            <trans-unit id="flexform.no_limit">
+                <source>No limit</source>
+            </trans-unit>
+            <trans-unit id="flexform.pagePid">
+                <source>Product page (empty value = current page)</source>
+            </trans-unit>
+            <trans-unit id="flexform.compareViewPid">
+                <source>Compare view page</source>
+            </trans-unit>
+
+            <trans-unit id="flexform.mode.select_mode">
+                <source>Select mode</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.product_controller">
+                <source>Products</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.product_list">
+                <source>List view (Possible navigation)</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.product_show">
+                <source>Single view</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.product_wish_list">
+                <source>Wishlist</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.product_compare_view">
+                <source>Compare view</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.product_compare_pre_view">
+                <source>Compare pre-view</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.navigation_controller">
+                <source>Menu</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.navigation_show">
+                <source>Navigation menu</source>
+            </trans-unit>
+            <trans-unit id="flexform.filtering_sheet__title">
+                <source>Filtering</source>
+            </trans-unit>
+            <trans-unit id="flexform.filters">
+                <source>Filters</source>
+            </trans-unit>
+            <trans-unit id="flexform.mode.product_lazy_list">
+                <source>Lazy list</source>
+            </trans-unit>
+            <trans-unit id="flexform.allowed_categories">
+                <source>Allowed product categories</source>
+            </trans-unit>
+            <trans-unit id="flexform.exclude_categories">
+                <source>Forbidden product categories</source>
+            </trans-unit>
+            <trans-unit id="flexform.navigationListView_title">
+                <source>Navigation options</source>
+            </trans-unit>
+            <trans-unit id="flexform.show_navigation_list_view">
+                <source>Show navigation</source>
+            </trans-unit>
+            <trans-unit id="flexform.hide_navigation_list_view_on_detail_mode">
+                <source>Hide navigation when switch to detail product view</source>
+            </trans-unit>
+            <trans-unit id="flexform.singleView_title">
+                <source>Single view options</source>
+            </trans-unit>
+            <trans-unit id="flexform.show_latest_visited_products">
+                <source>Show latest visited products</source>
+            </trans-unit>
+            <trans-unit id="flexform.show_gallery_pagination">
+                <source>Show gallery pagination</source>
+            </trans-unit>
+            <trans-unit id="flexform.product_orderings">
+                <source>Product ordering</source>
+            </trans-unit>
+            <trans-unit id="flexform.product_sortby">
+                <source>Sort by</source>
+            </trans-unit>
+            <trans-unit id="flexform.product_sort_direction">
+                <source>Sort direction</source>
+            </trans-unit>
+            <trans-unit id="flexform.sort_direction_asc">
+                <source>Ascending</source>
+            </trans-unit>
+            <trans-unit id="flexform.sort_direction_desc">
+                <source>Descending</source>
+            </trans-unit>
+            <trans-unit id="flexform.categoriesOrderings">
+                <source>Categories ordering</source>
+            </trans-unit>
+            <trans-unit id="flexform.lists_sheet__title">
+                <source>Comapre &amp; Wish lists</source>
+            </trans-unit>
+            <trans-unit id="flexform.compare_list_enable">
+                <source>Show compare list icons</source>
+            </trans-unit>
+            <trans-unit id="flexform.wish_list_enable">
+                <source>Show wish list icons</source>
+            </trans-unit>
+            <trans-unit id="flexform.sortby_name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="flexform.sortby_tstamp">
+                <source>Last updated</source>
+            </trans-unit>
+            <trans-unit id="flexform.sortby_crdate">
+                <source>Creation date</source>
+            </trans-unit>
+            <trans-unit id="flexform.sortby_categories">
+                <source>Category</source>
+            </trans-unit>
+            <trans-unit id="flexform.enable_message_instead_of_page404">
+                <source>Enable message instead of page 404</source>
+            </trans-unit>
+            <trans-unit id="flexform.navigation_expand_all">
+                <source>Expand all categories</source>
+            </trans-unit>
+            <trans-unit id="flexform.sortby_title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="flexform.sortby_sorting">
+                <source>Default sorting</source>
+            </trans-unit>
+            <trans-unit id="flexform.categories_sorting">
+                <source>Categories sorting</source>
+            </trans-unit>
+            <trans-unit id="flexform.hide_filter_options_no_result">
+                <source>Hide filtering options without result</source>
+            </trans-unit>
+            <!--FlexForm:END-->
+
+            <!--Extension manager configuration:START-->
+            <trans-unit id="extconf.dontCheckPidForSysCategory">
+                <source>Don't check pid when assigning category (enable if the whole installation shares the same categories)</source>
+            </trans-unit>
+            <trans-unit id="extconf.includeSkuInRealurlConfiguration">
+                <source>Use sku field to combine it with name in url</source>
+            </trans-unit>
+            <!--Extension manager configuration:END-->
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,32 @@
+<script>
+	(function (w) {
+		var ProductManager = w.ProductManager || {};
+
+		ProductManager.settings = ProductManager.settings || {};
+		ProductManager.settings.lazyLoading = {
+			wrapper: '.lazylist-wrapper',
+            itemsContainer: '.lazylist-wrapper .cards-container',
+            countContainer: '.results-count-container .results-count',
+            nothingFound: '#nothing-found',
+            hiddenClass: 'hidden',
+            item: '.lazy-item',
+            loaderOverlay: '.loader-wrapper',
+			loadMoreButton: '[data-load-more="1"]',
+			template: '#lazy-loading-template .lazy-item',
+            limit: '<f:format.htmlspecialchars>{settings.limit}</f:format.htmlspecialchars>',
+			ajaxUrl: '<f:format.htmlspecialchars>{ajaxUrl}</f:format.htmlspecialchars>',
+			loadMoreType: '<f:format.htmlspecialchars>{settings.lazyLoading.loadMoreType}</f:format.htmlspecialchars>',
+			demandCategories: '<f:format.htmlspecialchars>{demandCategories}</f:format.htmlspecialchars>',
+			pagePid: '<f:format.htmlspecialchars>{settings.pagePid}</f:format.htmlspecialchars>',
+			storagePid: '{storagePid}',
+			orderDirection: '{settings.orderProductDirection}',
+			orderBy: '{settings.orderProductBy}',
+			lazyLoadingStop: '<f:format.htmlspecialchars>{lazyLoadingStop}</f:format.htmlspecialchars>',
+			wishListEnable: '{settings.wishList.enable}',
+			compareListEnable: '{settings.compareList.enable}',
+			hideFilterOptionsNoResult: '{settings.hideFilterOptionsNoResult}'
+		};
+
+		w.ProductManager = ProductManager;
+	})(window);
+</script>

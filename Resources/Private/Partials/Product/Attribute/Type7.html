@@ -1,0 +1,16 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:comment>Image</f:comment>
+<f:if condition="{attribute.value}">
+    <f:then>
+        <f:for each="{attribute.value}" as="file">
+            <div>
+                <f:image image="{file}"
+                         maxWidth="{settings.images.singleView.attributeMaxWidth}"
+                         alt="{file.properties.alternative}"
+                         title="{file.properties.description}"/>
+            </div>
+        </f:for>
+    </f:then>
+    <f:else>-</f:else>
+</f:if>
+</html>

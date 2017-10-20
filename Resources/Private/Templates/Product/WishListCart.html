@@ -1,0 +1,20 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default"/>
+
+<f:section name="main">
+	<f:link.page pageUid="{settings.wishList.pagePid}">
+		<span id="pxa-pm-wish-list-cart">
+		<ppm:svg
+				width="32"
+				height="32"
+				source="{settings.wishList.cartIcon}"/>
+		<span id="pxa-pm-wish-list-cart__counter"></span>
+	</span>
+	</f:link.page>
+	<f:if condition="{settings.wishList.pagePid} == false">
+		Wish list page is not set {$plugin.tx_pxaproductmanager.settings.wishList.pagePid}
+	</f:if>
+</f:section>
+</html>

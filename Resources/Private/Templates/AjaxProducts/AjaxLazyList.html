@@ -1,0 +1,13 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Ajax"/>
+
+<f:section name="main"><f:spaceless>
+    <f:if condition="{products}">
+        <f:for each="{products}" as="product">
+            <f:render partial="Product/LazyListProductItem"
+                      arguments="{product: product}"/>
+        </f:for>
+    </f:if>
+</f:spaceless></f:section>
+</html>

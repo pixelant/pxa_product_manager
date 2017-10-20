@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z"
+          product-name="pxa_product_manager">
+        <header/>
+        <body>
+            <trans-unit id="fe.single_view_disabled">
+                <source>Single view disabled for this item!</source>
+            </trans-unit>
+            <trans-unit id="fe.sku">
+                <source>SKU</source>
+            </trans-unit>
+            <trans-unit id="fe.sub_products">
+                <source>Sub-products</source>
+            </trans-unit>
+            <trans-unit id="fe.related_products">
+                <source>Related products</source>
+            </trans-unit>
+            <trans-unit id="fe.attributes">
+                <source>Technical specifications</source>
+            </trans-unit>
+            <trans-unit id="fe.latest_visited_products">
+                <source>Latest visited products</source>
+            </trans-unit>
+            <trans-unit id="fe.related_links">
+                <source>Related links</source>
+            </trans-unit>
+            <trans-unit id="fe.compare_list.add_title">
+                <source>Add to compare list</source>
+            </trans-unit>
+            <trans-unit id="fe.compare_list.remove_title">
+                <source>Remove from compare list</source>
+            </trans-unit>
+            <trans-unit id="fe.wish_list.add_title">
+                <source>Add to wish list</source>
+            </trans-unit>
+            <trans-unit id="fe.wish_list.remove_title">
+                <source>Remove from wish list</source>
+            </trans-unit>
+            <trans-unit id="fe.added_to_list">
+                <source>Added to list "%s"</source>
+            </trans-unit>
+            <trans-unit id="fe.remove_from_list">
+                <source>Removed from list "%s"</source>
+            </trans-unit>
+            <trans-unit id="fe.wish_list">
+                <source>Wish list</source>
+            </trans-unit>
+            <trans-unit id="fe.compare_list">
+                <source>Compare list</source>
+            </trans-unit>
+            <trans-unit id="fe.clear_filter">
+                <source>Clear</source>
+            </trans-unit>
+            <trans-unit id="fe.compare_goto">
+                <source>Go to compare details</source>
+            </trans-unit>
+            <trans-unit id="fe.number_of_results_found">
+                <source>products found</source>
+            </trans-unit>
+            <trans-unit id="fe.red_rows_indicates_differences">
+                <source>Red rows indicates differences</source>
+            </trans-unit>
+            <trans-unit id="fe.nothing_were_found">
+                <source>Nothing were found</source>
+            </trans-unit>
+            <trans-unit id="fe.no_products_found">
+                <source>No products found</source>
+            </trans-unit>
+            <trans-unit id="fe.load_more">
+                <source>Load more</source>
+            </trans-unit>
+            <trans-unit id="fe.not_found_header">
+                <source>Not found</source>
+            </trans-unit>
+            <trans-unit id="fe.not_found_text">
+                <source>Product was not found</source>
+            </trans-unit>
+            <trans-unit id="fe.error_request">
+                <source>Error request</source>
+            </trans-unit>
+            <trans-unit id="fe.error_limit">
+                <source>You reached limit</source>
+            </trans-unit>
+            <trans-unit id="fe.checkbox.yes">
+                <source>Yes</source>
+            </trans-unit>
+            <trans-unit id="fe.checkbox.no">
+                <source>No</source>
+            </trans-unit>
+
+            <!--Javascript labels-->
+            <trans-unit id="fe.js.no_options_found">
+                <source>No results</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

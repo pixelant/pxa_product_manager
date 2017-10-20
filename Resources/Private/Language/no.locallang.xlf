@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z"
+          product-name="pxa_product_manager" target-language="no">
+        <header/>
+        <body>
+            <trans-unit id="fe.sku">
+                <target>RSK nr / ART nr</target>
+            </trans-unit>
+            <trans-unit id="fe.sub_products">
+                <target>Subprodukter</target>
+            </trans-unit>
+            <trans-unit id="fe.related_products">
+                <target>Relaterade produkter</target>
+            </trans-unit>
+            <trans-unit id="fe.attributes">
+                <target>Produkt data</target>
+            </trans-unit>
+            <trans-unit id="fe.clear_filter">
+                <target>Rens</target>
+            </trans-unit>
+            <trans-unit id="fe.no_products_found">
+                <target>Ingen søkeresultat</target>
+            </trans-unit>
+            <trans-unit id="fe.number_of_results_found">
+                <target>produkter funnet</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,17 @@
+<script>
+	(function (w) {
+		var ProductManager = w.ProductManager || {};
+
+		ProductManager.settings = ProductManager.settings || {};
+
+		// Filtering settings
+		ProductManager.settings.filtering = {
+			selectBoxes: '.tx-pxa-product-manager select[data-filter-type]',
+			resetButton: '.tx-pxa-product-manager [data-reset-filter]',
+			availableOptionsList: '<f:format.raw>{availableOptionsList}</f:format.raw>',
+			availableCategoriesList: '<f:format.raw>{availableCategoriesList}</f:format.raw>'
+		};
+
+		w.ProductManager = ProductManager;
+	})(window);
+</script>

@@ -1,0 +1,203 @@
+plugin.tx_pxaproductmanager {
+    view {
+        templateRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.view.templateRootPath}
+        }
+
+        partialRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.view.partialRootPath}
+        }
+
+        layoutRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.view.layoutRootPath}
+        }
+    }
+
+    persistence {
+        storagePid = {$plugin.tx_pxaproductmanager.persistence.storagePid}
+        recursive = {$plugin.tx_pxaproductmanager.persistence.recursive}
+    }
+
+    features {
+
+    }
+
+    settings {
+        # pid
+        pagePid = {$plugin.tx_pxaproductmanager.settings.pagePid}
+
+        # general settings
+        latestVisitedProductsLimit = {$plugin.tx_pxaproductmanager.settings.latestVisitedProductsLimit}
+        showCategoriesWithProducts = {$plugin.tx_pxaproductmanager.settings.showCategoriesWithProducts}
+        doNotShowEmptyCategoriesInNavigation = {$plugin.tx_pxaproductmanager.settings.doNotShowEmptyCategoriesInNavigation}
+        disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
+
+        lazyLoading {
+            loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
+
+            pageType = 201701
+        }
+
+        wishList {
+            enable = {$plugin.tx_pxaproductmanager.settings.wishList.enable}
+            limit = {$plugin.tx_pxaproductmanager.settings.wishList.limit}
+            pagePid = {$plugin.tx_pxaproductmanager.settings.wishList.pagePid}
+            cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/like.svg
+            buttonIcon = EXT:pxa_product_manager/Resources/Public/Icons/like_combine.png
+            pageType = 201702
+        }
+
+        compareList {
+            enable = {$plugin.tx_pxaproductmanager.settings.compareList.enable}
+            pagePid = {$plugin.tx_pxaproductmanager.settings.compareList.pagePid}
+            cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/balance.svg
+            buttonIcon < .cartIcon
+            pageType = 201702
+        }
+
+        demand {
+            allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy
+        }
+
+        orderByAllowed = name,tstamp,crdate,categories
+
+        attributes {
+            includeSkuInAttributeListing = {$plugin.tx_pxaproductmanager.settings.attributes.includeSkuInAttributeListing}
+            dateFormat = {$plugin.tx_pxaproductmanager.settings.attributes.dateFormat}
+            divideAttributesBySets = {$plugin.tx_pxaproductmanager.settings.attributes.divideAttributesBySets}
+        }
+
+        # gallery
+        images {
+            pathNoImage = EXT:pxa_product_manager/Resources/Public/Images/noimage.png
+
+            singleView {
+                mainMaxWidth = {$plugin.tx_pxaproductmanager.settings.images.singleView.mainMaxWidth}
+                mainMaxHeight = {$plugin.tx_pxaproductmanager.settings.images.singleView.mainMaxHeight}
+                attributeMaxWidth = {$plugin.tx_pxaproductmanager.settings.images.singleView.attributeMaxWidth}
+                showNavigationButtons = {$plugin.tx_pxaproductmanager.settings.images.singleView.showNavigationButtons}
+            }
+
+            listView {
+                maxWidth = {$plugin.tx_pxaproductmanager.settings.images.listView.maxWidth}
+                maxHeight = {$plugin.tx_pxaproductmanager.settings.images.listView.maxHeight}
+            }
+
+            compareView {
+                maxWidth = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxWidth}
+                maxHeight = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxHeight}
+            }
+        }
+
+        # comma list of labels available through ProductManager.Main.translate
+        translateJsLabels {
+            #1 = fe.js.no_options_found
+        }
+    }
+}
+
+# include scripts
+page {
+    includeJSFooterlibs {
+        pxa_pm_select2 = EXT:pxa_product_manager/Resources/Public/JavaScript/select2/dist/js/select2.min.js
+        pxaPmSettings = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Settings.js
+        pxaPmLazyLoading = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.LazyLoading.js
+        pxaPmFiltering = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Filtering.js
+        pxaPmWishList = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.WishList.js
+        pxaPmCompareList = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.CompareList.js
+        pxaPmMessanger = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Messanger.js
+    }
+
+    includeJSFooter {
+        pxaPmMain = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.js
+    }
+
+    includeCSS {
+        select2 = EXT:pxa_product_manager/Resources/Public/JavaScript/select2/dist/css/select2.min.css
+    }
+}
+
+[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}]
+    page {
+        includeCSS {
+            pxa_product_manager = EXT:pxa_product_manager/Resources/Public/Css/product_manager.css
+        }
+    }
+[end]
+
+# Enable single view action if product is set
+[globalVar = GP:tx_pxaproductmanager_pi1|product > 0]
+    config.defaultGetVars {
+        tx_pxaproductmanager_pi1.action = show
+    }
+
+    # add stuff for gallery
+    page {
+        includeCSS {
+            jquerytosrus = EXT:pxa_product_manager/Resources/Public/Css/jquery.tosrus/jquery.tosrus.all.css
+            product_manager_lightbox = EXT:pxa_product_manager/Resources/Public/Css/product_manager_lightbox.css
+        }
+
+        includeJSFooterlibs {
+            jquerytosrus01 = EXT:pxa_product_manager/Resources/Public/JavaScript/jquery.tosrus/hammer.min.js
+            jquerytosrus02 = EXT:pxa_product_manager/Resources/Public/JavaScript/jquery.tosrus/jquery.tosrus.all.min.js
+        }
+
+        includeJSFooter {
+            pxapmLightbox = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Lightbox.js
+        }
+    }
+[end]
+
+# Ajax loading
+PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING = PAGE
+PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING {
+    typeNum = 201701
+
+    config {
+        disableAllHeaderCode = 1
+        admPanel = 0
+        debug = 0
+    }
+
+    10 = USER_INT
+    10 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        extensionName = PxaProductManager
+        pluginName = Pi1
+        vendorName = Pixelant
+
+        settings =< plugin.tx_pxaproductmanager.settings
+        persistence =< plugin.tx_pxaproductmanager.persistence
+        view =< plugin.tx_pxaproductmanager.view
+        features {
+            requireCHashArgumentForActionArguments = 0
+        }
+
+        switchableControllerActions {
+            AjaxProducts {
+                1 = ajaxLazyList
+            }
+        }
+    }
+}
+
+PXA_PRODUCT_MANAGER_WISH_LIST < PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING
+PXA_PRODUCT_MANAGER_WISH_LIST {
+    typeNum = 201702
+
+    10.switchableControllerActions.AjaxProducts >
+
+    10 {
+        switchableControllerActions {
+            AjaxJson {
+                1 = toggleWishList
+                2 = toggleCompareList
+                3 = loadCompareList
+            }
+        }
+    }
+}
+
+# Includes
+<INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Library/" extensions="ts">

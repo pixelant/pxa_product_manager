@@ -1,0 +1,26 @@
+.single-product-gallery__pagination {
+    width: 100%;
+    float: left;
+    padding-bottom: 20px;
+    line-height: 0;
+}
+
+.single-product-gallery__pagination a {
+    width: 65px;
+    height: 65px;
+    border: 1px solid #e0e0e0;
+    display: inline-block;
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 10px 10px 0 0;
+    transition: border-color 0.2s linear;
+}
+
+.single-product-gallery img {
+    display: none;
+}
+
+.single-product-gallery .tos-wrapper img {
+    display: block;
+}

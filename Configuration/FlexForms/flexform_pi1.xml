@@ -1,0 +1,518 @@
+<T3DataStructure>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sheet_title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <switchableControllerActions>
+                        <TCEforms>
+                            <onChange>reload</onChange>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode</label>
+                            <config>
+                                <type>select</type>
+                                <items>
+                                    <numIndex index="0">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.select_mode</numIndex>
+                                        <numIndex index="1">0</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_controller</numIndex>
+                                        <numIndex index="1">--div--</numIndex>
+                                    </numIndex>
+                                    <numIndex index="2">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_list</numIndex>
+                                        <numIndex index="1">Product->list;Product->show</numIndex>
+                                    </numIndex>
+                                    <numIndex index="3">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_show</numIndex>
+                                        <numIndex index="1">Product->show</numIndex>
+                                    </numIndex>
+                                    <numIndex index="4">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_lazy_list</numIndex>
+                                        <numIndex index="1">Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                    </numIndex>
+                                    <numIndex index="5">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_wish_list</numIndex>
+                                        <numIndex index="1">Product->wishList</numIndex>
+                                    </numIndex>
+                                    <numIndex index="6">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_pre_view</numIndex>
+                                        <numIndex index="1">Product->comparePreView;Product->compareView</numIndex>
+                                    </numIndex>
+                                    <numIndex index="7">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_view</numIndex>
+                                        <numIndex index="1">Product->compareView;Product->comparePreView</numIndex>
+                                    </numIndex>
+                                    <numIndex index="8">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_controller</numIndex>
+                                        <numIndex index="1">--div--</numIndex>
+                                    </numIndex>
+                                    <numIndex index="9">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_show</numIndex>
+                                        <numIndex index="1">Navigation->show</numIndex>
+                                    </numIndex>
+                                    <numIndex index="10">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.filtering_controller</numIndex>
+                                        <numIndex index="1">--div--</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </switchableControllerActions>
+
+                    <settings.pagePid>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.pagePid</label>
+                            <displayCond>
+                                <AND>
+                                    <numIndex index="0">FIELD:switchableControllerActions:REQ:true</numIndex>
+                                    <numIndex index="1">FIELD:switchableControllerActions:!=:Filter->showFilter</numIndex>
+                                </AND>
+                            </displayCond>
+                            <config>
+                                <type>group</type>
+                                <internal_type>db</internal_type>
+                                <allowed>pages</allowed>
+                                <size>1</size>
+                                <maxitems>1</maxitems>
+                                <minitems>0</minitems>
+                                <show_thumbs>1</show_thumbs>
+                                <wizards>
+                                    <suggest>
+                                        <type>suggest</type>
+                                    </suggest>
+                                </wizards>
+                            </config>
+                        </TCEforms>
+                    </settings.pagePid>
+
+                    <settings.limit>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.limit</label>
+                            <displayCond>FIELD:switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <config>
+                                <type>input</type>
+                                <size>10</size>
+                                <eval>int</eval>
+                            </config>
+                        </TCEforms>
+                    </settings.limit>
+
+                    <settings.category>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation_category</label>
+                            <displayCond>FIELD:switchableControllerActions:IN:Navigation->show,Product->list;Product->show</displayCond>
+                            <config>
+                                <type>select</type>
+                                <renderMode>tree</renderMode>
+                                <treeConfig>
+                                    <parentField>parent</parentField>
+                                    <appearance>
+                                        <maxLevels>99</maxLevels>
+                                        <expandAll>TRUE</expandAll>
+                                        <showHeader>TRUE</showHeader>
+                                    </appearance>
+                                </treeConfig>
+                                <foreign_table>sys_category</foreign_table>
+                                <foreign_table_where>AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent= 0) ORDER BY sys_category.sorting</foreign_table_where>
+                                <size>10</size>
+                                <autoSizeMax>20</autoSizeMax>
+                                <minitems>1</minitems>
+                                <maxitems>1</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.category>
+
+                    <settings.allowedCategories>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.allowed_categories</label>
+                            <displayCond>FIELD:switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>select</type>
+                                <renderMode>tree</renderMode>
+                                <treeConfig>
+                                    <parentField>parent</parentField>
+                                    <appearance>
+                                        <maxLevels>99</maxLevels>
+                                        <expandAll>TRUE</expandAll>
+                                        <showHeader>TRUE</showHeader>
+                                    </appearance>
+                                </treeConfig>
+                                <foreign_table>sys_category</foreign_table>
+                                <foreign_table_where> AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0) ORDER BY sys_category.sorting</foreign_table_where>
+                                <size>10</size>
+                                <autoSizeMax>20</autoSizeMax>
+                                <minitems>0</minitems>
+                                <maxitems>99</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.allowedCategories>
+
+                    <settings.excludeCategories>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.exclude_categories</label>
+                            <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList,Navigation->show</displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>select</type>
+                                <renderMode>tree</renderMode>
+                                <treeConfig>
+                                    <parentField>parent</parentField>
+                                    <appearance>
+                                        <maxLevels>99</maxLevels>
+                                        <expandAll>TRUE</expandAll>
+                                        <showHeader>TRUE</showHeader>
+                                    </appearance>
+                                </treeConfig>
+                                <foreign_table>sys_category</foreign_table>
+                                <foreign_table_where> AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0) ORDER BY sys_category.sorting</foreign_table_where>
+                                <size>10</size>
+                                <autoSizeMax>20</autoSizeMax>
+                                <minitems>0</minitems>
+                                <maxitems>99</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.excludeCategories>
+
+                    <settings.compareViewPid>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.compareViewPid</label>
+                            <displayCond>
+                                <AND>
+                                    <numIndex index="0">FIELD:switchableControllerActions:REQ:true</numIndex>
+                                    <numIndex index="1">FIELD:switchableControllerActions:=:Product->comparePreView;Product->compareView</numIndex>
+                                </AND>
+                            </displayCond>
+                            <config>
+                                <type>group</type>
+                                <internal_type>db</internal_type>
+                                <allowed>pages</allowed>
+                                <size>1</size>
+                                <maxitems>1</maxitems>
+                                <minitems>1</minitems>
+                                <show_thumbs>1</show_thumbs>
+                                <wizards>
+                                    <suggest>
+                                        <type>suggest</type>
+                                    </suggest>
+                                </wizards>
+                            </config>
+                        </TCEforms>
+                    </settings.compareViewPid>
+                </el>
+            </ROOT>
+        </sDEF>
+        <navigationListView>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigationListView_title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.showNavigationListView>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_navigation_list_view</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</displayCond>
+                            <exclude>1</exclude>
+                            <onChange>reload</onChange>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.showNavigationListView>
+
+                    <settings.hideNavigationListViewOnDetailMode>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.hide_navigation_list_view_on_detail_mode</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.hideNavigationListViewOnDetailMode>
+
+                    <settings.navigationExpandAll>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation_expand_all</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
+                                    <AND>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                        <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
+                                    </AND>
+                                </OR>
+                            </displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.navigationExpandAll>
+                </el>
+            </ROOT>
+        </navigationListView>
+        <singleView>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.singleView_title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.showLatestVisitedProducts>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_latest_visited_products</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->show</displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.showLatestVisitedProducts>
+
+                    <settings.enableMessageInsteadOfPage404>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.enable_message_instead_of_page404</label>
+                            <displayCond> FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show</displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.enableMessageInsteadOfPage404>
+
+                    <settings.showGalleryPagination>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_gallery_pagination</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show</displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.showGalleryPagination>
+                </el>
+            </ROOT>
+        </singleView>
+        <productOrderings>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.product_orderings</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.orderProductBy>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.product_sortby</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                </OR>
+                            </displayCond>
+                            <config>
+                                <type>select</type>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_name</numIndex>
+                                        <numIndex index="1">name</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_tstamp</numIndex>
+                                        <numIndex index="1">tstamp</numIndex>
+                                    </numIndex>
+                                    <numIndex index="2" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_crdate</numIndex>
+                                        <numIndex index="1">crdate</numIndex>
+                                    </numIndex>
+                                    <numIndex index="3" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_categories</numIndex>
+                                        <numIndex index="1">categories</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.orderProductBy>
+                    <settings.orderProductDirection>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.product_sort_direction</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                </OR>
+                            </displayCond>
+                            <config>
+                                <type>select</type>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_asc</numIndex>
+                                        <numIndex index="1">asc</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_desc</numIndex>
+                                        <numIndex index="1">desc</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.orderProductDirection>
+                </el>
+            </ROOT>
+        </productOrderings>
+        <categoriesOrderings>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.categoriesOrderings</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.orderCategoriesBy>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.product_sortby</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
+                                    <AND>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                        <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
+                                    </AND>
+                                </OR>
+                            </displayCond>
+                            <config>
+                                <type>select</type>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_sorting</numIndex>
+                                        <numIndex index="1">sorting</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_title</numIndex>
+                                        <numIndex index="1">title</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.orderCategoriesBy>
+                    <settings.orderCategoriesDirection>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.product_sort_direction</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
+                                    <AND>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                        <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
+                                    </AND>
+                                </OR>
+                            </displayCond>
+                            <config>
+                                <type>select</type>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_asc</numIndex>
+                                        <numIndex index="1">asc</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_desc</numIndex>
+                                        <numIndex index="1">desc</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.orderCategoriesDirection>
+                </el>
+            </ROOT>
+        </categoriesOrderings>
+        <productLists>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lists_sheet__title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.wishList.enable>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.wish_list_enable</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->comparePreView;Product->compareView</numIndex>
+                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->compareView;Product->comparePreView</numIndex>
+                                </OR>
+                            </displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.wishList.enable>
+
+                    <settings.compareList.enable>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.compare_list_enable</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList</numIndex>
+                                </OR>
+                            </displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.compareList.enable>
+                </el>
+            </ROOT>
+        </productLists>
+
+        <filtering>
+            <ROOT>
+            <TCEforms>
+                <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filtering_sheet__title</sheetTitle>
+            </TCEforms>
+            <type>array</type>
+                <el>
+                    <settings.hideFilterOptionsNoResult>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.hide_filter_options_no_result</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.hideFilterOptionsNoResult>
+
+                    <settings.filters>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>select</type>
+                                <foreign_table>tx_pxaproductmanager_domain_model_filter</foreign_table>
+                                <foreign_table_where> AND (tx_pxaproductmanager_domain_model_filter.sys_language_uid = 0 OR tx_pxaproductmanager_domain_model_filter.l10n_parent = 0) ORDER BY tx_pxaproductmanager_domain_model_filter.sorting</foreign_table_where>
+                                <size>10</size>
+                                <autoSizeMax>20</autoSizeMax>
+                                <maxitems>9999</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.filters>
+                </el>
+            </ROOT>
+        </filtering>
+    </sheets>
+</T3DataStructure>

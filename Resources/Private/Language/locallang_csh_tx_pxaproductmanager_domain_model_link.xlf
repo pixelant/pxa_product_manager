@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z" product-name="pxa_product_manager">
+		<header/>
+		<body>
+
+			<trans-unit id="name.description">
+				<source>Text of link</source>
+			</trans-unit>
+			<trans-unit id="link.description">
+				<source>Target link</source>
+			</trans-unit>
+			<trans-unit id="description.description">
+				<source>Link description</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

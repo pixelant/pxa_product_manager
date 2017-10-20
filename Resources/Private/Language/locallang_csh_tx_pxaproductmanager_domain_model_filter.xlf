@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-01-05T12:56:46Z" product-name="pxa_product_manager">
+		<header/>
+		<body>
+			<trans-unit id="type.description">
+				<source>Type of filter</source>
+			</trans-unit>
+			<trans-unit id="name.description">
+				<source>Name of filter</source>
+			</trans-unit>
+			<trans-unit id="parent_category.description">
+				<source>Filter parent category</source>
+			</trans-unit>
+			<trans-unit id="attribute.description">
+				<source>Filter attribute (Only selectbox)</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
