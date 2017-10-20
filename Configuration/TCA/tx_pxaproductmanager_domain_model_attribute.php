@@ -33,7 +33,7 @@ $tx_pxaproductmanager_domain_model_attribute = [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, type, required, show_in_attribute_listing, show_in_compare, identifier, default_value, options, label_unchecked, label_checked',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, label, type, required, show_in_attribute_listing, show_in_compare, identifier, icon, default_value, options, label_unchecked, label_checked',
     ],
     'types' => [
         '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value,' . $accessTab],
@@ -44,8 +44,8 @@ $tx_pxaproductmanager_domain_model_attribute = [
     // @codingStandardsIgnoreEnd
     'palettes' => [
         'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
-        'common' => ['showitem' => 'name, --linebreak--, type'],
-        'options' => ['showitem' => 'required, show_in_attribute_listing, show_in_compare'],
+        'common' => ['showitem' => 'name, --linebreak--, label, --linebreak--, type'],
+        'options' => ['showitem' => 'required, show_in_attribute_listing, show_in_compare, --linebreak--, icon'],
         'checkbox_values' => ['showitem' => 'label_checked, label_unchecked'],
     ],
     'columns' => [
@@ -130,6 +130,15 @@ $tx_pxaproductmanager_domain_model_attribute = [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim,required'
+            ]
+        ],
+        'label' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.label',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
             ]
         ],
         'type' => [
@@ -242,7 +251,53 @@ $tx_pxaproductmanager_domain_model_attribute = [
                     'localizeChildrenAtParentLocalization' => true
                 ]
             ]
-        ]
+        ],
+        'icon' => [
+            'exclude' => 1,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.icon',
+            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
+                'icon',
+                [
+                    'appearance' => [
+                        'createNewRelationLinkTitle' =>
+                            'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
+                        'showPossibleLocalizationRecords' => false,
+                        'showRemovedLocalizationRecords' => true,
+                        'showAllLocalizationLink' => false,
+                        'showSynchronizationLink' => false
+                    ],
+                    'foreign_match_fields' => [
+                        'fieldname' => 'icon',
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_attribute',
+                        'table_local' => 'sys_file',
+                    ],
+                    'maxitems' => 1,
+                    // @codingStandardsIgnoreStart
+                    'overrideChildTca' => [
+                        'types' => [
+                            '0' => [
+                                'showitem' => '
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                            --palette--;;filePalette'
+                            ],
+                            \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                                'showitem' => '
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                            --palette--;;filePalette'
+                            ]
+                        ]
+                    ],
+                    // @codingStandardsIgnoreEnd
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                        'localizeChildrenAtParentLocalization' => true,
+                    ],
+                ],
+                'svg'
+            ),
+        ],
     ]
 ];
 

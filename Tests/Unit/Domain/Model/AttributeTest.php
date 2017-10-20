@@ -304,4 +304,18 @@ class AttributeTest extends UnitTestCase
             $this->fixture->getValue()
         );
     }
+
+    /**
+     * @test
+     */
+    public function labelCanBeSet()
+    {
+        $label = 'Label';
+        $this->fixture->setLabel($label);
+
+        self::assertEquals(
+            $label,
+            $this->fixture->getLabel()
+        );
+    }
 }

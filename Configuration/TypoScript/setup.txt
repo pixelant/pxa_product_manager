@@ -65,6 +65,8 @@ plugin.tx_pxaproductmanager {
             includeSkuInAttributeListing = {$plugin.tx_pxaproductmanager.settings.attributes.includeSkuInAttributeListing}
             dateFormat = {$plugin.tx_pxaproductmanager.settings.attributes.dateFormat}
             divideAttributesBySets = {$plugin.tx_pxaproductmanager.settings.attributes.divideAttributesBySets}
+            iconMaxSize = {$plugin.tx_pxaproductmanager.settings.attributes.iconMaxSize}
+            iconClasses = {$plugin.tx_pxaproductmanager.settings.attributes.iconClasses}
         }
 
         # gallery

@@ -78,6 +78,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_attribute.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_attribute.label">
+                <source>Label</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_attribute.type">
                 <source>Type</source>
             </trans-unit>
@@ -137,6 +140,9 @@
             </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_attribute.type_9">
                 <source>Multiselect</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_attribute.icon">
+                <source>Icon</source>
             </trans-unit>
             <!--Attributes TCA:END-->
 
