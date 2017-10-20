@@ -5,7 +5,7 @@
   "scripts": {
     "php:codesniffer": ".Build/bin/phpcs -n --colors --standard=PSR2 --extensions=php --ignore=*./.Build/* .",
     "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c Tests/Build/UnitTests.xml",
-    "php:functionaltests": "export typo3DatabaseName=pm_test typo3DatabaseHost=localhost typo3DatabaseUsername=root typo3DatabasePassword=root TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml",
+    "php:functionaltests": "export typo3DatabaseName=typo3 typo3DatabaseHost=localhost typo3DatabaseUsername=root typo3DatabasePassword=root TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml",
     "build:suite": "npm run php:codesniffer && npm run php:unittests && npm run php:functionaltests",
     "build:suite_no_functional": "npm run php:codesniffer && npm run php:unittests",
     "build:extension": "npm run add:resource:select2 && npm run add:resource:jquery.TosRUs",
