@@ -32,18 +32,18 @@ script:
   - >
     echo;
     echo "Running PHP codesniffer";
-    .Build/bin/phpcs --standard=PSR2 --extensions=php --ignore=*./.Build/* .
+    .Build/bin/phpcs -n --standard=PSR2 --extensions=php --ignore=*./.Build/* .
 
   - >
     echo;
     echo "Running unit tests";
-    .Build/bin/phpunit -c Tests/Build/UnitTests.xml
+    .Build/bin/phpunit -c Tests/Build/UnitTests.xml;
 
   - >
     echo;
     echo "Running functional tests";
-    export typo3DatabaseName="typo3"
-    export typo3DatabaseHost="localhost"
-    export typo3DatabaseUsername="root"
-    export typo3DatabasePassword=""
-    .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml
+    export typo3DatabaseName="typo3";
+    export typo3DatabaseHost="localhost";
+    export typo3DatabaseUsername="root";
+    export typo3DatabasePassword="";
+    .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml;
