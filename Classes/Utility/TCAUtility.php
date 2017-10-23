@@ -116,7 +116,7 @@ class TCAUtility
                     'type' => 'input',
                     'size' => '30',
                     'max' => '256',
-                    'eval' => 'trim,required',
+                    'eval' => 'trim',
                     'renderType' => 'inputLink',
                     'softref' => 'typolink'
                 ],

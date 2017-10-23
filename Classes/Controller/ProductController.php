@@ -293,7 +293,12 @@ class ProductController extends AbstractController
 
         /** @var Attribute $attribute */
         foreach ($attributeSet->getAttributes() as $attribute) {
-            if (!$attribute->isShowInCompare()) {
+            if (!$attribute->isShowInCompare()
+                || GeneralUtility::inList(
+                    $this->settings['ignoreAttributeTypesInCompareView'],
+                    $attribute->getType()
+                )
+            ) {
                 continue;
             }
 
@@ -316,7 +321,7 @@ class ProductController extends AbstractController
     protected function getDiffValuesForProductsSingleAttribute(array $products, Attribute $attribute)
     {
         $diffData = [
-            'label' => $attribute->getName()
+            'label' => $attribute->getLabel() ?: $attribute->getName()
         ];
         $attributesList = [];
         $tempValues = [];
@@ -327,8 +332,7 @@ class ProductController extends AbstractController
 
             /** @var Attribute $pAttribute */
             foreach ($product->getAttributes() as $pAttribute) {
-                if ($pAttribute->getUid() === $attribute->getUid()
-                    && $pAttribute->getType() !== Attribute::ATTRIBUTE_TYPE_IMAGE) {
+                if ($pAttribute->getUid() === $attribute->getUid()) {
                     $singleAttribute = $pAttribute;
                 }
             }
