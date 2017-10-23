@@ -188,7 +188,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Icon
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @lazy
      */
     protected $icon;
@@ -342,7 +342,6 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
          * You may modify the constructor of this class instead
          */
         $this->options = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->icon = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -514,9 +513,9 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * Sets the icon value
      *
      * @api
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $icon
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $icon
      */
-    public function setImage(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $icon)
+    public function setIcon(\TYPO3\CMS\Extbase\Domain\Model\FileReference $icon)
     {
         $this->icon = $icon;
     }
@@ -525,7 +524,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * Gets the icon value
      *
      * @api
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
      */
     public function getIcon()
     {

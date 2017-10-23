@@ -38,7 +38,6 @@
 <f:section name="attributes">
     <f:for each="{attributes}" as="attribute">
         <f:if condition="{attribute.showInAttributeListing}">
-            {attribute.name} {attribute.type}
             <f:comment>Label need to output only value</f:comment>
             <f:switch expression="{attribute.type}">
                 <f:case value="8">
@@ -57,13 +56,12 @@
                                 <f:if condition="{attribute.icon}">
                                         <f:image maxWidth="{settings.attributes.iconMaxSize}"
                                                  maxHeight="{settings.attributes.iconMaxSize}"
-                                                 image="{attribute.icon.0}"
-                                                 treatIdAsReference="1"
+                                                 image="{attribute.icon}"
                                                  class="{settings.attributes.iconClasses}"
                                                  title="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"
                                                  alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
                                 </f:if>
-                                {f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}
+                                <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
                             </f:spaceless>
                         </th>
                         <td>

@@ -318,4 +318,18 @@ class AttributeTest extends UnitTestCase
             $this->fixture->getLabel()
         );
     }
+
+    /**
+     * @test
+     */
+    public function iconCanBeSet()
+    {
+        $icon = new \TYPO3\CMS\Extbase\Domain\Model\FileReference();
+        $this->fixture->setIcon($icon);
+
+        self::assertSame(
+            $icon,
+            $this->fixture->getIcon()
+        );
+    }
 }
