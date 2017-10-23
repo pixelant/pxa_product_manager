@@ -2,7 +2,7 @@
 <f:comment>Link</f:comment>
 <f:if condition="{attribute.value}">
     <f:then>
-        <f:link.typolink parameter="{attribute.value}" title="{attribute.name}">{attribute.name}</f:link.typolink>
+        <f:link.typolink parameter="{attribute.value}" title="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}">{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}</f:link.typolink>
     </f:then>
     <f:else>-</f:else>
 </f:if>

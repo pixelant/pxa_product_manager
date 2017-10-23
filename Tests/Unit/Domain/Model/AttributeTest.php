@@ -304,4 +304,32 @@ class AttributeTest extends UnitTestCase
             $this->fixture->getValue()
         );
     }
+
+    /**
+     * @test
+     */
+    public function labelCanBeSet()
+    {
+        $label = 'Label';
+        $this->fixture->setLabel($label);
+
+        self::assertEquals(
+            $label,
+            $this->fixture->getLabel()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function iconCanBeSet()
+    {
+        $icon = new \TYPO3\CMS\Extbase\Domain\Model\FileReference();
+        $this->fixture->setIcon($icon);
+
+        self::assertSame(
+            $icon,
+            $this->fixture->getIcon()
+        );
+    }
 }

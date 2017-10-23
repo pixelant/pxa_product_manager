@@ -179,6 +179,21 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $value;
 
     /**
+     * label
+     *
+     * @var \string
+     */
+    protected $label = '';
+
+    /**
+     * Icon
+     *
+     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     * @lazy
+     */
+    protected $icon;
+
+    /**
      * Returns the name
      *
      * @return \string $name
@@ -471,5 +486,48 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @return \string $label
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Sets the label
+     *
+     * @param \string $label
+     * @return void
+     */
+    public function setLabel(string $label)
+    {
+        $this->label = $label;
+    }
+
+    /**
+     * Sets the icon value
+     *
+     * @api
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $icon
+     */
+    public function setIcon(\TYPO3\CMS\Extbase\Domain\Model\FileReference $icon)
+    {
+        $this->icon = $icon;
+    }
+
+    /**
+     * Gets the icon value
+     *
+     * @api
+     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     */
+    public function getIcon()
+    {
+        return $this->icon;
     }
 }

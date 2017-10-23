@@ -95,6 +95,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attribute (
   pid int(11) DEFAULT '0' NOT NULL,
 
   name varchar(255) DEFAULT '' NOT NULL,
+  label varchar(255) DEFAULT '' NOT NULL,
   type int(11) DEFAULT '0' NOT NULL,
   required tinyint(1) unsigned DEFAULT '0' NOT NULL,
   show_in_attribute_listing tinyint(1) unsigned DEFAULT '0' NOT NULL,
@@ -104,6 +105,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attribute (
   options int(11) unsigned DEFAULT '0' NOT NULL,
   label_checked varchar(255) DEFAULT '' NOT NULL,
   label_unchecked varchar(255) DEFAULT '' NOT NULL,
+  icon int(11) unsigned DEFAULT '0',
 
   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
   crdate int(11) unsigned DEFAULT '0' NOT NULL,

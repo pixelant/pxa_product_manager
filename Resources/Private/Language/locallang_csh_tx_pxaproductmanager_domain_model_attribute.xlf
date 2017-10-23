@@ -28,6 +28,12 @@
             <trans-unit id="label_unchecked.description">
                 <source>Displayed if flag is not set on product single view</source>
             </trans-unit>
+            <trans-unit id="label.description">
+                <source>Default behaviour is to use value from label if filled in, else name, when attribute is rendered frontend.</source>
+            </trans-unit>
+            <trans-unit id="icon.description">
+                <source>Select icon to render in frontend if selected template supports it</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
