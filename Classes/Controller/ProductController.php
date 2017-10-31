@@ -163,6 +163,15 @@ class ProductController extends AbstractController
                 ((int)$this->settings['latestVisitedProductsLimit'] + 1)
             );
 
+            // check if categories have a custom single view template set
+            if ($product->getCategories()->count() > 0) {
+                foreach ($product->getCategories() as $category) {
+                    if (strlen($category->getSingleViewTemplate()) > 0) {
+                        $this->view->setTemplate($category->getSingleViewTemplate());
+                    }
+                }
+            }
+
             // add navigation if enabled in list view
             if ($this->settings['showNavigationListView']
                 && !$this->settings['hideNavigationListViewOnDetailMode']
@@ -373,6 +382,88 @@ class ProductController extends AbstractController
      */
     public function notFoundAction()
     {
+    }
+
+    /**
+     * action grouped list
+     *
+     * @return void
+     */
+    public function groupedListAction()
+    {
+
+        $groupedList = [];
+        $excludeCategories = GeneralUtility::intExplode(',', $this->settings['excludeCategories'], true);
+
+        $category = $this->determinateCategory(
+            MainUtility::getActiveCategoryFromRequest()
+        );
+
+        if ($category) {
+            $this->settings['demandCategories'] = [$category->getUid()];
+            $demand = $this->createDemandFromSettings($this->settings);
+            $products = $this->productRepository->findDemanded($demand);
+
+            /** @var QueryResultInterface $subCategories */
+            $subCategories = $this->categoryRepository->findByParent(
+                $category,
+                $this->getOrderingsForCategories()
+            );
+
+            if ($subCategories->count() > 0) {
+                $groupedListIndex = 0;
+                $duplicateCategories = [];
+                foreach ($subCategories as $index => $subCategory) {
+                    $subCategoryUid = $subCategory->getUid();
+
+                    if (in_array($subCategoryUid, $excludeCategories)) {
+                        // excluded category, unset
+                        array_push($duplicateCategories, $index);
+                    } else {
+                        $subCategoryCategories = $this->categoryRepository->findByParent(
+                            $subCategory,
+                            $this->getOrderingsForCategories()
+                        );
+
+                        // if category doesn't have any sub categories, fetch products
+                        if ($subCategoryCategories->count() == 0) {
+                            $this->settings['demandCategories'] = [$subCategoryUid];
+                            $demand = $this->createDemandFromSettings($this->settings);
+                            $subCategoryProducts = $this->productRepository->findDemanded($demand);
+
+                            if ($subCategoryProducts->count() > 0) {
+                                // if category has products it will be displayed differently, remove from "browse" categories
+                                array_push($duplicateCategories, $index);
+                                // add to grouped list instead
+                                $groupedList[$groupedListIndex]['category'] = $subCategory;
+                                $groupedList[$groupedListIndex]['products'] = $subCategoryProducts;
+                                $groupedList[$groupedListIndex]['categoryAttributes'] = 0;
+                                if ($subCategoryProducts->count() > 0) {
+                                    $groupedList[$groupedListIndex]['categoryAttributes'] =
+                                        $subCategoryProducts[0]->getAttributes()->count();
+                                }
+                                $groupedListIndex++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // remove dublicate categories (added to groupedList)
+            if (count($duplicateCategories) > 0) {
+                foreach ($duplicateCategories as $index) {
+                    unset($subCategories[$index]);
+                }
+            }
+
+            $this->view->assignMultiple([
+                'category' => $category,
+                'products' => $products,
+                'subCategories' => $subCategories,
+            ]);
+        }
+
+        $this->view->assign('groupedList', $groupedList ?? []);
     }
 
     /**

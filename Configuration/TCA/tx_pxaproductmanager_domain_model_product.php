@@ -28,12 +28,12 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, description, import_id, import_name, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, description, attributes_description, import_id, import_name, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
     ],
 
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, sku, description,
+            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, sku, description, attributes_description,
 --div--;LLL:EXT:lang/locallang_tca.xlf:sys_category.tabs.category, categories,
 --palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images,images,
@@ -533,6 +533,17 @@ return [
             'label' => 'deleted',
             'config' => [
                 'type' => 'passthrough'
+            ]
+        ],
+        'attributes_description' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.attributes_description',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 15,
+                'eval' => 'trim',
+                'enableRichtext' => true
             ]
         ]
     ]

@@ -898,4 +898,18 @@ class ProductTest extends UnitTestCase
             $this->fixture->getSerializedAttributesValues()
         );
     }
+
+    /**
+     * @test
+     */
+    public function attributesDescriptionCanBeSet()
+    {
+        $attributeDescription = 'attributeDescription';
+        $this->fixture->setAttributeDescription($attributeDescription);
+
+        self::assertEquals(
+            $description,
+            $this->fixture->getAttributeDescription()
+        );
+    }
 }

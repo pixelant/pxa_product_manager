@@ -88,6 +88,9 @@
             <trans-unit id="flexform.mode.product_list">
                 <source>List view (Possible navigation)</source>
             </trans-unit>
+            <trans-unit id="flexform.mode.product_groupedlist">
+                <source>Grouped list view</source>
+            </trans-unit>
             <trans-unit id="flexform.mode.product_show">
                 <source>Single view</source>
             </trans-unit>

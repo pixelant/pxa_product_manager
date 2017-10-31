@@ -88,7 +88,12 @@
             <trans-unit id="fe.checkbox.no">
                 <source>No</source>
             </trans-unit>
-
+            <trans-unit id="fe.pdf">
+                <source>PDF</source>
+            </trans-unit>
+            <trans-unit id="fe.product">
+                <source>Product</source>
+            </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>

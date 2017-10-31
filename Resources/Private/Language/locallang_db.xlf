@@ -57,6 +57,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_product.tab.attributes">
                 <source>Attributes</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.attributes_description">
+                <source>Attributes description</source>
+            </trans-unit>
             <!--Products TCA:END-->
 
             <!--Attributes Set TCA:START-->
@@ -225,6 +228,15 @@
             </trans-unit>
             <trans-unit id="sys_category.subcategories_tab">
                 <source>Sub-Categories</source>
+            </trans-unit>
+            <trans-unit id="sys_category.pxapm_banner_image">
+                <source>Banner Image (grouped list view)</source>
+            </trans-unit>
+            <trans-unit id="sys_category.pxapm_card_view_template">
+                <source>Card View Template (grouped list view)</source>
+            </trans-unit>
+            <trans-unit id="sys_category.pxapm_single_view_template">
+                <source>Single View Template</source>
             </trans-unit>
             <!--sys_category TCA:END-->
         </body>

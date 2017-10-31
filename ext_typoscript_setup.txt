@@ -21,6 +21,9 @@ config.tx_extbase {
                         pxapm_attributes_sets.mapOnProperty = attributeSets
                         pxapm_description.mapOnProperty = description
                         pxapm_image.mapOnProperty = image
+                        pxapm_banner_image.mapOnProperty = bannerImage
+                        pxapm_card_view_template.mapOnProperty = cardViewTemplate
+                        pxapm_single_view_template.mapOnProperty = singleViewTemplate
                     }
                 }
             }

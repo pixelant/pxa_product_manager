@@ -27,34 +27,38 @@
                                         <numIndex index="1">Product->list;Product->show</numIndex>
                                     </numIndex>
                                     <numIndex index="3">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_groupedlist</numIndex>
+                                        <numIndex index="1">Product->groupedList;Product->show</numIndex>
+                                    </numIndex>
+                                    <numIndex index="4">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_show</numIndex>
                                         <numIndex index="1">Product->show</numIndex>
                                     </numIndex>
-                                    <numIndex index="4">
+                                    <numIndex index="5">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_lazy_list</numIndex>
                                         <numIndex index="1">Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
                                     </numIndex>
-                                    <numIndex index="5">
+                                    <numIndex index="6">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_wish_list</numIndex>
                                         <numIndex index="1">Product->wishList</numIndex>
                                     </numIndex>
-                                    <numIndex index="6">
+                                    <numIndex index="7">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_pre_view</numIndex>
                                         <numIndex index="1">Product->comparePreView;Product->compareView</numIndex>
                                     </numIndex>
-                                    <numIndex index="7">
+                                    <numIndex index="8">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_view</numIndex>
                                         <numIndex index="1">Product->compareView;Product->comparePreView</numIndex>
                                     </numIndex>
-                                    <numIndex index="8">
+                                    <numIndex index="9">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
-                                    <numIndex index="9">
+                                    <numIndex index="10">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_show</numIndex>
                                         <numIndex index="1">Navigation->show</numIndex>
                                     </numIndex>
-                                    <numIndex index="10">
+                                    <numIndex index="11">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.filtering_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
@@ -104,7 +108,7 @@
                     <settings.category>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation_category</label>
-                            <displayCond>FIELD:switchableControllerActions:IN:Navigation->show,Product->list;Product->show</displayCond>
+                            <displayCond>FIELD:switchableControllerActions:IN:Navigation->show,Product->list;Product->show,Product->groupedList;Product->show</displayCond>
                             <config>
                                 <type>select</type>
                                 <renderMode>tree</renderMode>
@@ -155,7 +159,7 @@
                     <settings.excludeCategories>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.exclude_categories</label>
-                            <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList,Navigation->show</displayCond>
+                            <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList,Navigation->show,Product->groupedList;Product->show</displayCond>
                             <exclude>1</exclude>
                             <config>
                                 <type>select</type>
@@ -270,7 +274,7 @@
                     <settings.showLatestVisitedProducts>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_latest_visited_products</label>
-                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->show</displayCond>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->show,Product->groupedList;Product->show</displayCond>
                             <exclude>1</exclude>
                             <config>
                                 <type>check</type>
@@ -282,7 +286,7 @@
                     <settings.enableMessageInsteadOfPage404>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.enable_message_instead_of_page404</label>
-                            <displayCond> FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show</displayCond>
+                            <displayCond> FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show,Product->groupedList;Product->show</displayCond>
                             <exclude>1</exclude>
                             <config>
                                 <type>check</type>
@@ -294,7 +298,7 @@
                     <settings.showGalleryPagination>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_gallery_pagination</label>
-                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show</displayCond>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show,Product->groupedList;Product->show</displayCond>
                             <exclude>1</exclude>
                             <config>
                                 <type>check</type>
@@ -319,6 +323,7 @@
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
                                     <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                 </OR>
                             </displayCond>
                             <config>
@@ -351,6 +356,7 @@
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
                                     <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                 </OR>
                             </displayCond>
                             <config>
@@ -385,7 +391,7 @@
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
                                     <AND>
-                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->groupedList;Product->show</numIndex>
                                         <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
                                     </AND>
                                 </OR>
@@ -412,7 +418,7 @@
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
                                     <AND>
-                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->groupedList;Product->show</numIndex>
                                         <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
                                     </AND>
                                 </OR>
@@ -450,6 +456,7 @@
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
                                     <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->comparePreView;Product->compareView</numIndex>
                                     <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->compareView;Product->comparePreView</numIndex>
+                                    <numIndex index="3">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                 </OR>
                             </displayCond>
                             <config>
@@ -466,6 +473,7 @@
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
                                     <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList</numIndex>
+                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                 </OR>
                             </displayCond>
                             <config>

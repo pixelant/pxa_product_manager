@@ -229,6 +229,13 @@ class Product extends AbstractEntity
     protected $magicCallMethodCache = [];
 
     /**
+     * attributesDescription
+     *
+     * @var \string
+     */
+    protected $attributesDescription;
+
+    /**
      * __construct
      *
      */
@@ -1191,5 +1198,26 @@ class Product extends AbstractEntity
 
             $this->attributes->attach($attribute);
         }
+    }
+
+    /**
+     * Get attributesDescription
+     *
+     * @return string
+     */
+    public function getAttributesDescription(): string
+    {
+        return $this->attributesDescription;
+    }
+
+    /**
+     * Set attributesDescription
+     *
+     * @param string $attributesDescription attributesDescription
+     * @return void
+     */
+    public function setAttributesDescription(string $attributesDescription)
+    {
+        $this->attributesDescription = $attributesDescription;
     }
 }

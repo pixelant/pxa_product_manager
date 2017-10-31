@@ -250,4 +250,46 @@ class CategoryTest extends UnitTestCase
             $this->fixture->getDescription()
         );
     }
+
+    /**
+     * @test
+     */
+    public function cardViewTemplateCanBeSet()
+    {
+        $cardViewTemplate = 'cardViewTemplate';
+        $this->fixture->setCardViewTemplate($cardViewTemplate);
+
+        self::assertEquals(
+            $cardViewTemplate,
+            $this->fixture->getCardViewTemplate()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function singleViewTemplateCanBeSet()
+    {
+        $singleViewTemplate = 'singleViewTemplate';
+        $this->fixture->setSingleViewTemplate($singleViewTemplate);
+
+        self::assertEquals(
+            $singleViewTemplate,
+            $this->fixture->getSingleViewTemplate()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function bannerImageCanBeSet()
+    {
+        $bannerImage = new \TYPO3\CMS\Extbase\Domain\Model\FileReference();
+        $this->fixture->setBannerImage($bannerImage);
+
+        self::assertSame(
+            $bannerImage,
+            $this->fixture->getBannerImage()
+        );
+    }
 }
