@@ -109,4 +109,18 @@ class FilterTest extends UnitTestCase
             $this->fixture->getAttribute()
         );
     }
+
+    /**
+     * @test
+     */
+    public function labelCanBeSet()
+    {
+        $label = 'label';
+        $this->fixture->setLabel($label);
+
+        self::assertEquals(
+            $label,
+            $this->fixture->getLabel()
+        );
+    }
 }

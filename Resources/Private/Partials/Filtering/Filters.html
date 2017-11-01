@@ -12,12 +12,15 @@
     <form class="row productmanager-filter_options" name="pxa-pm-filtering">
         <f:for each="{filters}" as="filter">
             <div class="filter-wrapper col-sm-3">
-                <h3>{filter.name}</h3>
+
+                <f:variable name="filterName"><f:if condition="{filter.label}" then="{filter.label}" else="{filter.name}"/></f:variable>
+
+                <h3>{filterName}</h3>
 
                 <select data-filter-type="{filter.type}"
                         data-attribute-uid="{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}"
                         data-identifier="{filter.type}-{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}"
-                        data-placeholder="{filter.name}"
+                        data-placeholder="{filterName}"
                         class="productmanager-filter list-group"
                         multiple
                         style="visibility: hidden;">

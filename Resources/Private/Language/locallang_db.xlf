@@ -159,6 +159,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_filter.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_filter.label">
+                <source>Label</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_filter.parent_category">
                 <source>Parent Category</source>
             </trans-unit>

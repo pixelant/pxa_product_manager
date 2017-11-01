@@ -28,7 +28,7 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, parent_category, attribute, starttime, endtime',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, parent_category, attribute, starttime, endtime',
     ],
     'types' => [
         '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang'],
@@ -36,7 +36,7 @@ return [
     ],
     'palettes' => [
         'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
-        'common' => ['showitem' => 'type, --linebreak--, name'],
+        'common' => ['showitem' => 'type, --linebreak--, name, --linebreak--, label'],
         'categories' => ['showitem' => 'parent_category'],
         'attributes' => ['showitem' => 'attribute'],
         'lang' => ['showitem' => 'starttime, --linebreak--, endtime']
@@ -150,6 +150,15 @@ return [
                 'size' => 30,
                 'eval' => 'trim,required'
             ],
+        ],
+        'label' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.label',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ]
         ],
         'parent_category' => [
             'exclude' => 1,
