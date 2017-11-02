@@ -407,8 +407,6 @@ class ProductController extends AbstractController
                 [$category->getUid()],
                 $excludeCategories
             );
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->settings['demandCategories'],'Debug',16);
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($excludeCategories,'Debug',16);
             $demand = $this->createDemandFromSettings($this->settings);
             $products = $this->productRepository->findDemanded($demand);
 
