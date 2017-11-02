@@ -92,6 +92,9 @@ class PageLayoutView
                         case 'Product->list':
                             $additionalInfo .= $this->getListModeInfo($flexFormSettings['settings']);
                             break;
+                        case 'Product->groupedList':
+                            $additionalInfo .= $this->getGroupedListModeInfo($flexFormSettings['settings']);
+                            break;
                         case 'Product->show':
                             $additionalInfo .= $this->getSingleViewModeInfo($flexFormSettings['settings']);
                             break;
@@ -260,6 +263,60 @@ class PageLayoutView
                     ($settings[$checkbox] ? 'yes' : 'no'))
             );
         }
+
+        return $info;
+    }
+
+    /**
+     * Get html preview for LazyList mode
+     *
+     * @param $settings
+     * @return string
+     */
+    public function getGroupedListModeInfo(array $settings): string
+    {
+        $info = '<br>';
+        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
+
+        $info .= $this->getProductOrderingInfo($settings);
+        $info .= self::$hrMarkup;
+
+        $info .= $this->getCategoriesInfo(
+            $this->translate('flexform.allowed_categories'),
+            $settings['category'] ?? ''
+        );
+        $info .= $this->getCategoriesInfo(
+            $this->translate('flexform.exclude_categories'),
+            $settings['excludeCategories'] ?? ''
+        );
+
+        $info .= self::$hrMarkup;
+        $checkboxes = [
+            'showLatestVisitedProducts',
+            'enableMessageInsteadOfPage404',
+            'showGalleryPagination'
+        ];
+
+        foreach ($checkboxes as $checkbox) {
+            if ($checkbox === 'hr') {
+                $info .= self::$hrMarkup;
+                continue;
+            }
+            $checkboxLowerCase = GeneralUtility::camelCaseToLowerCaseUnderscored($checkbox);
+
+            $info .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->translate('flexform.' . $checkboxLowerCase),
+                $this->translate('be.extension_info.checkbox_' .
+                    ($settings[$checkbox] ? 'yes' : 'no'))
+            );
+        }
+
+        $info .= self::$hrMarkup;
+        $info .= $this->getIconListOptionsInfo($settings, 'compareList');
+        $info .= $this->getIconListOptionsInfo($settings, 'wishList');
+
+        $info .= $this->getCategoriesOrderingsInfo($settings);
 
         return $info;
     }

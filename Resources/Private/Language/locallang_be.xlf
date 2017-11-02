@@ -118,6 +118,9 @@
             <trans-unit id="flexform.mode.product_lazy_list">
                 <source>Lazy list</source>
             </trans-unit>
+            <trans-unit id="flexform.mode.product_grouped_list">
+                <source>Grouped by categories</source>
+            </trans-unit>
             <trans-unit id="flexform.allowed_categories">
                 <source>Allowed product categories</source>
             </trans-unit>

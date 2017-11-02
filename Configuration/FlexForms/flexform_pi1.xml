@@ -390,8 +390,9 @@
                             <displayCond>
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                     <AND>
-                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->groupedList;Product->show</numIndex>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
                                         <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
                                     </AND>
                                 </OR>
@@ -417,8 +418,9 @@
                             <displayCond>
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                     <AND>
-                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->groupedList;Product->show</numIndex>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
                                         <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
                                     </AND>
                                 </OR>
