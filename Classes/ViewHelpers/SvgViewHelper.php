@@ -64,6 +64,7 @@ class SvgViewHelper extends AbstractViewHelper
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
     ) {
+        $arguments['source'] = ltrim($arguments['source'], '/');
         $sourceAbs = GeneralUtility::getFileAbsFileName($arguments['source']);
 
         if (!file_exists($sourceAbs)) {

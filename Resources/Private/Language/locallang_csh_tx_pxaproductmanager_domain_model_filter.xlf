@@ -15,6 +15,9 @@
 			<trans-unit id="attribute.description">
 				<source>Filter attribute (Only selectbox)</source>
 			</trans-unit>
+			<trans-unit id="label.description">
+				<source>Default behaviour is to use value from label if filled in, else name, when filter is rendered frontend.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

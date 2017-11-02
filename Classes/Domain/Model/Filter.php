@@ -74,6 +74,13 @@ class Filter extends AbstractEntity
     protected $attribute;
 
     /**
+     * label
+     *
+     * @var \string
+     */
+    protected $label = '';
+
+    /**
      * Returns the name
      *
      * @return string $name
@@ -155,5 +162,26 @@ class Filter extends AbstractEntity
     public function setAttribute(\Pixelant\PxaProductManager\Domain\Model\Attribute $attribute)
     {
         $this->attribute = $attribute;
+    }
+
+    /**
+     * Returns the label
+     *
+     * @return \string $label
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Sets the label
+     *
+     * @param \string $label
+     * @return void
+     */
+    public function setLabel(string $label)
+    {
+        $this->label = $label;
     }
 }

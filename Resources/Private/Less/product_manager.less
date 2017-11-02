@@ -470,6 +470,45 @@
         text-align: center;
         background-color: rgba(255,255,255,.5);
     }
+
+    .products-list-view-wrapper {
+        .group-list-banner__wrp {
+            position: relative;
+
+            .group-list-banner__text {
+                position: absolute;
+                left: 0;
+                text-align: left;
+                bottom: 0;
+                padding: 5px 30px;
+                color: #fff;
+                background-color: fade(@main-color, 20%);
+
+                h1,
+                h2,
+                h3,
+                h4 {
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    .products-grouped-item {
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        .subcategory-description {
+            background-color: fade(@main-color, 20%);
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+    }
+
+    .selection {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 }
 
 // Hide empty select options

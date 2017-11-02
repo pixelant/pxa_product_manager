@@ -24,6 +24,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
   meta_description text,
   fal_links int(11) unsigned DEFAULT '0',
   serialized_attributes_values blob,
+  attributes_description text NOT NULL,
 
   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
   crdate int(11) unsigned DEFAULT '0' NOT NULL,
@@ -304,7 +305,10 @@ CREATE TABLE sys_category (
   meta_description text,
   pxapm_subcategories int(11) unsigned DEFAULT '0',
   pxapm_attributes_sets int(11) unsigned DEFAULT '0' NOT NULL,
-  pxapm_description text NOT NULL
+  pxapm_description text NOT NULL,
+  pxapm_banner_image int(11) unsigned DEFAULT '0',
+  pxapm_card_view_template varchar(255) DEFAULT '' NOT NULL,
+  pxapm_single_view_template varchar(255) DEFAULT '' NOT NULL
 );
 
 #
@@ -352,6 +356,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_filter (
 
   type int(11) DEFAULT '0' NOT NULL,
   name varchar(255) DEFAULT '' NOT NULL,
+  label varchar(255) DEFAULT '' NOT NULL,
   parent_category int(11) unsigned DEFAULT '0',
   attribute int(11) unsigned DEFAULT '0',
 

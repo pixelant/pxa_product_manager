@@ -33,6 +33,13 @@
             </f:else>
         </f:if>
     </table>
+
+    <f:if condition="{product.attributesDescription}">
+        <div class="attributes-description">
+            <f:format.html>{product.attributesDescription}</f:format.html>
+        </div>
+    </f:if>
+
 </f:if>
 
 <f:section name="attributes">

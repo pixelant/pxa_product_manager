@@ -92,6 +92,24 @@ class Category extends CategoryExtbase
     protected $attributeSets;
 
     /**
+     * Banner Image
+     *
+     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     * @lazy
+     */
+    protected $bannerImage;
+
+    /**
+     * @var \string
+     */
+    protected $cardViewTemplate = '';
+
+    /**
+     * @var \string
+     */
+    protected $singleViewTemplate = '';
+
+    /**
      * __construct
      */
     public function __construct()
@@ -303,5 +321,68 @@ class Category extends CategoryExtbase
     public function removeAttributeSet(\Pixelant\PxaProductManager\Domain\Model\AttributeSet $attributeSet)
     {
         $this->attributeSets->detach($attributeSet);
+    }
+
+    /**
+     * getBannerImage
+     *
+     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     */
+    public function getBannerImage()
+    {
+        return $this->bannerImage;
+    }
+
+    /**
+     * setBannerImage
+     *
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $bannerImage
+     * @return void
+     */
+    public function setBannerImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $bannerImage)
+    {
+        $this->bannerImage = $bannerImage;
+    }
+
+    /**
+     * Get CardViewTemplate
+     *
+     * @return \string
+     */
+    public function getCardViewTemplate(): string
+    {
+        return $this->cardViewTemplate;
+    }
+
+    /**
+     * Set CardViewTemplate
+     *
+     * @param \string $cardViewTemplate CardViewTemplate
+     * @return void
+     */
+    public function setCardViewTemplate(string $cardViewTemplate)
+    {
+        $this->cardViewTemplate = $cardViewTemplate;
+    }
+
+    /**
+     * Get SingleViewTemplate
+     *
+     * @return \string
+     */
+    public function getSingleViewTemplate(): string
+    {
+        return $this->singleViewTemplate;
+    }
+
+    /**
+     * Set SingleViewTemplate
+     *
+     * @param \string $singleViewTemplate SingleViewTemplate
+     * @return void
+     */
+    public function setSingleViewTemplate(string $singleViewTemplate)
+    {
+        $this->singleViewTemplate = $singleViewTemplate;
     }
 }
