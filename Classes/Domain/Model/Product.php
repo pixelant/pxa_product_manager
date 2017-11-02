@@ -1069,6 +1069,27 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Get attributesDescription
+     *
+     * @return string
+     */
+    public function getAttributesDescription(): string
+    {
+        return $this->attributesDescription;
+    }
+
+    /**
+     * Set attributesDescription
+     *
+     * @param string $attributesDescription attributesDescription
+     * @return void
+     */
+    public function setAttributesDescription(string $attributesDescription)
+    {
+        $this->attributesDescription = $attributesDescription;
+    }
+
+    /**
      * Get image for different views
      *
      * @param string $propertyName
@@ -1198,26 +1219,5 @@ class Product extends AbstractEntity
 
             $this->attributes->attach($attribute);
         }
-    }
-
-    /**
-     * Get attributesDescription
-     *
-     * @return string
-     */
-    public function getAttributesDescription(): string
-    {
-        return $this->attributesDescription;
-    }
-
-    /**
-     * Set attributesDescription
-     *
-     * @param string $attributesDescription attributesDescription
-     * @return void
-     */
-    public function setAttributesDescription(string $attributesDescription)
-    {
-        $this->attributesDescription = $attributesDescription;
     }
 }

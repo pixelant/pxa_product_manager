@@ -53,9 +53,8 @@
         <f:comment><!-- grouped list (subcategories + products) --></f:comment>
         <f:if condition="{groupedList}">
             <f:for each="{groupedList}" as="groupedItem" iteration="groupIteration">
-                
-                <f:variable name="productGroupedItemHeadClass">{f:if(condition: groupIteration.isOdd, then: ' products-grouped-item-odd', else: ' products-grouped-item-even')}</f:variable>
-                <div class="row products-grouped-item{productGroupedItemHeadClass}">
+
+                <div class="row products-grouped-item{f:if(condition: groupIteration.isOdd, then: ' products-grouped-item-odd', else: ' products-grouped-item-even')}">
                     <div class="subcategory-description col-md-12">
                         <div class="row">
                             <div class="col-md-4">
@@ -86,15 +85,15 @@
                                 <div class="col-md-12">
                                     <f:comment><!-- View mode --></f:comment>
                                     <ul class="nav nav-pills pull-right" role="tablist">
-                                        <li role="presentation" class="active">
-                                            <a href="#product-view-grid-{groupedItem.category.uid}" class="active" aria-controls="" role="tab" data-toggle="tab">
+                                        <li class="active">
+                                            <a href="#product-view-grid-{groupedItem.category.uid}" class="active" role="tab" data-toggle="tab">
                                                 <ppm:svg source="EXT:pxa_product_manager/Resources/Public/Icons/Svg/grid.svg" />
                                             </a>
                                         </li>
 
                                         <f:if condition="{groupedItem.categoryAttributes} >= 2">
-                                            <li role="presentation">
-                                                <a href="#product-view-list-{groupedItem.category.uid}" class="" aria-controls="profile" role="tab" data-toggle="tab">
+                                            <li>
+                                                <a href="#product-view-list-{groupedItem.category.uid}" role="tab" data-toggle="tab">
                                                     <ppm:svg source="EXT:pxa_product_manager/Resources/Public/Icons/Svg/list.svg" />
                                                 </a>
                                             </li>
@@ -119,9 +118,21 @@
                             <f:if condition="{groupedItem.categoryAttributes} >= 2">
                                 <div role="tabpanel" class="tab-pane" id="product-view-list-{groupedItem.category.uid}">
                                     <div class="items-list">
-                                        <f:for each="{groupedItem.products}" as="groupProduct" iteration="productIteration">
-                                            <f:render section="row" arguments="{product: groupProduct, iteration: productIteration}" />
-                                        </f:for>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered">
+                                                <tr>
+                                                    <th><f:translate key="fe.product" /></th>
+                                                    <f:for each="{groupedItem.products.0.attributes}" as="attribute">
+                                                        <th><f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/></th>
+                                                    </f:for>
+                                                    <th><f:translate key="fe.pdf" /></th>
+                                                </tr>
+
+                                                <f:for each="{groupedItem.products}" as="groupProduct" iteration="productIteration">
+                                                    <f:render section="row" arguments="{product: groupProduct, iteration: productIteration}" />
+                                                </f:for>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </f:if>
@@ -130,8 +141,6 @@
                 </div>
             </f:for>
         </f:if>
-
-        </div>
     </div>
 </f:section>
 
@@ -142,20 +151,6 @@
 </f:section>
 
 <f:section name="row">
-    <f:if condition="{iteration.isFirst}">
-        <f:then>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <tr>
-                        <th><f:translate key="fe.product" /></th>
-                        <f:for each="{product.attributes}" as="attribute">
-                            <th><f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/></th>
-                        </f:for>
-                        <th><f:translate key="fe.pdf" /></th>
-                    </tr>
-        </f:then>
-    </f:if>
-
     <tr>
         <td>
             <f:if condition="{product.disableSingleView}">
@@ -173,10 +168,9 @@
             <td><f:render partial="Product/Attribute/Type{attribute.type}" arguments="{attribute: attribute}"/></td>
         </f:for>
         <td>
-            <f:variable name="pdfFound">0</f:variable>
-            <f:if condition="{product.falLinks}">
-                <f:for each="{product.falLinks}" as="file">
-                    <f:if condition="{file.originalResource.originalFile.extension} == 'pdf' && !{pdfFound}">
+            <f:alias map="{pdfFiles: '{ppm:product.getFalFilesByExtension(product: product, extension: \'pdf\', limit: 1)}'}">
+                <f:if condition="{pdfFiles}">
+                    <f:alias map="{file: pdfFiles.0}">
                         <f:link.typolink parameter="{file.originalResource.publicUrl} _blank">
                             <f:if condition="{f:uri.image(src: 'EXT:pxa_product_manager/Resources/Public/Icons/FileIcons/{file.originalResource.properties.extension}.svg')}">
                                 <f:then>
@@ -187,17 +181,11 @@
                                 </f:else>
                             </f:if>
                         </f:link.typolink>
-                        <f:variable name="pdfFound">1</f:variable>
-                    </f:if>
-                </f:for>
-            </f:if>
+                    </f:alias>
+                </f:if>
+            </f:alias>
         </td>
     </tr>
-    
-    <f:if condition="{iteration.isLast}">
-            </table>
-        </div>
-    </f:if>
 </f:section>
 
 </html>

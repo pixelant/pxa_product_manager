@@ -241,6 +241,9 @@
             <trans-unit id="sys_category.pxapm_single_view_template">
                 <source>Single View Template</source>
             </trans-unit>
+            <trans-unit id="sys_category.default">
+                <source>Default</source>
+            </trans-unit>
             <!--sys_category TCA:END-->
         </body>
     </file>

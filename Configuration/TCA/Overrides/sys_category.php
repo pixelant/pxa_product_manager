@@ -215,7 +215,7 @@ call_user_func(function () {
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['Default card', 'Card'],
+                    [$ll . 'sys_category.default', ''],
                 ],
                 'size' => 1,
                 'maxitems' => 1,
@@ -230,7 +230,7 @@ call_user_func(function () {
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['Default', '']
+                    [$ll . 'sys_category.default', '']
                 ],
                 'size' => 1,
                 'maxitems' => 1,
