@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaProductManager\Tests\Unit\ViewHelpers\Product;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -62,7 +63,8 @@ class GetFalFilesByExtensionViewHelperTest extends UnitTestCase
             'extension' => 'pdf'
         ];
         $mockedRenderingContextInterface = $this->createMock(RenderingContextInterface::class);
-        $closure = function () {};
+        $closure = function () {
+        };
 
         $files = GetFalFilesByExtensionViewHelper::renderStatic(
             $arguments,
@@ -89,7 +91,8 @@ class GetFalFilesByExtensionViewHelperTest extends UnitTestCase
             'limit' => $limit
         ];
         $mockedRenderingContextInterface = $this->createMock(RenderingContextInterface::class);
-        $closure = function () {};
+        $closure = function () {
+        };
 
         $files = GetFalFilesByExtensionViewHelper::renderStatic(
             $arguments,
@@ -114,7 +117,8 @@ class GetFalFilesByExtensionViewHelperTest extends UnitTestCase
             'extension' => 'docx'
         ];
         $mockedRenderingContextInterface = $this->createMock(RenderingContextInterface::class);
-        $closure = function () {};
+        $closure = function () {
+        };
 
         $files = GetFalFilesByExtensionViewHelper::renderStatic(
             $arguments,
