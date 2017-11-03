@@ -209,6 +209,19 @@
 					}
 
 				}
+				// min-max box type
+				if (type == 3) {
+					var currentValue = $this.val(),
+						// string, two dropdowns so add data-range to key
+						key = type + '-' + uid + '-' + $this.data('range');
+					if (currentValue.length > 0) {
+						filteringData[key] = {
+							attributeUid: uid,
+							type: type,
+							value: [currentValue, $this.data('range')]
+						}
+					}
+				}
 			});
 
 			return filteringData;

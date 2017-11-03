@@ -94,6 +94,12 @@
             <trans-unit id="fe.product">
                 <source>Product</source>
             </trans-unit>
+            <trans-unit id="fe.minmax.from">
+                <source>From</source>
+            </trans-unit>
+            <trans-unit id="fe.minmax.to">
+                <source>To</source>
+            </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>

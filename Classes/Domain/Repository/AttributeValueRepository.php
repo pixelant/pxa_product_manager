@@ -28,6 +28,8 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 
 /**
  * Class AttributeValueRepository
@@ -75,5 +77,53 @@ class AttributeValueRepository extends Repository
                 $this->createInRowQuery($query, 'value', $value)
             ])
         )->execute($rawResult);
+    }
+
+    /**
+     * Find attribute values by their attribute and option values (higher or lower)
+     *
+     * @param $attribute
+     * @param int $minValue
+     * @param int $maxValue
+     * @param bool $rawResult
+     * @return QueryResultInterface|array
+     */
+    public function findAttributeValuesByAttributeAndMinMaxOptionValues($attribute, $minValue = null, $maxValue = null, $rawResult = false)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
+
+        $constraints[] = $queryBuilder->expr()->eq('tx_pxaproductmanager_domain_model_attributevalue.attribute', $queryBuilder->createNamedParameter($attribute, \PDO::PARAM_INT));
+
+        if (!empty($minValue)) {
+            $constraints[] = $queryBuilder->expr()->gte(
+                'tx_pxaproductmanager_domain_model_option.value',
+                $queryBuilder->createNamedParameter($minValue, \PDO::PARAM_INT)
+            );
+        }
+
+        if (!empty($maxValue)) {
+            $constraints[] = $queryBuilder->expr()->lte(
+                'tx_pxaproductmanager_domain_model_option.value',
+                $queryBuilder->createNamedParameter($maxValue, \PDO::PARAM_INT)
+            );
+        }
+
+        $result = $queryBuilder
+            ->select('tx_pxaproductmanager_domain_model_attributevalue.uid')
+            ->from('tx_pxaproductmanager_domain_model_attributevalue')
+            ->join(
+                'tx_pxaproductmanager_domain_model_attributevalue',
+                'tx_pxaproductmanager_domain_model_option',
+                'tx_pxaproductmanager_domain_model_option',
+                $queryBuilder->expr()->in(
+                    'tx_pxaproductmanager_domain_model_option.uid',
+                    $queryBuilder->quoteIdentifier('tx_pxaproductmanager_domain_model_attributevalue.value')
+                )
+            )
+            ->where(...$constraints)
+            ->groupBy('tx_pxaproductmanager_domain_model_attributevalue.uid')
+            ->execute($rawResult)->fetchAll();
+
+        return $result;
     }
 }

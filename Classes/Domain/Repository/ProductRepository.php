@@ -155,7 +155,6 @@ class ProductRepository extends AbstractDemandRepository
             }
         }
 
-
         if (!empty($constraints)) {
             $query->matching(
                 $this->createConstraintFromConstraintsArray(
@@ -189,6 +188,7 @@ class ProductRepository extends AbstractDemandRepository
     protected function createFilteringConstraints(QueryInterface $query, array $filters, string $conjunction = 'or')
     {
         $constraints = [];
+        $ranges = [];
 
         foreach ($filters as $filter) {
             if (!empty($filter['value'])) {
@@ -231,8 +231,48 @@ class ProductRepository extends AbstractDemandRepository
                             'or'
                         );
                         break;
+                    case Filter::TYPE_ATTRIBUTES_MINMAX:
+                        // need to just prebuild array since minmax attribute filter can consist of two inputs
+                        list($value, $rangeType) = $filter['value'];
+                        $rangeKey = (int)$filter['attributeUid'];
+
+                        $ranges[$rangeKey][$rangeType] = $value;
+
+                        break;
                     default:
                         // only two are supported for now
+                }
+            }
+        }
+
+        // go through ranges after all filters have been processed
+        // since they can have value from two filter inputs
+        if (!empty($ranges) && count($ranges) > 0) {
+            foreach ($ranges as $attributeId => $range) {
+                $rangeConstraints = [];
+
+                $attributeValues = $this->attributeValueRepository->findAttributeValuesByAttributeAndMinMaxOptionValues(
+                    (int)$attributeId,
+                    isset($range['min']) ? $range['min'] : null,
+                    isset($range['max']) ? $range['max'] : null,
+                    true
+                );
+
+                if (empty($attributeValues)) {
+                    // force no result for filter constraint if no value was found but filter was set on FE
+                    $rangeConstraints[] = $query->contains('attributeValues', 0);
+                } else {
+                    foreach ($attributeValues as $attributeValue) {
+                        $rangeConstraints[] = $query->contains('attributeValues', $attributeValue['uid']);
+                    }
+                }
+
+                if (!empty($rangeConstraints)) {
+                    $constraints[] = $this->createConstraintFromConstraintsArray(
+                        $query,
+                        $rangeConstraints,
+                        'or'
+                    );
                 }
             }
         }

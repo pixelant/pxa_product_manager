@@ -32,7 +32,8 @@ return [
     ],
     'types' => [
         '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang'],
-        '2' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang']
+        '2' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang'],
+        '3' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang']
     ],
     'palettes' => [
         'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
@@ -135,7 +136,8 @@ return [
                 'renderType' => 'selectSingle',
                 'items' => [
                     ['Categories', 1],
-                    ['Attribute', 2]
+                    ['Attribute', 2],
+                    ['Attribute min-max (if applicable, require only numeric attribute values)', 3],
                 ],
                 'size' => 1,
                 'maxitems' => 1,
