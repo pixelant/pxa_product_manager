@@ -199,6 +199,7 @@ class AbstractController extends ActionController
     {
         $demandNoLimit = clone $demand;
         $demandNoLimit->setLimit(0);
+        $demandNoLimit->setOffset(0);
         $productsNoLimit = $this->productRepository->findDemandedRaw($demandNoLimit);
 
         list($availableOptions, $availableCategories) = $this->getAvailableFilteringOptionsForProducts(
