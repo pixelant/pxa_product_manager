@@ -247,15 +247,14 @@ class ProductRepository extends AbstractDemandRepository
 
         // go through ranges after all filters have been processed
         // since they can have value from two filter inputs
-        if (!empty($ranges) && count($ranges) > 0) {
+        if (!empty($ranges)) {
             foreach ($ranges as $attributeId => $range) {
                 $rangeConstraints = [];
 
                 $attributeValues = $this->attributeValueRepository->findAttributeValuesByAttributeAndMinMaxOptionValues(
                     (int)$attributeId,
-                    isset($range['min']) ? $range['min'] : null,
-                    isset($range['max']) ? $range['max'] : null,
-                    true
+                    isset($range['min']) ? (int)$range['min'] : null,
+                    isset($range['max']) ? (int)$range['max'] : null
                 );
 
                 if (empty($attributeValues)) {

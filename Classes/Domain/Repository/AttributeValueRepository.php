@@ -25,6 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -85,23 +86,31 @@ class AttributeValueRepository extends Repository
      * @param $attribute
      * @param int $minValue
      * @param int $maxValue
-     * @param bool $rawResult
      * @return QueryResultInterface|array
      */
-    public function findAttributeValuesByAttributeAndMinMaxOptionValues($attribute, $minValue = null, $maxValue = null, $rawResult = false)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
+    public function findAttributeValuesByAttributeAndMinMaxOptionValues(
+        int $attribute,
+        int $minValue = null,
+        int $maxValue = null
+    ) {
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            'tx_pxaproductmanager_domain_model_attributevalue'
+        );
 
-        $constraints[] = $queryBuilder->expr()->eq('tx_pxaproductmanager_domain_model_attributevalue.attribute', $queryBuilder->createNamedParameter($attribute, \PDO::PARAM_INT));
+        $constraints[] = $queryBuilder->expr()->eq(
+            'tx_pxaproductmanager_domain_model_attributevalue.attribute',
+            $queryBuilder->createNamedParameter($attribute, \PDO::PARAM_INT)
+        );
 
-        if (!empty($minValue)) {
+        if ($minValue !== null) {
             $constraints[] = $queryBuilder->expr()->gte(
                 'tx_pxaproductmanager_domain_model_option.value',
                 $queryBuilder->createNamedParameter($minValue, \PDO::PARAM_INT)
             );
         }
 
-        if (!empty($maxValue)) {
+        if ($maxValue !== null) {
             $constraints[] = $queryBuilder->expr()->lte(
                 'tx_pxaproductmanager_domain_model_option.value',
                 $queryBuilder->createNamedParameter($maxValue, \PDO::PARAM_INT)
@@ -122,7 +131,8 @@ class AttributeValueRepository extends Repository
             )
             ->where(...$constraints)
             ->groupBy('tx_pxaproductmanager_domain_model_attributevalue.uid')
-            ->execute($rawResult)->fetchAll();
+            ->execute()
+            ->fetchAll();
 
         return $result;
     }

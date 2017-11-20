@@ -135,9 +135,9 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['Categories', 1],
-                    ['Attribute', 2],
-                    ['Attribute min-max (if applicable, require only numeric attribute values)', 3],
+                    ['Categories', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_CATEGORIES],
+                    ['Attribute', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_ATTRIBUTES],
+                    ['Attribute min-max (if applicable, require only numeric attribute values)', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_ATTRIBUTES_MINMAX],
                 ],
                 'size' => 1,
                 'maxitems' => 1,
