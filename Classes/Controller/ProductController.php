@@ -457,7 +457,7 @@ class ProductController extends AbstractController
                 }
 
                 // remove dublicate categories (added to groupedList)
-                if (count($duplicateCategories) > 0) {
+                if (!empty($duplicateCategories)) {
                     foreach ($duplicateCategories as $index) {
                         unset($subCategories[$index]);
                     }
@@ -466,7 +466,7 @@ class ProductController extends AbstractController
 
             $this->view->assignMultiple([
                 'category' => $category,
-                'products' => $products,
+                'products' => $products ?? [],
                 'subCategories' => $subCategories,
             ]);
         }
