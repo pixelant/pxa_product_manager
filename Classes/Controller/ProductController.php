@@ -403,12 +403,13 @@ class ProductController extends AbstractController
         );
 
         if ($category !== null) {
-            $this->settings['demandCategories'] = $this->getDemandCategories(
-                [$category->getUid()],
-                $excludeCategories
-            );
-            $demand = $this->createDemandFromSettings($this->settings);
-            $products = $this->productRepository->findDemanded($demand);
+            // if showCategoriesWithProducts, display products in just this category, not recursive
+            if ($this->settings['showCategoriesWithProducts']) {
+                $this->settings['demandCategories'] = [$category->getUid()];
+
+                $demand = $this->createDemandFromSettings($this->settings);
+                $products = $this->productRepository->findDemanded($demand);
+            }
 
             /** @var QueryResultInterface $subCategories */
             $subCategories = $this->categoryRepository->findByParent(
@@ -456,7 +457,7 @@ class ProductController extends AbstractController
                 }
 
                 // remove dublicate categories (added to groupedList)
-                if (count($duplicateCategories) > 0) {
+                if (!empty($duplicateCategories)) {
                     foreach ($duplicateCategories as $index) {
                         unset($subCategories[$index]);
                     }
@@ -465,7 +466,7 @@ class ProductController extends AbstractController
 
             $this->view->assignMultiple([
                 'category' => $category,
-                'products' => $products,
+                'products' => $products ?? [],
                 'subCategories' => $subCategories,
             ]);
         }
