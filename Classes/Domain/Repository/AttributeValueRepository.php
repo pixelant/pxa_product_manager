@@ -105,14 +105,14 @@ class AttributeValueRepository extends Repository
 
         if ($minValue !== null) {
             $constraints[] = $queryBuilder->expr()->gte(
-                'tx_pxaproductmanager_domain_model_option.value',
+                'option.value',
                 $queryBuilder->createNamedParameter($minValue, \PDO::PARAM_INT)
             );
         }
 
         if ($maxValue !== null) {
             $constraints[] = $queryBuilder->expr()->lte(
-                'tx_pxaproductmanager_domain_model_option.value',
+                'option.value',
                 $queryBuilder->createNamedParameter($maxValue, \PDO::PARAM_INT)
             );
         }
@@ -123,10 +123,15 @@ class AttributeValueRepository extends Repository
             ->join(
                 'tx_pxaproductmanager_domain_model_attributevalue',
                 'tx_pxaproductmanager_domain_model_option',
-                'tx_pxaproductmanager_domain_model_option',
-                $queryBuilder->expr()->in(
-                    'tx_pxaproductmanager_domain_model_option.uid',
-                    $queryBuilder->quoteIdentifier('tx_pxaproductmanager_domain_model_attributevalue.value')
+                'option',
+                // ugly fix for "IN". but using just "IN" doesn't work
+                /**
+                 * @TODO find nice way for this query
+                 */
+                sprintf(
+                    'CONCAT(\',\', %s, \',\') LIKE CONCAT(\'%%,\', %s, \',%%\')',
+                    $queryBuilder->quoteIdentifier('tx_pxaproductmanager_domain_model_attributevalue.value'),
+                    $queryBuilder->quoteIdentifier('option.uid')
                 )
             )
             ->where(...$constraints)

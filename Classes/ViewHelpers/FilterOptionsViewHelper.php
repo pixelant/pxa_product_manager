@@ -83,7 +83,8 @@ class FilterOptionsViewHelper extends AbstractViewHelper
                 foreach ($filter->getAttribute()->getOptions() as $attributeOption) {
                     $options[] = [
                         'title' => $attributeOption->getValue(),
-                        'value' => (int)$attributeOption->getValue()
+                        'value' => (int)$attributeOption->getValue(),
+                        'uid' => $attributeOption->getUid()
                     ];
                 }
                 break;
