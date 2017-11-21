@@ -45,6 +45,7 @@ class LinkViewHelper extends PageViewHelper
         $this->registerArgument('product', 'mixed', 'Product to link', false, null);
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * @param int|NULL $pageUid target page. See TypoLink destination
      * @param array $additionalParams query parameters to be attached to the resulting URI
@@ -58,7 +59,9 @@ class LinkViewHelper extends PageViewHelper
      * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
      * @param string $addQueryStringMethod Set which parameters will be kept. Only active if $addQueryString = TRUE
      * @return string Rendered page URI
+     *
      */
+    // @codingStandardsIgnoreEnd
     public function render(
         $pageUid = null,
         array $additionalParams = [],

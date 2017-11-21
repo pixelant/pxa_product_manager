@@ -97,6 +97,7 @@ class AttributeSet extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->attributes->detach($attributeToRemove);
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Returns the attributes
      *
@@ -117,6 +118,7 @@ class AttributeSet extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->attributes = $attributes;
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * Returns the name
