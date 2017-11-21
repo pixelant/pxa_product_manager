@@ -25,9 +25,12 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 
 /**
  * Class AttributeValueRepository
@@ -75,5 +78,67 @@ class AttributeValueRepository extends Repository
                 $this->createInRowQuery($query, 'value', $value)
             ])
         )->execute($rawResult);
+    }
+
+    /**
+     * Find attribute values by their attribute and option values (higher or lower)
+     *
+     * @param $attribute
+     * @param int $minValue
+     * @param int $maxValue
+     * @return QueryResultInterface|array
+     */
+    public function findAttributeValuesByAttributeAndMinMaxOptionValues(
+        int $attribute,
+        int $minValue = null,
+        int $maxValue = null
+    ) {
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            'tx_pxaproductmanager_domain_model_attributevalue'
+        );
+
+        $constraints[] = $queryBuilder->expr()->eq(
+            'tx_pxaproductmanager_domain_model_attributevalue.attribute',
+            $queryBuilder->createNamedParameter($attribute, \PDO::PARAM_INT)
+        );
+
+        if ($minValue !== null) {
+            $constraints[] = $queryBuilder->expr()->gte(
+                'option.value',
+                $queryBuilder->createNamedParameter($minValue, \PDO::PARAM_INT)
+            );
+        }
+
+        if ($maxValue !== null) {
+            $constraints[] = $queryBuilder->expr()->lte(
+                'option.value',
+                $queryBuilder->createNamedParameter($maxValue, \PDO::PARAM_INT)
+            );
+        }
+
+        $result = $queryBuilder
+            ->select('tx_pxaproductmanager_domain_model_attributevalue.uid')
+            ->from('tx_pxaproductmanager_domain_model_attributevalue')
+            ->join(
+                'tx_pxaproductmanager_domain_model_attributevalue',
+                'tx_pxaproductmanager_domain_model_option',
+                'option',
+                // ugly fix for "IN". but using just "IN" doesn't work
+                /**
+                 * @TODO find nice way for this query
+                 */
+                sprintf(
+                    'CONCAT(\',\', %s, \',\') LIKE CONCAT(\'%%,\', %s, \',%%\')',
+                    $queryBuilder->quoteIdentifier('tx_pxaproductmanager_domain_model_attributevalue.value'),
+                    $queryBuilder->quoteIdentifier('option.uid')
+                )
+            )
+            ->where(...$constraints)
+            ->groupBy('tx_pxaproductmanager_domain_model_attributevalue.uid')
+            ->execute()
+            ->fetchAll();
+
+        return $result;
     }
 }

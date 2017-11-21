@@ -275,7 +275,7 @@ class Category extends CategoryExtbase
      * @param boolean $deleted
      * @return void
      */
-    public function setDeleted(string $deleted)
+    public function setDeleted(bool $deleted)
     {
         $this->deleted = $deleted;
     }
@@ -290,12 +290,14 @@ class Category extends CategoryExtbase
         return $this->attributeSets;
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Sets the Attributes
      *
      * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet> $attributeSets
      * @return void
      */
+    // @codingStandardsIgnoreEnd
     public function setAttributeSets(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $attributeSets)
     {
         $this->attributeSets = $attributeSets;
@@ -315,7 +317,7 @@ class Category extends CategoryExtbase
     /**
      * Removes a AttributeSet
      *
-     * @param \Pixelant\PxaProductManager\Domain\Model\AttributeSet $attribute
+     * @param \Pixelant\PxaProductManager\Domain\Model\AttributeSet $attributeSet
      * @return void
      */
     public function removeAttributeSet(\Pixelant\PxaProductManager\Domain\Model\AttributeSet $attributeSet)

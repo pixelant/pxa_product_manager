@@ -78,6 +78,16 @@ class FilterOptionsViewHelper extends AbstractViewHelper
                     ];
                 }
                 break;
+            case Filter::TYPE_ATTRIBUTES_MINMAX:
+                /** @var Option $attributeOption */
+                foreach ($filter->getAttribute()->getOptions() as $attributeOption) {
+                    $options[] = [
+                        'title' => $attributeOption->getValue(),
+                        'value' => (int)$attributeOption->getValue(),
+                        'uid' => $attributeOption->getUid()
+                    ];
+                }
+                break;
             default:
                 break;
         }

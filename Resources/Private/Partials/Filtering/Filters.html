@@ -15,17 +15,7 @@
                 <f:alias map="{filterName: '{f:if(condition: filter.label, then: filter.label, else: filter.name)}'}">
                     <h3>{filterName}</h3>
 
-                    <select data-filter-type="{filter.type}"
-                            data-attribute-uid="{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}"
-                            data-identifier="{filter.type}-{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}"
-                            data-placeholder="{filterName}"
-                            class="productmanager-filter list-group"
-                            multiple
-                            style="visibility: hidden;">
-                        <f:for each="{ppm:filterOptions(filter: filter)}" as="option">
-                            <option value="{option.value}">{option.title}</option>
-                        </f:for>
-                    </select>
+                    <f:render partial="Filtering/FilterType{filter.type}" arguments="{filter: filter, filterName: filterName}" />
                 </f:alias>
             </div>
         </f:for>

@@ -46,6 +46,11 @@ class Filter extends AbstractEntity
     const TYPE_ATTRIBUTES = 2;
 
     /**
+     * attributes type minmax
+     */
+    const TYPE_ATTRIBUTES_MINMAX = 3;
+
+    /**
      * type
      *
      * @var int

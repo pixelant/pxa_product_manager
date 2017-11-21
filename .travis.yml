@@ -32,7 +32,8 @@ script:
   - >
     echo;
     echo "Running PHP codesniffer";
-    .Build/bin/phpcs -n --standard=PSR2 --extensions=php --ignore=*./.Build/* .
+    .Build/bin/phpcs -n --standard=PSR2 --extensions=php --ignore=*./.Build/* --ignore=*./Tests/* --ignore=*./Classes/* .;
+    .Build/bin/phpcs --standard=PSR2 --extensions=php --ignore=*./.Build/* --ignore=*./Tests/* --ignore=*./Configuration/* .;
 
   - >
     echo;

@@ -189,7 +189,9 @@
 		 * @private
 		 */
 		var buildFilteringData = function () {
-			var filteringData = {};
+			var filteringData = {},
+				currentValue = '',
+				key = '';
 
 			$selectBoxes.each(function () {
 				var $this = $(this),
@@ -197,10 +199,10 @@
 					uid = parseInt($this.data('attribute-uid'));
 				// select box type
 				if (type <= 2) {
-					var currentValue = $this.val(),
-						// string
-						key = type + '-' + uid;
-					if (currentValue.length > 0) {
+					currentValue = $this.val();
+					key = type + '-' + uid;
+
+					if (currentValue !== null && currentValue.length > 0) {
 						filteringData[key] = {
 							type: type,
 							attributeUid: uid,
@@ -208,6 +210,19 @@
 						}
 					}
 
+				}
+				// min-max box type
+				if (type === 3) {
+					currentValue = $this.val();
+						// string, two dropdowns so add data-range to key
+					key = type + '-' + uid + '-' + $this.data('range');
+					if (currentValue !== null && currentValue.length > 0) {
+						filteringData[key] = {
+							attributeUid: uid,
+							type: type,
+							value: [currentValue, $this.data('range')]
+						}
+					}
 				}
 			});
 
@@ -231,10 +246,26 @@
 
 						// If it's selected then it's active by default
 						if ($option.is(':selected') === false) {
-							var inList = ProductManager.Main.isInList(
-								filterType === 1 ? _availableCategoriesList : _availableOptionsList,
-								$option.attr('value')
-							);
+							var inList;
+
+							switch(filterType) {
+								// categories and simple attributes select
+								case 1:
+								case 2:
+									inList = ProductManager.Main.isInList(
+										filterType === 1 ? _availableCategoriesList : _availableOptionsList,
+										$option.attr('value')
+									);
+									break;
+								// max and min
+								case 3:
+									inList = ProductManager.Main.isInList(
+										_availableOptionsList,
+										$option.data('option-uid')
+									);
+									break;
+							}
+
 							if (inList || (_availableCategoriesList + _availableOptionsList) === '') {
 								$option.prop('disabled', false);
 							} else {
