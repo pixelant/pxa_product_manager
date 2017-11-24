@@ -16,6 +16,7 @@ namespace Pixelant\PxaProductManager\Hook;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -30,12 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageLayoutView
 {
-    /**
-     * Path to the locallang file
-     *
-     * @var string
-     */
-    const LLPATH = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:';
+    use TranslateBeTrait;
 
     /**
      * HR tag
@@ -114,9 +110,7 @@ class PageLayoutView
                     }
                 }
             } else {
-                $additionalInfo .= $this->getLanguageService()->sL(
-                    self::LLPATH . 'be.extension_info.mode.not_configured'
-                );
+                $additionalInfo .= $this->translate('be.extension_info.mode.not_configured');
             }
         }
 
@@ -595,26 +589,5 @@ class PageLayoutView
         );
 
         return $info . '<br>';
-    }
-
-    /**
-     * Return language service instance
-     *
-     * @return \TYPO3\CMS\Lang\LanguageService
-     */
-    protected function getLanguageService()
-    {
-        return $GLOBALS['LANG'];
-    }
-
-    /**
-     * Translate by key
-     *
-     * @param string $key
-     * @return string
-     */
-    protected function translate(string $key): string
-    {
-        return $this->getLanguageService()->sL(self::LLPATH . $key) ?? '';
     }
 }
