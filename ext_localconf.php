@@ -50,8 +50,10 @@ call_user_func(
         // LinkHandler
         // t3://pxappm?product=[product_id]
         // t3://pxappm?category=[category_id]
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['linkHandler']['pxappm'] = \Pixelant\PxaProductManager\LinkHandler\LinkHandling::class;
-        $GLOBALS['TYPO3_CONF_VARS']['FE']['typolinkBuilder']['pxappm'] = \Pixelant\PxaProductManager\LinkHandler\ProductLinkBuilder::class;
+        $linkType = 'pxappm';
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['linkHandler'][$linkType] = \Pixelant\PxaProductManager\LinkHandler\LinkHandling::class;
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['typolinkBuilder'][$linkType] = \Pixelant\PxaProductManager\LinkHandler\ProductLinkBuilder::class;
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['linkHandler'][$linkType] = \Pixelant\PxaProductManager\LinkHandler\LinkHandlingFormData::class;
 
         // Register cache
         if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['cache_pxa_pm_categories']['frontend'])) {
