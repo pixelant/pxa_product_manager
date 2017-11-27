@@ -99,11 +99,12 @@ class BreadcrumbsBuilder
                     }
                 }
             }
-            $product = (int)$arguments['product'];
-
-            if ($product) {
+            if ($product = (int)$arguments['product']) {
                 /** @var Product $product */
                 $product = $this->productRepository->findByUid($product);
+            }
+
+            if (is_object($product)) {
                 $url = $this->buildLink($breadcrumbs, $product->getUid(), true);
 
                 // @codingStandardsIgnoreStart

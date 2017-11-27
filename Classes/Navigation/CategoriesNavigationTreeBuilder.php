@@ -94,15 +94,13 @@ class CategoriesNavigationTreeBuilder
      */
     public function buildTree(int $rootCategory, int $activeCategory = 0): array
     {
-        if ($activeCategory) {
-            $this->activeList = array_map(
-                function ($category) {
-                    return $category->getUid();
-                },
-                CategoryUtility::getParentCategories(
-                    $this->categoryRepository->findByUid($activeCategory)
-                )
-            );
+        /** @var Category $activeCategoryObject */
+        $activeCategoryObject = $this->categoryRepository->findByUid($activeCategory);
+        if ($activeCategoryObject !== null) {
+            /** @var Category $category */
+            foreach (CategoryUtility::getParentCategories($activeCategoryObject) as $category) {
+                $this->activeList[] = $category->getUid();
+            }
             // add current too
             $this->activeList[] = $activeCategory;
         }
