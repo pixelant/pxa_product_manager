@@ -6,7 +6,7 @@
 <f:section name="select">
     <select data-filter-type="{filter.type}"
             data-attribute-uid="{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}"
-            data-identifier="{filter.type}-{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}-max"
+            data-identifier="{filter.type}-{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}-{range}"
             data-placeholder="{f:translate(key: 'fe.minmax.{label}')}"
             data-range="{range}"
             data-minimum-results-for-search="15"

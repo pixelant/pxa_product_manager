@@ -32,6 +32,10 @@
 		var _availableOptionsList = '',
 			_availableCategoriesList = '';
 
+		var _filterTypeCategories = 1,
+			_filterTypeAttributeOptions = 2,
+			_filterTypeAttributeMinMax = 3;
+
 		/**
 		 * Last filter trigger. Need to remember it, to
 		 * don't remove options of it
@@ -214,7 +218,7 @@
 				// min-max box type
 				if (type === 3) {
 					currentValue = $this.val();
-						// string, two dropdowns so add data-range to key
+					// string, two dropdowns so add data-range to key
 					key = type + '-' + uid + '-' + $this.data('range');
 					if (currentValue !== null && currentValue.length > 0) {
 						filteringData[key] = {
@@ -234,12 +238,15 @@
 		 * We need to show only options that has product results
 		 */
 		var updateFilteringOptions = function () {
+			var minMaxFilter = null;
+
+			// Go for each filter
 			$selectBoxes.each(function () {
-				var identifier = $(this).data('identifier');
+				var identifier = $(this).data('identifier'),
+					filterType = $(this).data('filter-type');
 
 				if (identifier !== _lastFilterBoxIdentifier) {
-					var filterType = $(this).data('filter-type'),
-						$selectFilter = $(this);
+					var $selectFilter = $(this);
 
 					$selectFilter.find('option').each(function () {
 						var $option = $(this);
@@ -248,17 +255,17 @@
 						if ($option.is(':selected') === false) {
 							var inList;
 
-							switch(filterType) {
+							switch (filterType) {
 								// categories and simple attributes select
-								case 1:
-								case 2:
+								case _filterTypeCategories:
+								case _filterTypeAttributeOptions:
 									inList = ProductManager.Main.isInList(
 										filterType === 1 ? _availableCategoriesList : _availableOptionsList,
 										$option.attr('value')
 									);
 									break;
 								// max and min
-								case 3:
+								case _filterTypeAttributeMinMax:
 									inList = ProductManager.Main.isInList(
 										_availableOptionsList,
 										$option.data('option-uid')
@@ -276,8 +283,34 @@
 
 					// re-init to respect changes
 					$selectFilter.select2();
+				} else if (filterType === _filterTypeAttributeMinMax) {
+					minMaxFilter = $(this);
 				}
 			});
+
+			// If last changed filter was min-max type
+			// we need to disable options with bigger/lower values
+			if (minMaxFilter !== null) {
+				var isCurrentMinMaxFilterRangeMin = minMaxFilter.data('range') === 'min',
+					identifierParts = _lastFilterBoxIdentifier.split('-'),
+					secondMinMaxFilterIdentifier = identifierParts[0] + '-' + identifierParts[1] + '-' + (isCurrentMinMaxFilterRangeMin ? 'max' : 'min'),
+					secondMinMaxFilter = $('[data-identifier="' + secondMinMaxFilterIdentifier + '"]');
+
+				if (secondMinMaxFilter.length === 1) {
+					var currentFilterValue = parseInt(minMaxFilter.val()),
+						secondFilterValue = parseInt(secondMinMaxFilter.val());
+
+					secondMinMaxFilter.find('option').each(function () {
+						var $optionMinMax = $(this),
+							value = parseInt($optionMinMax.attr('value'));
+
+						if ((isCurrentMinMaxFilterRangeMin && value < currentFilterValue)
+							|| (!isCurrentMinMaxFilterRangeMin && value > currentFilterValue)) {
+							$optionMinMax.prop('disabled', true);
+						}
+					});
+				}
+			}
 		};
 
 		/**
