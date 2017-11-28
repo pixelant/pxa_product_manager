@@ -120,6 +120,7 @@ class AbstractController extends ActionController
 
         $treeBuilder
             ->setExpandAll((bool)$this->settings['navigationExpandAll'])
+            ->setHideCategoriesWithoutProducts((bool)$this->settings['navigationHideCategoriesWithoutProducts'])
             ->setExcludeCategories($excludeCategories);
 
         // set custom order

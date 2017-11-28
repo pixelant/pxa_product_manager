@@ -136,6 +136,9 @@
             <trans-unit id="flexform.hide_navigation_list_view_on_detail_mode">
                 <source>Hide navigation when switch to detail product view</source>
             </trans-unit>
+            <trans-unit id="flexform.navigation_hide_categories_without_products">
+                <source>Hide categories without products</source>
+            </trans-unit>
             <trans-unit id="flexform.singleView_title">
                 <source>Single view options</source>
             </trans-unit>

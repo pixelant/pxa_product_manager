@@ -3,10 +3,13 @@
 namespace Pixelant\PxaProductManager\Tests\Functional\Navigation;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Navigation\CategoriesNavigationTreeBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 
 /**
  * Class CategoriesNavigationTreeBuilderTest
@@ -25,6 +28,7 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_category.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/tx_pxaproductmanager_domain_model_product.xml');
         $this->categoryRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(CategoryRepository::class);
     }
 
@@ -186,6 +190,57 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
         $navigationBuilder
             ->setExpandAll(true)
             ->setExcludeCategories($excludeCategories);
+
+        $result = $navigationBuilder->buildTree($rootCategoryUid, $activeCategoryUid);
+
+        $this->dataIsSimilar($expectData, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function buildTreeWithHiddenCategoriesNoProductsWillExcludeCategoriesWithoutProductsFromMenuData()
+    {
+        $rootCategoryUid = 100;
+        $activeCategoryUid = 101;
+
+        $expectData = [
+            'rootCategory' => $this->categoryRepository->findByUid($rootCategoryUid),
+            'subItems' => [
+                101 => [
+                    'category' => $this->categoryRepository->findByUid(101),
+                    'subItems' => [
+                        102 => [
+                            'category' => $this->categoryRepository->findByUid(102),
+                            'subItems' => [],
+                            'isCurrent' => false,
+                            'isActive' => false,
+                            'level' => 3
+                        ]
+                    ],
+                    'isCurrent' => true,
+                    'isActive' => true,
+                    'level' => 2
+                ]
+            ],
+            'level' => 1
+        ];
+
+        // Repository with custom settings
+        /** @var Typo3QuerySettings $querySettings */
+        $querySettings = GeneralUtility::makeInstance(ObjectManager::class)->get(Typo3QuerySettings::class);
+        $querySettings->setRespectStoragePage(false);
+
+        /** @var ProductRepository $productRepository */
+        $productRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(ProductRepository::class);
+        $productRepository->setDefaultQuerySettings($querySettings);
+
+        /** @var CategoriesNavigationTreeBuilder $navigationBuilder */
+        $navigationBuilder = GeneralUtility::makeInstance(CategoriesNavigationTreeBuilder::class);
+        $navigationBuilder
+            ->setExpandAll(true)
+            ->setHideCategoriesWithoutProducts(true)
+            ->injectProductRepository($productRepository);
 
         $result = $navigationBuilder->buildTree($rootCategoryUid, $activeCategoryUid);
 

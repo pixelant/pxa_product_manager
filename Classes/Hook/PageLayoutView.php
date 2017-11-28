@@ -178,14 +178,34 @@ class PageLayoutView
             $settings['excludeCategories'] ?? ''
         );
 
-        $info .= sprintf(
+        $info .= $this->menuGeneraInfo($settings);
+
+        $info .= $this->getCategoriesOrderingsInfo($settings);
+
+        return $info;
+    }
+
+    /**
+     * Information about navigation options
+     *
+     * @param array $settings
+     * @return string
+     */
+    protected function menuGeneraInfo(array $settings): string
+    {
+        $info = sprintf(
             '<b>%s</b>: %s<br>',
             $this->translate('flexform.navigation_expand_all'),
             $this->translate('be.extension_info.checkbox_' .
                 ($settings['navigationExpandAll'] ? 'yes' : 'no'))
         );
 
-        $info .= $this->getCategoriesOrderingsInfo($settings);
+        $info .= sprintf(
+            '<b>%s</b>: %s<br>',
+            $this->translate('flexform.navigation_hide_categories_without_products'),
+            $this->translate('be.extension_info.checkbox_' .
+                ($settings['navigationHideCategoriesWithoutProducts'] ? 'yes' : 'no'))
+        );
 
         return $info;
     }
@@ -337,6 +357,7 @@ class PageLayoutView
             'showNavigationListView',
             'hideNavigationListViewOnDetailMode',
             'navigationExpandAll',
+            'navigationHideCategoriesWithoutProducts',
             'hr',
             'showLatestVisitedProducts',
             'enableMessageInsteadOfPage404',

@@ -100,6 +100,23 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
+     * Count products for category
+     *
+     * @param Category $category
+     * @return int
+     */
+    public function countByCategory(Category $category): int
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->contains('categories', $category)
+        );
+
+        return $query->count();
+    }
+
+    /**
      * findProductsByUIds
      *
      * @param array $uids

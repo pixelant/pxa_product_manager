@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\Navigation;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\CategoryUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -45,7 +46,12 @@ class CategoriesNavigationTreeBuilder
      *
      * @var CategoryRepository
      */
-    protected $categoryRepository;
+    protected $categoryRepository = null;
+
+    /**
+     * @var ProductRepository
+     */
+    protected $productRepository = null;
 
     /**
      * Active categories
@@ -69,6 +75,13 @@ class CategoriesNavigationTreeBuilder
     protected $expandAll = false;
 
     /**
+     * Hide categories that doesn't have products
+     *
+     * @var bool
+     */
+    protected $hideCategoriesWithoutProducts = false;
+
+    /**
      * Default orderings
      *
      * @var array
@@ -82,7 +95,32 @@ class CategoriesNavigationTreeBuilder
      */
     public function __construct()
     {
-        $this->categoryRepository = MainUtility::getObjectManager()->get(CategoryRepository::class);
+        $objectManager = MainUtility::getObjectManager();
+
+        /** @noinspection PhpParamsInspection */
+        $this->injectProductRepository($objectManager->get(ProductRepository::class));
+        /** @noinspection PhpParamsInspection */
+        $this->injectCategoryRepository($objectManager->get(CategoryRepository::class));
+    }
+
+    /**
+     * Mostly for testing purpose
+     *
+     * @param ProductRepository $productRepository
+     */
+    public function injectProductRepository(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
+     * Mostly for testing purpose
+     *
+     * @param CategoryRepository $categoryRepository
+     */
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -164,6 +202,24 @@ class CategoriesNavigationTreeBuilder
     }
 
     /**
+     * @return bool
+     */
+    public function isHideCategoriesWithoutProducts(): bool
+    {
+        return $this->hideCategoriesWithoutProducts;
+    }
+
+    /**
+     * @param bool $hideCategoriesWithoutProducts
+     * @return  CategoriesNavigationTreeBuilder
+     */
+    public function setHideCategoriesWithoutProducts(bool $hideCategoriesWithoutProducts)
+    {
+        $this->hideCategoriesWithoutProducts = $hideCategoriesWithoutProducts;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getOrderings(): array
@@ -197,7 +253,9 @@ class CategoriesNavigationTreeBuilder
     ) {
         /** @var Category $category */
         foreach ($categories as $category) {
-            if (!in_array($category->getUid(), $this->excludeCategories)) {
+            $subItems = $this->findSubCategories($category);
+
+            if ($this->isCategoryVisible($category) || $subItems->count() > 0) {
                 $treeData[$category->getUid()] = [
                     'category' => $category,
                     'subItems' => [],
@@ -205,7 +263,6 @@ class CategoriesNavigationTreeBuilder
                     'isActive' => in_array($category->getUid(), $this->activeList),
                     'level' => $level
                 ];
-                $subItems = $this->findSubCategories($category);
 
                 if ($subItems->count() > 0
                     && ($this->expandAll || $treeData[$category->getUid()]['isActive'])
@@ -233,5 +290,30 @@ class CategoriesNavigationTreeBuilder
             $parentCategory,
             $this->orderings
         );
+    }
+
+    /**
+     * Check if category is visible inside menu
+     *
+     * @param Category $category
+     * @return bool
+     */
+    protected function isCategoryVisible(Category $category): bool
+    {
+        $excluded = in_array($category->getUid(), $this->excludeCategories);
+        $hideNoProducts = $this->hideCategoriesWithoutProducts && $this->hasNoProducts($category);
+
+        return !$excluded && !$hideNoProducts;
+    }
+
+    /**
+     * Check if there is products results for category
+     *
+     * @param Category $category
+     * @return bool
+     */
+    protected function hasNoProducts(Category $category)
+    {
+        return $this->productRepository->countByCategory($category) === 0;
     }
 }

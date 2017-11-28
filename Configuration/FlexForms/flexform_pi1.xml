@@ -261,6 +261,26 @@
                             </config>
                         </TCEforms>
                     </settings.navigationExpandAll>
+
+                    <settings.navigationHideCategoriesWithoutProducts>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation_hide_categories_without_products</label>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Navigation->show</numIndex>
+                                    <AND>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
+                                        <numIndex index="1">FIELD:navigationListView.settings.showNavigationListView:REQ:TRUE</numIndex>
+                                    </AND>
+                                </OR>
+                            </displayCond>
+                            <exclude>1</exclude>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.navigationHideCategoriesWithoutProducts>
                 </el>
             </ROOT>
         </navigationListView>
