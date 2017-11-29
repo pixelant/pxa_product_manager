@@ -42,6 +42,40 @@
         <title>Another category</title>
     </sys_category>
 
+    <sys_category>
+        <uid>100</uid>
+        <pid>1</pid>
+        <parent>0</parent>
+        <title>Another root</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>101</uid>
+        <pid>1</pid>
+        <parent>100</parent>
+        <title>Sub another root</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>102</uid>
+        <pid>1</pid>
+        <parent>101</parent>
+        <title>Sub sub another root</title>
+    </sys_category>
+
+    <sys_category>
+        <uid>103</uid>
+        <pid>1</pid>
+        <parent>100</parent>
+        <title>Sub another root no Sub categories and products</title>
+    </sys_category>
+
+    <sys_category_record_mm>
+        <uid_local>102</uid_local>
+        <uid_foreign>100</uid_foreign>
+        <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+        <fieldname>categories</fieldname>
+    </sys_category_record_mm>
 
     <sys_category_record_mm>
         <uid_local>4</uid_local>

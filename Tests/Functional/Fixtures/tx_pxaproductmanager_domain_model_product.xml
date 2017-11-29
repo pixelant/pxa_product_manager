@@ -8,6 +8,14 @@
         <categories>1</categories>
     </tx_pxaproductmanager_domain_model_product>
 
+    <tx_pxaproductmanager_domain_model_product>
+        <uid>100</uid>
+        <pid>1</pid>
+        <name>Another test product</name>
+        <sku>312</sku>
+        <categories>1</categories>
+    </tx_pxaproductmanager_domain_model_product>
+
     <sys_category_record_mm>
         <uid_local>3</uid_local>
         <uid_foreign>1</uid_foreign>
