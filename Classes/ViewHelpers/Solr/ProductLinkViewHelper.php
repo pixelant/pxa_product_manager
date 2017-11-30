@@ -31,6 +31,7 @@ use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class ProductLinkViewHelper implements ViewHelper
 {
@@ -75,7 +76,9 @@ class ProductLinkViewHelper implements ViewHelper
                 $product = $this->productRepository->findByUid((int)$document['uid']);
 
                 if ($product !== null) {
-                    $url = MainUtility::getTSFE()->cObj->getTypoLink_URL(
+                    /** @var ContentObjectRenderer $contentObject */
+                    $contentObject = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+                    $url = $contentObject->getTypoLink_URL(
                         $this->settings['pagePid'],
                         MainUtility::buildLinksArguments($product)
                     );
