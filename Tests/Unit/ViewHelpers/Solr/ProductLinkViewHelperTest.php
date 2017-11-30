@@ -34,11 +34,6 @@ class ProductLinkViewHelperTest extends UnitTestCase
         $settings['solr']['productManagerTypes'] = 'product_search_type';
 
         $this->viewHelper->_set('settings', $settings);
-
-        $tsfe = $this->createMock(TypoScriptFrontendController::class);
-        $tsfe->cObj = $this->createPartialMock(ContentObjectRenderer::class, ['getTypoLink_URL']);
-
-        $GLOBALS['TSFE'] = $tsfe;
     }
 
     /**
@@ -62,11 +57,6 @@ class ProductLinkViewHelperTest extends UnitTestCase
             ->willReturn($product);
 
         $this->viewHelper->_set('productRepository', $productRepository);
-
-        $GLOBALS['TSFE']->cObj
-            ->expects($this->once())
-            ->method('getTypoLink_URL')
-            ->willReturn('');
 
         $this->viewHelper->execute([serialize($document)]);
     }
@@ -103,15 +93,7 @@ class ProductLinkViewHelperTest extends UnitTestCase
 
         $this->viewHelper->_set('productRepository', $productRepository);
 
-        $GLOBALS['TSFE']->cObj
-            ->expects($this->never())
-            ->method('getTypoLink_URL');
 
         $this->assertEmpty($this->viewHelper->execute([serialize($document)]));
-    }
-
-    protected function tearDown()
-    {
-        unset($this->viewHelper, $GLOBALS['TSFE']);
     }
 }
