@@ -31,6 +31,7 @@ namespace Pixelant\PxaProductManager\Utility;
 use Pixelant\PxaProductManager\Controller\NavigationController;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -201,6 +202,11 @@ class MainUtility
     public static function buildLinksArguments($product = null, Category $category = null): array
     {
         $arguments = [];
+        if (!is_object($product)) {
+            /** @var ProductRepository $productRepository */
+            $productRepository = self::getObjectManager()->get(ProductRepository::class);
+            $product = $productRepository->findByUid((int)$product);
+        }
 
         // If no category, try to get it from product
         if ($category === null
@@ -211,7 +217,7 @@ class MainUtility
         }
 
         if ($category !== null) {
-            // Het tree, don't use root category in url
+            // Get tree, don't use root category in url
             /**
              * @TODO always remove first category ?
              */
@@ -226,6 +232,7 @@ class MainUtility
             $categories[] = $category;
 
             $i = 0;
+            /** @var Category $category */
             foreach ($categories as $category) {
                 $arguments[NavigationController::CATEGORY_ARG_START_WITH . $i++] = $category->getUid();
             }
