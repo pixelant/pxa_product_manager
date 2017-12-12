@@ -202,7 +202,7 @@ class MainUtility
     public static function buildLinksArguments($product = null, Category $category = null): array
     {
         $arguments = [];
-        if (!is_object($product)) {
+        if ($product !== null && !is_object($product)) {
             /** @var ProductRepository $productRepository */
             $productRepository = self::getObjectManager()->get(ProductRepository::class);
             $product = $productRepository->findByUid((int)$product);

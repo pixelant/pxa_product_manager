@@ -78,9 +78,15 @@ class ProductLinkViewHelper implements ViewHelper
                 if ($product !== null) {
                     /** @var ContentObjectRenderer $contentObject */
                     $contentObject = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-                    $url = $contentObject->getTypoLink_URL(
-                        $this->settings['pagePid'],
-                        MainUtility::buildLinksArguments($product)
+                    $url = $contentObject->typoLink_URL(
+                        [
+                            'parameter' => $this->settings['pagePid'],
+                            'additionalParams' => GeneralUtility::implodeArrayForUrl(
+                                '',
+                                MainUtility::buildLinksArguments($product)
+                            ),
+                            'useCacheHash' => 1
+                        ]
                     );
                 }
             } else {

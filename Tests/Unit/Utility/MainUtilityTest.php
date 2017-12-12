@@ -74,25 +74,6 @@ class MainUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function buildLinkArgumentsOnlyProductIntegerNoCategories()
-    {
-        $product = 1122;
-
-        $expected = [
-            'tx_pxaproductmanager_pi1' => [
-                'product' => $product
-            ]
-        ];
-
-        self::assertEquals(
-            $expected,
-            MainUtility::buildLinksArguments($product)
-        );
-    }
-
-    /**
-     * @test
-     */
     public function buildLinkArgumentsProductAndCategoryAreSet()
     {
         $product = new Product();
