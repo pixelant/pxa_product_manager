@@ -15,6 +15,7 @@ https://docs.google.com/document/d/1WuOBeH5oJ8b_yLczXVZkPRhiR12IjCa6ltb4IBuvvDk/
 - Support of product links with category tree in URL "category1/sub-category/product/product-name"
 - Wish list
 - Compare list
+- Grouped list
 - Breadcrumbs
 - Divide TCA tabs according to attribute sets
 - Functional tests
