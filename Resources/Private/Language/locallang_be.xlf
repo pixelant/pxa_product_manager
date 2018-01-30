@@ -215,6 +215,36 @@
                 <source>Use sku field to combine it with name in url</source>
             </trans-unit>
             <!--Extension manager configuration:END-->
+
+            <!--Backend module:START-->
+            <trans-unit id="be.module_name">
+                <source>Product manager</source>
+            </trans-unit>
+            <trans-unit id="be.no_categories">
+                <source>No categories</source>
+            </trans-unit>
+            <trans-unit id="be.no_categories_text">
+                <source>No categories were found, try to choose different folder.</source>
+            </trans-unit>
+            <trans-unit id="be.edit_category">
+                <source>Edit category - "%s"</source>
+            </trans-unit>
+            <trans-unit id="be.no_translation">
+                <source>Category hasn't been translate yet</source>
+            </trans-unit>
+            <trans-unit id="be.show_translations">
+                <source>Show translations (%s)</source>
+            </trans-unit>
+            <trans-unit id="be.no_subcategories">
+                <source>No sub-categories were found</source>
+            </trans-unit>
+            <trans-unit id="be.see_subcategories">
+                <source>See sub-categories</source>
+            </trans-unit>
+            <trans-unit id="be.go_back">
+                <source>Back</source>
+            </trans-unit>
+            <!--Backend module:END-->
         </body>
     </file>
 </xliff>

@@ -1,0 +1,156 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers/Backend" data-namespace-typo3-fluid="true">
+
+<f:layout name="BELayout"/>
+<f:debug>{_all}</f:debug>
+
+<f:section name="main">
+    <h1>
+        <pxa:translate key="be.module_name"/>
+        - "{pageTitle}"
+    </h1>
+
+    <f:flashMessages/>
+
+    <f:if condition="{categories}">
+        <f:then>
+            <f:variable name="iconCategory" value="{pxa:getRecordIcon(uid: categories.0.uid, table: 'sys_category')}" />
+
+            <f:render section="categoryBreadCrumbs" arguments="{categoryBreadCrumbs: categoryBreadCrumbs}"/>
+
+            <div class="panel-group" role="tablist" id="category-list" aria-multiselectable="true">
+                <f:for each="{categories}" as="category">
+                    <f:alias map="{translations: '{pxa:getRecordTranslations(uid: category.uid, table: \'sys_category\')}'}">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"
+                                 role="tab"
+                                 id="heading-{category.uid}">
+                                <div class="row panel-title">
+                                    <div class="col-xs-4">
+                                        <a href="{pxa:recordEditUrl(uid: category.uid)}"
+                                           title="{pxa:translate(key: 'be.edit_category', arguments: '{0: category.title}')}">
+                                            {iconCategory -> f:format.raw()} {category.title}
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <f:if condition="{translations}">
+                                            <f:then>
+                                                <a href="#collapseCategory-{category.uid}"
+                                                   role="button"
+                                                   data-toggle="collapse"
+                                                   data-parent="#accordion"
+                                                   aria-expanded="false"
+                                                   aria-controls="collapseOne"
+                                                   class="collapsed">
+                                                    <pxa:translate key="be.show_translations" arguments="{count: '{translations -> f:count()}'}"/>
+                                                </a>
+                                            </f:then>
+                                            <f:else>
+                                                <span><pxa:translate key="be.no_translation"/></span>
+                                            </f:else>
+                                        </f:if>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <f:if condition="{category.subCategories -> f:count()}">
+                                            <f:then>
+                                                <f:link.action arguments="{category: category}">
+                                                    <pxa:translate key="be.see_subcategories"/> ({category.subCategories -> f:count()})
+                                                </f:link.action>
+                                            </f:then>
+                                            <f:else>
+                                                <pxa:translate key="be.no_subcategories"/>
+                                            </f:else>
+                                        </f:if>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-collapse collapse"
+                                 role="tabpanel"
+                                 id="collapseCategory-{category.uid}"
+                                 aria-labelledby="headingOne"
+                                 aria-expanded="false">
+                                <div class="panel-body">
+                                    <f:for each="{translations}" as="translation">
+                                        <div class="row">
+                                            <div class="col-xs-2">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <a href="{pxa:recordEditUrl(uid: translation.uid)}"
+                                                   title="{pxa:translate(key: 'be.edit_category', arguments: '{0: category.title}')}">
+                                                    {iconCategory -> f:format.raw()} {translation.title}
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <pxa:getDbRecord uid="{translation.sys_language_uid}" table="sys_language" as="sysLanguage">
+                                                    {sysLanguage.title}
+                                                    <f:format.raw><pxa:getRecordIcon uid="{sysLanguage.uid}" table="sys_language"/></f:format.raw>
+                                                </pxa:getDbRecord>
+                                            </div>
+                                        </div>
+                                    </f:for>
+                                </div>
+                            </div>
+                        </div>
+                    </f:alias>
+                </f:for>
+            </div>
+
+            <f:if condition="{activeCategory}">
+                <f:if condition="{activeCategory.parent}">
+                    <f:then>
+                        <f:link.action class="btn btn-primary" arguments="{category: activeCategory.parent}">
+                            <pxa:translate key="be.go_back"/>
+                        </f:link.action>
+                    </f:then>
+                    <f:else>
+                        <f:link.action class="btn btn-primary">
+                            <pxa:translate key="be.go_back"/>
+                        </f:link.action>
+                    </f:else>
+                </f:if>
+            </f:if>
+        </f:then>
+        <f:else>
+            <div class="callout callout-info">
+                <div class="media">
+                    <div class="media-left">
+						<span class="fa-stack fa-lg callout-icon">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+							<i class="fa fa-info fa-stack-1x"></i>
+                        </span>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="callout-title">
+                            <pxa:translate key="be.no_categories"/>
+                        </h4>
+                        <div class="callout-body">
+                            <p>
+                                <pxa:translate key="be.no_categories_text"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </f:else>
+    </f:if>
+</f:section>
+
+<f:section name="categoryBreadCrumbs">
+    <f:if condition="{categoryBreadCrumbs}">
+        <f:for each="{categoryBreadCrumbs}" as="category" iteration="i">
+            <f:if condition="{i.isLast}">
+                <f:then>
+                    <i>
+                        {category.title}
+                    </i>
+                </f:then>
+                <f:else>
+                    <f:link.action arguments="{category: category}">
+                        {category.title}
+                    </f:link.action>
+                    &nbsp;|&nbsp;
+                </f:else>
+            </f:if>
+        </f:for>
+    </f:if>
+</f:section>
+</html>

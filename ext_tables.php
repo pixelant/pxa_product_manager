@@ -63,6 +63,22 @@ call_user_func(
                     ['source' => 'EXT:pxa_product_manager/Resources/Public/Icons/' . $path]
                 );
             }
+
+            // Register BE module
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+                'Pixelant.' . $_EXTKEY,
+                'web',          // Main area
+                'mod1',         // Name of the module
+                '',             // Position of the module
+                [
+                    'BackendManager' => 'index'
+                ],
+                [          // Additional configuration
+                    'access' => 'user,group',
+                    'icon' => 'EXT:' . $_EXTKEY . '/ext_icon.png',
+                    'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_mod.xml',
+                ]
+            );
         }
     },
     $_EXTKEY

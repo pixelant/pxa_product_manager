@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2018-01-30T15:29:57Z"
+		  product-name="pxa_product_manager">
+		<header/>
+		<body>
+			<trans-unit id="mlang_tabs_tab" xml:space="preserve">
+				<source>Products Manager</source>
+			</trans-unit>
+			<trans-unit id="mlang_labels_tablabel" xml:space="preserve">
+				<source>Manage products and categories</source>
+			</trans-unit>
+			<trans-unit id="mlang_labels_tabdescr" xml:space="preserve">
+				<source>Module used mostly for products and categories sorting.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
