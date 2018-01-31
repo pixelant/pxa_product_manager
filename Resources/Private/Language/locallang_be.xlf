@@ -230,19 +230,28 @@
                 <source>Edit category - "%s"</source>
             </trans-unit>
             <trans-unit id="be.no_translation">
-                <source>Category hasn't been translate yet</source>
+                <source>No translations</source>
             </trans-unit>
             <trans-unit id="be.show_translations">
-                <source>Show translations (%s)</source>
+                <source>Translations (%s)</source>
             </trans-unit>
             <trans-unit id="be.no_subcategories">
-                <source>No sub-categories were found</source>
+                <source>No sub-categories</source>
             </trans-unit>
             <trans-unit id="be.see_subcategories">
                 <source>See sub-categories</source>
             </trans-unit>
             <trans-unit id="be.go_back">
                 <source>Back</source>
+            </trans-unit>
+            <trans-unit id="be.create_new_category">
+                <source>+ Add new category</source>
+            </trans-unit>
+            <trans-unit id="be.move_up">
+                <source>Move up</source>
+            </trans-unit>
+            <trans-unit id="be.move_down">
+                <source>Move down</source>
             </trans-unit>
             <!--Backend module:END-->
         </body>

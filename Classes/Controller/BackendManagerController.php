@@ -70,11 +70,13 @@ class BackendManagerController extends ActionController
                 $category
             );
 
-            $this->view
-                ->assign('categories', $categories)
-                ->assign('activeCategory', $category)
-                ->assign('categoryBreadCrumbs', $this->buildCategoryBreadCrumbs($category))
-                ->assign('pageTitle', BackendUtility::getRecord('pages', $this->pid, 'title')['title']);
+            $this->view->assignMultiple([
+                'categories' => $categories,
+                'activeCategory' => $category,
+                'newCategoryUrl' => $this->buildNewRecordLink('sys_category', $category),
+                'categoryBreadCrumbs' => $this->buildCategoryBreadCrumbs($category),
+                'pageTitle' => BackendUtility::getRecord('pages', $this->pid, 'title')['title']
+            ]);
         }
     }
 
@@ -94,5 +96,27 @@ class BackendManagerController extends ActionController
         }
 
         return array_reverse($result);
+    }
+
+    /**
+     * New record url
+
+     * @param string $table
+     * @param Category|null $category
+     * @return string
+     */
+    protected function buildNewRecordLink(string $table, Category $category = null)
+    {
+        $urlParameters = [
+            'edit[' . $table . '][' . $this->pid . ']' => 'new',
+            'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
+        ];
+
+        if ($category !== null) {
+            $field = $table === 'sys_category' ? 'parent' : 'categories';
+            $urlParameters['overrideVals'][$table][$field] = $category->getUid();
+        }
+
+        return BackendUtility::getModuleUrl('record_edit', $urlParameters);
     }
 }
