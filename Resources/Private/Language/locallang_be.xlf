@@ -241,6 +241,12 @@
             <trans-unit id="be.see_subcategories">
                 <source>See sub-categories</source>
             </trans-unit>
+            <trans-unit id="be.see_products">
+                <source>Products</source>
+            </trans-unit>
+            <trans-unit id="be.no_products">
+                <source>No products</source>
+            </trans-unit>
             <trans-unit id="be.go_back">
                 <source>Back</source>
             </trans-unit>

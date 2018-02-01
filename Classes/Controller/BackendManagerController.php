@@ -3,12 +3,12 @@
 namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
-use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * Class BackendManagerController
@@ -65,19 +65,39 @@ class BackendManagerController extends ActionController
     public function indexAction(Category $category = null)
     {
         if ($this->pid > 0) {
-            $categories = $this->categoryRepository->findCategoriesByPidAndParent(
+            $categories = $this->categoryRepository->findCategoriesByPidAndParentIgnoreHidden(
                 $this->pid,
                 $category
             );
 
             $this->view->assignMultiple([
                 'categories' => $categories,
+                'products' => $this->getCategoriesWithProducts($categories),
+                'categoriesPositions' => $this->generatePositionsArray($categories->toArray()),
                 'activeCategory' => $category,
                 'newCategoryUrl' => $this->buildNewRecordLink('sys_category', $category),
                 'categoryBreadCrumbs' => $this->buildCategoryBreadCrumbs($category),
                 'pageTitle' => BackendUtility::getRecord('pages', $this->pid, 'title')['title']
             ]);
         }
+    }
+
+    /**
+     * Get categories uid to products array
+     *
+     * @param QueryResultInterface|array $categories
+     * @return array
+     */
+    protected function getCategoriesWithProducts($categories): array
+    {
+        $products = [];
+
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $products[$category->getUid()] = $this->productRepository->findProductsByCategories([$category], true);
+        }
+
+        return $products;
     }
 
     /**
@@ -100,12 +120,11 @@ class BackendManagerController extends ActionController
 
     /**
      * New record url
-
      * @param string $table
      * @param Category|null $category
      * @return string
      */
-    protected function buildNewRecordLink(string $table, Category $category = null)
+    protected function buildNewRecordLink(string $table, Category $category = null): string
     {
         $urlParameters = [
             'edit[' . $table . '][' . $this->pid . ']' => 'new',
@@ -118,5 +137,34 @@ class BackendManagerController extends ActionController
         }
 
         return BackendUtility::getModuleUrl('record_edit', $urlParameters);
+    }
+
+    /**
+     * Generate array of positions uids to sort records
+     *
+     * @param array|QueryResultInterface $records
+     * @return array
+     */
+    protected function generatePositionsArray($records): array
+    {
+        if (count($records) < 2) {
+            return [];
+        }
+
+        $result = [];
+        $prevUid = 0;
+        $prevPrevUid = 0;
+
+        /** @var AbstractDomainObject $record */
+        foreach ($records as $record) {
+            if ($prevUid) {
+                $result['prev'][$record->getUid()] = $prevPrevUid;
+                $result['next'][$prevUid] = '-' . $record->getUid();
+            }
+            $prevPrevUid = isset($result['prev'][$record->getUid()]) ? -$prevUid : $this->pid;
+            $prevUid = $record->getUid();
+        }
+
+        return $result;
     }
 }

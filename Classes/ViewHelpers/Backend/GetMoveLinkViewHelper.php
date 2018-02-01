@@ -23,7 +23,7 @@ class GetMoveLinkViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('uid', 'int', 'Record uid', true);
         $this->registerArgument('table', 'string', 'Table name', true);
-        $this->registerArgument('neighborhoodUid', 'int', 'Uid of record to move to', true);
+        $this->registerArgument('positionUid', 'int', 'Uid of record to move to', true);
     }
 
     /**
@@ -40,15 +40,13 @@ class GetMoveLinkViewHelper extends AbstractViewHelper
         RenderingContextInterface $renderingContext
     ): string {
         $uid = (int)$arguments['uid'];
-        $neighborhoodUid = (int)$arguments['neighborhoodUid'];
+        $positionUid = (int)$arguments['positionUid'];
         $table = trim($arguments['table']);
 
-        if ($uid && $table && $neighborhoodUid) {
-            $params = '&cmd[' . $table . '][' . $uid . '][move]=' . $neighborhoodUid;
+        if ($uid && $table && $positionUid) {
+            $params = '&cmd[' . $table . '][' . $uid . '][move]=' . $positionUid;
 
-            $t = BackendUtility::getLinkToDataHandlerAction($params);
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($t,'Debug',16);
-            return $t;
+            return BackendUtility::getLinkToDataHandlerAction($params);
         }
 
         return '';

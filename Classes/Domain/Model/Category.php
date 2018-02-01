@@ -136,8 +136,8 @@ class Category extends CategoryExtbase
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
          */
-        $this->attributeSets = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->subCategories = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->attributeSets = new ObjectStorage();
+        $this->subCategories = new ObjectStorage();
     }
 
     /**
@@ -404,7 +404,7 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category> $subCategories
+     * @param ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category> $subCategories
      */
     public function setSubCategories(ObjectStorage $subCategories)
     {

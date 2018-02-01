@@ -14,8 +14,6 @@
 
     <f:if condition="{categories}">
         <f:then>
-            <f:variable name="iconCategory" value="{pxa:getRecordIcon(uid: categories.0.uid, table: 'sys_category')}"/>
-
             <f:render section="categoryBreadCrumbs" arguments="{categoryBreadCrumbs: categoryBreadCrumbs}"/>
 
             <div class="new-record-buttons">
@@ -41,7 +39,10 @@
                                         <a href="{pxa:recordEditUrl(uid: category.uid)}"
                                            title="{pxa:translate(key: 'be.edit_category', arguments: '{0: category.title}')}"
                                            class="record-title">
-                                            {iconCategory -> f:format.raw()} {category.title} (id: {category.uid})
+                                            <f:format.raw>
+                                                <pxa:getRecordIcon uid="{category.uid}" table="sys_category"/>
+                                            </f:format.raw>
+                                            {category.title} (id: {category.uid})
                                         </a>
                                     </div>
                                     <div class="col-xs-8">
@@ -50,32 +51,10 @@
                                            href="{pxa:recordEditUrl(uid: category.uid)}">
                                             <core:icon identifier="actions-open"/>
                                         </a>
-                                        <f:if condition="{i.isFirst}">
-                                            <f:then>
-                                                <span class="btn btn-default disabled">
-                                                    <core:icon identifier="empty-empty"/>
-                                                </span>
-                                            </f:then>
-                                            <f:else>
-                                                <a class="btn btn-default"
-                                                   title="{pxa:translate(key: 'be.move_up')}"
-                                                   href="{pxa:getMoveLink(uid: category.uid, neighborhoodUid: '{categories.0.uid}', table: 'sys_category')}">
-                                                    <core:icon identifier="actions-move-up"/>
-                                                </a>
-                                            </f:else>
-                                        </f:if>
-                                        <f:if condition="{i.isLast}">
-                                            <f:then></f:then>
-                                            <f:else>
-                                                <f:comment>
-                                                <a class="btn btn-default"
-                                                   title="{pxa:translate(key: 'be.move_down')}"
-                                                   href="{pxa:getMoveLink(uid: category.uid, neighborhoodUid: '{categories.{i.index}}', table: 'sys_category')}">
-                                                    <core:icon identifier="actions-move-down"/>
-                                                </a>
-                                                </f:comment>
-                                            </f:else>
-                                        </f:if>
+
+                                        <f:render section="sortingControls"
+                                                  arguments="{categoriesPositions: categoriesPositions, category: category}"/>
+
                                         <f:if condition="{translations}">
                                             <f:then>
                                                 <a href="#collapseCategory-{category.uid}"
@@ -111,6 +90,21 @@
                                                 </button>
                                             </f:else>
                                         </f:if>
+                                        <f:if condition="{products.{category.uid}}">
+                                            <f:then>
+                                                <f:link.action action="listProducts"
+                                                               arguments="{category: category}"
+                                                               class="btn btn-default">
+                                                    <pxa:translate key="be.see_products"/>
+                                                    ({products.{category.uid} -> f:count()})
+                                                </f:link.action>
+                                            </f:then>
+                                            <f:else>
+                                                <button type="button" class="btn btn-default" disabled="disabled">
+                                                    <pxa:translate key="be.no_products"/>
+                                                </button>
+                                            </f:else>
+                                        </f:if>
                                     </div>
                                 </div>
                             </div>
@@ -126,8 +120,8 @@
                                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a href="{pxa:recordEditUrl(uid: translation.uid)}"
                                                    title="{pxa:translate(key: 'be.edit_category', arguments: '{0: translation.title}')}">
-                                                    {iconCategory -> f:format.raw()} {translation.title} (id:
-                                                    {translation.uid})
+                                                    <core:iconForRecord table="sys_category" row="{translation}"/>
+                                                    {translation.title} (id: {translation.uid})
 
                                                     <core:icon identifier="actions-open"/>
                                                 </a>
@@ -215,6 +209,39 @@
                 </f:else>
             </f:if>
         </div>
+    </f:if>
+</f:section>
+
+<f:section name="sortingControls">
+    <f:if condition="{categoriesPositions}">
+        <f:if condition="{categoriesPositions.prev.{category.uid}}">
+            <f:then>
+                <a class="btn btn-default"
+                   title="{pxa:translate(key: 'be.move_up')}"
+                   href="{pxa:getMoveLink(uid: category.uid, positionUid: '{categoriesPositions.prev.{category.uid}}', table: 'sys_category')}">
+                    <core:icon identifier="actions-move-up"/>
+                </a>
+            </f:then>
+            <f:else>
+            <span class="btn btn-default disabled">
+                <core:icon identifier="empty-empty"/>
+            </span>
+            </f:else>
+        </f:if>
+        <f:if condition="{categoriesPositions.next.{category.uid}}">
+            <f:then>
+                <a class="btn btn-default"
+                   title="{pxa:translate(key: 'be.move_down')}"
+                   href="{pxa:getMoveLink(uid: category.uid, positionUid: '{categoriesPositions.next.{category.uid}}', table: 'sys_category')}">
+                    <core:icon identifier="actions-move-down"/>
+                </a>
+            </f:then>
+            <f:else>
+            <span class="btn btn-default disabled">
+                <core:icon identifier="empty-empty"/>
+            </span>
+            </f:else>
+        </f:if>
     </f:if>
 </f:section>
 </html>

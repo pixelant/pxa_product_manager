@@ -85,11 +85,13 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
      * @param int $pid
      * @return QueryResultInterface
      */
-    public function findCategoriesByPidAndParent(int $pid, Category $category = null)
+    public function findCategoriesByPidAndParentIgnoreHidden(int $pid, Category $category = null)
     {
         $query = $this->createQuery();
         $query->getQuerySettings()
-            ->setRespectStoragePage(false);
+            ->setRespectStoragePage(false)
+            ->setIgnoreEnableFields(true)
+            ->setEnableFieldsToBeIgnored(['disabled']);
 
         $query->matching(
             $query->logicalAnd([
