@@ -75,11 +75,27 @@ class BackendManagerController extends ActionController
                 'products' => $this->getCategoriesWithProducts($categories),
                 'categoriesPositions' => $this->generatePositionsArray($categories->toArray()),
                 'activeCategory' => $category,
-                'newCategoryUrl' => $this->buildNewRecordLink('sys_category', $category),
+                'newRecordUrl' => $this->buildNewRecordUrl('sys_category', $category),
                 'categoryBreadCrumbs' => $this->buildCategoryBreadCrumbs($category),
                 'pageTitle' => BackendUtility::getRecord('pages', $this->pid, 'title')['title']
             ]);
         }
+    }
+
+    /**
+     * List category products
+     *
+     * @param Category $category
+     */
+    public function listProductsAction(Category $category)
+    {
+        $this->view->assignMultiple([
+            'products' =>$this->productRepository->findProductsByCategories([$category], true),
+            'activeCategory' => $category,
+            'newRecordUrl' => $this->buildNewRecordUrl('tx_pxaproductmanager_domain_model_product', $category),
+            'categoryBreadCrumbs' => $this->buildCategoryBreadCrumbs($category),
+            'pageTitle' => BackendUtility::getRecord('pages', $this->pid, 'title')['title']
+        ]);
     }
 
     /**
@@ -124,7 +140,7 @@ class BackendManagerController extends ActionController
      * @param Category|null $category
      * @return string
      */
-    protected function buildNewRecordLink(string $table, Category $category = null): string
+    protected function buildNewRecordUrl(string $table, Category $category = null): string
     {
         $urlParameters = [
             'edit[' . $table . '][' . $this->pid . ']' => 'new',

@@ -47,3 +47,7 @@
 .back-button {
     margin-bottom: 15px;
 }
+
+.panel-heading .btn-info, .panel-heading .btn-info:active, .panel-heading .btn-info:focus, .panel-heading .btn-info:hover {
+    color: #fff;
+}

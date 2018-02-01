@@ -6,26 +6,19 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Imaging\Icon;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
- * Generate icon for record
+ * Record translations getter
  *
  * @package Pixelant\PxaProductManager\ViewHelpers\Backend
  */
 class GetRecordTranslationsViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
-
-    /**
-     * @var IconFactory
-     */
-    private static $iconFactory = null;
 
     /**
      * Initialize arguments
@@ -37,6 +30,8 @@ class GetRecordTranslationsViewHelper extends AbstractViewHelper
     }
 
     /**
+     * Translation records
+     *
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
@@ -83,19 +78,5 @@ class GetRecordTranslationsViewHelper extends AbstractViewHelper
         }
 
         return [];
-    }
-
-    /**
-     * Wrapper for icon factory
-     *
-     * @return object|IconFactory
-     */
-    private static function getIconFactory()
-    {
-        if (self::$iconFactory === null) {
-            self::$iconFactory = GeneralUtility::makeInstance(IconFactory::class);
-        }
-
-        return self::$iconFactory;
     }
 }

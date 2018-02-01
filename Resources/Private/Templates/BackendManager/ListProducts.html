@@ -12,33 +12,32 @@
 
     <f:flashMessages/>
 
-    <f:if condition="{categories}">
-        <f:then>
+    <f:if condition="{products}">
             <f:render partial="Backend/CategoryBreadCrumbs" arguments="{categoryBreadCrumbs: categoryBreadCrumbs}"/>
 
-            <f:render partial="Backend/NewRecordButton" arguments="{label: 'create_new_category', newRecordUrl: newRecordUrl}"/>
+            <f:render partial="Backend/NewRecordButton" arguments="{label: 'create_new_product', newRecordUrl: newRecordUrl}"/>
 
             <f:render partial="Backend/BackButton" arguments="{activeCategory: activeCategory}"/>
 
             <div class="panel-group" role="tablist" id="category-list" aria-multiselectable="true">
-                <f:for each="{categories}" as="category">
+                <f:for each="{products}" as="product">
                     <f:alias
-                            map="{translations: '{pxa:getRecordTranslations(uid: category.uid, table: \'sys_category\')}'}">
+                            map="{translations: '{pxa:getRecordTranslations(uid: product.uid, table: \'tx_pxaproductmanager_domain_model_product\')}'}">
                         <div class="panel panel-default">
                             <div class="panel-heading"
                                  role="tab"
                                  id="heading-{category.uid}">
                                 <div class="row panel-title">
                                     <div class="col-xs-4">
-                                        <a href="{pxa:recordEditUrl(uid: category.uid)}"
-                                           title="{pxa:translate(key: 'be.edit_category', arguments: '{0: category.title}')}"
+                                        <a href="{pxa:recordEditUrl(uid: product.uid, table: 'tx_pxaproductmanager_domain_model_product')}"
+                                           title="{pxa:translate(key: 'be.edit_category', arguments: '{0: product.title}')}"
                                            class="record-title">
                                             <f:format.raw>
-                                                <pxa:getRecordIcon uid="{category.uid}" table="sys_category"/>
+                                                <pxa:getRecordIcon uid="{product.uid}" table="tx_pxaproductmanager_domain_model_product"/>
                                             </f:format.raw>
-                                            {category.title} (id: {category.uid})
+                                            {product.name} (id: {product.uid})
                                         </a>
-                                    </div>
+                                    </div><f:comment>
                                     <div class="col-xs-8">
                                         <a class="btn btn-default"
                                            title="{pxa:translate(key: 'be.edit_category', arguments: '{0: category.title}')}"
@@ -99,9 +98,10 @@
                                                 </button>
                                             </f:else>
                                         </f:if>
-                                    </div>
+                                    </div></f:comment>
                                 </div>
                             </div>
+                            <f:comment>
                             <div class="panel-collapse collapse"
                                  role="tabpanel"
                                  id="collapseCategory-{category.uid}"
@@ -133,69 +133,14 @@
                                         </div>
                                     </f:for>
                                 </div>
-                            </div>
+                            </div></f:comment>
                         </div>
                     </f:alias>
                 </f:for>
             </div>
 
             <f:render partial="Backend/BackButton" arguments="{activeCategory: activeCategory}"/>
-        </f:then>
-        <f:else>
-            <div class="callout callout-info">
-                <div class="media">
-                    <div class="media-left">
-						<span class="fa-stack fa-lg callout-icon">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-							<i class="fa fa-info fa-stack-1x"></i>
-                        </span>
-                    </div>
-                    <div class="media-body">
-                        <h4 class="callout-title">
-                            <pxa:translate key="be.no_categories"/>
-                        </h4>
-                        <div class="callout-body">
-                            <p>
-                                <pxa:translate key="be.no_categories_text"/>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </f:else>
-    </f:if>
-</f:section>
 
-<f:section name="sortingControls">
-    <f:if condition="{categoriesPositions}">
-        <f:if condition="{categoriesPositions.prev.{category.uid}}">
-            <f:then>
-                <a class="btn btn-default"
-                   title="{pxa:translate(key: 'be.move_up')}"
-                   href="{pxa:getMoveLink(uid: category.uid, positionUid: '{categoriesPositions.prev.{category.uid}}', table: 'sys_category')}">
-                    <core:icon identifier="actions-move-up"/>
-                </a>
-            </f:then>
-            <f:else>
-            <span class="btn btn-default disabled">
-                <core:icon identifier="empty-empty"/>
-            </span>
-            </f:else>
-        </f:if>
-        <f:if condition="{categoriesPositions.next.{category.uid}}">
-            <f:then>
-                <a class="btn btn-default"
-                   title="{pxa:translate(key: 'be.move_down')}"
-                   href="{pxa:getMoveLink(uid: category.uid, positionUid: '{categoriesPositions.next.{category.uid}}', table: 'sys_category')}">
-                    <core:icon identifier="actions-move-down"/>
-                </a>
-            </f:then>
-            <f:else>
-            <span class="btn btn-default disabled">
-                <core:icon identifier="empty-empty"/>
-            </span>
-            </f:else>
-        </f:if>
     </f:if>
 </f:section>
 </html>

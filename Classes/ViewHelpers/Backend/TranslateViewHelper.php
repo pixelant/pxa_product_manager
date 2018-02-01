@@ -29,7 +29,10 @@ class TranslateViewHelper extends AbstractViewHelper
     /**
      * Translate label
      *
-     * @return string
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed|string
      */
     public static function renderStatic(
         array $arguments,

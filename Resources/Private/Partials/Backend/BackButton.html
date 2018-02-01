@@ -1,0 +1,18 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers/Backend"  data-namespace-typo3-fluid="true">
+<f:if condition="{activeCategory}">
+    <div class="back-button">
+        <f:if condition="{activeCategory.parent}">
+            <f:then>
+                <f:link.action class="btn btn-default" arguments="{category: activeCategory.parent}">
+                    <pxa:translate key="be.go_back"/>
+                </f:link.action>
+            </f:then>
+            <f:else>
+                <f:link.action class="btn btn-default">
+                    <pxa:translate key="be.go_back"/>
+                </f:link.action>
+            </f:else>
+        </f:if>
+    </div>
+</f:if>
+</html>

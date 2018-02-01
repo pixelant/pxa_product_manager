@@ -71,7 +71,7 @@ call_user_func(
                 'mod1',         // Name of the module
                 '',             // Position of the module
                 [
-                    'BackendManager' => 'index'
+                    'BackendManager' => 'index, listProducts'
                 ],
                 [          // Additional configuration
                     'access' => 'user,group',

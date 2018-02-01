@@ -253,6 +253,9 @@
             <trans-unit id="be.create_new_category">
                 <source>+ Add new category</source>
             </trans-unit>
+            <trans-unit id="be.create_new_product">
+                <source>+ Add new product</source>
+            </trans-unit>
             <trans-unit id="be.move_up">
                 <source>Move up</source>
             </trans-unit>
