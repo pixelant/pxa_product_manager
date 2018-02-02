@@ -1,0 +1,24 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers/Backend" data-namespace-typo3-fluid="true">
+<f:if condition="{translations}">
+    <f:then>
+        <a href="#collapse-{uid}"
+           role="button"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           aria-expanded="false"
+           aria-controls="collapseOne"
+           class="collapsed btn btn-info">
+            <pxa:translate key="be.show_translations"
+                           arguments="{count: '{translations -> f:count()}'}"/>
+        </a>
+    </f:then>
+    <f:else>
+        <span>
+            <button type="button" class="btn btn-default" disabled="disabled">
+                <pxa:translate key="be.no_translation"/>
+            </button>
+        </span>
+    </f:else>
+</f:if>
+</html>

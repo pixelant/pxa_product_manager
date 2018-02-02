@@ -24,6 +24,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use Pixelant\PxaProductManager\Domain\Model\Category;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -75,6 +76,35 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
         }
 
         return [];
+    }
+
+    /**
+     * Get categories for some folder
+     * Use in BE module to list categories
+     *
+     * @param int $pid
+     * @return QueryResultInterface
+     */
+    public function findCategoriesByPidAndParentIgnoreHidden(int $pid, Category $category = null)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()
+            ->setRespectStoragePage(false)
+            ->setIgnoreEnableFields(true)
+            ->setEnableFieldsToBeIgnored(['disabled']);
+
+        $query->matching(
+            $query->logicalAnd([
+                $query->equals('pid', $pid),
+                $query->equals('parent', $category ?? 0)
+            ])
+        );
+
+        $query->setOrderings([
+            'sorting' => QueryInterface::ORDER_ASCENDING
+        ]);
+
+        return $query->execute();
     }
 
     /**

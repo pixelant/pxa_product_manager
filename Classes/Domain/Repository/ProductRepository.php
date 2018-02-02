@@ -66,12 +66,14 @@ class ProductRepository extends AbstractDemandRepository
      * Find products by categories
      *
      * @param array $categories
+     * @param bool $showHidden
      * @param array $orderings
      * @return QueryResultInterface|array
      */
     public function findProductsByCategories(
         array $categories,
-        $orderings = ['name' => QueryInterface::ORDER_DESCENDING]
+        bool $showHidden = false,
+        array $orderings = ['name' => QueryInterface::ORDER_DESCENDING]
     ) {
         if (empty($categories)) {
             return [];
@@ -79,6 +81,12 @@ class ProductRepository extends AbstractDemandRepository
 
         // Find products our own way, because CategoryCollection::load doesn't have options to set the ordering
         $query = $this->createQuery();
+        if (true === $showHidden) {
+            $query
+                ->getQuerySettings()
+                ->setIgnoreEnableFields(true)
+                ->setEnableFieldsToBeIgnored(['disabled']);
+        }
 
         $constraints = [];
         /** @var Category $category */

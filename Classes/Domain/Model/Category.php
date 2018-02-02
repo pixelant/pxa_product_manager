@@ -110,6 +110,12 @@ class Category extends CategoryExtbase
     protected $singleViewTemplate = '';
 
     /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
+     * @lazy
+     */
+    protected $subCategories;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -130,7 +136,8 @@ class Category extends CategoryExtbase
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
          */
-        $this->attributeSets = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->attributeSets = new ObjectStorage();
+        $this->subCategories = new ObjectStorage();
     }
 
     /**
@@ -386,5 +393,21 @@ class Category extends CategoryExtbase
     public function setSingleViewTemplate(string $singleViewTemplate)
     {
         $this->singleViewTemplate = $singleViewTemplate;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
+     */
+    public function getSubCategories()
+    {
+        return $this->subCategories;
+    }
+
+    /**
+     * @param ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category> $subCategories
+     */
+    public function setSubCategories(ObjectStorage $subCategories)
+    {
+        $this->subCategories = $subCategories;
     }
 }

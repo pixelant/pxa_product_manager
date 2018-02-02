@@ -1,0 +1,53 @@
+.breadcrumb {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.breadcrumb > li {
+    display: inline-block;
+}
+
+.breadcrumb > li > a {
+    color: #337ab7;
+    text-decoration: none;
+}
+
+.breadcrumb > li > a:hover {
+    color: #23527c;
+    text-decoration: underline;
+}
+
+.breadcrumb > li + li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+
+.breadcrumb > .active {
+    color: #777;
+}
+
+.tx-pxa-product-manager .panel .panel-heading {
+    font-weight: normal;
+    padding: 5px 15px;
+}
+
+.new-record-buttons {
+    padding-bottom: 15px;
+}
+
+.record-title {
+    margin-top: 8px;
+    display: inline-block;
+}
+
+.back-button {
+    margin-bottom: 15px;
+}
+
+.panel-heading .btn-info, .panel-heading .btn-info:active, .panel-heading .btn-info:focus, .panel-heading .btn-info:hover {
+    color: #fff;
+}

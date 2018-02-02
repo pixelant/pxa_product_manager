@@ -1,6 +1,6 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Tests\Unit;
+namespace Pixelant\PxaProductManager\Tests\Unit\Controller;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Controller\NavigationController;

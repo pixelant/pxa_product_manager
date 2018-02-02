@@ -48,7 +48,7 @@ call_user_func(
 
         if (TYPO3_MODE === 'BE') {
             $icons = [
-                'ext-pxa-product-manager-wizard-icon' => 'extension-icon.png',
+                'ext-pxa-product-manager-wizard-icon' => 'package.svg',
             ];
 
             /** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
@@ -59,10 +59,26 @@ call_user_func(
             foreach ($icons as $identifier => $path) {
                 $iconRegistry->registerIcon(
                     $identifier,
-                    \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
-                    ['source' => 'EXT:pxa_product_manager/Resources/Public/Icons/' . $path]
+                    \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+                    ['source' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/' . $path]
                 );
             }
+
+            // Register BE module
+            \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+                'Pixelant.' . $_EXTKEY,
+                'web',          // Main area
+                'mod1',         // Name of the module
+                '',             // Position of the module
+                [
+                    'BackendManager' => 'index, listProducts'
+                ],
+                [          // Additional configuration
+                    'access' => 'user,group',
+                    'icon' => 'EXT:' . $_EXTKEY . '/ext_icon.svg',
+                    'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_mod.xml',
+                ]
+            );
         }
     },
     $_EXTKEY

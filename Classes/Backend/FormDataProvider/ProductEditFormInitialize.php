@@ -5,12 +5,15 @@ namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
+use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
@@ -21,6 +24,8 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class ProductEditFormInitialize implements FormDataProviderInterface
 {
+    use TranslateBeTrait;
+
     /**
      * Hold static configuration for attributes fields
      *
@@ -42,9 +47,13 @@ class ProductEditFormInitialize implements FormDataProviderInterface
      */
     public function addData(array $result): array
     {
-        if ($result['tableName'] === 'tx_pxaproductmanager_domain_model_product'
-            && !StringUtility::beginsWith($result['databaseRow']['uid'], 'NEW')
-        ) {
+        if ($result['tableName'] !== 'tx_pxaproductmanager_domain_model_product') {
+            return $result;
+        }
+
+        $isNew = StringUtility::beginsWith($result['databaseRow']['uid'], 'NEW');
+
+        if (!$isNew) {
             /** @var AttributeHolderUtility $attributeHolder */
             $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
             $attributeHolder->start(ProductUtility::getProductCategoriesUids($result['databaseRow']['uid']));
@@ -67,7 +76,11 @@ class ProductEditFormInitialize implements FormDataProviderInterface
                         );
                     }
                 }
+            } else {
+                $this->showNotificationMessage('tca.notification_no_attributes_available');
             }
+        } else {
+            $this->showNotificationMessage('tca.notification_first_save');
         }
 
         return $result;
@@ -261,5 +274,30 @@ class ProductEditFormInitialize implements FormDataProviderInterface
             $diffRow[$field] = $attributeValue;
             $defaultLanguageRow[$field] = $attributeValue;
         }
+    }
+
+    /**
+     * Show notification message for user
+     *
+     * @param string $label
+     */
+    protected function showNotificationMessage(string $label)
+    {
+        /** @var FlashMessage $flashMessage */
+        $flashMessage = GeneralUtility::makeInstance(
+            FlashMessage::class,
+            $this->translate($label),
+            $this->translate('tca.notification_title'),
+            FlashMessage::INFO,
+            true
+        );
+
+        /** @var FlashMessageQueue $flashMessageQueue */
+        $flashMessageQueue = GeneralUtility::makeInstance(
+            FlashMessageQueue::class,
+            'core.template.flashMessages'
+        );
+
+        $flashMessageQueue->addMessage($flashMessage);
     }
 }
