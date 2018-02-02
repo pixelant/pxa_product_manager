@@ -72,10 +72,6 @@ call_user_func(
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
             '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pxa_product_manager/Configuration/TypoScript/PageTS/rteTsConfig.ts">'
         );
-
-        // Register solr view helper
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['solr']['PiResults']['addViewHelpers'][$_EXTKEY] =
-            \Pixelant\PxaProductManager\ViewHelpers\Solr\SolrViewHelperProvider::class;
     },
     $_EXTKEY
 );

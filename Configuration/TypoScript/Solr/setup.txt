@@ -1,6 +1,3 @@
-### Override solr results template to modify how product record look
-plugin.tx_solr.templateFiles.results = EXT:pxa_product_manager/Resources/Private/Extensions/Solr/results.htm
-
 plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product = 1
 plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product {
     table = tx_pxaproductmanager_domain_model_product
@@ -15,13 +12,20 @@ plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product {
         description < .content
         abstract = teaser
 
-        url = TEXT
+        url = USER
         url {
-            typolink.parameter = {$plugin.tx_pxaproductmanager.settings.pagePid}
-            typolink.additionalParams = &tx_pxaproductmanager_pi1[product]={field:uid}&L={field:__solr_index_language}
-            typolink.additionalParams.insertData = 1
-            typolink.returnLast = url
-            typolink.useCacheHash = 1
+            userFunc = Pixelant\PxaProductManager\UserFunction\SolrProductLink->getLink
+            pageUid = {$plugin.tx_pxaproductmanager.settings.pagePid}
+
+            productUid = TEXT
+            productUid {
+                field = uid
+            }
+
+            languageUid = TEXT
+            languageUid {
+                field = __solr_index_language
+            }
         }
 
         image_main_url_stringS = USER
@@ -73,15 +77,5 @@ plugin.tx_solr.search.faceting.facets.type {
         tx_pxaproductmanager_domain_model_product = TEXT
         tx_pxaproductmanager_domain_model_product.value = Products
         tx_pxaproductmanager_domain_model_product.insertData = 1
-    }
-}
-
-plugin {
-    tx_pxaproductmanager {
-        settings {
-            solr {
-                productManagerTypes = tx_pxaproductmanager_domain_model_product
-            }
-        }
     }
 }
