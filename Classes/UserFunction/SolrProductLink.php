@@ -1,8 +1,5 @@
 <?php
-
-
 namespace Pixelant\PxaProductManager\UserFunction;
-
 
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
