@@ -229,6 +229,9 @@
             <trans-unit id="be.edit_category">
                 <source>Edit category - "%s"</source>
             </trans-unit>
+            <trans-unit id="be.edit_product">
+                <source>Edit product - "%s"</source>
+            </trans-unit>
             <trans-unit id="be.no_translation">
                 <source>No translations</source>
             </trans-unit>

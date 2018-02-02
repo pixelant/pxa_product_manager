@@ -30,110 +30,27 @@
                                 <div class="row panel-title">
                                     <div class="col-xs-4">
                                         <a href="{pxa:recordEditUrl(uid: product.uid, table: 'tx_pxaproductmanager_domain_model_product')}"
-                                           title="{pxa:translate(key: 'be.edit_category', arguments: '{0: product.title}')}"
+                                           title="{pxa:translate(key: 'be.edit_product', arguments: '{0: product.title}')}"
                                            class="record-title">
                                             <f:format.raw>
                                                 <pxa:getRecordIcon uid="{product.uid}" table="tx_pxaproductmanager_domain_model_product"/>
                                             </f:format.raw>
                                             {product.name} (id: {product.uid})
                                         </a>
-                                    </div><f:comment>
+                                    </div>
                                     <div class="col-xs-8">
                                         <a class="btn btn-default"
-                                           title="{pxa:translate(key: 'be.edit_category', arguments: '{0: category.title}')}"
-                                           href="{pxa:recordEditUrl(uid: category.uid)}">
+                                           title="{pxa:translate(key: 'be.edit_product', arguments: '{0: product.title}')}"
+                                           href="{pxa:recordEditUrl(uid: product.uid, table: 'tx_pxaproductmanager_domain_model_product')}">
                                             <core:icon identifier="actions-open"/>
                                         </a>
 
-                                        <f:render section="sortingControls"
-                                                  arguments="{categoriesPositions: categoriesPositions, category: category}"/>
-
-                                        <f:if condition="{translations}">
-                                            <f:then>
-                                                <a href="#collapseCategory-{category.uid}"
-                                                   role="button"
-                                                   data-toggle="collapse"
-                                                   data-parent="#accordion"
-                                                   aria-expanded="false"
-                                                   aria-controls="collapseOne"
-                                                   class="collapsed btn btn-info">
-                                                    <pxa:translate key="be.show_translations"
-                                                                   arguments="{count: '{translations -> f:count()}'}"/>
-                                                </a>
-                                            </f:then>
-                                            <f:else>
-                                                <span>
-                                                    <button type="button" class="btn btn-default" disabled="disabled">
-                                                        <pxa:translate key="be.no_translation"/>
-                                                    </button>
-                                                </span>
-                                            </f:else>
-                                        </f:if>
-                                        <f:if condition="{category.subCategories -> f:count()}">
-                                            <f:then>
-                                                <f:link.action arguments="{category: category}"
-                                                               class="btn btn-info">
-                                                    <pxa:translate key="be.see_subcategories"/>
-                                                    ({category.subCategories -> f:count()})
-                                                </f:link.action>
-                                            </f:then>
-                                            <f:else>
-                                                <button type="button" class="btn btn-default" disabled="disabled">
-                                                    <pxa:translate key="be.no_subcategories"/>
-                                                </button>
-                                            </f:else>
-                                        </f:if>
-                                        <f:if condition="{products.{category.uid}}">
-                                            <f:then>
-                                                <f:link.action action="listProducts"
-                                                               arguments="{category: category}"
-                                                               class="btn btn-info">
-                                                    <pxa:translate key="be.see_products"/>
-                                                    ({products.{category.uid} -> f:count()})
-                                                </f:link.action>
-                                            </f:then>
-                                            <f:else>
-                                                <button type="button" class="btn btn-default" disabled="disabled">
-                                                    <pxa:translate key="be.no_products"/>
-                                                </button>
-                                            </f:else>
-                                        </f:if>
-                                    </div></f:comment>
+                                        <f:render partial="Backend/TranslationsButton" arguments="{uid: product.uid, translations: translations}"/>
+                                    </div>
                                 </div>
                             </div>
-                            <f:comment>
-                            <div class="panel-collapse collapse"
-                                 role="tabpanel"
-                                 id="collapseCategory-{category.uid}"
-                                 aria-labelledby="headingOne"
-                                 aria-expanded="false">
-                                <div class="panel-body">
-                                    <f:for each="{translations}" as="translation">
-                                        <div class="row">
-                                            <div class="col-xs-2">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <a href="{pxa:recordEditUrl(uid: translation.uid)}"
-                                                   title="{pxa:translate(key: 'be.edit_category', arguments: '{0: translation.title}')}">
-                                                    <core:iconForRecord table="sys_category" row="{translation}"/>
-                                                    {translation.title} (id: {translation.uid})
 
-                                                    <core:icon identifier="actions-open"/>
-                                                </a>
-                                            </div>
-                                            <div class="col-xs-2">
-                                                <pxa:getDbRecord uid="{translation.sys_language_uid}"
-                                                                 table="sys_language" as="sysLanguage">
-                                                    {sysLanguage.title}
-                                                    <f:format.raw>
-                                                        <pxa:getRecordIcon uid="{sysLanguage.uid}"
-                                                                           table="sys_language"/>
-                                                    </f:format.raw>
-                                                </pxa:getDbRecord>
-                                            </div>
-                                        </div>
-                                    </f:for>
-                                </div>
-                            </div></f:comment>
+                            <f:render partial="Backend/TranslationsPanel" arguments="{uid: product.uid, translations: translations, itemName: 'product', table: 'tx_pxaproductmanager_domain_model_product', titleField: 'name'}"/>
                         </div>
                     </f:alias>
                 </f:for>
