@@ -164,7 +164,7 @@
 				tx_pxaproductmanager_pi1: {
 					demand: {
 						offSet: offSet,
-						categories: settings.demandCategories.split(','),
+						categories: (settings.demandCategories.length > 0) ? settings.demandCategories.split(',') : [],
 						limit: settings.limit,
 						filters: filteringData,
 						storagePid: storage,
