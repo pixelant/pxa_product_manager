@@ -72,6 +72,7 @@ class TCAUtility
                 'label' => '',
                 'config' => [
                     'type' => 'check',
+                    'items' => []
                 ]
             ],
 

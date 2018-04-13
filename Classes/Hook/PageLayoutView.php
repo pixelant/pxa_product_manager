@@ -347,7 +347,7 @@ class PageLayoutView
         $info .= $this->getPagePidInfo((int)$settings['pagePid']);
         $info .= $this->getCategoriesInfo(
             $this->translate('flexform.navigation_category'),
-            $settings['category']
+            $settings['category'] ?? ''
         );
 
         $info .= $this->getProductOrderingInfo($settings);
