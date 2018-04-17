@@ -75,7 +75,8 @@ class ProductRepository extends AbstractDemandRepository
         array $categories,
         bool $showHidden = false,
         array $orderings = ['name' => QueryInterface::ORDER_DESCENDING],
-        string $conjunction = 'and'
+        string $conjunction = 'and',
+        int $limit = 0
     ) {
         if (empty($categories)) {
             return [];
@@ -105,6 +106,11 @@ class ProductRepository extends AbstractDemandRepository
         );
 
         $query->setOrderings($orderings);
+
+        // Set limit
+        if ($limit > 0) {
+            $query->setLimit($limit);
+        }
 
         return $query->execute();
     }

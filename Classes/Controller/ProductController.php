@@ -10,7 +10,6 @@ use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -502,22 +501,14 @@ class ProductController extends AbstractController
                 true
             );
 
+            // Get products
             $products = $this->productRepository->findProductsByCategories(
                 $categories,
                 false,
                 ['tstamp' => QueryInterface::ORDER_DESCENDING],
-                'or'
+                'or',
+                (int)$this->settings['limit']
             );
-
-            // Cast to array
-            if ($products instanceof QueryResult) {
-                $products = $products->toArray();
-            }
-
-            // Cut off products if limit is set
-            if ($this->settings['limit']) {
-                $products = array_slice($products, 0, $this->settings['limit']);
-            }
         }
 
         $this->view->assign('products', $products);
