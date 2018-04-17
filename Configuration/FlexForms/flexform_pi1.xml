@@ -144,7 +144,10 @@
                             <displayCond>
                                 <AND>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->customProductsList;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.settings.customProductsList.mode:=:products</numIndex>
+                                    <OR>
+                                        <numIndex index="0">FIELD:sDEF.settings.customProductsList.mode:=:products</numIndex>
+                                        <numIndex index="1">FIELD:sDEF.settings.customProductsList.mode:REQ:false</numIndex>
+                                    </OR>
                                 </AND>
                             </displayCond>
                             <config>
