@@ -107,6 +107,9 @@ class PageLayoutView
                         case 'Product->compareView':
                             $additionalInfo .= $this->getCompareInfo($flexFormSettings['settings']);
                             break;
+                        case 'Product->customProductsList':
+                            $additionalInfo .= $this->getCustomProductsListInfo($flexFormSettings['settings']);
+                            break;
                     }
                 }
             } else {
@@ -558,6 +561,93 @@ class PageLayoutView
         $info .= $this->getIconListOptionsInfo($settings, 'compareList');
 
         return $info;
+    }
+
+    /**
+     * @param array $settings
+     * @return string
+     */
+    protected function getCustomProductsListInfo(array $settings): string
+    {
+        $info = '<br>';
+
+        // Pid
+        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
+
+        // Mode
+        $info .= sprintf(
+            '<b>%s</b>: %s<br>',
+            $this->translate('flexform.custom_products_list.mode'),
+            $this->translate($settings['customProductsList']['mode'] === 'products' ?
+                'flexform.custom_products_list.mode.products' : 'flexform.custom_products_list.mode.category')
+        );
+
+        if ($settings['customProductsList']['mode'] === 'category') {
+            // Product categories
+            $info .= $this->getCategoriesInfo(
+                $this->translate('flexform.custom_products_list.products_categories'),
+                $settings['customProductsList']['productsCategories'] ?? ''
+            );
+
+            // Limit
+            $info .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->translate('flexform.limit'),
+                (int)$settings['limit'] ?: $this->translate('flexform.no_limit')
+            );
+        }
+
+        // Selected products
+        if ($settings['customProductsList']['mode'] === 'products') {
+            $info .= $this->getProductsInfo(
+                $this->translate('flexform.custom_products_list.products_to_show'),
+                $settings['customProductsList']['productsToShow'] ?? ''
+            );
+        }
+
+        return $info;
+    }
+
+    /**
+     * Summary info for products
+     *
+     * @param string $title
+     * @param string $products
+     * @return string
+     */
+    protected function getProductsInfo(string $title, string $products): string
+    {
+        $categories = GeneralUtility::intExplode(',', $products, true);
+        $info = '<b>' . $title . '</b>:';
+
+        if (!empty($products)) {
+            $productsInfo = '';
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+                'tx_pxaproductmanager_domain_model_product'
+            );
+            $statement = $queryBuilder
+                ->select('uid', 'name')
+                ->from('tx_pxaproductmanager_domain_model_product')
+                ->where(
+                    $queryBuilder->expr()->in(
+                        'uid',
+                        $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
+                    )
+                )
+                ->execute();
+            while ($product = $statement->fetch()) {
+                $productsInfo .= ', ' . $product['name'];
+            }
+
+            $productsInfo = ltrim($productsInfo, ',');
+        }
+
+        if (!isset($productsInfo)) {
+            $productsInfo = ' ' . $this->translate('be.extension_info.none');
+        }
+
+        return $info . $productsInfo . '<br>';
     }
 
     /**

@@ -31,34 +31,38 @@
                                         <numIndex index="1">Product->groupedList;Product->show</numIndex>
                                     </numIndex>
                                     <numIndex index="4">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_custom_products_list</numIndex>
+                                        <numIndex index="1">Product->customProductsList;Product->show</numIndex>
+                                    </numIndex>
+                                    <numIndex index="5">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_show</numIndex>
                                         <numIndex index="1">Product->show</numIndex>
                                     </numIndex>
-                                    <numIndex index="5">
+                                    <numIndex index="6">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_lazy_list</numIndex>
                                         <numIndex index="1">Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
                                     </numIndex>
-                                    <numIndex index="6">
+                                    <numIndex index="7">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_wish_list</numIndex>
                                         <numIndex index="1">Product->wishList</numIndex>
                                     </numIndex>
-                                    <numIndex index="7">
+                                    <numIndex index="8">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_pre_view</numIndex>
                                         <numIndex index="1">Product->comparePreView;Product->compareView</numIndex>
                                     </numIndex>
-                                    <numIndex index="8">
+                                    <numIndex index="9">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_view</numIndex>
                                         <numIndex index="1">Product->compareView;Product->comparePreView</numIndex>
                                     </numIndex>
-                                    <numIndex index="9">
+                                    <numIndex index="10">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
-                                    <numIndex index="10">
+                                    <numIndex index="11">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_show</numIndex>
                                         <numIndex index="1">Navigation->show</numIndex>
                                     </numIndex>
-                                    <numIndex index="11">
+                                    <numIndex index="12">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.filtering_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
@@ -93,10 +97,39 @@
                         </TCEforms>
                     </settings.pagePid>
 
+                    <settings.customProductsList.mode>
+                        <TCEforms>
+                            <onChange>reload</onChange>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode</label>
+                            <displayCond>FIELD:switchableControllerActions:=:Product->customProductsList;Product->show</displayCond>
+                            <config>
+                                <type>select</type>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode.products</numIndex>
+                                        <numIndex index="1">products</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode.category</numIndex>
+                                        <numIndex index="1">category</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.customProductsList.mode>
+
                     <settings.limit>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.limit</label>
-                            <displayCond>FIELD:switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <displayCond>
+                                <OR>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                    <AND>
+                                        <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->customProductsList;Product->show</numIndex>
+                                        <numIndex index="1">FIELD:sDEF.settings.customProductsList.mode:=:category</numIndex>
+                                    </AND>
+                                </OR>
+                            </displayCond>
                             <config>
                                 <type>input</type>
                                 <size>10</size>
@@ -104,6 +137,62 @@
                             </config>
                         </TCEforms>
                     </settings.limit>
+
+                    <settings.customProductsList.productsToShow>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.products_to_show</label>
+                            <displayCond>
+                                <AND>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->customProductsList;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.settings.customProductsList.mode:=:products</numIndex>
+                                </AND>
+                            </displayCond>
+                            <config>
+                                <type>group</type>
+                                <internal_type>db</internal_type>
+                                <allowed>tx_pxaproductmanager_domain_model_product</allowed>
+                                <size>10</size>
+                                <minitems>1</minitems>
+                                <maxitems>50</maxitems>
+                                <show_thumbs>1</show_thumbs>
+                                <wizards>
+                                    <suggest>
+                                        <type>suggest</type>
+                                    </suggest>
+                                </wizards>
+                            </config>
+                        </TCEforms>
+                    </settings.customProductsList.productsToShow>
+
+                    <settings.customProductsList.productsCategories>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.products_categories</label>
+                            <displayCond>
+                                <AND>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->customProductsList;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.settings.customProductsList.mode:=:category</numIndex>
+                                </AND>
+                            </displayCond>
+                            <config>
+                                <type>select</type>
+                                <renderMode>tree</renderMode>
+                                <treeConfig>
+                                    <parentField>parent</parentField>
+                                    <appearance>
+                                        <maxLevels>99</maxLevels>
+                                        <expandAll>TRUE</expandAll>
+                                        <showHeader>TRUE</showHeader>
+                                    </appearance>
+                                </treeConfig>
+                                <foreign_table>sys_category</foreign_table>
+                                <foreign_table_where> AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0) ORDER BY sys_category.sorting</foreign_table_where>
+                                <size>10</size>
+                                <autoSizeMax>20</autoSizeMax>
+                                <minitems>0</minitems>
+                                <maxitems>99</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.customProductsList.productsCategories>
 
                     <settings.category>
                         <TCEforms>
