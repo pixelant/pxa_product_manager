@@ -91,6 +91,9 @@
             <trans-unit id="flexform.mode.product_groupedlist">
                 <source>Grouped list view</source>
             </trans-unit>
+            <trans-unit id="flexform.mode.product_custom_products_list">
+                <source>Custom products list view</source>
+            </trans-unit>
             <trans-unit id="flexform.mode.product_show">
                 <source>Single view</source>
             </trans-unit>
@@ -205,6 +208,23 @@
             <trans-unit id="flexform.hide_filter_options_no_result">
                 <source>Hide filtering options without result</source>
             </trans-unit>
+
+            <trans-unit id="flexform.custom_products_list.mode">
+                <source>Custom products list mode</source>
+            </trans-unit>
+            <trans-unit id="flexform.custom_products_list.mode.products">
+                <source>Defined by products list</source>
+            </trans-unit>
+            <trans-unit id="flexform.custom_products_list.mode.category">
+                <source>Defined by category</source>
+            </trans-unit>
+            <trans-unit id="flexform.custom_products_list.products_to_show">
+                <source>Products to show</source>
+            </trans-unit>
+            <trans-unit id="flexform.custom_products_list.products_categories">
+                <source>Products categories</source>
+            </trans-unit>
+
             <!--FlexForm:END-->
 
             <!--Extension manager configuration:START-->

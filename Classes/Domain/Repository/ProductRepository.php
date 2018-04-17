@@ -68,12 +68,16 @@ class ProductRepository extends AbstractDemandRepository
      * @param array $categories
      * @param bool $showHidden
      * @param array $orderings
-     * @return QueryResultInterface|array
+     * @param string $conjunction
+     * @param int $limit
+     * @return array|QueryResultInterface
      */
     public function findProductsByCategories(
         array $categories,
         bool $showHidden = false,
-        array $orderings = ['name' => QueryInterface::ORDER_DESCENDING]
+        array $orderings = ['name' => QueryInterface::ORDER_DESCENDING],
+        string $conjunction = 'and',
+        int $limit = 0
     ) {
         if (empty($categories)) {
             return [];
@@ -98,11 +102,16 @@ class ProductRepository extends AbstractDemandRepository
             $this->createConstraintFromConstraintsArray(
                 $query,
                 $constraints,
-                'and'
+                $conjunction
             )
         );
 
         $query->setOrderings($orderings);
+
+        // Set limit
+        if ($limit > 0) {
+            $query->setLimit($limit);
+        }
 
         return $query->execute();
     }
