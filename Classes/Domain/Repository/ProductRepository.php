@@ -69,6 +69,7 @@ class ProductRepository extends AbstractDemandRepository
      * @param bool $showHidden
      * @param array $orderings
      * @param string $conjunction
+     * @param int $limit
      * @return array|QueryResultInterface
      */
     public function findProductsByCategories(

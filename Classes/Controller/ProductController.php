@@ -476,7 +476,9 @@ class ProductController extends AbstractController
     }
 
     /**
+     * List of custom products
      *
+     * @return void
      */
     public function customProductsListAction()
     {
@@ -490,7 +492,7 @@ class ProductController extends AbstractController
                 $this->settings['customProductsList']['productsToShow'],
                 true
             );
-            $products = $this->productRepository->findProductsByUids($productsList);
+            $products = $this->getProductByUidsList($productsList);
         }
 
         // Category mode
