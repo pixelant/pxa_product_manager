@@ -486,13 +486,21 @@ class ProductController extends AbstractController
 
         // Products mode
         if ($mode == 'products') {
-            $productsList = GeneralUtility::trimExplode(',', $this->settings['customProductsList']['productsToShow'], true);
+            $productsList = GeneralUtility::trimExplode(
+                ',',
+                $this->settings['customProductsList']['productsToShow'],
+                true
+            );
             $products = $this->productRepository->findProductsByUids($productsList);
         }
 
         // Category mode
         if ($mode == 'category') {
-            $categories = GeneralUtility::trimExplode(',', $this->settings['customProductsList']['productsCategories'], true);
+            $categories = GeneralUtility::trimExplode(
+                ',',
+                $this->settings['customProductsList']['productsCategories'],
+                true
+            );
 
             $products = $this->productRepository->findProductsByCategories(
                 $categories,
