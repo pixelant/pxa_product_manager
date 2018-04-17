@@ -10,6 +10,7 @@ use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /***************************************************************
@@ -472,6 +473,47 @@ class ProductController extends AbstractController
         }
 
         $this->view->assign('groupedList', $groupedList ?? []);
+    }
+
+    /**
+     * List of custom products
+     *
+     * @return void
+     */
+    public function customProductsListAction()
+    {
+        $mode = $this->settings['customProductsList']['mode'];
+        $products = [];
+
+        // Products mode
+        if ($mode == 'products') {
+            $productsList = GeneralUtility::trimExplode(
+                ',',
+                $this->settings['customProductsList']['productsToShow'],
+                true
+            );
+            $products = $this->getProductByUidsList($productsList);
+        }
+
+        // Category mode
+        if ($mode == 'category') {
+            $categories = GeneralUtility::trimExplode(
+                ',',
+                $this->settings['customProductsList']['productsCategories'],
+                true
+            );
+
+            // Get products
+            $products = $this->productRepository->findProductsByCategories(
+                $categories,
+                false,
+                ['tstamp' => QueryInterface::ORDER_DESCENDING],
+                'or',
+                (int)$this->settings['limit']
+            );
+        }
+
+        $this->view->assign('products', $products);
     }
 
     /**
