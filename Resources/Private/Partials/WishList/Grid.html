@@ -1,0 +1,52 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<div class="pm-products-user-list">
+    <f:if condition="{products}">
+        <f:for each="{products}" as="product">
+            <div class="col-md-4 col-sm-6">
+                <f:if condition="{product.disableSingleView}">
+                    <f:then>
+                        <f:render section="item" arguments="{product: product}"/>
+                    </f:then>
+                    <f:else>
+                        <ppm:link pageUid="{settings.pagePid}" product="{product}">
+                            <f:render section="item" arguments="{product: product}"/>
+                        </ppm:link>
+                    </f:else>
+                </f:if>
+            </div>
+        </f:for>
+    </f:if>
+    <div class="list-no-products-found">
+        0 -
+        <f:translate key="fe.number_of_results_found"/>
+    </div>
+</div>
+
+<f:section name="item">
+    <div class="item">
+        <f:render partial="Product/ListImage" arguments="{image: product.thumbnail, title: '{product.name}'}"/>
+        <span class="wish-list-btn in-progress list-clear__icon"
+              data-wish-list-button="1"
+              data-delete-parent-on-remove=".col-md-4"
+              data-product-uid="{product.uid}"
+              data-add-to-list-text="{f:translate(key: 'fe.compare_list.add_title')}"
+              data-remove-from-list-text="{f:translate(key: 'fe.compare_list.remove_title')}"
+              data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleWishList', absolute: '1', arguments: '{wishProduct: product}', pageType: '{settings.wishList.pageType}')}">
+            <ppm:svg
+                    source="{f:uri.resource(path: 'Icons/circle-cross.svg', extensionName: 'pxa_product_manager')}"/>
+        </span>
+        <div class="item-body">
+            <div class="item-title">
+                <h4>{product.name}</h4>
+            </div>
+            <f:if condition="{settings.compareList.enable}">
+                <div class="item-options-bar">
+                    <f:render partial="Product/OptionsBar/CompareListButton" arguments="{uid: product.uid}"/>
+                </div>
+                <div style="clear: both;"></div>
+            </f:if>
+        </div>
+    </div>
+</f:section>
+</html>

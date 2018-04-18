@@ -89,6 +89,11 @@ plugin.tx_pxaproductmanager {
                 maxWidth = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxWidth}
                 maxHeight = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxHeight}
             }
+
+            orderView {
+                maxWidth = {$plugin.tx_pxaproductmanager.settings.images.orderView.maxWidth}
+                maxHeight = {$plugin.tx_pxaproductmanager.settings.images.orderView.maxHeight}
+            }
         }
 
         # comma list of labels available through ProductManager.Main.translate

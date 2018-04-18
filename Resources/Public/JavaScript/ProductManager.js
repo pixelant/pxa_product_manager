@@ -1,5 +1,5 @@
 (function (w, $) {
-	var ProductManager = w.ProductManager || {};
+	const ProductManager = w.ProductManager || {};
 
 	// Init settings
 	ProductManager.settings = ProductManager.settings || {};
@@ -9,7 +9,7 @@
 		listeners: {},
 
 		init: function () {
-			for (var key in ProductManager.settings.events) {
+			for (let key in ProductManager.settings.events) {
 				if (ProductManager.settings.events.hasOwnProperty(key)) {
 					this.listeners[ProductManager.settings.events[key]] = [];
 				}
@@ -44,9 +44,9 @@
 		 * @param exdays
 		 */
 		setCookie: function (cName, value, exdays) {
-			var exdate = new Date();
+			let exdate = new Date();
 			exdate.setDate(exdate.getDate() + exdays);
-			var cValue = encodeURIComponent(value) + ((exdays === null) ? '' : '; expires=' + exdate.toUTCString()) + '; path=/';
+			let cValue = encodeURIComponent(value) + ((exdays === null) ? '' : '; expires=' + exdate.toUTCString()) + '; path=/';
 			document.cookie = cName + '=' + cValue;
 		},
 
@@ -57,7 +57,7 @@
 		 * @return {string}|{boolean}
 		 */
 		getCookie: function (cName) {
-			var i, x, y, ARRcookies = document.cookie.split(';');
+			let i, x, y, ARRcookies = document.cookie.split(';');
 			for (i = 0; i < ARRcookies.length; i++) {
 				x = ARRcookies[i].substr(0, ARRcookies[i].indexOf('='));
 				y = ARRcookies[i].substr(ARRcookies[i].indexOf('=') + 1);
@@ -88,7 +88,7 @@
 		 * @param flyingTo
 		 */
 		flyToElement: function (flyer, flyingTo) {
-			var divider = 3,
+			const divider = 3,
 				flyerClone = flyer.clone();
 
 			flyerClone.css({
@@ -100,8 +100,8 @@
 			});
 
 			$('body').append(flyerClone);
-			var gotoX = flyingTo.offset().left + (flyingTo.width() / 2) - (flyer.width() / divider) / 2;
-			var gotoY = flyingTo.offset().top + (flyingTo.height() / 2) - (flyer.height() / divider) / 2;
+			const gotoX = flyingTo.offset().left + (flyingTo.width() / 2) - (flyer.width() / divider) / 2;
+			const gotoY = flyingTo.offset().top + (flyingTo.height() / 2) - (flyer.height() / divider) / 2;
 
 			$(flyerClone).animate({
 					opacity: 0.4,
@@ -131,12 +131,12 @@
 			modifier = modifier || 0;
 
 			if ($cartCounter.length === 1) {
-				var currentValue = parseInt($cartCounter.text().trim());
+				let currentValue = parseInt($cartCounter.text().trim());
 				if (isNaN(currentValue)) {
 					currentValue = 0;
 				}
 
-				var newValue = currentValue + modifier;
+				const newValue = currentValue + modifier;
 				$cartCounter.text(newValue > 0 ? newValue : 0);
 			}
 		},
@@ -169,7 +169,7 @@
 				console.log('Invalid event', event);
 				return;
 			}
-			for (var i = 0; i < this.listeners[event].length; i++) {
+			for (let i = 0; i < this.listeners[event].length; i++) {
 				this.listeners[event][i](data);
 			}
 		},

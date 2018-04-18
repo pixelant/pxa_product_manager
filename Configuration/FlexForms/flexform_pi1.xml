@@ -299,6 +299,18 @@
                             </config>
                         </TCEforms>
                     </settings.compareViewPid>
+
+                    <settings.enableOrderFunction>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.enable_order_function</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->wishList</displayCond>
+                            <onChange>reload</onChange>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.enableOrderFunction>
                 </el>
             </ROOT>
         </sDEF>
@@ -599,7 +611,6 @@
                 </el>
             </ROOT>
         </productLists>
-
         <filtering>
             <ROOT>
             <TCEforms>
@@ -636,5 +647,26 @@
                 </el>
             </ROOT>
         </filtering>
+        <orderFucntion>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_function_sheet__title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.orderRecipientsEmails>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_recipients_emails</label>
+                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
+                            <config>
+                                <type>text</type>
+                                <cols>32</cols>
+                                <rows>2</rows>
+                            </config>
+                        </TCEforms>
+                    </settings.orderRecipientsEmails>
+                </el>
+            </ROOT>
+        </orderFucntion>
     </sheets>
 </T3DataStructure>

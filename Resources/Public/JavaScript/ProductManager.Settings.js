@@ -1,5 +1,5 @@
 (function (w) {
-	var ProductManager = w.ProductManager || {};
+	const ProductManager = w.ProductManager || {};
 
 	// Init settings
 	ProductManager.settings = ProductManager.settings || {};
@@ -8,6 +8,9 @@
 	ProductManager.settings.wishList = {
 		buttonIdentifier: '[data-wish-list-button="1"]',
 		itemClass: '.item',
+		orderItemAmountClass: '.order-product-amount',
+		orderItemPriceClass: '.item-order-price',
+		totalPriceIdentifier: '#pxa-pm-order-total-price',
 		cartIdentifier: '#pxa-pm-wish-list-cart',
 		cartCounter: '#pxa-pm-wish-list-cart__counter',
 		inListClass: 'selected',

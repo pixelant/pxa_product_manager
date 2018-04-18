@@ -208,6 +208,18 @@
             <trans-unit id="flexform.hide_filter_options_no_result">
                 <source>Hide filtering options without result</source>
             </trans-unit>
+            <trans-unit id="flexform.enable_order_function">
+                <source>Enable order function</source>
+            </trans-unit>
+            <trans-unit id="flexform.order_function_sheet__title">
+                <source>Ordering settings</source>
+            </trans-unit>
+            <trans-unit id="flexform.order_recipients_emails">
+                <source>Recipients emails (each in new line)</source>
+            </trans-unit>
+            <trans-unit id="flexform.no_recipients">
+                <source>No recipients were set. No one will get notification about new order</source>
+            </trans-unit>
 
             <trans-unit id="flexform.custom_products_list.mode">
                 <source>Custom products list mode</source>
@@ -224,7 +236,6 @@
             <trans-unit id="flexform.custom_products_list.products_categories">
                 <source>Products categories</source>
             </trans-unit>
-
             <!--FlexForm:END-->
 
             <!--Extension manager configuration:START-->

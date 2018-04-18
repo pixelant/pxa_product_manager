@@ -106,6 +106,21 @@
             <trans-unit id="fe.price_currency_format">
                 <source>%1$s $</source>
             </trans-unit>
+            <trans-unit id="fe.product_name">
+                <source>Product name</source>
+            </trans-unit>
+            <trans-unit id="fe.price_per">
+                <source>Price per item.</source>
+            </trans-unit>
+            <trans-unit id="fe.add">
+                <source>Add</source>
+            </trans-unit>
+            <trans-unit id="fe.total_price">
+                <source>Total price</source>
+            </trans-unit>
+            <trans-unit id="fe.send_order">
+                <source>Send order</source>
+            </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>

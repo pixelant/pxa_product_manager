@@ -122,6 +122,19 @@ plugin.tx_pxaproductmanager {
         }
     }
 
+    # customsubcategory=pxaproductmanager_wish_list=Wish list
+    settings {
+        images {
+            orderView {
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=int; label=Image max width
+                maxWidth = 100
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=int; label=Image max height
+                maxHeight = 100
+            }
+        }
+    }
+
     # customsubcategory=pxaproductmanager_compare_list=Compare list
     settings {
         compareList {
