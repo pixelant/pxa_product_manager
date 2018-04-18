@@ -4,6 +4,8 @@ namespace Pixelant\PxaProductManager\Tests\Utility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use Pixelant\PxaProductManager\Domain\Model\Category;
+use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 /**
  * Class ProductUtilityTest
@@ -94,5 +96,118 @@ class ProductUtilityTest extends UnitTestCase
     protected function getProductsUids()
     {
         return [1, 2, 3];
+    }
+
+    /**
+     * @test
+     */
+    public function canGetCalculatedCustomSorting()
+    {
+        $product = new Product();
+        $product->_setProperty('uid', 4);
+        // When ConfigurationManager is in 'BE' mode it uses the product pid
+        // to set what page to get configuration from, set it to 100 here to
+        // make it unique since function is static
+        $product->_setProperty('pid', 100);
+
+        $configuration = [
+            'plugin.' => [
+                'tx_pxaproductmanager.' => [
+                    'settings.' => [
+                        'additionalClasses.' => [
+                            'categories.' => [
+                                '33' => 'class-33'
+                            ],
+                            'launched.' => [
+                                'isNewClass' => 'class-new'
+                            ]
+                        ],
+                        'launched.' => [
+                            'dateIntervalAsNew' => 'P14D'
+                        ],
+                        'customSorting.' => [
+                            'enable' => 1,
+                            'points' => [
+                                'new' => 22,
+                                'categories' => [
+                                    '33' => 33,
+                                    '44' => 44,
+                                    '55' => 55,
+                                    '66' => 66
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $category = $this->getMockBuilder(Category::class)
+            ->setMethods(['getUid'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $category->method('getUid')->will(self::returnValue(33));
+        $product->addCategory($category);
+
+        $configurationUtilityMock = $this->getMockBuilder(\Pixelant\PxaProductManager\Utility\ConfigurationUtility::class)
+            ->setMethods(['getSettings'])
+            ->getMock();
+        $configurationManagerMock = $this->getMockBuilder(\Pixelant\PxaProductManager\Configuration\ConfigurationManager::class)
+            ->setMethods(['getConfiguration'])
+            ->getMock();
+        $environmentServiceMock = $this->getMockBuilder(\TYPO3\CMS\Extbase\Service\EnvironmentService::class)
+            ->setMethods(array('isEnvironmentInFrontendMode'))
+            ->getMock();
+
+        ObjectAccess::setProperty($configurationUtilityMock, 'configurationManager', $configurationManagerMock, true);
+        ObjectAccess::setProperty($configurationManagerMock, 'environmentService', $environmentServiceMock, true);
+
+        $environmentServiceMock->method('isEnvironmentInFrontendMode')->will($this->returnValue(false));
+        $configurationManagerMock->method('getConfiguration')->will($this->returnValue($configuration));
+
+        // Check that customSorting is calculated correctly when "isNew"
+        $launched = new \DateTime();
+        $launched->modify('-13 days');
+        $product->setLaunched($launched);
+
+        self::assertEquals(
+            55,
+            ProductUtility::getCalculatedCustomSorting($product)
+        );
+
+        // Check that customSorting is calculated correctly when not "isNew"
+        $launched = new \DateTime();
+        $launched->modify('-14 days');
+        $product->setLaunched($launched);
+
+        self::assertEquals(
+            33,
+            ProductUtility::getCalculatedCustomSorting($product)
+        );
+
+        // Check that customSorting is calculated with multiple categories and not "isNew"
+        $category = $this->getMockBuilder(Category::class)
+            ->setMethods(['getUid'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $category->method('getUid')->will(self::returnValue(44));
+        $product->addCategory($category);
+
+        self::assertEquals(
+            77,
+            ProductUtility::getCalculatedCustomSorting($product)
+        );
+
+        // Check that customSorting is calculated with multiple categories and "isNew"
+        $launched = new \DateTime();
+        $launched->modify('-13 days');
+        $product->setLaunched($launched);
+
+        $product->addCategory($category);
+
+        self::assertEquals(
+            99,
+            ProductUtility::getCalculatedCustomSorting($product)
+        );
     }
 }

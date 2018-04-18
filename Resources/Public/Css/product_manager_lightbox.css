@@ -17,6 +17,18 @@
     transition: border-color 0.2s linear;
 }
 
+.single-product-gallery-assets__pagination a {
+    border-radius: 10px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    border: 1px solid #e0e0e0;
+}
+.single-product-gallery-assets__pagination a.tos-selected {
+    background-color: #e0e0e0;
+}
+
 .single-product-gallery img {
     display: none;
 }

@@ -7,17 +7,17 @@ call_user_func(
             'Pixelant.' . $_EXTKEY,
             'Pi1',
             [
-                'Product' => 'list, show, wishList, lazyList, comparePreView, compareView, groupedList',
+                'Product' => 'list, show, wishList, lazyList, comparePreView, compareView, groupedList, promotionList',
                 'Navigation' => 'show',
                 'AjaxProducts' => 'ajaxLazyList',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList',
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList',
                 'Filter' => 'showFilter'
             ],
             // non-cacheable actions
             [
                 'Product' => 'wishList, comparePreView, compareView',
                 'AjaxProducts' => 'ajaxLazyList',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList'
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList'
             ]
         );
 
@@ -72,6 +72,18 @@ call_user_func(
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
             '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pxa_product_manager/Configuration/TypoScript/PageTS/rteTsConfig.ts">'
         );
+
+        // Register solr view helper
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['solr']['PiResults']['addViewHelpers'][$_EXTKEY] =
+            \Pixelant\PxaProductManager\ViewHelpers\Solr\SolrViewHelperProvider::class;
+
+        $ppmLocalLangBe = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf';
+        $productCustomSortingUpdateTask = Pixelant\PxaProductManager\Task\ProductCustomSortingUpdateTask::class;
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][$productCustomSortingUpdateTask] = [
+            'extension' => $_EXTKEY,
+            'title' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.title',
+            'description' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.description'
+        ];
     },
     $_EXTKEY
 );

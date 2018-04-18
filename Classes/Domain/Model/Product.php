@@ -25,6 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
+use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -236,6 +237,58 @@ class Product extends AbstractEntity
     protected $attributesDescription;
 
     /**
+     * Assets
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     * @lazy
+     */
+    protected $assets;
+
+    /**
+     * additionalInformation
+     *
+     * @var \string
+     */
+    protected $additionalInformation;
+
+    /**
+     * teaser
+     *
+     * @var \string
+     */
+    protected $teaser;
+
+    /**
+     * usp
+     *
+     * @var \string
+     */
+    protected $usp;
+
+    /**
+     * @var \DateTime|NULL
+     */
+    protected $launched;
+
+    /**
+     * @var \DateTime|NULL
+     */
+    protected $discontinued;
+
+    /**
+     * accessories
+     *
+     * @lazy
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
+     */
+    protected $accessories;
+
+    /**
+     * @var int
+     */
+    protected $customSorting = 0;
+
+    /**
      * __construct
      *
      */
@@ -272,6 +325,10 @@ class Product extends AbstractEntity
         $this->categories = new ObjectStorage();
 
         $this->attributeValues = new ObjectStorage();
+
+        $this->assets = new ObjectStorage();
+
+        $this->accessories = new ObjectStorage();
     }
 
     /**
@@ -1219,5 +1276,314 @@ class Product extends AbstractEntity
 
             $this->attributes->attach($attribute);
         }
+    }
+
+    /**
+     * Adds an asset
+     *
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $asset
+     * @return void
+     */
+    public function addAsset(\TYPO3\CMS\Extbase\Domain\Model\FileReference $asset)
+    {
+        $this->assets->attach($asset);
+    }
+
+    /**
+     * Removes an asset
+     *
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $asset The asset to be removed
+     * @return void
+     */
+    public function removeAsset(\TYPO3\CMS\Extbase\Domain\Model\FileReference $asset)
+    {
+        $this->assets->detach($asset);
+    }
+
+    /**
+     * Returns the assets
+     *
+     * @return ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $assets
+     */
+    public function getAssets(): ObjectStorage
+    {
+        return $this->assets;
+    }
+
+    /**
+     * Sets the assets
+     *
+     * @param ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $assets
+     * @return void
+     */
+    public function setAssets(ObjectStorage $assets)
+    {
+        $this->assets = $assets;
+    }
+
+    /**
+     * Returns the additionalInformation
+     *
+     * @return \string $additionalInformation
+     */
+    public function getAdditionalInformation(): string
+    {
+        return $this->additionalInformation;
+    }
+
+    /**
+     * Sets the additionalInformation
+     *
+     * @param \string $additionalInformation
+     * @return void
+     */
+    public function setAdditionalInformation(string $additionalInformation)
+    {
+        $this->additionalInformation = $additionalInformation;
+    }
+
+    /**
+     * Returns the teaser
+     *
+     * @return \string $teaser
+     */
+    public function getTeaser(): string
+    {
+        return $this->teaser;
+    }
+
+    /**
+     * Sets the teaser
+     *
+     * @param \string $teaser
+     * @return void
+     */
+    public function setTeaser(string $teaser)
+    {
+        $this->teaser = $teaser;
+    }
+
+    /**
+     * Returns the usp
+     *
+     * @return \string $usp
+     */
+    public function getUsp(): string
+    {
+        return $this->usp;
+    }
+
+    /**
+     * Returns the usp as list (f.ex. to use as bullets)
+     *
+     * @return \array $usp
+     */
+    public function getUspAsList(): array
+    {
+        return explode("\n", $this->usp);
+    }
+
+    /**
+     * Sets the usp
+     *
+     * @param \string $usp
+     * @return void
+     */
+    public function setUsp(string $usp)
+    {
+        $this->usp = $usp;
+    }
+
+    /**
+     * Returns launched date
+     *
+     * @return \DateTime|NULL the launched date
+     */
+    public function getLaunched()
+    {
+        return $this->launched;
+    }
+
+    /**
+     * Sets launched date
+     *
+     * @param \DateTime|NULL $launched the launched date
+     */
+    public function setLaunched(\DateTime $launched = null)
+    {
+        $this->launched = $launched;
+    }
+
+    /**
+     * Returns discontinued date
+     *
+     * @return \DateTime|NULL the discontinued date
+     */
+    public function getDiscontinued()
+    {
+        return $this->discontinued;
+    }
+
+    /**
+     * Sets discontinued date
+     *
+     * @param \DateTime|NULL $discontinued the discontinued date
+     */
+    public function setDiscontinued(\DateTime $discontinued = null)
+    {
+        $this->discontinued = $discontinued;
+    }
+
+    /**
+     * Returns true if product is considered as discontinued
+     *
+     * @return bool
+     */
+    public function getIsDiscontinued():  bool
+    {
+        $isDiscontinued = false;
+        if (!empty(self::getDiscontinued())) {
+            $today = new \DateTime('00:00');
+            $isDiscontinued = self::getDiscontinued()->format('U') <= $today->format('U');
+        }
+        return $isDiscontinued;
+    }
+
+    /**
+     * Adds a accessory
+     *
+     * @param \Pixelant\PxaProductManager\Domain\Model\Product $accessory
+     * @return void
+     */
+    public function addAccessory(Product $accessory)
+    {
+        $this->accessories->attach($accessory);
+    }
+
+    /**
+     * Removes a accessory
+     *
+     * @param \Pixelant\PxaProductManager\Domain\Model\Product $accessory The accessory to be removed
+     * @return void
+     */
+    public function removeAccessory(Product $accessory)
+    {
+        $this->accessories->detach($accessory);
+    }
+
+    /**
+     * Returns the accessories
+     *
+     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product> $accessories
+     */
+    public function getAccessories(): ObjectStorage
+    {
+        return $this->accessories;
+    }
+
+    /**
+     * Sets the accessories
+     *
+     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\Product> $accessories
+     * @return void
+     */
+    public function setAccessories(ObjectStorage $accessories)
+    {
+        $this->accessories = $accessories;
+    }
+
+    /**
+     * Returns true if product is considered as new
+     * based on product launched date and setup ts launched.daysAsNew
+     *
+     * @return bool
+     */
+    public function getIsNew():  bool
+    {
+        $isNew = false;
+        if (!empty(self::getLaunched())) {
+            $pluginSettings = ConfigurationUtility::getSettings(self::getPid());
+            $dateInterval = $pluginSettings['launched']['dateIntervalAsNew'];
+            if (!empty($dateInterval)) {
+                try {
+                    $newUntil = clone self::getLaunched();
+                    $newUntil->add(new \DateInterval((string)$dateInterval));
+                    $isNew = $newUntil->format('U') > time();
+                } catch (\Exception $e) {
+                    // TODO: Log invalid interval_spec
+                }
+            }
+        }
+        return $isNew;
+    }
+
+    /**
+     * Gets additional classes
+     *
+     * @param string $prefix If prefix should be added to all additional classes
+     * @return string
+     */
+    public function getAdditionalClasses($prefix = '')
+    {
+        $additionalClasses = [];
+
+        $pluginSettings = ConfigurationUtility::getSettings(self::getPid());
+
+        // check if additional category classes are set in plugin ts setup
+        // this way we can add custom classes for products based on its categories in templates
+        $categoriesAdditionalClasses = $pluginSettings['additionalClasses']['categories'];
+        if (is_array($categoriesAdditionalClasses) && count($categoriesAdditionalClasses) > 0) {
+            foreach ($this->getCategories() as $category) {
+                $className = $categoriesAdditionalClasses[$category->getUid()];
+                if (!empty($className)) {
+                    $additionalClasses[] = $className;
+                }
+            }
+        }
+
+        // check if product is considered new, then add class
+        // based on ts setup additionalClasses.launched.isNew
+        if (self::getIsNew()) {
+            $isNewClass = $pluginSettings['additionalClasses']['launched']['isNewClass'];
+            if (!empty($isNewClass)) {
+                $additionalClasses[] = $isNewClass;
+            }
+        }
+
+        // check if product is considered discontinued, then add class
+        // based on ts setup additionalClasses.discontinued.isDiscontinuedClass
+        if (self::getIsDiscontinued()) {
+            $isDiscontinuedClass = $pluginSettings['additionalClasses']['discontinued']['isDiscontinuedClass'];
+            if (!empty($isDiscontinuedClass)) {
+                $additionalClasses[] = $isDiscontinuedClass;
+            }
+        }
+
+        if (is_array($additionalClasses) && count($additionalClasses) > 0) {
+            return implode($prefix . ' ', $additionalClasses);
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Get custom sorting
+     *
+     * @return int
+     */
+    public function getCustomSorting(): int
+    {
+        return $this->customSorting;
+    }
+
+    /**
+     * Set custom sorting
+     *
+     * @param int $customSorting Custom sorting
+     * @return void
+     */
+    public function setCustomSorting(int $customSorting)
+    {
+        $this->customSorting = $customSorting;
     }
 }

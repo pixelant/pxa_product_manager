@@ -539,6 +539,9 @@ class ProductController extends AbstractController
         if (is_array($settings['filters'])) {
             $demand->setFilters($settings['filters']);
         }
+        if (!empty($settings['includeDiscontinued'])) {
+            $demand->setIncludeDiscontinued($settings['includeDiscontinued']);
+        }
 
         // set orderings
         if ($settings['orderProductBy']) {
@@ -550,7 +553,6 @@ class ProductController extends AbstractController
         if ($settings['orderByAllowed']) {
             $demand->setOrderByAllowed($settings['orderByAllowed']);
         }
-
         return $demand;
     }
 
@@ -676,5 +678,40 @@ class ProductController extends AbstractController
         } else {
             MainUtility::getTSFE()->pageNotFoundAndExit('No product entry found.');
         }
+    }
+
+    /**
+     * promotion list action
+     *
+     * @return void
+     */
+    public function promotionListAction()
+    {
+        /** @var Demand $demand */
+        $demand = GeneralUtility::makeInstance(Demand::class);
+
+        if (!empty($this->settings['allowedCategories'])) {
+            $demand->setCategories(
+                explode(',', $this->settings['allowedCategories'])
+            );
+        }
+        if (!empty($this->settings['allowedCategoriesMode'])) {
+            $demand->setCategoryConjunction($this->settings['allowedCategoriesMode']);
+        }
+        if ($limit = (int)$this->settings['limit']) {
+            $demand->setLimit($this->settings['limit']);
+        }
+        if ($this->settings['orderProductBy']) {
+            $demand->setOrderBy($this->settings['orderProductBy']);
+        }
+        if ($this->settings['orderProductDirection']) {
+            $demand->setOrderDirection($this->settings['orderProductDirection']);
+        }
+        if ($this->settings['orderByAllowed']) {
+            $demand->setOrderByAllowed($this->settings['orderByAllowed']);
+        }
+
+        $products = $this->productRepository->findDemanded($demand);
+        $this->view->assign('products', $products ?? []);
     }
 }

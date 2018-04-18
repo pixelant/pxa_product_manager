@@ -124,8 +124,20 @@
             <trans-unit id="flexform.mode.product_grouped_list">
                 <source>Grouped by categories</source>
             </trans-unit>
+            <trans-unit id="flexform.mode.product_promotion_list">
+                <source>Promotion List</source>
+            </trans-unit>
             <trans-unit id="flexform.allowed_categories">
                 <source>Allowed product categories</source>
+            </trans-unit>
+            <trans-unit id="flexform.allowed_categories_mode">
+                <source>Allowed product categories mode</source>
+            </trans-unit>
+            <trans-unit id="flexform.categories_mode_and">
+                <source>Products must contain all selected categories</source>
+            </trans-unit>
+            <trans-unit id="flexform.categories_mode_or">
+                <source>Products must contain at least one of the selected categories</source>
             </trans-unit>
             <trans-unit id="flexform.exclude_categories">
                 <source>Forbidden product categories</source>
@@ -204,9 +216,14 @@
             </trans-unit>
             <trans-unit id="flexform.categories_sorting">
                 <source>Categories sorting</source>
+            </trans-unit><trans-unit id="flexform.sortby_customSorting">
+                <source>Custom sorting</source>
             </trans-unit>
             <trans-unit id="flexform.hide_filter_options_no_result">
                 <source>Hide filtering options without result</source>
+            </trans-unit>
+            <trans-unit id="flexform.include_discontinued">
+                <source>Include discontinued products</source>
             </trans-unit>
 
             <trans-unit id="flexform.custom_products_list.mode">
@@ -234,7 +251,43 @@
             <trans-unit id="extconf.includeSkuInRealurlConfiguration">
                 <source>Use sku field to combine it with name in url</source>
             </trans-unit>
+            <trans-unit id="extconf.accessoriesRestriction" xml:space="preserve">
+            <source>Accessories PID restriction: Restrict the available accessories in product records. PageTsConfig:
+                TCEFORM.tx_pxaproductmanager_domain_model_product.accessories.PAGE_TSCONFIG_IDLIST=xxx,xxx.
+            </source>
+            </trans-unit>
+            <trans-unit id="extconf.relatedProductsRestriction" xml:space="preserve">
+            <source>Related Products PID restriction: Restrict the available accessories in product records. PageTsConfig:
+                TCEFORM.tx_pxaproductmanager_domain_model_product.accessories.PAGE_TSCONFIG_IDLIST=xxx,xxx.
+            </source>
+            </trans-unit>
+            <trans-unit id="extconf.subProductsRestriction" xml:space="preserve">
+            <source>Sub Products PID restriction: Restrict the available accessories in product records. PageTsConfig:
+                TCEFORM.tx_pxaproductmanager_domain_model_product.accessories.PAGE_TSCONFIG_IDLIST=xxx,xxx.
+            </source>
+            </trans-unit>
+            <trans-unit id="extconf.restriction.current_pid" xml:space="preserve">
+                <source>Current page</source>
+            </trans-unit>
+            <trans-unit id="extconf.restriction.siteroot" xml:space="preserve">
+                <source>Site root</source>
+            </trans-unit>
+            <trans-unit id="extconf.restriction.pages_tsconfig" xml:space="preserve">
+                <source>Page TsConfig</source>
+            </trans-unit>
+            <trans-unit id="extconf.restriction.none" xml:space="preserve">
+                <source>No restriction</source>
+            </trans-unit>
             <!--Extension manager configuration:END-->
+
+            <!-- Scheduler tasks:START-->
+            <trans-unit id="task.productCustomSortingUpdate.title" xml:space="preserve">
+                <source>Update product custom sorting</source>
+            </trans-unit>
+            <trans-unit id="task.productCustomSortingUpdate.description" xml:space="preserve">
+                <source>Fetches all products and updates custom sorting. Only needed when custom sorting is used and configured with TS.</source>
+            </trans-unit>
+            <!-- Scheduler tasks:END-->
 
             <!--Backend module:START-->
             <trans-unit id="be.module_name">

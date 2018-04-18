@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use Pixelant\PxaProductManager\Utility\ProductUtility;
 
 /***************************************************************
  *  Copyright notice
@@ -215,5 +216,29 @@ class TceMain
         }
 
         return $pid ?? 1;
+    }
+
+    // @codingStandardsIgnoreStart
+    public function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj)
+    {// @codingStandardsIgnoreEnd
+        if ($table == 'tx_pxaproductmanager_domain_model_product') {
+            $productRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class)
+                ->get(\Pixelant\PxaProductManager\Domain\Repository\ProductRepository::class);
+
+            $product = $productRepository->findByIdentifier($id);
+
+            if ($product) {
+                $product->setCustomSorting(ProductUtility::getCalculatedCustomSorting($product));
+
+                if ($product->_isDirty()) {
+                    $productRepository->update($product);
+
+                    $persistenceManager = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class)
+                        ->get(\TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager::class);
+
+                    $persistenceManager->persistAll();
+                }
+            }
+        }
     }
 }

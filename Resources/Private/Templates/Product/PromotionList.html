@@ -1,0 +1,81 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+<f:section name="main">
+    <f:flashMessages />
+
+    <ppm:setPageTitle><f:if condition="{category.alternativeTitle}" then="{category.alternativeTitle}" else="{category.title}"/></ppm:setPageTitle>
+
+    <div class="row">
+        <f:if condition="{treeData}">
+            <f:then>
+                <div class="col-md-3">
+                    <f:if condition="{treeData.subItems}">
+                        <div class="products-navigation">
+                            <div class="list-group">
+                                <f:render partial="Navigation/Menu" arguments="{items: treeData.subItems, level: '{treeData.level}'}"/>
+                            </div>
+                        </div>
+                    </f:if>
+                </div>
+                <div class="col-md-9">
+                    <f:render section="productWrapper" arguments="{_all}"/>
+                </div>
+            </f:then>
+            <f:else>
+                <div class="col-md-12">
+                    <f:render section="productWrapper" arguments="{_all}"/>
+                </div>
+            </f:else>
+        </f:if>
+    </div>
+</f:section>
+
+<f:section name="productWrapper">
+    <div class="products-wrapper">
+
+        <!--Category title-->
+        <f:if condition="{category.title}">
+            <div class="products-header">
+                <h1>{category.title}</h1>
+                <f:format.html>{category.description}</f:format.html>
+            </div>
+        </f:if>
+
+        <div class="items-list row">
+
+            <!--Show categories-->
+            <f:if condition="{subCategories}">
+                <f:for each="{subCategories}" as="subCategory">
+                    <f:render section="item" arguments="{image: subCategory.image, title: subCategory.title, category: subCategory}" />
+                </f:for>
+            </f:if>
+
+            <!-- Show products -->
+            <f:if condition="{subCategories->f:count()} == 0} || {settings.showCategoriesWithProducts}">
+                <f:if condition="{products}">
+                    <f:then>
+                        <f:for each="{products}" as="product">
+                            <f:render section="item" arguments="{product:product, image: product.thumbnail, category: category}" />
+                        </f:for>
+                    </f:then>
+                    <f:else>
+                        <f:if condition="{subCategories->f:count()} == 0">
+                            <div class="no-products-found">
+                                <f:translate key="fe.no_products_found"/>
+                            </div>
+                        </f:if>
+                    </f:else>
+                </f:if>
+            </f:if>
+
+        </div>
+    </div>
+</f:section>
+<f:section name="item">
+    <div class="col-md-4 col-sm-6">
+        <f:render partial="Product/Card" arguments="{_all}" />
+    </div>
+</f:section>
+</html>

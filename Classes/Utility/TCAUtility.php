@@ -223,4 +223,56 @@ class TCAUtility
             // @codingStandardsIgnoreEnd
         ];
     }
+
+    protected static function getDynamicForeignTableWhere($setting, $table)
+    {
+        $configuration = \Pixelant\PxaProductManager\Utility\MainUtility::getExtMgrConfiguration();
+
+        // we will use current_pid as default to keep backward compatibility
+        $foreignTableWhere = 'AND ' . $table . '.pid = ###CURRENT_PID###';
+
+        // check and override by typoscript setting
+        $restrictionSetting = $configuration[$setting];
+        if ($restrictionSetting) {
+            switch ($restrictionSetting) {
+                case 'current_pid':
+                    $foreignTableWhere = ' AND ' . $table . '.pid=###CURRENT_PID### ';
+                    break;
+                case 'siteroot':
+                    $foreignTableWhere = ' AND ' . $table . '.pid IN (###SITEROOT###) ';
+                    break;
+                case 'page_tsconfig':
+                    $foreignTableWhere = ' AND ' . $table . '.pid IN (###PAGE_TSCONFIG_IDLIST###) ';
+                    break;
+                case 'none':
+                    $foreignTableWhere = '';
+                    break;
+            }
+        }
+        return $foreignTableWhere;
+    }
+
+    public static function getAccessoriesForeignTableWherePid()
+    {
+        return self::getDynamicForeignTableWhere(
+            'accessoriesRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    public static function getRelatedProductsForeignTableWherePid()
+    {
+        return self::getDynamicForeignTableWhere(
+            'relatedProductsRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    public static function getSubProductsForeignTableWherePid()
+    {
+        return self::getDynamicForeignTableWhere(
+            'subProductsRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
 }

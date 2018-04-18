@@ -20,12 +20,12 @@ class ProductRepositoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function createConstraintsWithEmptyDemandWontCallMatching()
+    public function createConstraintsWithEmptyDemandIncludingDiscontinuedProductsWontCallMatching()
     {
         $mockedQuery = $this->createMock(QueryInterface::class);
         $mockedRepository = $this->getAccessibleMock(
             ProductRepository::class,
-            ['createConstraintFromConstraintsArray'],
+            ['createConstraintFromConstraintsArray', 'createDiscontinuedConstraints'],
             [],
             '',
             false
@@ -35,7 +35,96 @@ class ProductRepositoryTest extends UnitTestCase
             ->expects($this->never())
             ->method('createConstraintFromConstraintsArray');
 
+            $mockedRepository
+            ->expects($this->never())
+            ->method('createDiscontinuedConstraints')
+            ->with($mockedQuery);
+
         $demand = new Demand();
+        $demand->setIncludeDiscontinued(true);
+
+        $mockedRepository->_call('createConstraints', $mockedQuery, $demand);
+    }
+
+    /**
+     * @test
+     */
+    public function createConstraintsWithEmptyDemandWithoutDiscontinuedProductsWillReturnConstraints()
+    {
+        $mockedQuery = $this->createMock(QueryInterface::class);
+        $mockedRepository = $this->getAccessibleMock(
+            ProductRepository::class,
+            ['createConstraintFromConstraintsArray', 'createDiscontinuedConstraints'],
+            [],
+            '',
+            false
+        );
+
+        $mockedRepository
+            ->expects($this->once())
+            ->method('createDiscontinuedConstraints')
+            ->with($mockedQuery);
+
+        $mockedRepository
+            ->expects($this->once())
+            ->method('createConstraintFromConstraintsArray');
+
+        $demand = new Demand();
+
+        $mockedRepository->_call('createConstraints', $mockedQuery, $demand);
+    }
+
+    /**
+     * @test
+     */
+    public function createConstraintsWithDemandIncludingDiscontinuedProductsWillReturnConstraints()
+    {
+        $categories = [123];
+        $filters = [
+            [
+                'value' => 123,
+                'type' => Filter::TYPE_ATTRIBUTES
+            ]
+        ];
+        $demand = new Demand();
+        $demand->setCategories($categories);
+        $demand->setFilters($filters);
+        $demand->setIncludeDiscontinued(true);
+
+        $mockedQuery = $this->getMockBuilder(QueryInterface::class)->getMock();
+        $mockedRepository = $this->getAccessibleMock(
+            ProductRepository::class,
+            [
+                'createConstraintFromConstraintsArray',
+                'createFilteringConstraints',
+                'createCategoryConstraints',
+                'createDiscontinuedConstraints'
+            ],
+            [],
+            '',
+            false
+        );
+
+        $mockedRepository
+            ->expects($this->once())
+            ->method('createFilteringConstraints')
+            ->with($mockedQuery, $filters, $demand->getFiltersConjunction())
+            ->willReturn(1);
+
+        $mockedRepository
+            ->expects($this->once())
+            ->method('createCategoryConstraints')
+            ->with($mockedQuery, $categories, $demand->getCategoryConjunction());
+
+        $mockedRepository
+            ->expects($this->never())
+            ->method('createDiscontinuedConstraints')
+            ->with($mockedQuery);
+
+        $mockedRepository
+            ->expects($this->once())
+            ->method('createConstraintFromConstraintsArray');
+
 
         $mockedRepository->_call('createConstraints', $mockedQuery, $demand);
     }
@@ -59,7 +148,12 @@ class ProductRepositoryTest extends UnitTestCase
         $mockedQuery = $this->getMockBuilder(QueryInterface::class)->getMock();
         $mockedRepository = $this->getAccessibleMock(
             ProductRepository::class,
-            ['createConstraintFromConstraintsArray', 'createFilteringConstraints', 'createCategoryConstraints'],
+            [
+                'createConstraintFromConstraintsArray',
+                'createFilteringConstraints',
+                'createCategoryConstraints',
+                'createDiscontinuedConstraints'
+            ],
             [],
             '',
             false
@@ -78,12 +172,16 @@ class ProductRepositoryTest extends UnitTestCase
 
         $mockedRepository
             ->expects($this->once())
+            ->method('createDiscontinuedConstraints')
+            ->with($mockedQuery);
+
+        $mockedRepository
+            ->expects($this->once())
             ->method('createConstraintFromConstraintsArray');
 
 
         $mockedRepository->_call('createConstraints', $mockedQuery, $demand);
     }
-
 
     /**
      * @test
@@ -249,13 +347,49 @@ class ProductRepositoryTest extends UnitTestCase
 
         $demand = new Demand();
         $demand->setOrderByAllowed('name,title');
-        $demand->setOrderBy('title');
+        $demand->setOrderBy('name');
         $demand->setOrderDirection($orderDirection);
 
         $mockedQuery
             ->expects($this->once())
             ->method('setOrderings')
-            ->with(['title' => $orderDirection]);
+            ->with(['name' => $orderDirection]);
+
+        $mockedRepository->_call('setOrderings', $mockedQuery, $demand);
+    }
+
+    /**
+     * @test
+     */
+    public function canSetOrderByByAllowedFieldsAddsNameWhenNotName()
+    {
+        $mockedQuery = $this->getMockBuilder(Query::class)
+            ->setMethods(['setOrderings'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockedRepository = $this->getAccessibleMock(
+            ProductRepository::class,
+            ['dummy'],
+            [],
+            '',
+            false
+        );
+
+        $orderDirection = QueryInterface::ORDER_DESCENDING;
+
+        $demand = new Demand();
+        $demand->setOrderByAllowed('custom_sorting,title');
+        $demand->setOrderBy('custom_sorting');
+        $demand->setOrderDirection($orderDirection);
+
+        $mockedQuery
+            ->expects($this->once())
+            ->method('setOrderings')
+            ->with([
+                'custom_sorting' => $orderDirection,
+                'name' => 'ASC'
+            ]);
 
         $mockedRepository->_call('setOrderings', $mockedQuery, $demand);
     }

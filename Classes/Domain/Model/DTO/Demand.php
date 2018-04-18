@@ -103,6 +103,13 @@ class Demand
     protected $categoryConjunction = 'or';
 
     /**
+     * Include discontinued products
+     *
+     * @var bool
+     */
+    protected $includeDiscontinued = false;
+
+    /**
      * Demand constructor.
      */
     public function __construct()
@@ -275,5 +282,21 @@ class Demand
     public function setStoragePid(array $storagePid)
     {
         $this->storagePid = $storagePid;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIncludeDiscontinued(): bool
+    {
+        return $this->includeDiscontinued;
+    }
+
+    /**
+     * @param bool $includeDiscontinued
+     */
+    public function setIncludeDiscontinued(bool $includeDiscontinued)
+    {
+        $this->includeDiscontinued = $includeDiscontinued;
     }
 }

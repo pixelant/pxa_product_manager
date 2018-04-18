@@ -31,7 +31,7 @@ plugin.tx_pxaproductmanager {
         showCategoriesWithProducts = {$plugin.tx_pxaproductmanager.settings.showCategoriesWithProducts}
         doNotShowEmptyCategoriesInNavigation = {$plugin.tx_pxaproductmanager.settings.doNotShowEmptyCategoriesInNavigation}
         disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
-
+        
         lazyLoading {
             loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
 
@@ -55,11 +55,42 @@ plugin.tx_pxaproductmanager {
             pageType = 201702
         }
 
+        additionalClasses {
+            categories {
+                # can be used to add additional classes to products in templates
+                # uidOfClass = className(s)
+            }
+            launched {
+                isNewClass = product-new
+            }
+            discontinued {
+                isDiscontinuedClass = product-discontinued
+            }
+        }
+
+        customSorting {
+            # if enabled parses pointsAsNew + configured categories to assign a value into custom_sorting
+            enable = 0
+            points {
+                new = 50
+                categories {
+                    # categoryId = points
+                    # xx = xxx
+                }
+            }
+        }
+
+        launched {
+            # uses DateInterval interval_spec f.ex P14D or P1Y to calculate if product should be considered as a new product
+            # if not set, no calculation will occur 
+            dateIntervalAsNew =
+        }
+
         demand {
             allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy
         }
 
-        orderByAllowed = name,tstamp,crdate,categories
+        orderByAllowed = name,tstamp,crdate,categories,custom_sorting
 
         attributes {
             includeSkuInAttributeListing = {$plugin.tx_pxaproductmanager.settings.attributes.includeSkuInAttributeListing}
@@ -199,6 +230,7 @@ PXA_PRODUCT_MANAGER_WISH_LIST {
                 1 = toggleWishList
                 2 = toggleCompareList
                 3 = loadCompareList
+                4 = emptyCompareList
             }
         }
     }

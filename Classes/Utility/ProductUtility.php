@@ -170,4 +170,35 @@ class ProductUtility
 
         return GeneralUtility::inList($list, is_object($product) ? $product->getUid() : (int)$product);
     }
+
+    /**
+     * Get calculated custom sorting
+     *
+     * @return void
+     */
+    public static function getCalculatedCustomSorting($product)
+    {
+        $customSorting = 0;
+
+        if ($product->getIsNew() || $product->getCategories()->count() > 0) {
+            $pluginSettings = ConfigurationUtility::getSettings($product->getPid());
+            if ($pluginSettings['customSorting']['enable']) {
+                // Get "new" points
+                if ($product->getIsNew()) {
+                    $customSorting += (int)$pluginSettings['customSorting']['points']['new'];
+                }
+                // Get "category" points
+                if ($product->getCategories()->count() > 0) {
+                    foreach ($product->getCategories() as $category) {
+                        $catUid = $category->getUid();
+                        if (isset($pluginSettings['customSorting']['points']['categories'][$catUid])) {
+                            $catPoint = $pluginSettings['customSorting']['points']['categories'][$catUid];
+                            $customSorting += (int)$catPoint;
+                        }
+                    }
+                }
+            }
+        }
+        return $customSorting;
+    }
 }
