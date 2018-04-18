@@ -222,13 +222,24 @@ class ProductController extends AbstractController
 
     /**
      * Wish list of products
+     *
+     * @param bool $showOrderForm
      */
-    public function wishListAction()
+    public function wishListAction(bool $showOrderForm = false)
     {
-        $this->view->assign(
-            'products',
-            $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME)
-        );
+        $this->view
+            ->assign(
+                'products',
+                $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME)
+            )
+            ->assign(
+                'showOrderForm',
+                $showOrderForm
+            );
+
+        if ($this->request->hasArgument('orderProducts')) {
+            $this->view->assign('orderProducts', $this->request->getArgument('orderProducts'));
+        }
     }
 
     /**
@@ -292,6 +303,12 @@ class ProductController extends AbstractController
                 'diffData',
                 $productAttributeSets
             );
+    }
+
+    public function makeOrderAction()
+    {
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->request->getArguments(),'Debug',16);
+        die;
     }
 
     /**
