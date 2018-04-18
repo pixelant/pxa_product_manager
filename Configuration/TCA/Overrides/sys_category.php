@@ -283,7 +283,7 @@ call_user_func(function () {
         'after:pxapm_subcategories'
     );
 
-    if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\CategoryUtility::getCategoriesTCAWhereClause())) {
+    if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\TCAUtility::getCategoriesTCAWhereClause())) {
         $categoriesCongifuration = &$GLOBALS['TCA']['sys_category']['columns']['parent']['config'];
         $categoriesCongifuration['foreign_table_where'] =
             $categoryWhere . ' ' . $categoriesCongifuration['foreign_table_where'];

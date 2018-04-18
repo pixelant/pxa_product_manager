@@ -77,6 +77,23 @@ class MainUtility
     }
 
     /**
+     * Check if prices enabled
+     *
+     * @return bool
+     */
+    public static function isPricingEnabled(): bool
+    {
+        static $pricingEnabled;
+
+        if ($pricingEnabled === null) {
+            $configuration = self::getExtMgrConfiguration();
+            $pricingEnabled = isset($configuration['enablePrices']) && (int)$configuration['enablePrices'] === 1;
+        }
+
+        return $pricingEnabled;
+    }
+
+    /**
      * Get extension manager settings
      *
      * @return array
@@ -85,7 +102,7 @@ class MainUtility
     {
         if (self::$settings === null) {
             self::$settings = GeneralUtility::removeDotsFromTS(
-                self::getTSFE()->tmpl->setup['plugin.']['tx_pxaproductmanager.']['settings.']
+                self::getTSFE()->tmpl->setup['plugin.']['tx_pxaproductmanager.']['settings.'] ?? []
             );
         }
 

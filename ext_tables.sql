@@ -8,6 +8,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
 
   name varchar(255) DEFAULT '' NOT NULL,
   sku varchar(255) DEFAULT '' NOT NULL,
+  price double(11,2) DEFAULT '0.00' NOT NULL,
   description text NOT NULL,
   import_id varchar(255) DEFAULT '' NOT NULL,
   import_name varchar(255) DEFAULT '' NOT NULL,

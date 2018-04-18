@@ -83,14 +83,4 @@ class CategoryUtility
 
         return $results;
     }
-
-    /**
-     * TCA where clause for categories
-     * @return string
-     */
-    public static function getCategoriesTCAWhereClause(): string
-    {
-        return (int)MainUtility::getExtMgrConfiguration()['dontCheckPidForSysCategory'] === 1
-            ? '' : 'AND sys_category.pid=###CURRENT_PID### ';
-    }
 }

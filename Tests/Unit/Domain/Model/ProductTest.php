@@ -153,6 +153,15 @@ class ProductTest extends UnitTestCase
         );
     }
 
+    /*public function defaultPricesIsZero()
+    {
+        $this
+    }
+
+    public function priceCanBeSet()
+    {
+
+    }*/
     /**
      * @test
      */

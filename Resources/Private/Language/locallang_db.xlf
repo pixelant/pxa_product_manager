@@ -15,6 +15,12 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_product.sku">
                 <source>Sku</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.price">
+                <source>Price</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.price_disabled">
+                <source>Prices are disabled</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_product.description">
                 <source>Description</source>
             </trans-unit>

@@ -100,6 +100,12 @@
             <trans-unit id="fe.minmax.to">
                 <source>To</source>
             </trans-unit>
+            <trans-unit id="fe.price">
+                <source>Price</source>
+            </trans-unit>
+            <trans-unit id="fe.price_currency_format">
+                <source>%1$s $</source>
+            </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>

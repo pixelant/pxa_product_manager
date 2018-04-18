@@ -99,6 +99,17 @@ plugin.tx_pxaproductmanager {
         # don't compare images and links
         ignoreAttributeTypesInCompareView = 6,7
     }
+
+    _LOCAL_LANG {
+        default {
+            # Default pricing format
+            # |decimals|dec_point|thousands_sep|
+            priceFormat = |2|.| |
+        }
+        sv {
+            priceFormat = |2|,| |
+        }
+    }
 }
 
 # include scripts

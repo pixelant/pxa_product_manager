@@ -234,6 +234,9 @@
             <trans-unit id="extconf.includeSkuInRealurlConfiguration">
                 <source>Use sku field to combine it with name in url</source>
             </trans-unit>
+            <trans-unit id="extconf.enablePrices">
+                <source>Enable products pricing</source>
+            </trans-unit>
             <!--Extension manager configuration:END-->
 
             <!--Backend module:START-->

@@ -10,10 +10,16 @@ defined('TYPO3_MODE') || die;
     // optional: add TCA options which controls how the field is displayed. e.g position and name of the category tree.
     [
         'fieldConfiguration' => [
-            'foreign_table_where' => \Pixelant\PxaProductManager\Utility\CategoryUtility::getCategoriesTCAWhereClause()
+            'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getCategoriesTCAWhereClause()
                 . 'AND sys_category.sys_language_uid IN (-1, 0)'
         ]
     ]
 );
 
 $GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns']['categories']['onChange'] = 'reload';
+
+if (!\Pixelant\PxaProductManager\Utility\MainUtility::isPricingEnabled()) {
+    $columns = &$GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns'];
+    $columns['price']['config']['readOnly'] = true;
+    $columns['price']['label'] = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_product.price_disabled';
+}
