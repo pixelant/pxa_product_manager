@@ -119,6 +119,12 @@ plugin.tx_pxaproductmanager {
 
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/030; type=int; label=Wish list page Pid
             pagePid =
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=boolean; label=Replace form fields with values of frontend user fields
+            replaceWithFeUserValues = 1
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=boolean; label=Send order email to user if "email" field is set
+            sendEmailToUser = 1
         }
     }
 
@@ -126,10 +132,10 @@ plugin.tx_pxaproductmanager {
     settings {
         images {
             orderView {
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=int; label=Image max width
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/060; type=int; label=Image max width
                 maxWidth = 100
 
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=int; label=Image max height
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/070; type=int; label=Image max height
                 maxHeight = 100
             }
         }

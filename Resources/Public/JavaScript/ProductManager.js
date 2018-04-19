@@ -42,11 +42,14 @@
 		 * @param cName
 		 * @param value
 		 * @param exdays
+		 * @param disableEncode
 		 */
-		setCookie: function (cName, value, exdays) {
+		setCookie: function (cName, value, exdays, disableEncode) {
 			let exdate = new Date();
+			disableEncode = disableEncode || false;
+
 			exdate.setDate(exdate.getDate() + exdays);
-			let cValue = encodeURIComponent(value) + ((exdays === null) ? '' : '; expires=' + exdate.toUTCString()) + '; path=/';
+			let cValue = (disableEncode ? value : encodeURIComponent(value)) + ((exdays === null) ? '' : '; expires=' + exdate.toUTCString()) + '; path=/';
 			document.cookie = cName + '=' + cValue;
 		},
 
@@ -68,6 +71,24 @@
 			}
 
 			return false;
+		},
+
+		/**
+		 * Encode to b64
+		 * @param str
+		 */
+		utf8_to_b64: function (str) {
+			return window.btoa(encodeURIComponent(str));
+		},
+
+		/**
+		 * Decode from b64
+		 *
+		 * @param str
+		 * @returns {*}
+		 */
+		b64_to_utf8: function (str) {
+			return decodeURIComponent(window.atob(str));
 		},
 
 		/**

@@ -6,6 +6,7 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Service\OrderMailService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -223,23 +224,50 @@ class ProductController extends AbstractController
     /**
      * Wish list of products
      *
-     * @param bool $showOrderForm
+     * @param bool $sendOrder
      */
-    public function wishListAction(bool $showOrderForm = false)
+    public function wishListAction(bool $sendOrder = false)
     {
-        $this->view
-            ->assign(
-                'products',
-                $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME)
-            )
-            ->assign(
-                'showOrderForm',
-                $showOrderForm
-            );
+        $orderFormFields = $this->getProcessedOrderFormFields();
+
+        if ($sendOrder) {
+            $values = $this->request->hasArgument('orderFields')
+                ? $this->request->getArgument('orderFields')
+                : [];
+
+            if ($this->validateOrderFields($orderFormFields, $values)) {
+                $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
+                $this->redirect('finishOrder');
+            }
+        }
 
         if ($this->request->hasArgument('orderProducts')) {
-            $this->view->assign('orderProducts', $this->request->getArgument('orderProducts'));
+            $orderState = $this->request->getArgument('orderProducts');
+        } elseif (!empty($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])) {
+            $orderState = json_decode(
+                urldecode(
+                    base64_decode($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])
+                ),
+                true
+            );
+
+            if (!is_array($orderState)) {
+                $orderState = [];
+            }
         }
+
+        $this->view->assignMultiple([
+            'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
+            'orderFormFields' => $orderFormFields,
+            'orderProducts' => $orderState ?? [],
+            'sendOrder' => $sendOrder
+        ]);
+    }
+
+    public function finishOrderAction()
+    {
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->request->getArguments(), 'Debug', 16);
+        die;
     }
 
     /**
@@ -305,10 +333,75 @@ class ProductController extends AbstractController
             );
     }
 
-    public function makeOrderAction()
+    /**
+     * Get order form fields, where value are replaced with fe user fields
+     *
+     * @return array
+     */
+    protected function getProcessedOrderFormFields(): array
     {
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->request->getArguments(),'Debug',16);
-        die;
+        $fields = $this->settings['wishList']['orderForm']['fields'] ?? [];
+
+        if (!empty($fields)
+            && MainUtility::getTSFE()->loginUser
+            && (int)$this->settings['wishList']['orderForm']['replaceWithFeUserValues'] === 1
+        ) {
+            $feUser = MainUtility::getTSFE()->fe_user->user;
+
+            foreach ($fields as $field => &$fieldConf) {
+                if (array_key_exists($field, $feUser)) {
+                    $fieldConf['feUserValue'] = $feUser[$field];
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Return false if fields fail validation. Also will add error messages to fields configuration
+     *
+     * @param array $fields
+     * @param array $values
+     * @return bool
+     */
+    protected function validateOrderFields(array &$fields, array $values): bool
+    {
+        $isValid = true;
+
+        foreach ($fields as $field => &$fieldConf) {
+            if (!empty($fieldConf['validation'])) {
+                $validations = GeneralUtility::trimExplode(',', $fieldConf['validation'], true);
+                $value = $values[$field] ?? $fieldConf['feUserValue'] ?? '';
+                $fieldConf['errors'] = [];
+                $fieldConf['value'] = $value;
+
+                foreach ($validations as $validation) {
+                    switch ($validation) {
+                        case 'required':
+                            if (empty($value)) {
+                                $fieldConf['errors'][] = $this->translate('fe.validation_error.required');
+                                $isValid = false;
+                            }
+                            break;
+                        case 'email':
+                            if (!GeneralUtility::validEmail($value)) {
+                                $fieldConf['errors'][] = $this->translate('fe.validation_error.email');
+                                $isValid = false;
+                            }
+                            break;
+                        case 'url':
+                            if (!GeneralUtility::isValidUrl($value)) {
+                                $fieldConf['errors'][] = $this->translate('fe.validation_error.ulr');
+                                $isValid = false;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        return $isValid;
     }
 
     /**
@@ -503,7 +596,7 @@ class ProductController extends AbstractController
         $products = [];
 
         // Products mode
-        if ($mode == 'products') {
+        if ($mode === 'products') {
             $productsList = GeneralUtility::trimExplode(
                 ',',
                 $this->settings['customProductsList']['productsToShow'],
@@ -513,7 +606,7 @@ class ProductController extends AbstractController
         }
 
         // Category mode
-        if ($mode == 'category') {
+        if ($mode === 'category') {
             $categories = GeneralUtility::trimExplode(
                 ',',
                 $this->settings['customProductsList']['productsCategories'],

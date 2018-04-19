@@ -11,6 +11,18 @@
 		let ajaxLoadingInProgress = true;
 
 		/**
+		 * Name of cookie
+		 * @type {string}
+		 */
+		const ORDER_STATE_COOKIE_NAME = 'pxa_pm_order_state';
+
+		/**
+		 * Save order information for number of days
+		 * @type {number}
+		 */
+		const EXPIRE_ORDER_COOKIE_DAYS = 1;
+
+		/**
 		 * Dom elements
 		 */
 		let $buttons,
@@ -35,6 +47,7 @@
 			ajaxLoadingInProgress = false;
 
 			_updateTotalPrice();
+			_saveCurrentStateOfAmountOfProducts();
 			_trackOrderAmountChanges();
 		};
 
@@ -96,6 +109,10 @@
 					if(parentToRemove.length === 1) {
 						parentToRemove.fadeOut('fast', function () {
 							parentToRemove.remove();
+
+							// Update order changes
+							_updateTotalPrice();
+							_saveCurrentStateOfAmountOfProducts();
 						});
 					}
 
@@ -174,7 +191,37 @@
 				}
 
 				_updateTotalPrice();
+				_saveCurrentStateOfAmountOfProducts();
 			});
+		};
+
+		/**
+		 * Save state of order
+		 *
+		 * @returns {boolean}
+		 * @private
+		 */
+		const _saveCurrentStateOfAmountOfProducts = function () {
+			if ($orderItemsAmount.length === 0) {
+				return false;
+			}
+
+			let currentState = {};
+			$orderItemsAmount.each(function () {
+				const $this = $(this);
+				let productUid = parseInt($this.data('product-uid'));
+
+				if (productUid > 0) {
+					currentState[productUid] = parseInt($this.val());
+				}
+			});
+
+			ProductManager.Main.setCookie(
+				ORDER_STATE_COOKIE_NAME,
+				ProductManager.Main.utf8_to_b64(JSON.stringify(currentState)),
+				EXPIRE_ORDER_COOKIE_DAYS,
+				true // disable encoding, because it was already done
+			)
 		};
 
 		/**

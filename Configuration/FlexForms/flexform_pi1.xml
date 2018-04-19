@@ -44,7 +44,7 @@
                                     </numIndex>
                                     <numIndex index="7">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_wish_list</numIndex>
-                                        <numIndex index="1">Product->wishList;Product->makeOrder</numIndex>
+                                        <numIndex index="1">Product->wishList;Product->finishOrder</numIndex>
                                     </numIndex>
                                     <numIndex index="8">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_pre_view</numIndex>
@@ -303,7 +303,7 @@
                     <settings.enableOrderFunction>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.enable_order_function</label>
-                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->makeOrder</displayCond>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->finishOrder</displayCond>
                             <onChange>reload</onChange>
                             <config>
                                 <type>check</type>
@@ -598,7 +598,7 @@
                             <displayCond>
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->makeOrder</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->finishOrder</numIndex>
                                     <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                 </OR>
                             </displayCond>

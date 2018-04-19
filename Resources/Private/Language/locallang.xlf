@@ -118,8 +118,23 @@
             <trans-unit id="fe.total_price">
                 <source>Total price</source>
             </trans-unit>
-            <trans-unit id="fe.send_order">
-                <source>Send order</source>
+            <trans-unit id="fe.continue_to_order">
+                <source>Continue to order</source>
+            </trans-unit>
+            <trans-unit id="fe.make_order">
+                <source>Make order</source>
+            </trans-unit>
+            <trans-unit id="fe.no_order_fields">
+                <source>No order fields defined</source>
+            </trans-unit>
+            <trans-unit id="fe.validation_error.required">
+                <source>This field is required</source>
+            </trans-unit>
+            <trans-unit id="fe.validation_error.ulr">
+                <source>This is not a valid url</source>
+            </trans-unit>
+            <trans-unit id="fe.validation_error.email">
+                <source>This is not a valid E-mail address</source>
             </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">

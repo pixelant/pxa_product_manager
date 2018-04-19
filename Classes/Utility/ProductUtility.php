@@ -57,6 +57,11 @@ class ProductUtility
     const WISH_LIST_COOKIE_NAME = 'pxa_pm_wish_list';
 
     /**
+     * Name of cookie that keep order state
+     */
+    const ORDER_STATE_COOKIE_NAME = 'pxa_pm_order_state';
+
+    /**
      * Get array of uids of categories for product
      *
      * @param $product

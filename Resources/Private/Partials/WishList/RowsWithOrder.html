@@ -3,9 +3,62 @@
 
 <div class="pm-products-user-list row">
     <f:if condition="{products}">
-        <f:if condition=""></f:if>
-        <f:form action="wishList" arguments="{showOrderForm: 1}">
+        <f:form arguments="{sendOrder: 1}" class="form-horizontal">
+            <div class="row item-order-header">
+                <div class="col-sm-2 col-md-1"></div>
+                <div class="col-sm-2 col-md-4"><f:translate key="fe.product_name"/></div>
+                <div class="col-sm-2 col-md-2"><f:translate key="fe.sku"/></div>
+                <div class="col-sm-2 col-md-2"><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per')}" else=""/></div>
+                <div class="col-sm-2 col-md-2"><f:translate key="fe.add"/></div>
+                <div class="col-sm-2 col-md-1"></div>
+            </div>
 
+            <f:for each="{products}" as="product">
+                <div class="row item-order-row">
+                    <f:render
+                            section="item"
+                            arguments="{product: product, orderProducts: orderProducts}" />
+                </div>
+            </f:for>
+
+            <div class="row">
+                <div class="col-md-2 col-md-offset-8">
+                    <f:if condition="{ppm:isPricingEnabled()}">
+                        <f:translate key="fe.total_price"/> -
+                        <span id="pxa-pm-order-total-price">
+                        <div class="lds-dual-ring"><div class="small"></div></div>
+                    </span>
+                    </f:if>
+                </div>
+                <div class="col-md-2">
+                    <button aria-expanded="false"
+                            class="btn btn-primary"
+                            data-target="#pm-collapse-order-form"
+                            data-toggle="collapse"
+                            type="button">
+                        <f:translate key="fe.continue_to_order"/>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="collapse{f:if(condition: sendOrder, then: ' in')}" id="pm-collapse-order-form" aria-expanded="true">
+                <f:if condition="{orderFormFields}">
+                    <f:then>
+                        <f:for each="{orderFormFields}" key="field" as="fieldConf">
+                            <f:render partial="OrderFormFields/{fieldConf.type}" arguments="{fieldConf: fieldConf, field: field}" />
+                        </f:for>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default"><f:translate key="fe.make_order" /></button>
+                            </div>
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <p class="bg-warning"><f:translate key="fe.no_order_fields" /></p>
+                    </f:else>
+                </f:if>
+            </div>
         </f:form>
     </f:if>
     <div class="list-no-products-found">
@@ -13,41 +66,6 @@
         <f:translate key="fe.number_of_results_found" />
     </div>
 </div>
-
-<f:section name="main">
-    <div class="row item-order-header">
-        <div class="col-sm-2 col-md-1"></div>
-        <div class="col-sm-2 col-md-4"><f:translate key="fe.product_name"/></div>
-        <div class="col-sm-2 col-md-2"><f:translate key="fe.sku"/></div>
-        <div class="col-sm-2 col-md-2"><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per')}" else=""/></div>
-        <div class="col-sm-2 col-md-2"><f:translate key="fe.add"/></div>
-        <div class="col-sm-2 col-md-1"></div>
-    </div>
-
-    <f:for each="{products}" as="product">
-        <div class="row item-order-row">
-            <f:render
-                    section="item"
-                    arguments="{product: product, orderProducts: orderProducts}" />
-        </div>
-    </f:for>
-
-    <div class="row">
-        <div class="col-md-2 col-md-offset-8">
-            <f:if condition="{ppm:isPricingEnabled()}">
-                <f:translate key="fe.total_price"/> -
-                <span id="pxa-pm-order-total-price">
-                        <div class="lds-dual-ring"><div class="small"></div></div>
-                    </span>
-            </f:if>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary">
-                <f:translate key="fe.{submitLabel}"/>
-            </button>
-        </div>
-    </div>
-</f:section>
 
 <f:section name="item">
     <div class="col-sm-2 col-md-1">
