@@ -46,29 +46,32 @@ call_user_func(function () {
     $configuration['fixedPostVars'][] = [
         'title' => 'Product only for single view',
         'key' => 'pxa_product_manager_single_view',
-        'configuration' => [
+        'configuration' => array_merge(
             [
-                'GETvar' => 'tx_pxaproductmanager_pi1[product]',
-                'lookUpTable' => [
-                    'table' => 'tx_pxaproductmanager_domain_model_product',
-                    'id_field' => 'uid',
-                    'alias_field' => 'IF(path_segment!="",path_segment,name)',
-                    'addWhereClause' => ' AND NOT deleted',
-                    'useUniqueCache' => 1,
-                    'useUniqueCache_conf' => [
-                        'strtolower' => 1,
-                        'spaceCharacter' => '-',
+                [
+                    'GETvar' => 'tx_pxaproductmanager_pi1[product]',
+                    'lookUpTable' => [
+                        'table' => 'tx_pxaproductmanager_domain_model_product',
+                        'id_field' => 'uid',
+                        'alias_field' => 'IF(path_segment!="",path_segment,name)',
+                        'addWhereClause' => ' AND NOT deleted',
+                        'useUniqueCache' => 1,
+                        'useUniqueCache_conf' => [
+                            'strtolower' => 1,
+                            'spaceCharacter' => '-',
+                        ],
+                        'autoUpdate' => 1,
+                        'expireDays' => 30,
+                        'languageGetVar' => 'L',
+                        'languageExceptionUids' => '',
+                        'languageField' => 'sys_language_uid',
+                        'transOrigPointerField' => 'l10n_parent',
+                        'enable404forInvalidAlias' => '1',
                     ],
-                    'autoUpdate' => 1,
-                    'expireDays' => 30,
-                    'languageGetVar' => 'L',
-                    'languageExceptionUids' => '',
-                    'languageField' => 'sys_language_uid',
-                    'transOrigPointerField' => 'l10n_parent',
-                    'enable404forInvalidAlias' => '1',
                 ],
-            ]
-        ]
+            ],
+            $lookUpCategories
+        )
     ];
 
     $aliasField = 'IF(path_segment!="",path_segment,name)';
