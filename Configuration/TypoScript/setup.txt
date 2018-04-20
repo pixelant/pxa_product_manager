@@ -52,6 +52,8 @@ plugin.tx_pxaproductmanager {
                 replaceWithFeUserValues = {$plugin.tx_pxaproductmanager.settings.wishList.replaceWithFeUserValues}
                 sendEmailToUser = {$plugin.tx_pxaproductmanager.settings.wishList.sendEmailToUser}
 
+                emailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmail.html
+
                 fields {
                     name {
                         type = input

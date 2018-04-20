@@ -236,7 +236,7 @@ class ProductController extends AbstractController
                 : [];
 
             if ($this->validateOrderFields($orderFormFields, $values)) {
-                $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
+                $this->sendOrderEmail($orderFormFields);
                 $this->redirect('finishOrder');
             }
         }
@@ -331,6 +331,30 @@ class ProductController extends AbstractController
                 'diffData',
                 $productAttributeSets
             );
+    }
+
+    /**
+     * Send emails with order
+     *
+     * @param array $orderFields
+     * @return void
+     */
+    protected function sendOrderEmail(array $orderFields)
+    {
+        $template = $this->settings['wishList']['orderForm']['emailTemplatePath'];
+
+        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
+        // @TODO make field name configurable
+        if (!empty($orderFields['email']['value'])) {
+            $recipients[] = $orderFields['email']['value'];
+        }
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($recipients,'Debug',16);
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->settings,'Debug',16);die;
+        /** @var OrderMailService $orderMailService */
+        $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
+        $orderMailService
+            ->generateMailBody($template, $orderFields)
+            ->setSubject($this->translate('fe.email.orderForm.subject'));
     }
 
     /**

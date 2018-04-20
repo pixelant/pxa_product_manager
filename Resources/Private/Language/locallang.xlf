@@ -136,6 +136,10 @@
             <trans-unit id="fe.validation_error.email">
                 <source>This is not a valid E-mail address</source>
             </trans-unit>
+
+            <trans-unit id="fe.email.orderForm.subject">
+                <source>New order</source>
+            </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>
