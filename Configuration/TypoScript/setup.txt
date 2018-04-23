@@ -71,6 +71,11 @@ plugin.tx_pxaproductmanager {
             }
         }
 
+        email {
+            senderName = {$plugin.tx_pxaproductmanager.settings.email.senderName}
+            senderEmail = {$plugin.tx_pxaproductmanager.settings.email.senderEmail}
+        }
+
         compareList {
             enable = {$plugin.tx_pxaproductmanager.settings.compareList.enable}
             pagePid = {$plugin.tx_pxaproductmanager.settings.compareList.pagePid}

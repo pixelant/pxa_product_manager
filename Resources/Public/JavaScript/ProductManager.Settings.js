@@ -10,7 +10,7 @@
 		itemClass: '.item',
 		orderItemAmountClass: '.order-product-amount',
 		orderItemPriceClass: '.item-order-price',
-		totalPriceIdentifier: '#pxa-pm-order-total-price',
+		totalPriceClass: '.pxa-pm-order-total-price',
 		cartIdentifier: '#pxa-pm-wish-list-cart',
 		cartCounter: '#pxa-pm-wish-list-cart__counter',
 		inListClass: 'selected',

@@ -151,4 +151,15 @@ plugin.tx_pxaproductmanager {
             pagePid =
         }
     }
+
+    # customsubcategory=pxaproductmanager_emails=Email default settings
+    settings {
+        email {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_emails/010; type=string; label=Name of sender
+            senderName = Product manager
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_emails/020; type=string; label=Email address of sender
+            senderEmail = noreply@site.com
+        }
+    }
 }

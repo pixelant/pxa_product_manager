@@ -7,7 +7,7 @@ call_user_func(
             'Pixelant.' . $_EXTKEY,
             'Pi1',
             [
-                'Product' => 'list, show, wishList, lazyList, comparePreView, compareView, groupedList',
+                'Product' => 'list, show, wishList, finishOrder, lazyList, comparePreView, compareView, groupedList',
                 'Navigation' => 'show',
                 'AjaxProducts' => 'ajaxLazyList',
                 'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList',
@@ -15,7 +15,7 @@ call_user_func(
             ],
             // non-cacheable actions
             [
-                'Product' => 'wishList, comparePreView, compareView',
+                'Product' => 'wishList, finishOrder, comparePreView, compareView',
                 'AjaxProducts' => 'ajaxLazyList',
                 'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList'
             ]

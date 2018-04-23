@@ -26,6 +26,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
+use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -340,18 +341,7 @@ class Product extends AbstractEntity
      */
     public function getFormatPrice(): string
     {
-        if ($format = LocalizationUtility::translate('priceFormat', 'PxaProductManager')) {
-            $format = explode('|', trim($format, '|'));
-        } else {
-            $format = [2, '.', ' '];
-        }
-
-        return number_format(
-            $this->price,
-            (int)($format[0] ?? 0),
-            (string)($format[1] ?? '.'),
-            (string)($format[2] ?? ',')
-        );
+        return ProductUtility::formatPrice($this->price);
     }
 
     /**

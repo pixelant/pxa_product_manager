@@ -115,6 +115,9 @@
             <trans-unit id="fe.add">
                 <source>Add</source>
             </trans-unit>
+            <trans-unit id="fe.amount">
+                <source>Amount</source>
+            </trans-unit>
             <trans-unit id="fe.total_price">
                 <source>Total price</source>
             </trans-unit>
@@ -123,6 +126,12 @@
             </trans-unit>
             <trans-unit id="fe.make_order">
                 <source>Make order</source>
+            </trans-unit>
+            <trans-unit id="fe.order_sent_header">
+                <source>Your order was sent successfully.</source>
+            </trans-unit>
+            <trans-unit id="fe.order_sent_text">
+                <source>Administrator will contact you about shortly.</source>
             </trans-unit>
             <trans-unit id="fe.no_order_fields">
                 <source>No order fields defined</source>
@@ -139,6 +148,9 @@
 
             <trans-unit id="fe.email.orderForm.subject">
                 <source>New order</source>
+            </trans-unit>
+            <trans-unit id="fe.email.orderForm.userFields">
+                <source>Order form information</source>
             </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">

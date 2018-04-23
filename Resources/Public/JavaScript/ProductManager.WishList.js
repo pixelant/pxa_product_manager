@@ -65,7 +65,7 @@
 			$cartCounter = $(wishListSettings.cartCounter);
 			$orderItemsAmount = $(wishListSettings.orderItemAmountClass);
 			$orderItemsPrices = $(wishListSettings.orderItemPriceClass);
-			$totalPrice = $(wishListSettings.totalPriceIdentifier);
+			$totalPrice = $(wishListSettings.totalPriceClass);
 		};
 
 		/**
@@ -150,7 +150,7 @@
 		 * @private
 		 */
 		const _updateTotalPrice = function () {
-			if ($orderItemsPrices.length === 0 || $totalPrice.length !== 1) {
+			if ($orderItemsPrices.length === 0 || $totalPrice.length === 0) {
 				return false;
 			}
 

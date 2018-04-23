@@ -14,7 +14,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
  * Class AbstractMailService
  * @package Pixelant\PxaProductManager\Service
  */
-class AbstractMailService
+abstract class AbstractMailService
 {
     const FORMAT_PLAINTEXT = 'plaintext';
 
@@ -95,9 +95,9 @@ class AbstractMailService
         }
 
         $this->mailMessage
-            ->setSubject($this->subject)
             ->setFrom([$this->senderEmail => $this->senderName])
-            ->setTo($this->receivers);
+            ->setTo($this->receivers)
+            ->setSubject($this->subject);
 
         if ($format === self::FORMAT_PLAINTEXT) {
             $this->mailMessage->setBody($this->message, 'text/plain');
@@ -105,7 +105,7 @@ class AbstractMailService
             $this->mailMessage->setBody($this->message, 'text/html');
         }
 
-        return $this->send();
+        return $this->mailMessage->send() > 0;
     }
 
 
@@ -118,38 +118,6 @@ class AbstractMailService
     abstract public function generateMailBody(...$variables);
 
     /**
-     * @return MailMessage
-     */
-    public function getMailMessage(): MailMessage
-    {
-        return $this->mailMessage;
-    }
-
-    /**
-     * @param MailMessage $mailMessage
-     */
-    public function setMailMessage(MailMessage $mailMessage)
-    {
-        $this->mailMessage = $mailMessage;
-    }
-
-    /**
-     * @return ObjectManager
-     */
-    public function getObjectManager(): ObjectManager
-    {
-        return $this->objectManager;
-    }
-
-    /**
-     * @param ObjectManager $objectManager
-     */
-    public function setObjectManager(ObjectManager $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    /**
      * @return array
      */
     public function getPluginSettings(): array
@@ -159,10 +127,12 @@ class AbstractMailService
 
     /**
      * @param array $pluginSettings
+     * @return AbstractMailService
      */
     public function setPluginSettings(array $pluginSettings)
     {
         $this->pluginSettings = $pluginSettings;
+        return $this;
     }
 
     /**
@@ -175,10 +145,12 @@ class AbstractMailService
 
     /**
      * @param string $senderName
+     * @return AbstractMailService
      */
     public function setSenderName(string $senderName)
     {
         $this->senderName = $senderName;
+        return $this;
     }
 
     /**
@@ -191,10 +163,12 @@ class AbstractMailService
 
     /**
      * @param string $senderEmail
+     * @return AbstractMailService
      */
     public function setSenderEmail(string $senderEmail)
     {
         $this->senderEmail = $senderEmail;
+        return $this;
     }
 
     /**
@@ -207,10 +181,12 @@ class AbstractMailService
 
     /**
      * @param array $receivers
+     * @return AbstractMailService
      */
     public function setReceivers(array $receivers)
     {
         $this->receivers = $receivers;
+        return $this;
     }
 
     /**
@@ -223,10 +199,12 @@ class AbstractMailService
 
     /**
      * @param string $subject
+     * @return AbstractMailService
      */
     public function setSubject(string $subject)
     {
         $this->subject = $subject;
+        return $this;
     }
 
     /**
@@ -239,10 +217,12 @@ class AbstractMailService
 
     /**
      * @param string $message
+     * @return AbstractMailService
      */
     public function setMessage(string $message)
     {
         $this->message = $message;
+        return $this;
     }
 
     /**

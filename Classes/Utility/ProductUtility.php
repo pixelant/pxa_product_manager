@@ -34,6 +34,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class ProductUtility
@@ -149,6 +150,28 @@ class ProductUtility
 
 
         return '';
+    }
+
+    /**
+     * Format product price
+     *
+     * @param float $price
+     * @return string
+     */
+    public static function formatPrice(float $price): string
+    {
+        if ($format = LocalizationUtility::translate('priceFormat', 'PxaProductManager')) {
+            $format = explode('|', trim($format, '|'));
+        } else {
+            $format = [2, '.', ' '];
+        }
+
+        return number_format(
+            $price,
+            (int)($format[0] ?? 0),
+            (string)($format[1] ?? '.'),
+            (string)($format[2] ?? ',')
+        );
     }
 
     /**

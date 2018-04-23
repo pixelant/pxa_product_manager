@@ -11,6 +11,7 @@ use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -231,13 +232,16 @@ class ProductController extends AbstractController
         $orderFormFields = $this->getProcessedOrderFormFields();
 
         if ($sendOrder) {
-            $values = $this->request->hasArgument('orderFields')
-                ? $this->request->getArgument('orderFields')
-                : [];
+            try {
+                $orderProducts = $this->request->getArgument('orderProducts');
+                $values = $this->request->getArgument('orderFields');
 
-            if ($this->validateOrderFields($orderFormFields, $values)) {
-                $this->sendOrderEmail($orderFormFields);
-                $this->redirect('finishOrder');
+                if ($this->validateOrderFields($orderFormFields, $values)) {
+                    $this->sendOrderEmail($orderFormFields, $orderProducts);
+                    $this->redirect('finishOrder');
+                }
+            } catch (NoSuchArgumentException $exception) {
+                // orderProducts and orderFields are required to send email
             }
         }
 
@@ -264,10 +268,15 @@ class ProductController extends AbstractController
         ]);
     }
 
+    /**
+     * Finish order text
+     * Show some successful texts
+     */
     public function finishOrderAction()
     {
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->request->getArguments(), 'Debug', 16);
-        die;
+        // Clean list
+        MainUtility::cleanCookieValue(ProductUtility::WISH_LIST_COOKIE_NAME);
+        MainUtility::cleanCookieValue(ProductUtility::ORDER_STATE_COOKIE_NAME);
     }
 
     /**
@@ -337,24 +346,32 @@ class ProductController extends AbstractController
      * Send emails with order
      *
      * @param array $orderFields
+     * @param array $orderProducts
      * @return void
      */
-    protected function sendOrderEmail(array $orderFields)
+    protected function sendOrderEmail(array $orderFields, array $orderProducts)
     {
         $template = $this->settings['wishList']['orderForm']['emailTemplatePath'];
 
+        $products = $this->getProductByUidsList(array_keys($orderProducts));
+
         $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
         // @TODO make field name configurable
-        if (!empty($orderFields['email']['value'])) {
+        if (!empty($orderFields['email']['value'])
+            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
             $recipients[] = $orderFields['email']['value'];
         }
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($recipients,'Debug',16);
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->settings,'Debug',16);die;
+
         /** @var OrderMailService $orderMailService */
         $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
         $orderMailService
-            ->generateMailBody($template, $orderFields)
-            ->setSubject($this->translate('fe.email.orderForm.subject'));
+            ->generateMailBody($template, $orderFields, $orderProducts, $products)
+            ->setSubject($this->translate('fe.email.orderForm.subject'))
+            ->setReceivers($recipients)
+            ->setSenderName($this->settings['email']['senderName'])
+            ->setSenderEmail($this->settings['email']['senderEmail']);
+
+        $orderMailService->send();
     }
 
     /**
@@ -394,11 +411,12 @@ class ProductController extends AbstractController
         $isValid = true;
 
         foreach ($fields as $field => &$fieldConf) {
+            $value = $values[$field] ?? $fieldConf['feUserValue'] ?? '';
+            $fieldConf['value'] = $value;
+
             if (!empty($fieldConf['validation'])) {
                 $validations = GeneralUtility::trimExplode(',', $fieldConf['validation'], true);
-                $value = $values[$field] ?? $fieldConf['feUserValue'] ?? '';
                 $fieldConf['errors'] = [];
-                $fieldConf['value'] = $value;
 
                 foreach ($validations as $validation) {
                     switch ($validation) {
