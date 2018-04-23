@@ -156,6 +156,7 @@ plugin.tx_pxaproductmanager {
 page {
     includeJSFooterlibs {
         pxa_pm_select2 = EXT:pxa_product_manager/Resources/Public/JavaScript/select2/dist/js/select2.min.js
+        pxa_pm_sprintf = EXT:pxa_product_manager/Resources/Public/JavaScript/sprintf/sprintf.min.js
         pxaPmSettings = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Settings.js
         pxaPmLazyLoading = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.LazyLoading.js
         pxaPmFiltering = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Filtering.js

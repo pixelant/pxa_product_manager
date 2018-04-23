@@ -75,18 +75,20 @@
 		 * @private
 		 */
 		const _initUrlStashState = function () {
-			let hash = decodeURIComponent(window.location.hash);
+			let hash = decodeURIComponent(window.location.hash),
+				filters;
 
 			if (hash.length > 0 && hash.substring(0, 8) === '#filter:') {
 				hash = hash.substring(8);
 
 				try {
-					let filters = JSON.parse(hash);
+					filters = JSON.parse(hash);
 				} catch (e) {
+					filters = null;
 					console.log(e);
 				}
 
-				if (typeof filters !== 'undefined' && filters.length) {
+				if (filters !== null && filters.length) {
 					// disable select box onchange
 					_triggerSelectBoxChange = false;
 

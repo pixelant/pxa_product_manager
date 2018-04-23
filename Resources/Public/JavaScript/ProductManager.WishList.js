@@ -154,7 +154,15 @@
 				return false;
 			}
 
-			let sum = 0;
+			let sum = 0,
+				currencyFormat = $totalPrice.first().data('currency-format') || '',
+				numberFormat = $totalPrice.first().data('nubmer-format') || '',
+				format = ProductManager.Main.trimChar(numberFormat, '|').split('|'),
+
+				decimals = parseInt(format[0]) || 2,
+				decimalSep = format[1] || '.',
+				thousandsSep = format[2] || ',';
+
 			$orderItemsPrices.each(function () {
 				const $this = $(this);
 
@@ -168,7 +176,12 @@
 				}
 			});
 
-			$totalPrice.text(sum);
+			$totalPrice.text(
+				sprintf(
+					currencyFormat,
+					ProductManager.Main.numberFormat(sum, decimals, decimalSep, thousandsSep)
+				)
+			);
 		};
 
 		/**

@@ -168,7 +168,7 @@ class ProductUtility
 
         return number_format(
             $price,
-            (int)($format[0] ?? 0),
+            (int)($format[0] ?? 2),
             (string)($format[1] ?? '.'),
             (string)($format[2] ?? ',')
         );

@@ -25,7 +25,9 @@
                 <div class="col-md-2 col-md-offset-8">
                     <f:if condition="{ppm:isPricingEnabled()}">
                         <f:translate key="fe.total_price"/> -
-                        <span class="pxa-pm-order-total-price">
+                        <span class="pxa-pm-order-total-price"
+                              data-nubmer-format="{f:translate(key: 'priceFormat')}"
+                              data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
                         <div class="lds-dual-ring"><div class="small"></div></div>
                     </span>
                     </f:if>
