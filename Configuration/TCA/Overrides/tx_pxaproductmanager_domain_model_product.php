@@ -21,5 +21,7 @@ $GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns']['categor
 if (!\Pixelant\PxaProductManager\Utility\MainUtility::isPricingEnabled()) {
     $columns = &$GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns'];
     $columns['price']['config']['readOnly'] = true;
+    // @codingStandardsIgnoreStart
     $columns['price']['label'] = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_product.price_disabled';
+    // @codingStandardsIgnoreEnd
 }

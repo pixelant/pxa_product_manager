@@ -153,15 +153,29 @@ class ProductTest extends UnitTestCase
         );
     }
 
-    /*public function defaultPricesIsZero()
+    /**
+     * @test
+     */
+    public function defaultPricesIsZero()
     {
-        $this
+        $this->assertEquals(
+            0.00,
+            $this->fixture->getPrice()
+        );
     }
 
+    /**
+     * @test
+     */
     public function priceCanBeSet()
     {
+        $price = 1.23;
 
-    }*/
+        $this->fixture->setPrice($price);
+
+        $this->assertEquals($price, $this->fixture->getPrice());
+    }
+
     /**
      * @test
      */

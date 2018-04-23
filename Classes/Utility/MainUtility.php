@@ -248,7 +248,7 @@ class MainUtility
              * @TODO always remove first category ?
              */
             $categories = array_slice(
-            // use descending order
+                // use descending order
                 array_reverse(
                     CategoryUtility::getParentCategories($category)
                 ),
