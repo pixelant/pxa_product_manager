@@ -33,13 +33,14 @@ class OrderMailService extends AbstractMailService
             foreach ($products as $product) {
                 $totalPrice += ($product->getPrice() * (int)($orderProducts[$product->getUid()] ?? 1));
             }
+            
+            $standAloneView->assign('totalPrice', ProductUtility::formatPrice($totalPrice));
         }
 
         $standAloneView->assignMultiple([
             'orderFields' => $orderFields,
             'orderProducts' => $orderProducts,
-            'products' => $products,
-            'totalPrice' => ProductUtility::formatPrice($totalPrice)
+            'products' => $products
         ]);
 
         $this->message = $standAloneView->render();
