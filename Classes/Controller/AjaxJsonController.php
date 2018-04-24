@@ -149,7 +149,7 @@ class AjaxJsonController extends AbstractController
     public function emptyCompareListAction()
     {
         MainUtility::getTSFE()->fe_user->setKey('ses', ProductUtility::COMPARE_LIST_SESSION_NAME, []);
-        $response['success'] = true;
-        $this->view->assign('value', $response);
+
+        $this->view->assign('value', ['success' => true]);
     }
 }

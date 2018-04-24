@@ -26,7 +26,7 @@ class BackendConfigurationManager extends ExtbaseBackendConfigurationManager
      * @param integer $currentPageId Current page id
      * @return void
      */
-    public function setCurrentPageId($currentPageId)
+    public function setCurrentPageId(int $currentPageId)
     {
         $this->currentPageId = $currentPageId;
     }

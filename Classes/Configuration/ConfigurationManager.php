@@ -13,7 +13,9 @@ namespace Pixelant\PxaProductManager\Configuration;
  *
  * The TYPO3 project - inspiring people to share!
  */
+use Pixelant\PxaProductManager\Configuration\BackendConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager as ExtbaseConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\FrontendConfigurationManager;
 
 /**
  * A configuration manager following the strategy pattern (GoF315). It hides the concrete
@@ -24,16 +26,17 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager as ExtbaseConfiguration
 class ConfigurationManager extends ExtbaseConfigurationManager
 {
     /**
+     * Initialize
      */
     protected function initializeConcreteConfigurationManager()
     {
         if ($this->environmentService->isEnvironmentInFrontendMode()) {
             $this->concreteConfigurationManager = $this->objectManager->get(
-                \TYPO3\CMS\Extbase\Configuration\FrontendConfigurationManager::class
+                FrontendConfigurationManager::class
             );
         } else {
             $this->concreteConfigurationManager = $this->objectManager->get(
-                \Pixelant\PxaProductManager\Configuration\BackendConfigurationManager::class
+                BackendConfigurationManager::class
             );
         }
     }
@@ -43,7 +46,7 @@ class ConfigurationManager extends ExtbaseConfigurationManager
      * @param integer $currentPageId Current page id
      * @return void
      */
-    public function setCurrentPageId($currentPageId)
+    public function setCurrentPageId(int $currentPageId)
     {
         if ($this->concreteConfigurationManager instanceof BackendConfigurationManager) {
             $this->concreteConfigurationManager->setCurrentPageId($currentPageId);
@@ -52,9 +55,10 @@ class ConfigurationManager extends ExtbaseConfigurationManager
 
     /**
      * check if environment is FrontentMode in ConfigurationManager
-     * @return void
+     *
+     * @return bool
      */
-    public function isEnvironmentInFrontendMode()
+    public function isEnvironmentInFrontendMode(): bool
     {
         return $this->environmentService->isEnvironmentInFrontendMode();
     }
