@@ -32,7 +32,7 @@ class ProductLinkBuilderTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_category.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_pxaproductmanager_domain_model_product.xml');
 
-        $this->mockedContentObjectRenderer = $this->getMock(ContentObjectRenderer::class, ['typolink_URL']);
+        $this->mockedContentObjectRenderer = $this->createPartialMock(ContentObjectRenderer::class, ['typolink_URL']);
 
         $this->productLinkBuilder = GeneralUtility::makeInstance(
             ProductLinkBuilder::class,
