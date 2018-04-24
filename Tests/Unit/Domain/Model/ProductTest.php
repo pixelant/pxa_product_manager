@@ -35,6 +35,7 @@ use Pixelant\PxaProductManager\Domain\Model\Link;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Test case for class \Pixelant\PxaProductManager\Domain\Model\Product.
@@ -64,10 +65,8 @@ class ProductTest extends UnitTestCase
         $this->fixture = new Product();
 
         // Set plugin setup ts fetched in "MainUtility" called from Product model
-        $GLOBALS['TSFE'] = $this->getMock(
-            \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
-            array(),
-            array($GLOBALS['TYPO3_CONF_VARS'], 1, 1)
+        $GLOBALS['TSFE'] = $this->createMock(
+            TypoScriptFrontendController::class
         );
 
         $this->configuration = [
@@ -987,11 +986,11 @@ class ProductTest extends UnitTestCase
     public function attributesDescriptionCanBeSet()
     {
         $attributeDescription = 'attributeDescription';
-        $this->fixture->setAttributeDescription($attributeDescription);
+        $this->fixture->setAttributesDescription($attributeDescription);
 
         self::assertEquals(
-            $description,
-            $this->fixture->getAttributeDescription()
+            $attributeDescription,
+            $this->fixture->getAttributesDescription()
         );
     }
 
