@@ -28,16 +28,17 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, description, attributes_description, import_id, import_name, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, teaser, description, usp, additional_information, attributes_description, import_id, import_name, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
     ],
 
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, sku, price, description, attributes_description,
+            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, sku, price, teaser, description, usp, additional_information, attributes_description, launched, discontinued, custom_sorting,
 --div--;LLL:EXT:lang/locallang_tca.xlf:sys_category.tabs.category, categories,
 --palette--;;paletteAttributes,
---div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images,images,
---div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, related_products, sub_products, fal_links, links,
+--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images,
+--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.assets, assets,
+--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, related_products, sub_products, accessories, fal_links, links,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.metadata, meta_description, keywords, alternative_title, path_segment,
 --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, disable_single_view, starttime, endtime'
 // @codingStandardsIgnoreEnd
@@ -221,7 +222,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.pid = ###CURRENT_PID###' .
+                'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getRelatedProductsForeignTableWherePid() .
                     ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                     ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid IN (-1,0)' .
                     ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
@@ -459,7 +460,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.pid = ###CURRENT_PID###' .
+                'foreign_table_where' =>  \Pixelant\PxaProductManager\Utility\TCAUtility::getSubProductsForeignTableWherePid() .
                     ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                     ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid IN (-1,0)' .
                     ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
@@ -554,6 +555,144 @@ return [
                 'eval' => 'trim',
                 'enableRichtext' => true
             ]
+        ],
+        'assets' => [
+            'label' => 'LLL:EXT:frontend/Resources/Private/Language/Database.xlf:tt_content.asset_references',
+            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig('assets', [
+                'appearance' => [
+                    'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/Database.xlf:tt_content.asset_references.addFileReference'
+                ],
+                // custom configuration for displaying fields in the overlay/reference table
+                // behaves the same as the image field.
+                'overrideChildTca' => [
+                    'types' => [
+                        '0' => [
+                            'showitem' => '
+                                --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                --palette--;;filePalette'
+                        ],
+                        \TYPO3\CMS\Core\Resource\File::FILETYPE_TEXT => [
+                            'showitem' => '
+                                --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                --palette--;;filePalette'
+                        ],
+                        \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                            'showitem' => '
+                                --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                --palette--;;filePalette'
+                        ],
+                        \TYPO3\CMS\Core\Resource\File::FILETYPE_AUDIO => [
+                            'showitem' => '
+                                --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.audioOverlayPalette;audioOverlayPalette,
+                                --palette--;;filePalette'
+                        ],
+                        \TYPO3\CMS\Core\Resource\File::FILETYPE_VIDEO => [
+                            'showitem' => '
+                                --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.videoOverlayPalette;videoOverlayPalette,
+                                --palette--;;filePalette'
+                        ],
+                        \TYPO3\CMS\Core\Resource\File::FILETYPE_APPLICATION => [
+                            'showitem' => '
+                                --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                --palette--;;filePalette'
+                        ]
+                    ],
+                ],
+            ], $GLOBALS['TYPO3_CONF_VARS']['SYS']['mediafile_ext'])
+        ],
+        'additional_information' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.additional_information',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 15,
+                'eval' => 'trim',
+                'enableRichtext' => true
+            ]
+        ],
+        'teaser' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.teaser',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 5,
+                'eval' => 'trim',
+                'enableRichtext' => false
+            ]
+        ],
+        'usp' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.usp',
+            'config' => [
+                'type' => 'text',
+                'cols' => 40,
+                'rows' => 10,
+                'eval' => 'trim',
+                'enableRichtext' => false
+            ]
+        ],
+        'launched' => [
+            'exclude' => 0,
+            'l10n_mode' => 'exclude',
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.launched',
+            'config' => [
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'eval' => 'date',
+                'size' => 13,
+                'default' => 0,
+            ],
+        ],
+        'discontinued' => [
+            'exclude' => 0,
+            'l10n_mode' => 'exclude',
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.discontinued',
+            'config' => [
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'eval' => 'date',
+                'size' => 13,
+                'default' => 0,
+            ],
+        ],
+        'accessories' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.accessories',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
+                'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getAccessoriesForeignTableWherePid() .
+                    ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
+                    ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid IN (-1,0)' .
+                    ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                'MM' => 'tx_pxaproductmanager_product_accessories_product_mm',
+                'size' => 10,
+                'autoSizeMax' => 30,
+                'maxitems' => 9999,
+                'multiple' => 0,
+                'fieldControl' => [
+                    'editPopup' => [
+                        'disabled' => false
+                    ],
+                    'addRecord' => [
+                        'disabled' => false,
+                    ]
+                ]
+            ]
+        ],
+        'custom_sorting' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.custom_sorting',
+            'config' => [
+                'type' => 'input',
+                'readOnly' => '1',
+                'eval' => 'int',
+                'size' => 13,
+                'default' => 0,
+            ],
         ]
     ]
 ];

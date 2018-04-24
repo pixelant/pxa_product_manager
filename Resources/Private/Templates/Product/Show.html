@@ -39,7 +39,7 @@
 </f:section>
 
 <f:section name="singleView">
-    <div class="single-product-wrapper" data-gallery-mode="{settings.images.singleView.showNavigationButtons}">
+    <div class="single-product-wrapper {product.additionalClasses}" data-gallery-mode="{settings.images.singleView.showNavigationButtons}">
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
@@ -55,10 +55,28 @@
                 </div>
 
                 <div class="row">
+                    <f:if condition="{product.teaser}">
+                        <div class="col-md-12 product-teaser">
+                            <f:format.html>{product.teaser}</f:format.html>
+                        </div>
+                    </f:if>
+                </div>
+
+                <div class="row">
                     <div class="col-md-8">
                         <div class="content">
                             <f:if condition="{product.description}">
                                 <f:format.html>{product.description}</f:format.html>
+                            </f:if>
+
+                            <f:if condition="{product.additionalInformation}">
+                                <f:format.html>{product.additionalInformation}</f:format.html>
+                            </f:if>
+
+                            <f:comment><!-- USP --></f:comment>
+                            <f:if condition="{product.usp}">
+                                <f:render partial="Product/Usp"
+                                          arguments="{product: product, headerTranslationIndex: 'fe.usp'}"/>
                             </f:if>
                         </div>
                     </div>
@@ -78,10 +96,59 @@
                                         </a>
                                     </f:alias>
                                 </f:for>
+                                <f:variable name="videos">0</f:variable>
+                                <f:if condition="{product.assets}">
+                                    <f:for each="{product.assets}" as="file">
+                                        <f:alias map="{sizes: settings.images.singleView}">
+                                            <f:switch expression="{file.originalResource.type}">
+                                                <f:case value="4">
+                                                    <f:variable name="videos">{videos + 1}</f:variable>
+                                                </f:case>
+                                                <f:defaultCase>
+                                                    <a href="{f:uri.image(image: file, maxWidth:'1920', maxHeight:'1080')}">
+                                                        <f:media
+                                                                width="{sizes.mainMaxWidth}m"
+                                                                height="{sizes.mainMaxHeight}m"
+                                                                file="{file}"
+                                                                alt="{file.alternative}"
+                                                                title="{file.title}"
+                                                                data="{description: file.description}"/>
+                                                    </a>
+                                                </f:defaultCase>
+                                            </f:switch>
+                                        </f:alias>
+                                    </f:for>
+                                </f:if>
                             </div>
                             <f:if condition="{settings.showGalleryPagination}">
                                 <div class="single-product-gallery__pagination"></div>
                             </f:if>
+
+                            <f:if condition="{videos}">
+                                <div class="single-product-gallery__assets">
+                                    <f:for each="{product.assets}" as="file">
+                                        <f:alias map="{sizes: settings.images.singleView}">
+                                            <f:switch expression="{file.originalResource.type}">
+                                                <f:case value="4">
+                                                    <div align="center" class="embed-responsive embed-responsive-16by9">
+                                                        <f:media
+                                                            width="{sizes.mainMaxWidth}"
+                                                            width="{sizes.mainMaxHeight}"
+                                                            file="{file}"
+                                                            alt="{file.alternative}"
+                                                            data="{description: file.description}"
+                                                            title="{file.title}" />
+                                                    </div>
+                                                </f:case>
+                                            </f:switch>
+                                        </f:alias>
+                                    </f:for>
+                                </div>
+                                <f:if condition="{settings.showGalleryPagination}">
+                                    <div align="center" class="single-product-gallery-assets__pagination"></div>
+                                </f:if>
+                            </f:if>
+
                         </div>
                     </div>
                 </div>
@@ -92,6 +159,35 @@
                             <f:render partial="Product/AttributeListing"
                                       arguments="{product: product}"/>
                         </div>
+
+                        <f:comment><!-- Launched and discontinued --></f:comment>
+                        <f:if condition="{product.launched} || {product.discontinued}">
+                            <div class="product-status">
+                                <h3><f:translate key="fe.product_status"/></h3>
+                                <table class="table">
+                                    <tbody>
+                                    <f:if condition="{product.launched}">
+                                        <tr>
+                                            <th><f:translate key="fe.launched"/></th>
+                                            <td><f:format.date format="Y-m-d">{product.launched}</f:format.date></td>
+                                        </tr>
+                                    </f:if>
+                                    <f:if condition="{product.discontinued}">
+                                        <tr {f:if(condition:product.isDiscontinued, then: 'class="product-discontinued"')}>
+                                            <th>
+                                                <f:if condition="{product.isDiscontinued}">
+                                                    <f:then><f:translate key="fe.is_discontinued"/></f:then>
+                                                    <f:else><f:translate key="fe.will_be_discontinued"/></f:else>
+                                                </f:if>
+                                            </th>
+                                            <td><f:format.date format="Y-m-d">{product.discontinued}</f:format.date></td>
+                                        </tr>
+                                    </f:if>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </f:if>
+
                     </div>
                     <f:if condition="{product.links -> f:count()} || {product.falLinks -> f:count()}">
                         <div class="col-md-4">
@@ -126,6 +222,12 @@
         <f:if condition="{product.subProducts}">
             <f:render partial="Product/Related"
                       arguments="{relatedProducts: product.subProducts, headerTranslationIndex: 'fe.sub_products'}"/>
+        </f:if>
+
+        <f:comment><!-- Accessories --></f:comment>
+        <f:if condition="{product.accessories}">
+            <f:render partial="Product/Accessories"
+                      arguments="{accessories: product.accessories, headerTranslationIndex: 'fe.accessories'}"/>
         </f:if>
 
         <f:comment><!-- Lates products --></f:comment>

@@ -36,6 +36,22 @@
 				}
 			});
 
+			$('.single-product-gallery__assets').tosrus({
+				infinite: true,
+				caption: {
+					add: false
+				},
+				slides: {
+					visible: 1
+				},
+				pagination: {
+					add: true,
+					type: 'bullets',
+					target: '.single-product-gallery-assets__pagination'
+				},
+				buttons: true
+			});
+
 		}
 
 	});

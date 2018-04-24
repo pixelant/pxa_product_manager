@@ -343,6 +343,159 @@ class ProductController extends AbstractController
     }
 
     /**
+     * promotion list action
+     *
+     * @return void
+     */
+    public function promotionListAction()
+    {
+        $this->settings['demandCategories'] = $this->getDemandCategories(
+            GeneralUtility::intExplode(',', $this->settings['allowedCategories'], true)
+        );
+
+        $demand = $this->createDemandFromSettings($this->settings);
+
+        $products = $this->productRepository->findDemanded($demand);
+
+        $this->view->assign('products', $products);
+    }
+
+    /**
+     * No found page
+     */
+    public function notFoundAction()
+    {
+    }
+
+    /**
+     * action grouped list
+     *
+     * @return void
+     */
+    public function groupedListAction()
+    {
+        $groupedList = [];
+        $excludeCategories = GeneralUtility::intExplode(',', $this->settings['excludeCategories'], true);
+
+        $category = $this->determinateCategory(
+            MainUtility::getActiveCategoryFromRequest()
+        );
+
+        if ($category !== null) {
+            // if showCategoriesWithProducts, display products in just this category, not recursive
+            if ($this->settings['showCategoriesWithProducts']) {
+                $this->settings['demandCategories'] = [$category->getUid()];
+
+                $demand = $this->createDemandFromSettings($this->settings);
+                $products = $this->productRepository->findDemanded($demand);
+            }
+
+            /** @var QueryResultInterface $subCategories */
+            $subCategories = $this->categoryRepository->findByParent(
+                $category,
+                $this->getOrderingsForCategories()
+            );
+
+            if ($subCategories->count() > 0) {
+                $groupedListIndex = 0;
+                $duplicateCategories = [];
+
+                foreach ($subCategories as $index => $subCategory) {
+                    $subCategoryUid = $subCategory->getUid();
+
+                    if (in_array($subCategoryUid, $excludeCategories, true)) {
+                        // excluded category, unset
+                        array_push($duplicateCategories, $index);
+                    } else {
+                        $subCategoryCategories = $this->categoryRepository->findByParent(
+                            $subCategory
+                        );
+
+                        // if category doesn't have any sub categories, fetch products
+                        if ($subCategoryCategories->count() === 0) {
+                            $this->settings['demandCategories'] = [$subCategoryUid];
+                            $demand = $this->createDemandFromSettings($this->settings);
+                            $subCategoryProducts = $this->productRepository->findDemanded($demand);
+
+                            if ($subCategoryProducts->count() > 0) {
+                                // if category has products it will be displayed differently,
+                                // remove from "browse" categories
+                                array_push($duplicateCategories, $index);
+                                // add to grouped list instead
+                                $groupedList[$groupedListIndex]['category'] = $subCategory;
+                                $groupedList[$groupedListIndex]['products'] = $subCategoryProducts;
+                                $groupedList[$groupedListIndex]['categoryAttributes'] = 0;
+                                if ($subCategoryProducts->count() > 0) {
+                                    $groupedList[$groupedListIndex]['categoryAttributes'] =
+                                        $subCategoryProducts->current()->getAttributes()->count();
+                                }
+                                $groupedListIndex++;
+                            }
+                        }
+                    }
+                }
+
+                // remove dublicate categories (added to groupedList)
+                if (!empty($duplicateCategories)) {
+                    foreach ($duplicateCategories as $index) {
+                        unset($subCategories[$index]);
+                    }
+                }
+            }
+
+            $this->view->assignMultiple([
+                'category' => $category,
+                'products' => $products ?? [],
+                'subCategories' => $subCategories,
+            ]);
+        }
+
+        $this->view->assign('groupedList', $groupedList ?? []);
+    }
+
+    /**
+     * List of custom products
+     *
+     * @return void
+     */
+    public function customProductsListAction()
+    {
+        $mode = $this->settings['customProductsList']['mode'];
+        $products = [];
+
+        // Products mode
+        if ($mode === 'products') {
+            $productsList = GeneralUtility::trimExplode(
+                ',',
+                $this->settings['customProductsList']['productsToShow'],
+                true
+            );
+            $products = $this->getProductByUidsList($productsList);
+        }
+
+        // Category mode
+        if ($mode === 'category') {
+            $categories = GeneralUtility::trimExplode(
+                ',',
+                $this->settings['customProductsList']['productsCategories'],
+                true
+            );
+
+            // Get products
+            $products = $this->productRepository->findProductsByCategories(
+                $categories,
+                false,
+                ['tstamp' => QueryInterface::ORDER_DESCENDING],
+                'or',
+                (int)$this->settings['limit']
+            );
+        }
+
+        $this->view->assign('products', $products);
+    }
+
+
+    /**
      * Send emails with order
      *
      * @param array $orderFields
@@ -535,140 +688,6 @@ class ProductController extends AbstractController
     }
 
     /**
-     * No found page
-     */
-    public function notFoundAction()
-    {
-    }
-
-    /**
-     * action grouped list
-     *
-     * @return void
-     */
-    public function groupedListAction()
-    {
-        $groupedList = [];
-        $excludeCategories = GeneralUtility::intExplode(',', $this->settings['excludeCategories'], true);
-
-        $category = $this->determinateCategory(
-            MainUtility::getActiveCategoryFromRequest()
-        );
-
-        if ($category !== null) {
-            // if showCategoriesWithProducts, display products in just this category, not recursive
-            if ($this->settings['showCategoriesWithProducts']) {
-                $this->settings['demandCategories'] = [$category->getUid()];
-
-                $demand = $this->createDemandFromSettings($this->settings);
-                $products = $this->productRepository->findDemanded($demand);
-            }
-
-            /** @var QueryResultInterface $subCategories */
-            $subCategories = $this->categoryRepository->findByParent(
-                $category,
-                $this->getOrderingsForCategories()
-            );
-
-            if ($subCategories->count() > 0) {
-                $groupedListIndex = 0;
-                $duplicateCategories = [];
-
-                foreach ($subCategories as $index => $subCategory) {
-                    $subCategoryUid = $subCategory->getUid();
-
-                    if (in_array($subCategoryUid, $excludeCategories, true)) {
-                        // excluded category, unset
-                        array_push($duplicateCategories, $index);
-                    } else {
-                        $subCategoryCategories = $this->categoryRepository->findByParent(
-                            $subCategory
-                        );
-
-                        // if category doesn't have any sub categories, fetch products
-                        if ($subCategoryCategories->count() === 0) {
-                            $this->settings['demandCategories'] = [$subCategoryUid];
-                            $demand = $this->createDemandFromSettings($this->settings);
-                            $subCategoryProducts = $this->productRepository->findDemanded($demand);
-
-                            if ($subCategoryProducts->count() > 0) {
-                                // if category has products it will be displayed differently,
-                                // remove from "browse" categories
-                                array_push($duplicateCategories, $index);
-                                // add to grouped list instead
-                                $groupedList[$groupedListIndex]['category'] = $subCategory;
-                                $groupedList[$groupedListIndex]['products'] = $subCategoryProducts;
-                                $groupedList[$groupedListIndex]['categoryAttributes'] = 0;
-                                if ($subCategoryProducts->count() > 0) {
-                                    $groupedList[$groupedListIndex]['categoryAttributes'] =
-                                        $subCategoryProducts->current()->getAttributes()->count();
-                                }
-                                $groupedListIndex++;
-                            }
-                        }
-                    }
-                }
-
-                // remove dublicate categories (added to groupedList)
-                if (!empty($duplicateCategories)) {
-                    foreach ($duplicateCategories as $index) {
-                        unset($subCategories[$index]);
-                    }
-                }
-            }
-
-            $this->view->assignMultiple([
-                'category' => $category,
-                'products' => $products ?? [],
-                'subCategories' => $subCategories,
-            ]);
-        }
-
-        $this->view->assign('groupedList', $groupedList ?? []);
-    }
-
-    /**
-     * List of custom products
-     *
-     * @return void
-     */
-    public function customProductsListAction()
-    {
-        $mode = $this->settings['customProductsList']['mode'];
-        $products = [];
-
-        // Products mode
-        if ($mode === 'products') {
-            $productsList = GeneralUtility::trimExplode(
-                ',',
-                $this->settings['customProductsList']['productsToShow'],
-                true
-            );
-            $products = $this->getProductByUidsList($productsList);
-        }
-
-        // Category mode
-        if ($mode === 'category') {
-            $categories = GeneralUtility::trimExplode(
-                ',',
-                $this->settings['customProductsList']['productsCategories'],
-                true
-            );
-
-            // Get products
-            $products = $this->productRepository->findProductsByCategories(
-                $categories,
-                false,
-                ['tstamp' => QueryInterface::ORDER_DESCENDING],
-                'or',
-                (int)$this->settings['limit']
-            );
-        }
-
-        $this->view->assign('products', $products);
-    }
-
-    /**
      * Create demand object
      *
      * @param array $settings
@@ -682,6 +701,9 @@ class ProductController extends AbstractController
         if (!empty($settings['demandCategories'])) {
             $demand->setCategories($settings['demandCategories']);
         }
+        if (!empty($settings['allowedCategoriesMode'])) {
+            $demand->setCategoryConjunction($settings['allowedCategoriesMode']);
+        }
         if ($limit = (int)$settings['limit']) {
             $demand->setLimit($limit);
         }
@@ -690,6 +712,9 @@ class ProductController extends AbstractController
         }
         if (is_array($settings['filters'])) {
             $demand->setFilters($settings['filters']);
+        }
+        if (!empty($settings['includeDiscontinued'])) {
+            $demand->setIncludeDiscontinued((bool)$settings['includeDiscontinued']);
         }
 
         // set orderings
@@ -702,7 +727,6 @@ class ProductController extends AbstractController
         if ($settings['orderByAllowed']) {
             $demand->setOrderByAllowed($settings['orderByAllowed']);
         }
-
         return $demand;
     }
 

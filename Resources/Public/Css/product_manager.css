@@ -2,6 +2,8 @@
   /* Related products */
   /* Related files */
   /* Related links*/
+  /* asseccories */
+  /* usp */
   /** loader **/
 }
 .tx-pxa-product-manager .item {
@@ -120,6 +122,37 @@
   width: 60%;
   color: #2b2b2b;
 }
+.tx-pxa-product-manager .product-status h3 {
+  text-transform: uppercase;
+  border-bottom: 1px solid #94c7da;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+.tx-pxa-product-manager .product-status .table > tbody > tr > th,
+.tx-pxa-product-manager .product-status .table > tbody > tr > td {
+  padding-left: 20px;
+  vertical-align: top;
+  border-top: 3px solid #fff;
+  border-right: 3px solid #fff;
+}
+.tx-pxa-product-manager .product-status .table > tbody > tr > th p,
+.tx-pxa-product-manager .product-status .table > tbody > tr > td p {
+  margin: 0;
+}
+.tx-pxa-product-manager .product-status th:first-of-type {
+  background: #94c7da;
+  width: 40%;
+  color: #2b2b2b;
+}
+.tx-pxa-product-manager .product-status td:last-of-type {
+  background: #eaf4f8;
+  width: 60%;
+  color: #2b2b2b;
+}
+.tx-pxa-product-manager .product-status .product-discontinued th,
+.tx-pxa-product-manager .product-status .product-discontinued td {
+  color: red;
+}
 .tx-pxa-product-manager .single-product-related h3 {
   border-bottom: 1px solid #94c7da;
   padding-bottom: 15px;
@@ -187,6 +220,21 @@
 .tx-pxa-product-manager .single-product-gallery__links ul {
   list-style: none;
   padding-left: 0;
+}
+.tx-pxa-product-manager .single-product-accessories h3 {
+  border-bottom: 1px solid #94c7da;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+.tx-pxa-product-manager .single-product-usp h3 {
+  border-bottom: 1px solid #94c7da;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+.tx-pxa-product-manager .single-product-usp ul {
+  list-style: square;
 }
 @keyframes lds-dual-ring {
   0% {

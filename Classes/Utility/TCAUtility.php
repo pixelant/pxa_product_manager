@@ -225,6 +225,45 @@ class TCAUtility
     }
 
     /**
+     * Table where for accessories
+     *
+     * @return string
+     */
+    public static function getAccessoriesForeignTableWherePid(): string
+    {
+        return self::getDynamicForeignTableWhere(
+            'accessoriesRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    /**
+     * Table where for related-products
+     *
+     * @return string
+     */
+    public static function getRelatedProductsForeignTableWherePid(): string
+    {
+        return self::getDynamicForeignTableWhere(
+            'relatedProductsRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    /**
+     * Table where for sub-products
+     *
+     * @return string
+     */
+    public static function getSubProductsForeignTableWherePid(): string
+    {
+        return self::getDynamicForeignTableWhere(
+            'subProductsRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    /**
      * TCA where clause for categories
      * @return string
      */
@@ -232,5 +271,42 @@ class TCAUtility
     {
         return (int)MainUtility::getExtMgrConfiguration()['dontCheckPidForSysCategory'] === 1
             ? '' : 'AND sys_category.pid=###CURRENT_PID### ';
+    }
+
+
+    /**
+     * Generate dynamic foreign table where
+     *
+     * @param $setting
+     * @param $table
+     * @return string
+     */
+    protected static function getDynamicForeignTableWhere(string $setting, string $table): string
+    {
+        $configuration = MainUtility::getExtMgrConfiguration();
+
+        // we will use current_pid as default to keep backward compatibility
+        $foreignTableWhere = 'AND ' . $table . '.pid = ###CURRENT_PID###';
+
+        // check and override by typoscript setting
+        $restrictionSetting = $configuration[$setting];
+        if ($restrictionSetting) {
+            switch ($restrictionSetting) {
+                case 'current_pid':
+                    $foreignTableWhere = ' AND ' . $table . '.pid=###CURRENT_PID### ';
+                    break;
+                case 'siteroot':
+                    $foreignTableWhere = ' AND ' . $table . '.pid IN (###SITEROOT###) ';
+                    break;
+                case 'page_tsconfig':
+                    $foreignTableWhere = ' AND ' . $table . '.pid IN (###PAGE_TSCONFIG_IDLIST###) ';
+                    break;
+                case 'none':
+                    $foreignTableWhere = '';
+                    break;
+            }
+        }
+
+        return $foreignTableWhere;
     }
 }

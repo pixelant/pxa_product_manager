@@ -100,6 +100,24 @@
             <trans-unit id="fe.minmax.to">
                 <source>To</source>
             </trans-unit>
+            <trans-unit id="fe.accessories">
+                <source>Accessories</source>
+            </trans-unit>
+            <trans-unit id="fe.usp">
+                <source>Unique features</source>
+            </trans-unit>
+            <trans-unit id="fe.launched">
+                <source>Launched</source>
+            </trans-unit>
+            <trans-unit id="fe.is_discontinued">
+                <source>Discontinued</source>
+            </trans-unit>
+            <trans-unit id="fe.will_be_discontinued">
+                <source>Will be discontinued</source>
+            </trans-unit>
+            <trans-unit id="fe.product_status">
+                <source>Product status</source>
+            </trans-unit>
             <trans-unit id="fe.price">
                 <source>Price</source>
             </trans-unit>
@@ -152,6 +170,7 @@
             <trans-unit id="fe.email.orderForm.userFields">
                 <source>Order form information</source>
             </trans-unit>
+
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>

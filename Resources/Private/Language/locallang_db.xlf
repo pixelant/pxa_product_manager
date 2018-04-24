@@ -66,6 +66,30 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_product.attributes_description">
                 <source>Attributes description</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.tab.assets">
+                <source>Media</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.additional_information">
+                <source>Additional information</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.teaser">
+                <source>Teaser</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.usp">
+                <source>Unique Selling Point</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.launched">
+                <source>Launched date</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.discontinued">
+                <source>Discontinued date</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.accessories">
+                <source>Accessories</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.custom_sorting">
+                <source>Custom Sorting</source>
+            </trans-unit>
             <!--Products TCA:END-->
 
             <!--Attributes Set TCA:START-->

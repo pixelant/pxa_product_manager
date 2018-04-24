@@ -2,12 +2,12 @@
 
 <f:layout name="Ajax"/>
 
-<f:section name="main"><f:spaceless>
+<f:section name="main">
     <f:if condition="{products}">
         <f:for each="{products}" as="product">
             <f:render partial="Product/LazyListProductItem"
                       arguments="{product: product}"/>
         </f:for>
     </f:if>
-</f:spaceless></f:section>
+</f:section>
 </html>

@@ -27,17 +27,6 @@ class MainUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function getSettingsReturnEmptyConfigrationIfNotSet()
-    {
-        $this->assertEquals(
-            [],
-            MainUtility::getSettings()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function buildLinkArgumentsOnlyProductWithCategories()
     {
         list($category1, $category2, $category3) = $this->getCategoriesForTest();

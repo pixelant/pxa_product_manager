@@ -1,8 +1,17 @@
 # cat=basic/enable/107; type=options[LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:yes=1]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.dontCheckPidForSysCategory
 dontCheckPidForSysCategory = 0
 
-# cat=basic/enable/110; type=options[LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:yes=1]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.includeSkuInRealurlConfiguration
+# cat=basic/enable/110; type=options[LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:no=0,LLL:EXT:lang/locallang_common.xlf:yes=1]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.includeSkuInRealurlConfiguration
 includeSkuInRealurlConfiguration = 1
 
-# cat=basic/enable/115; type=boolean; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.enablePrices
+# cat=basic/enable/120; type=options[LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.none=none,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.pages_tsconfig=page_tsconfig,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.current_pid=current_pid,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.siteroot=siteroot]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.relatedProductsRestriction
+relatedProductsRestriction = current_pid
+
+# cat=basic/enable/130; type=options[LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.none=none,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.pages_tsconfig=page_tsconfig,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.current_pid=current_pid,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.siteroot=siteroot]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.subProductsRestriction
+subProductsRestriction = current_pid
+
+# cat=basic/enable/140; type=options[LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.none=none,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.pages_tsconfig=page_tsconfig,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.current_pid=current_pid,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.siteroot=siteroot]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.accessoriesRestriction
+accessoriesRestriction = current_pid
+
+# cat=basic/enable/150; type=boolean; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.enablePrices
 enablePrices = 0

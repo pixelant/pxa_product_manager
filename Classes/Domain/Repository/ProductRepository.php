@@ -170,6 +170,10 @@ class ProductRepository extends AbstractDemandRepository
     {
         $constraints = [];
 
+        if (!$demand->getIncludeDiscontinued()) {
+            $constraints['discontinued'] = $this->createDiscontinuedConstraints($query);
+        }
+
         if (!empty($demand->getCategories())) {
             $constraints['categories'] = $this->createCategoryConstraints(
                 $query,
@@ -341,6 +345,28 @@ class ProductRepository extends AbstractDemandRepository
             $query,
             $constraints,
             strtolower($conjunction)
+        );
+    }
+
+    /**
+     * Create discontinued constraints
+     *
+     * @param QueryInterface $query
+     * @return \TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface
+     */
+    protected function createDiscontinuedConstraints(QueryInterface $query)
+    {
+        $constraints = [];
+
+        // include if discontinued isn't set
+        $constraints['ns'] = $query->equals('discontinued', 0);
+        // or discontinued is greater than today
+        $constraints['gt'] = $query->greaterThan('discontinued', new \DateTime('00:00'));
+
+        return $this->createConstraintFromConstraintsArray(
+            $query,
+            $constraints,
+            'or'
         );
     }
 }

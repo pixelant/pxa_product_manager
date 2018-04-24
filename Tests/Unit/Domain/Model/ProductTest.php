@@ -34,6 +34,8 @@ use Pixelant\PxaProductManager\Domain\Model\Image;
 use Pixelant\PxaProductManager\Domain\Model\Link;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Test case for class \Pixelant\PxaProductManager\Domain\Model\Product.
@@ -53,14 +55,70 @@ class ProductTest extends UnitTestCase
      */
     protected $fixture;
 
+    /**
+     * @var array
+     */
+    protected $configuration;
+
     public function setUp()
     {
         $this->fixture = new Product();
+
+        // Set plugin setup ts fetched in "MainUtility" called from Product model
+        $GLOBALS['TSFE'] = $this->createMock(
+            TypoScriptFrontendController::class
+        );
+
+        $this->configuration = [
+            'plugin.' => [
+                'tx_pxaproductmanager.' => [
+                    'settings.' => [
+                        'additionalClasses.' => [
+                            'categories.' => [
+                                '33' => 'class-33'
+                            ],
+                            'launched.' => [
+                                'isNewClass' => 'class-new'
+                            ]
+                        ],
+                        'launched.' => [
+                            'dateIntervalAsNew' => 'P14D'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_pxaproductmanager.']['settings.'] = [
+            'additionalClasses.' => [
+                'categories.' => [
+                    '33' => 'class-33'
+                ],
+                'launched.' => [
+                    'isNewClass' => 'class-new'
+                ]
+            ],
+            'launched.' => [
+                'dateIntervalAsNew' => 'P14D'
+            ],
+            'customSorting.' => [
+                'enable' => 1,
+                'points' => [
+                    'new' => 50,
+                    'categories' => [
+                        '2' => 2,
+                        '1910' => 1910
+                    ]
+                ]
+            ]
+        ];
     }
 
     public function tearDown()
     {
+        unset($GLOBALS['TSFE']);
         unset($this->fixture);
+        unset($this->configuration);
     }
 
     /**
@@ -928,11 +986,332 @@ class ProductTest extends UnitTestCase
     public function attributesDescriptionCanBeSet()
     {
         $attributeDescription = 'attributeDescription';
-        $this->fixture->setAttributeDescription($attributeDescription);
+        $this->fixture->setAttributesDescription($attributeDescription);
 
         self::assertEquals(
-            $description,
-            $this->fixture->getAttributeDescription()
+            $attributeDescription,
+            $this->fixture->getAttributesDescription()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getAccessoriesReturnsInitialValueForAccessories()
+    {
+        $objectStorage = new ObjectStorage();
+        self::assertEquals(
+            $objectStorage,
+            $this->fixture->getAccessories()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setAccessoriesForObjectStorageContainingAccessoriesSetsAccessories()
+    {
+        $product = new Product();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($product);
+        $this->fixture->setAccessories($objectStorage);
+
+        self::assertSame(
+            $objectStorage,
+            $this->fixture->getAccessories()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function addAccesoryForObjectStorageHoldingAccessories()
+    {
+        $product = new Product();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($product);
+        $this->fixture->addAccessory($product);
+
+        self::assertEquals(
+            $objectStorage,
+            $this->fixture->getAccessories()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function removeAccessoryForObjectStorageHoldingAccessories()
+    {
+        $product = new Product();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($product);
+        $objectStorage->detach($product);
+        $this->fixture->addAccessory($product);
+        $this->fixture->removeAccessory($product);
+
+        self::assertEquals(
+            $objectStorage,
+            $this->fixture->getAccessories()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function launchedCanBeSet()
+    {
+        $tstamp = new \DateTime();
+        $this->fixture->setLaunched($tstamp);
+
+        self::assertEquals(
+            $tstamp,
+            $this->fixture->getLaunched()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function discontinuedCanBeSet()
+    {
+        $tstamp = new \DateTime();
+        $this->fixture->setDiscontinued($tstamp);
+
+        self::assertEquals(
+            $tstamp,
+            $this->fixture->getDiscontinued()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function uspCanBeSet()
+    {
+        $usp = 'unique selling point';
+        $this->fixture->setUsp($usp);
+
+        self::assertEquals(
+            $usp,
+            $this->fixture->getUsp()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function uspCanBeGetAsList()
+    {
+        $usp = implode(
+            "\n",
+            [
+                'unique selling point 1',
+                'unique selling point 2'
+            ]
+        );
+        $uspAsList = explode("\n", $usp);
+
+        $this->fixture->setUsp($usp);
+
+        self::assertEquals(
+            $uspAsList,
+            $this->fixture->getUspAsList()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function teaserCanBeSet()
+    {
+        $teaser = 'teaser';
+        $this->fixture->setTeaser($teaser);
+
+        self::assertEquals(
+            $teaser,
+            $this->fixture->getTeaser()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function additionalInformationCanBeSet()
+    {
+        $additionalInformation = 'additional information';
+        $this->fixture->setAdditionalInformation($additionalInformation);
+
+        self::assertEquals(
+            $additionalInformation,
+            $this->fixture->getAdditionalInformation()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getAssetsReturnsInitialValueForAssets()
+    {
+        $objectStorage = new ObjectStorage();
+        self::assertEquals(
+            $objectStorage,
+            $this->fixture->getAssets()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setAssetsForObjectStorageContainingAssetsSetsAssets()
+    {
+        $asset = new FileReference();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($asset);
+        $this->fixture->setAssets($objectStorage);
+
+        self::assertSame(
+            $objectStorage,
+            $this->fixture->getAssets()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function addAssetForObjectStorageHoldingAssets()
+    {
+        $asset = new FileReference();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($asset);
+        $this->fixture->addAsset($asset);
+
+        self::assertEquals(
+            $objectStorage,
+            $this->fixture->getAssets()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function removeAssetForObjectStorageHoldingAssets()
+    {
+        $asset = new FileReference();
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($asset);
+        $objectStorage->detach($asset);
+        $this->fixture->addAsset($asset);
+        $this->fixture->removeAsset($asset);
+
+        self::assertEquals(
+            $objectStorage,
+            $this->fixture->getAssets()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getIsNewCanBeFetched()
+    {
+        $configurationUtilityMock = $this->getMockBuilder(\Pixelant\PxaProductManager\Utility\ConfigurationUtility::class)
+            ->setMethods(['getSettings'])
+            ->getMock();
+        $configurationManagerMock = $this->getMockBuilder(\Pixelant\PxaProductManager\Configuration\ConfigurationManager::class)
+            ->setMethods(['getConfiguration'])
+            ->getMock();
+        $environmentServiceMock = $this->getMockBuilder(\TYPO3\CMS\Extbase\Service\EnvironmentService::class)
+            ->setMethods(array('isEnvironmentInFrontendMode'))
+            ->getMock();
+
+        ObjectAccess::setProperty($configurationUtilityMock, 'configurationManager', $configurationManagerMock, true);
+        ObjectAccess::setProperty($configurationManagerMock, 'environmentService', $environmentServiceMock, true);
+
+        $environmentServiceMock->method('isEnvironmentInFrontendMode')->will($this->returnValue(false));
+        $configurationManagerMock->method('getConfiguration')->will($this->returnValue($this->configuration));
+
+        // verify that getIsNew returns false when we set launched to today -15 days
+        $launched = new \DateTime();
+        $launched->modify('-15 days');
+        $this->fixture->setLaunched($launched);
+
+        self::assertEquals(
+            false,
+            $this->fixture->getIsNew()
+        );
+
+        // verify that getIsNew returns true when we set launched to today -13 days
+        $launched = new \DateTime();
+        $launched->modify('-13 days');
+        $this->fixture->setLaunched($launched);
+
+        self::assertEquals(
+            true,
+            $this->fixture->getIsNew()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getAdditionalClassesCanBeFetched()
+    {
+        $category = $this->getMockBuilder(Category::class)
+            ->setMethods(['getUid'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $category->method('getUid')->will(self::returnValue(33));
+        $this->fixture->addCategory($category);
+
+        $configurationUtilityMock = $this->getMockBuilder(\Pixelant\PxaProductManager\Utility\ConfigurationUtility::class)
+            ->setMethods(['getSettings'])
+            ->getMock();
+        $configurationManagerMock = $this->getMockBuilder(\Pixelant\PxaProductManager\Configuration\ConfigurationManager::class)
+            ->setMethods(['getConfiguration'])
+            ->getMock();
+        $environmentServiceMock = $this->getMockBuilder(\TYPO3\CMS\Extbase\Service\EnvironmentService::class)
+            ->setMethods(array('isEnvironmentInFrontendMode'))
+            ->getMock();
+
+        ObjectAccess::setProperty($configurationUtilityMock, 'configurationManager', $configurationManagerMock, true);
+        ObjectAccess::setProperty($configurationManagerMock, 'environmentService', $environmentServiceMock, true);
+
+        $environmentServiceMock->method('isEnvironmentInFrontendMode')->will($this->returnValue(false));
+        $configurationManagerMock->method('getConfiguration')->will($this->returnValue($this->configuration));
+
+        // verify that getAdditionalClasses returns correct classe for category
+        $launched = new \DateTime();
+        $launched->modify('-15 days');
+        $this->fixture->setLaunched($launched);
+
+        self::assertEquals(
+            'class-33',
+            $this->fixture->getAdditionalClasses()
+        );
+
+        // verify that getAdditionalClasses returns correct classes for "new" and category
+        $launched = new \DateTime();
+        $launched->modify('-13 days');
+        $this->fixture->setLaunched($launched);
+
+        self::assertEquals(
+            'class-33 class-new',
+            $this->fixture->getAdditionalClasses()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function customSortingCanBeSet()
+    {
+        $customSorting = 1910;
+        $this->fixture->setCustomSorting($customSorting);
+
+        self::assertEquals(
+            $customSorting,
+            $this->fixture->getCustomSorting()
         );
     }
 }

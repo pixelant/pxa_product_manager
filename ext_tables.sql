@@ -26,6 +26,14 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
   fal_links int(11) unsigned DEFAULT '0',
   serialized_attributes_values blob,
   attributes_description text,
+  assets int(11) unsigned DEFAULT '0' NOT NULL,
+  accessories int(11) unsigned DEFAULT '0' NOT NULL,
+  additional_information text,
+  teaser text,
+  launched int(11) unsigned DEFAULT '0' NOT NULL,
+  discontinued int(11) unsigned DEFAULT '0' NOT NULL,
+  usp text,
+  custom_sorting int(11) DEFAULT '0' NOT NULL,
 
   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
   crdate int(11) unsigned DEFAULT '0' NOT NULL,
@@ -389,4 +397,17 @@ CREATE TABLE tx_pxaproductmanager_domain_model_filter (
   KEY t3ver_oid (t3ver_oid,t3ver_wsid),
   KEY language (l10n_parent,sys_language_uid)
 
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_product_accessories_product_mm'
+#
+CREATE TABLE tx_pxaproductmanager_product_accessories_product_mm (
+	uid_local int(11) unsigned DEFAULT '0' NOT NULL,
+	uid_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+	sorting int(11) unsigned DEFAULT '0' NOT NULL,
+	sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+
+	KEY uid_local (uid_local),
+	KEY uid_foreign (uid_foreign)
 );

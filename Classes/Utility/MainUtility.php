@@ -94,22 +94,6 @@ class MainUtility
     }
 
     /**
-     * Get extension manager settings
-     *
-     * @return array
-     */
-    public static function getSettings(): array
-    {
-        if (self::$settings === null) {
-            self::$settings = GeneralUtility::removeDotsFromTS(
-                self::getTSFE()->tmpl->setup['plugin.']['tx_pxaproductmanager.']['settings.'] ?? []
-            );
-        }
-
-        return self::$settings;
-    }
-
-    /**
      * Get uid of active category
      *
      * @return int
@@ -284,7 +268,13 @@ class MainUtility
      */
     public static function getObjectManager(): ObjectManager
     {
-        return GeneralUtility::makeInstance(ObjectManager::class);
+        static $objectManager;
+
+        if ($objectManager === null) {
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        }
+
+        return $objectManager;
     }
 
     /**
