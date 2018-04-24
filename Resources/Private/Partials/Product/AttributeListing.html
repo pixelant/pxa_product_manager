@@ -59,17 +59,15 @@
                 <f:case default="TRUE">
                     <tr>
                         <th>
-                            <f:spaceless>
-                                <f:if condition="{attribute.icon}">
-                                        <f:image maxWidth="{settings.attributes.iconMaxSize}"
-                                                 maxHeight="{settings.attributes.iconMaxSize}"
-                                                 image="{attribute.icon}"
-                                                 class="{settings.attributes.iconClasses}"
-                                                 title="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"
-                                                 alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
-                                </f:if>
-                                <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
-                            </f:spaceless>
+                            <f:if condition="{attribute.icon}">
+                                <f:image maxWidth="{settings.attributes.iconMaxSize}"
+                                         maxHeight="{settings.attributes.iconMaxSize}"
+                                         image="{attribute.icon}"
+                                         class="{settings.attributes.iconClasses}"
+                                         title="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"
+                                         alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
+                            </f:if>
+                            <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
                         </th>
                         <td>
                             <f:render partial="Product/Attribute/Type{attribute.type}"

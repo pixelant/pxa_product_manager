@@ -175,12 +175,10 @@
                                     <f:if condition="{product.discontinued}">
                                         <tr {f:if(condition:product.isDiscontinued, then: 'class="product-discontinued"')}>
                                             <th>
-                                                <f:spaceless>
                                                 <f:if condition="{product.isDiscontinued}">
                                                     <f:then><f:translate key="fe.is_discontinued"/></f:then>
                                                     <f:else><f:translate key="fe.will_be_discontinued"/></f:else>
                                                 </f:if>
-                                                </f:spaceless>
                                             </th>
                                             <td><f:format.date format="Y-m-d">{product.discontinued}</f:format.date></td>
                                         </tr>
