@@ -714,7 +714,7 @@ class ProductController extends AbstractController
             $demand->setFilters($settings['filters']);
         }
         if (!empty($settings['includeDiscontinued'])) {
-            $demand->setIncludeDiscontinued($settings['includeDiscontinued']);
+            $demand->setIncludeDiscontinued((bool)$settings['includeDiscontinued']);
         }
 
         // set orderings

@@ -45,7 +45,7 @@ class ConfigurationUtility
     /**
      * ConfigurationManager
      *
-     * @var \Pixelant\PxaProductManager\Configuration\ConfigurationManager
+     * @var ConfigurationManager
      */
     protected static $configurationManager;
 
@@ -62,15 +62,15 @@ class ConfigurationUtility
     public static function getSettings(int $currentPageId = null): array
     {
         if (self::$configurationManager === null) {
-            self::$configurationManager = GeneralUtility::makeInstance(ObjectManager::class)
-                ->get(ConfigurationManager::class);
+            self::$configurationManager = MainUtility::getObjectManager()->get(ConfigurationManager::class);
         }
 
         if (self::$configurationManager->isEnvironmentInFrontendMode()) {
             $configurationKey = 'FE';
         } else {
-            $configurationKey = $currentPageId !== null ?  $currentPageId : 'BE';
+            $configurationKey = $currentPageId ?? 'BE';
         }
+
 
         if (empty(self::$settings[$configurationKey])) {
             if ($currentPageId !== null && !self::$configurationManager->isEnvironmentInFrontendMode()) {
@@ -88,6 +88,7 @@ class ConfigurationUtility
                 self::$settings[$configurationKey] = [];
             }
         }
+
         return self::$settings[$configurationKey];
     }
 }

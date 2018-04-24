@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\LinkHandler;
 
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -85,7 +86,7 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
         }
 
         if (isset($parameters)) {
-            $singleViewPageUid = MainUtility::getSettings()['pagePid'];
+            $singleViewPageUid = ConfigurationUtility::getSettings()['pagePid'];
 
             $confLink = [
                 'parameter' => $singleViewPageUid ?: MainUtility::getTSFE()->id,

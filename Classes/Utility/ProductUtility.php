@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -202,9 +203,10 @@ class ProductUtility
     /**
      * Get calculated custom sorting
      *
-     * @return void
+     * @param Product $product
+     * @return int
      */
-    public static function getCalculatedCustomSorting($product)
+    public static function getCalculatedCustomSorting(Product $product): int
     {
         $customSorting = 0;
 
@@ -227,6 +229,7 @@ class ProductUtility
                 }
             }
         }
+
         return $customSorting;
     }
 }

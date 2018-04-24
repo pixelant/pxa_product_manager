@@ -16,9 +16,9 @@ namespace Pixelant\PxaProductManager\Task;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
@@ -38,12 +38,13 @@ class ProductCustomSortingUpdateTask extends AbstractTask
     public function execute()
     {
         $updatedProducts = 0;
-        $productRepository = GeneralUtility::makeInstance(ObjectManager::class)
-            ->get(ProductRepository::class);
+        /** @var ProductRepository $productRepository */
+        $productRepository = MainUtility::getObjectManager()->get(ProductRepository::class);
 
         $products = $productRepository->findAll(false);
 
         if ($products) {
+            /** @var Product $product */
             foreach ($products as $product) {
                 try {
                     $product->setCustomSorting(ProductUtility::getCalculatedCustomSorting($product));
@@ -56,8 +57,8 @@ class ProductCustomSortingUpdateTask extends AbstractTask
                 }
             }
             if ($updatedProducts > 0) {
-                $persistenceManager = GeneralUtility::makeInstance(ObjectManager::class)
-                    ->get(PersistenceManager::class);
+                /** @var PersistenceManager $persistenceManager */
+                $persistenceManager = MainUtility::getObjectManager()->get(PersistenceManager::class);
                 $persistenceManager->persistAll();
             }
         }

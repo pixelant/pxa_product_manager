@@ -2,6 +2,9 @@
 namespace Pixelant\PxaProductManager\Hook;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute as Attribute;
+use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -10,6 +13,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 /***************************************************************
  *  Copyright notice
@@ -218,13 +222,23 @@ class TceMain
         return $pid ?? 1;
     }
 
+    /**
+     * Set custom sorting for product
+     *
+     * @param $status
+     * @param $table
+     * @param $id
+     * @param $fieldArray
+     * @param $pObj
+     */
     // @codingStandardsIgnoreStart
     public function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj)
     {// @codingStandardsIgnoreEnd
         if ($table == 'tx_pxaproductmanager_domain_model_product') {
-            $productRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class)
-                ->get(\Pixelant\PxaProductManager\Domain\Repository\ProductRepository::class);
+            /** @var ProductRepository $productRepository */
+            $productRepository = MainUtility::getObjectManager()->get(ProductRepository::class);
 
+            /** @var Product $product */
             $product = $productRepository->findByIdentifier($id);
 
             if ($product) {
@@ -233,9 +247,8 @@ class TceMain
                 if ($product->_isDirty()) {
                     $productRepository->update($product);
 
-                    $persistenceManager = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class)
-                        ->get(\TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager::class);
-
+                    /** @var PersistenceManager $persistenceManager */
+                    $persistenceManager = MainUtility::getObjectManager()->get(PersistenceManager::class);
                     $persistenceManager->persistAll();
                 }
             }
