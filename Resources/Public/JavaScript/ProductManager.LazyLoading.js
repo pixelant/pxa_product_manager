@@ -1,5 +1,5 @@
 (function (w, $) {
-	var ProductManager = w.ProductManager || {};
+	const ProductManager = w.ProductManager || {};
 
 	// Lazy loading main function
 	ProductManager.LazyLoading = (function () {
@@ -7,27 +7,27 @@
 		 * Scroll type loading
 		 * @type {number}
 		 */
-		var LAZY_LOADING_SCROLL_TYPE = 1;
+		const LAZY_LOADING_SCROLL_TYPE = 1;
 
 		/**
 		 * wrapper of list
 		 */
-		var $wrapper;
+		let $wrapper;
 
 		/**
 		 * Loading spinner
 		 */
-		var $loaderOverlay;
+		let $loaderOverlay;
 
 		/**
 		 * Item template
 		 */
-		var $template;
+		let $template;
 
 		/**
 		 * Jquery elements
 		 */
-		var $loadMoreButton,
+		let $loadMoreButton,
 			$countContainer,
 			$lastItem,
 			$itemsContainer,
@@ -36,12 +36,12 @@
 		/**
 		 *  Loading settings
 		 */
-		var settings;
+		let settings;
 
 		/**
 		 * Lazy loading
 		 */
-		var lazyLoadingInProgress = false,
+		let lazyLoadingInProgress = false,
 			lazyLoadingStop = false,
 			offSet = 0,
 			loadMoreType,
@@ -57,8 +57,8 @@
 		 *
 		 * @param lazySettings
 		 */
-		var init = function (lazySettings) {
-			_initVars(lazySettings);
+		const init = function (lazySettings) {
+			_initvars(lazySettings);
 
 			if ($wrapper.length) {
 				if (loadMoreType === LAZY_LOADING_SCROLL_TYPE) {
@@ -89,11 +89,11 @@
 		 * @param lazySettings
 		 * @private
 		 */
-		var _initVars = function (lazySettings) {
+		const _initvars = function (lazySettings) {
 			settings = lazySettings;
 
 			// double check for limit
-			var limit = parseInt(settings.limit, 10);
+			let limit = parseInt(settings.limit, 10);
 			settings.limit = isNaN(limit) ? 8 : limit;
 			offSet = limit;
 
@@ -126,7 +126,7 @@
 		 *
 		 * @private
 		 */
-		var _initLoadMoreButton = function () {
+		const _initLoadMoreButton = function () {
 			$loadMoreButton.on('click', function (e) {
 				e.preventDefault();
 				$loadMoreButton.prop('disabled', true);
@@ -139,7 +139,7 @@
 		 *
 		 * @private
 		 */
-		var _initScrollLoading = function () {
+		const _initScrollLoading = function () {
 			$(window).scroll(function () {
 				if (!lazyLoadingInProgress && !lazyLoadingStop) {
 					if ($lastItem.length > 0 && $(window).scrollTop() >= $lastItem.offset().top - $(window).height()) {
@@ -155,12 +155,12 @@
 		 * @param updateFilteringOptions // Update options only on filter changes
 		 * @private
 		 */
-		var _runAjax = function (updateFilteringOptions) {
+		const _runAjax = function (updateFilteringOptions) {
 			updateFilteringOptions = updateFilteringOptions || false;
 			lazyLoadingInProgress = true;
 			$loaderOverlay.removeClass(settings.hiddenClass);
 
-			var data = {
+			let data = {
 				tx_pxaproductmanager_pi1: {
 					demand: {
 						offSet: offSet,
@@ -202,7 +202,7 @@
 					// Update wish list buttons
 					if (wishListEnable) {
 						// Init for new loaded buttons
-						var $buttons = $itemsContainer.find(
+						let $buttons = $itemsContainer.find(
 							ProductManager.WishList.getSettings().buttonIdentifier + '.' + ProductManager.WishList.getSettings().loadingClass
 						);
 
@@ -211,7 +211,7 @@
 					// Update compare list buttons
 					if (compareListEnable) {
 						// Init for new loaded buttons
-						var $buttonsCompareList = $itemsContainer.find(
+						let $buttonsCompareList = $itemsContainer.find(
 							ProductManager.CompareList.getSettings().buttonIdentifier +	'.' + ProductManager.CompareList.getSettings().loadingClass
 						);
 

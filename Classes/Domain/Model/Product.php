@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
@@ -25,11 +26,13 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
+use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  *
@@ -62,6 +65,13 @@ class Product extends AbstractEntity
      * @var \string
      */
     protected $sku;
+
+    /**
+     * Price
+     *
+     * @var float
+     */
+    protected $price = 0.0;
 
     /**
      * description
@@ -314,6 +324,32 @@ class Product extends AbstractEntity
     public function setSku(string $sku)
     {
         $this->sku = $sku;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    /**
+     * Format price
+     *
+     * @return float
+     */
+    public function getFormatPrice(): string
+    {
+        return ProductUtility::formatPrice($this->price);
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price)
+    {
+        $this->price = $price;
     }
 
     /**

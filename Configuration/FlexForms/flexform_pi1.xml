@@ -44,7 +44,7 @@
                                     </numIndex>
                                     <numIndex index="7">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_wish_list</numIndex>
-                                        <numIndex index="1">Product->wishList</numIndex>
+                                        <numIndex index="1">Product->wishList;Product->finishOrder</numIndex>
                                     </numIndex>
                                     <numIndex index="8">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_pre_view</numIndex>
@@ -299,6 +299,18 @@
                             </config>
                         </TCEforms>
                     </settings.compareViewPid>
+
+                    <settings.enableOrderFunction>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.enable_order_function</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->finishOrder</displayCond>
+                            <onChange>reload</onChange>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.enableOrderFunction>
                 </el>
             </ROOT>
         </sDEF>
@@ -586,7 +598,7 @@
                             <displayCond>
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->finishOrder</numIndex>
                                     <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                 </OR>
                             </displayCond>
@@ -599,7 +611,6 @@
                 </el>
             </ROOT>
         </productLists>
-
         <filtering>
             <ROOT>
             <TCEforms>
@@ -636,5 +647,26 @@
                 </el>
             </ROOT>
         </filtering>
+        <orderFucntion>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_function_sheet__title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.orderRecipientsEmails>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_recipients_emails</label>
+                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
+                            <config>
+                                <type>text</type>
+                                <cols>32</cols>
+                                <rows>2</rows>
+                            </config>
+                        </TCEforms>
+                    </settings.orderRecipientsEmails>
+                </el>
+            </ROOT>
+        </orderFucntion>
     </sheets>
 </T3DataStructure>

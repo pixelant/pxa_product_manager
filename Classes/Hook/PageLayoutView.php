@@ -557,6 +557,20 @@ class PageLayoutView
         $info = '<br>';
         $info .= $this->getPagePidInfo((int)$settings['pagePid']);
 
+        $info .= sprintf(
+            '<b>%s</b>: %s<br>',
+            $this->translate('flexform.enable_order_function'),
+            $this->translate('be.extension_info.checkbox_' .
+                ($settings['enableOrderFunction'] ? 'yes' : 'no'))
+        );
+
+        $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
+        $info .= sprintf(
+            '<b>%s</b>: %s<br>',
+            $this->translate('flexform.order_recipients_emails'),
+            empty($recipients) ? $this->translate('flexform.no_recipients'): implode(', ', $recipients)
+        );
+
         $info .= self::$hrMarkup;
         $info .= $this->getIconListOptionsInfo($settings, 'compareList');
 

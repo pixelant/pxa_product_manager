@@ -6,10 +6,12 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Service\OrderMailService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -222,13 +224,59 @@ class ProductController extends AbstractController
 
     /**
      * Wish list of products
+     *
+     * @param bool $sendOrder
      */
-    public function wishListAction()
+    public function wishListAction(bool $sendOrder = false)
     {
-        $this->view->assign(
-            'products',
-            $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME)
-        );
+        $orderFormFields = $this->getProcessedOrderFormFields();
+
+        if ($sendOrder) {
+            try {
+                $orderProducts = $this->request->getArgument('orderProducts');
+                $values = $this->request->getArgument('orderFields');
+
+                if ($this->validateOrderFields($orderFormFields, $values)) {
+                    $this->sendOrderEmail($orderFormFields, $orderProducts);
+                    $this->redirect('finishOrder');
+                }
+            } catch (NoSuchArgumentException $exception) {
+                // orderProducts and orderFields are required to send email
+            }
+        }
+
+        if ($this->request->hasArgument('orderProducts')) {
+            $orderState = $this->request->getArgument('orderProducts');
+        } elseif (!empty($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])) {
+            $orderState = json_decode(
+                urldecode(
+                    base64_decode($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])
+                ),
+                true
+            );
+
+            if (!is_array($orderState)) {
+                $orderState = [];
+            }
+        }
+
+        $this->view->assignMultiple([
+            'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
+            'orderFormFields' => $orderFormFields,
+            'orderProducts' => $orderState ?? [],
+            'sendOrder' => $sendOrder
+        ]);
+    }
+
+    /**
+     * Finish order text
+     * Show some successful texts
+     */
+    public function finishOrderAction()
+    {
+        // Clean list
+        MainUtility::cleanCookieValue(ProductUtility::WISH_LIST_COOKIE_NAME);
+        MainUtility::cleanCookieValue(ProductUtility::ORDER_STATE_COOKIE_NAME);
     }
 
     /**
@@ -292,6 +340,110 @@ class ProductController extends AbstractController
                 'diffData',
                 $productAttributeSets
             );
+    }
+
+    /**
+     * Send emails with order
+     *
+     * @param array $orderFields
+     * @param array $orderProducts
+     * @return void
+     */
+    protected function sendOrderEmail(array $orderFields, array $orderProducts)
+    {
+        $template = $this->settings['wishList']['orderForm']['emailTemplatePath'];
+
+        $products = $this->getProductByUidsList(array_keys($orderProducts));
+
+        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
+        // @TODO make field name configurable
+        if (!empty($orderFields['email']['value'])
+            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
+            $recipients[] = $orderFields['email']['value'];
+        }
+
+        /** @var OrderMailService $orderMailService */
+        $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
+        $orderMailService
+            ->generateMailBody($template, $orderFields, $orderProducts, $products)
+            ->setSubject($this->translate('fe.email.orderForm.subject'))
+            ->setReceivers($recipients)
+            ->setSenderName($this->settings['email']['senderName'])
+            ->setSenderEmail($this->settings['email']['senderEmail']);
+
+        $orderMailService->send();
+    }
+
+    /**
+     * Get order form fields, where value are replaced with fe user fields
+     *
+     * @return array
+     */
+    protected function getProcessedOrderFormFields(): array
+    {
+        $fields = $this->settings['wishList']['orderForm']['fields'] ?? [];
+
+        if (!empty($fields)
+            && MainUtility::getTSFE()->loginUser
+            && (int)$this->settings['wishList']['orderForm']['replaceWithFeUserValues'] === 1
+        ) {
+            $feUser = MainUtility::getTSFE()->fe_user->user;
+
+            foreach ($fields as $field => &$fieldConf) {
+                if (array_key_exists($field, $feUser)) {
+                    $fieldConf['feUserValue'] = $feUser[$field];
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Return false if fields fail validation. Also will add error messages to fields configuration
+     *
+     * @param array $fields
+     * @param array $values
+     * @return bool
+     */
+    protected function validateOrderFields(array &$fields, array $values): bool
+    {
+        $isValid = true;
+
+        foreach ($fields as $field => &$fieldConf) {
+            $value = $values[$field] ?? $fieldConf['feUserValue'] ?? '';
+            $fieldConf['value'] = $value;
+
+            if (!empty($fieldConf['validation'])) {
+                $validations = GeneralUtility::trimExplode(',', $fieldConf['validation'], true);
+                $fieldConf['errors'] = [];
+
+                foreach ($validations as $validation) {
+                    switch ($validation) {
+                        case 'required':
+                            if (empty($value)) {
+                                $fieldConf['errors'][] = $this->translate('fe.validation_error.required');
+                                $isValid = false;
+                            }
+                            break;
+                        case 'email':
+                            if (!GeneralUtility::validEmail($value)) {
+                                $fieldConf['errors'][] = $this->translate('fe.validation_error.email');
+                                $isValid = false;
+                            }
+                            break;
+                        case 'url':
+                            if (!GeneralUtility::isValidUrl($value)) {
+                                $fieldConf['errors'][] = $this->translate('fe.validation_error.ulr');
+                                $isValid = false;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        return $isValid;
     }
 
     /**
@@ -486,7 +638,7 @@ class ProductController extends AbstractController
         $products = [];
 
         // Products mode
-        if ($mode == 'products') {
+        if ($mode === 'products') {
             $productsList = GeneralUtility::trimExplode(
                 ',',
                 $this->settings['customProductsList']['productsToShow'],
@@ -496,7 +648,7 @@ class ProductController extends AbstractController
         }
 
         // Category mode
-        if ($mode == 'category') {
+        if ($mode === 'category') {
             $categories = GeneralUtility::trimExplode(
                 ',',
                 $this->settings['customProductsList']['productsCategories'],

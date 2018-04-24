@@ -1,23 +1,23 @@
 (function (w, $) {
-	var ProductManager = w.ProductManager || {};
+	const ProductManager = w.ProductManager || {};
 
 	// Compare list
 	ProductManager.CompareList = (function () {
 		/**
 		 * Main settings
 		 */
-		var settings;
+		let settings;
 
 		/**
 		 * Other settings
 		 */
-		var ajaxLoadingInProgress = true,
+		let ajaxLoadingInProgress = true,
 			productsList = [];
 
 		/**
 		 * Dom elements
 		 */
-		var $buttons,
+		let $buttons,
 			$cart,
 			$cartCounter;
 
@@ -26,7 +26,7 @@
 		 *
 		 * @param settings
 		 */
-		var init = function (settings) {
+		const init = function (settings) {
 			_initVars(settings);
 
 			_loadList();
@@ -38,7 +38,7 @@
 		 * @param listSettings
 		 * @private
 		 */
-		var _initVars = function (listSettings) {
+		const _initVars = function (listSettings) {
 			settings = listSettings;
 
 			$buttons = $(listSettings.buttonIdentifier + '.' + listSettings.loadingClass);
@@ -51,14 +51,14 @@
 		 *
 		 * @private
 		 */
-		var _loadList = function () {
+		const _loadList = function () {
 			ajaxLoadingInProgress = true;
 
 			$.ajax({
 				url: settings.listUrl,
 				dataType: 'json'
 			}).done(function (data) {
-				for (var i in data.compareList) {
+				for (let i in data.compareList) {
 					if (data.compareList.hasOwnProperty(i)) {
 						productsList.push(data.compareList[i]);
 					}
@@ -79,10 +79,10 @@
 		 * @param button
 		 * @private
 		 */
-		var _toggleWishListAjaxAction = function (button) {
+		const _toggleWishListAjaxAction = function (button) {
 			ajaxLoadingInProgress = true;
 
-			var parentToRemove = button.data('delete-parent-on-remove'),
+			let parentToRemove = button.data('delete-parent-on-remove'),
 				productUid = parseInt(button.data('product-uid')),
 				uri = button.data('ajax-uri');
 
@@ -106,7 +106,7 @@
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
 
 					if ($cart.length === 1 && data.inList) {
-						var itemImg = button.parents(settings.itemClass).find('img').eq(0);
+						let itemImg = button.closest(settings.itemClass).find('img').eq(0);
 
 						ProductManager.Main.flyToElement($(itemImg), $cart);
 					}
@@ -145,7 +145,7 @@
 		 * @param $buttons
 		 * @public
 		 */
-		var initButtons = function ($buttons) {
+		const initButtons = function ($buttons) {
 			$buttons.on('click', function (e) {
 				e.preventDefault();
 
@@ -155,7 +155,7 @@
 			});
 
 			$buttons.each(function () {
-				var button = $(this),
+				let button = $(this),
 					productUid = parseInt(button.data('product-uid')),
 					text = '',
 					className = '';
@@ -181,7 +181,7 @@
 		 *
 		 * @return string
 		 */
-		var getSettings = function () {
+		const getSettings = function () {
 			return settings;
 		};
 

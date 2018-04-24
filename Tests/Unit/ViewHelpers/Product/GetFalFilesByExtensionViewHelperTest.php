@@ -28,12 +28,9 @@ class GetFalFilesByExtensionViewHelperTest extends UnitTestCase
                 false
             );
 
-            $mockedOriginalFile = $this->getMock(
+            $mockedOriginalFile = $this->createPartialMock(
                 FileReferenceOriginal::class,
-                ['getExtension'],
-                [],
-                '',
-                false
+                ['getExtension']
             );
 
             $mockedOriginalFile

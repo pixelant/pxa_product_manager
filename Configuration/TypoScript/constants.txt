@@ -119,6 +119,25 @@ plugin.tx_pxaproductmanager {
 
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/030; type=int; label=Wish list page Pid
             pagePid =
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=boolean; label=Replace form fields with values of frontend user fields
+            replaceWithFeUserValues = 1
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=boolean; label=Send order email to user if "email" field is set
+            sendEmailToUser = 1
+        }
+    }
+
+    # customsubcategory=pxaproductmanager_wish_list=Wish list
+    settings {
+        images {
+            orderView {
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/060; type=int; label=Image max width
+                maxWidth = 100
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/070; type=int; label=Image max height
+                maxHeight = 100
+            }
         }
     }
 
@@ -130,6 +149,17 @@ plugin.tx_pxaproductmanager {
 
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_list/020; type=int; label=Compare pre-view page Pid
             pagePid =
+        }
+    }
+
+    # customsubcategory=pxaproductmanager_emails=Email default settings
+    settings {
+        email {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_emails/010; type=string; label=Name of sender
+            senderName = Product manager
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_emails/020; type=string; label=Email address of sender
+            senderEmail = noreply@site.com
         }
     }
 }

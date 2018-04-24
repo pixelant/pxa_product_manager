@@ -29,7 +29,7 @@ define(['jquery', 'TYPO3/CMS/Recordlist/LinkBrowser'], function ($, LinkBrowser)
 			e.preventDefault();
 
 			$(this)
-				.parents('.list-tree-group')
+				.closest('.list-tree-group')
 				.find('.list-tree-show')
 				.trigger('click');
 		})

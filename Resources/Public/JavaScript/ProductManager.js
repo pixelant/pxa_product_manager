@@ -1,5 +1,5 @@
 (function (w, $) {
-	var ProductManager = w.ProductManager || {};
+	const ProductManager = w.ProductManager || {};
 
 	// Init settings
 	ProductManager.settings = ProductManager.settings || {};
@@ -9,7 +9,7 @@
 		listeners: {},
 
 		init: function () {
-			for (var key in ProductManager.settings.events) {
+			for (let key in ProductManager.settings.events) {
 				if (ProductManager.settings.events.hasOwnProperty(key)) {
 					this.listeners[ProductManager.settings.events[key]] = [];
 				}
@@ -42,11 +42,14 @@
 		 * @param cName
 		 * @param value
 		 * @param exdays
+		 * @param disableEncode
 		 */
-		setCookie: function (cName, value, exdays) {
-			var exdate = new Date();
+		setCookie: function (cName, value, exdays, disableEncode) {
+			let exdate = new Date();
+			disableEncode = disableEncode || false;
+
 			exdate.setDate(exdate.getDate() + exdays);
-			var cValue = encodeURIComponent(value) + ((exdays === null) ? '' : '; expires=' + exdate.toUTCString()) + '; path=/';
+			let cValue = (disableEncode ? value : encodeURIComponent(value)) + ((exdays === null) ? '' : '; expires=' + exdate.toUTCString()) + '; path=/';
 			document.cookie = cName + '=' + cValue;
 		},
 
@@ -57,7 +60,7 @@
 		 * @return {string}|{boolean}
 		 */
 		getCookie: function (cName) {
-			var i, x, y, ARRcookies = document.cookie.split(';');
+			let i, x, y, ARRcookies = document.cookie.split(';');
 			for (i = 0; i < ARRcookies.length; i++) {
 				x = ARRcookies[i].substr(0, ARRcookies[i].indexOf('='));
 				y = ARRcookies[i].substr(ARRcookies[i].indexOf('=') + 1);
@@ -68,6 +71,24 @@
 			}
 
 			return false;
+		},
+
+		/**
+		 * Encode to b64
+		 * @param str
+		 */
+		utf8_to_b64: function (str) {
+			return window.btoa(encodeURIComponent(str));
+		},
+
+		/**
+		 * Decode from b64
+		 *
+		 * @param str
+		 * @returns {*}
+		 */
+		b64_to_utf8: function (str) {
+			return decodeURIComponent(window.atob(str));
 		},
 
 		/**
@@ -88,7 +109,7 @@
 		 * @param flyingTo
 		 */
 		flyToElement: function (flyer, flyingTo) {
-			var divider = 3,
+			const divider = 3,
 				flyerClone = flyer.clone();
 
 			flyerClone.css({
@@ -100,8 +121,8 @@
 			});
 
 			$('body').append(flyerClone);
-			var gotoX = flyingTo.offset().left + (flyingTo.width() / 2) - (flyer.width() / divider) / 2;
-			var gotoY = flyingTo.offset().top + (flyingTo.height() / 2) - (flyer.height() / divider) / 2;
+			const gotoX = flyingTo.offset().left + (flyingTo.width() / 2) - (flyer.width() / divider) / 2;
+			const gotoY = flyingTo.offset().top + (flyingTo.height() / 2) - (flyer.height() / divider) / 2;
 
 			$(flyerClone).animate({
 					opacity: 0.4,
@@ -131,14 +152,62 @@
 			modifier = modifier || 0;
 
 			if ($cartCounter.length === 1) {
-				var currentValue = parseInt($cartCounter.text().trim());
+				let currentValue = parseInt($cartCounter.text().trim());
 				if (isNaN(currentValue)) {
 					currentValue = 0;
 				}
 
-				var newValue = currentValue + modifier;
+				const newValue = currentValue + modifier;
 				$cartCounter.text(newValue > 0 ? newValue : 0);
 			}
+		},
+
+		/**
+		 * Format price
+		 *
+		 * @param n
+		 * @param decimals
+		 * @param decimal_sep
+		 * @param thousands_sep
+		 * @returns {string}
+		 */
+		numberFormat: function (n, decimals, decimal_sep, thousands_sep) {
+			let c = isNaN(decimals) ? 2 : Math.abs(decimals), //if decimal is zero we must take it, it means user does not want to show any decimal
+				d = decimal_sep || '.', //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
+
+				/*
+				according to [https://stackoverflow.com/questions/411352/how-best-to-determine-if-an-argument-is-not-sent-to-the-javascript-function]
+				the fastest way to check for not defined parameter is to use typeof value === 'undefined'
+				rather than doing value === undefined.
+				*/
+				t = (typeof thousands_sep === 'undefined') ? ' ' : thousands_sep, //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
+
+				sign = (n < 0) ? '-' : '',
+
+				//extracting the absolute value of the integer part of the number and converting to string
+				i = parseInt(n = Math.abs(n).toFixed(c)) + '',
+
+				j = (i.length > 3) ? i.length % 3 : 0;
+			return sign + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : '');
+		},
+
+		/**
+		 * Special trim with char
+		 *
+		 * @param string
+		 * @param charToRemove
+		 * @returns {*}
+		 */
+		trimChar: function (string, charToRemove) {
+			while (string.charAt(0) === charToRemove) {
+				string = string.substring(1);
+			}
+
+			while (string.charAt(string.length - 1) === charToRemove) {
+				string = string.substring(0, string.length - 1);
+			}
+
+			return string;
 		},
 
 		/**
@@ -169,7 +238,7 @@
 				console.log('Invalid event', event);
 				return;
 			}
-			for (var i = 0; i < this.listeners[event].length; i++) {
+			for (let i = 0; i < this.listeners[event].length; i++) {
 				this.listeners[event][i](data);
 			}
 		},

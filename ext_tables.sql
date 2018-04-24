@@ -8,7 +8,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
 
   name varchar(255) DEFAULT '' NOT NULL,
   sku varchar(255) DEFAULT '' NOT NULL,
-  description text NOT NULL,
+  price double(11,2) DEFAULT '0.00' NOT NULL,
+  description text,
   import_id varchar(255) DEFAULT '' NOT NULL,
   import_name varchar(255) DEFAULT '' NOT NULL,
   disable_single_view tinyint(1) unsigned DEFAULT '0' NOT NULL,
@@ -24,7 +25,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
   meta_description text,
   fal_links int(11) unsigned DEFAULT '0',
   serialized_attributes_values blob,
-  attributes_description text NOT NULL,
+  attributes_description text,
 
   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
   crdate int(11) unsigned DEFAULT '0' NOT NULL,
@@ -148,7 +149,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attributevalue (
 
   product int(11) unsigned DEFAULT '0' NOT NULL,
 
-  value text NOT NULL,
+  value text,
   attribute int(11) unsigned DEFAULT '0',
 
   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
@@ -305,7 +306,7 @@ CREATE TABLE sys_category (
   meta_description text,
   pxapm_subcategories int(11) unsigned DEFAULT '0',
   pxapm_attributes_sets int(11) unsigned DEFAULT '0' NOT NULL,
-  pxapm_description text NOT NULL,
+  pxapm_description text,
   pxapm_banner_image int(11) unsigned DEFAULT '0',
   pxapm_card_view_template varchar(255) DEFAULT '' NOT NULL,
   pxapm_single_view_template varchar(255) DEFAULT '' NOT NULL
