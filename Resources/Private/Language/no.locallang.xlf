@@ -20,7 +20,7 @@
                 <target>Rens</target>
             </trans-unit>
             <trans-unit id="fe.no_products_found">
-                <target>Ingen søkeresultat</target>
+                <target>Ingen søkeresultater</target>
             </trans-unit>
             <trans-unit id="fe.number_of_results_found">
                 <target>produkter funnet</target>

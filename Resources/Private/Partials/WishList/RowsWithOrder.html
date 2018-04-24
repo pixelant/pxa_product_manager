@@ -1,0 +1,132 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<div class="pm-products-user-list row">
+    <f:if condition="{products}">
+        <f:form arguments="{sendOrder: 1}" class="form-horizontal">
+            <div class="row item-order-header">
+                <div class="col-sm-2 col-md-1"></div>
+                <div class="col-sm-2 col-md-4"><f:translate key="fe.product_name"/></div>
+                <div class="col-sm-2 col-md-2"><f:translate key="fe.sku"/></div>
+                <div class="col-sm-2 col-md-2"><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per')}" else=""/></div>
+                <div class="col-sm-2 col-md-2"><f:translate key="fe.add"/></div>
+                <div class="col-sm-2 col-md-1"></div>
+            </div>
+
+            <f:for each="{products}" as="product">
+                <div class="row item-order-row">
+                    <f:render
+                            section="item"
+                            arguments="{product: product, orderProducts: orderProducts}" />
+                </div>
+            </f:for>
+
+            <div class="row">
+                <div class="col-md-2 col-md-offset-8">
+                    <f:if condition="{ppm:isPricingEnabled()}">
+                        <f:translate key="fe.total_price"/> -
+                        <span class="pxa-pm-order-total-price"
+                              data-nubmer-format="{f:translate(key: 'priceFormat')}"
+                              data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                        <div class="lds-dual-ring"><div class="small"></div></div>
+                    </span>
+                    </f:if>
+                </div>
+                <div class="col-md-2">
+                    <button aria-expanded="false"
+                            class="btn btn-primary"
+                            data-target="#pm-collapse-order-form"
+                            data-toggle="collapse"
+                            type="button">
+                        <f:translate key="fe.continue_to_order"/>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="collapse{f:if(condition: sendOrder, then: ' in')}" id="pm-collapse-order-form" aria-expanded="true">
+                <f:if condition="{orderFormFields}">
+                    <f:then>
+                        <f:for each="{orderFormFields}" key="field" as="fieldConf">
+                            <f:render partial="OrderFormFields/{fieldConf.type}" arguments="{fieldConf: fieldConf, field: field}" />
+                        </f:for>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default"><f:translate key="fe.make_order" /></button>
+                            </div>
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <p class="bg-warning"><f:translate key="fe.no_order_fields" /></p>
+                    </f:else>
+                </f:if>
+            </div>
+        </f:form>
+    </f:if>
+    <div class="list-no-products-found">
+        0 -
+        <f:translate key="fe.number_of_results_found" />
+    </div>
+</div>
+
+<f:section name="item">
+    <div class="col-sm-2 col-md-1">
+        <f:if condition="{product.thumbnail}">
+            <f:then>
+                <div class="item-order-img">
+                    <f:image maxWidth="{settings.images.orderView.maxWidth}"
+                             maxHeight="{settings.images.orderView.maxHeight}"
+                             image="{product.thumbnail}"
+                             title="{product.name}"
+                             alt="{product.name}"/>
+                </div>
+            </f:then>
+            <f:else>
+                <f:if condition="{settings.images.pathNoImage}">
+                    <div class="item-order-img">
+                        <f:image src="{settings.images.pathNoImage}"
+                                 width="{settings.images.orderView.maxWidth}"
+                                 height="{settings.images.orderView.maxHeight}"
+                                 alt="{product.name}"/>
+                    </div>
+                </f:if>
+            </f:else>
+        </f:if>
+    </div>
+    <div class="col-sm-2 col-md-4">
+        <ppm:link pageUid="{settings.pagePid}" product="{product}">
+            {product.name}
+        </ppm:link>
+    </div>
+    <div class="col-sm-2 col-md-2">{product.sku}</div>
+    <div class="col-sm-2 col-md-2">
+        <f:if condition="{ppm:isPricingEnabled()}">
+            <span class="item-order-price" id="item-order-price-{product.uid}" data-price="{product.price}" data-product-uid="{product.uid}">
+                <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
+            </span>
+        </f:if>
+    </div>
+    <div class="col-sm-2 col-md-2">
+        <f:form.textfield
+                name="orderProducts[{product.uid}]"
+                type="number"
+                value="{f:if(condition: '{orderProducts.{product.uid}}', then: '{orderProducts.{product.uid}}', else: 1)}"
+                class="order-product-amount"
+                id="order-product-amount-{product.uid}"
+                data="{product-uid: product.uid}" />
+    </div>
+    <div class="col-sm-2 col-md-1">
+            <span class="wish-list-btn in-progress order-clear__icon"
+                  data-wish-list-button="1"
+                  data-delete-parent-on-remove=".row"
+                  data-product-uid="{product.uid}"
+                  data-add-to-list-text="{f:translate(key: 'fe.compare_list.add_title')}"
+                  data-remove-from-list-text="{f:translate(key: 'fe.compare_list.remove_title')}"
+                  data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleWishList', absolute: '1', arguments: '{wishProduct: product}', pageType: '{settings.wishList.pageType}')}">
+            <ppm:svg
+                    source="{f:uri.resource(path: 'Icons/circle-cross.svg', extensionName: 'pxa_product_manager')}" />
+            </span>
+    </div>
+</f:section>
+
+</html>

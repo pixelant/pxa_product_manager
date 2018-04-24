@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
@@ -26,6 +27,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
+use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -63,6 +65,13 @@ class Product extends AbstractEntity
      * @var \string
      */
     protected $sku;
+
+    /**
+     * Price
+     *
+     * @var float
+     */
+    protected $price = 0.0;
 
     /**
      * description
@@ -371,6 +380,32 @@ class Product extends AbstractEntity
     public function setSku(string $sku)
     {
         $this->sku = $sku;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    /**
+     * Format price
+     *
+     * @return float
+     */
+    public function getFormatPrice(): string
+    {
+        return ProductUtility::formatPrice($this->price);
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price)
+    {
+        $this->price = $price;
     }
 
     /**
@@ -1442,9 +1477,9 @@ class Product extends AbstractEntity
     public function getIsDiscontinued():  bool
     {
         $isDiscontinued = false;
-        if (!empty(self::getDiscontinued())) {
+        if (!empty($this->getDiscontinued())) {
             $today = new \DateTime('00:00');
-            $isDiscontinued = self::getDiscontinued()->format('U') <= $today->format('U');
+            $isDiscontinued = $this->getDiscontinued()->format('U') <= $today->format('U');
         }
         return $isDiscontinued;
     }
@@ -1501,12 +1536,12 @@ class Product extends AbstractEntity
     public function getIsNew():  bool
     {
         $isNew = false;
-        if (!empty(self::getLaunched())) {
-            $pluginSettings = ConfigurationUtility::getSettings(self::getPid());
+        if (!empty($this->getLaunched())) {
+            $pluginSettings = ConfigurationUtility::getSettings($this->getPid());
             $dateInterval = $pluginSettings['launched']['dateIntervalAsNew'];
             if (!empty($dateInterval)) {
                 try {
-                    $newUntil = clone self::getLaunched();
+                    $newUntil = clone $this->getLaunched();
                     $newUntil->add(new \DateInterval((string)$dateInterval));
                     $isNew = $newUntil->format('U') > time();
                 } catch (\Exception $e) {
@@ -1523,11 +1558,11 @@ class Product extends AbstractEntity
      * @param string $prefix If prefix should be added to all additional classes
      * @return string
      */
-    public function getAdditionalClasses($prefix = '')
+    public function getAdditionalClasses(string $prefix = ''): string
     {
         $additionalClasses = [];
 
-        $pluginSettings = ConfigurationUtility::getSettings(self::getPid());
+        $pluginSettings = ConfigurationUtility::getSettings($this->getPid());
 
         // check if additional category classes are set in plugin ts setup
         // this way we can add custom classes for products based on its categories in templates
@@ -1543,7 +1578,7 @@ class Product extends AbstractEntity
 
         // check if product is considered new, then add class
         // based on ts setup additionalClasses.launched.isNew
-        if (self::getIsNew()) {
+        if ($this->getIsNew()) {
             $isNewClass = $pluginSettings['additionalClasses']['launched']['isNewClass'];
             if (!empty($isNewClass)) {
                 $additionalClasses[] = $isNewClass;
@@ -1552,7 +1587,7 @@ class Product extends AbstractEntity
 
         // check if product is considered discontinued, then add class
         // based on ts setup additionalClasses.discontinued.isDiscontinuedClass
-        if (self::getIsDiscontinued()) {
+        if ($this->getIsDiscontinued()) {
             $isDiscontinuedClass = $pluginSettings['additionalClasses']['discontinued']['isDiscontinuedClass'];
             if (!empty($isDiscontinuedClass)) {
                 $additionalClasses[] = $isDiscontinuedClass;

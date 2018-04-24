@@ -1,0 +1,55 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Email" />
+
+<f:section name="main">
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>UID</th>
+            <th><f:translate key="fe.product_name" extensionName="PxaProductManager" /></th>
+            <th><f:translate key="fe.sku"  extensionName="PxaProductManager" /></th>
+            <th><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per',  extensionName: 'PxaProductManager')}" else=""/></th>
+            <th><f:translate key="fe.amount" extensionName="PxaProductManager" /></th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{products}" as="product" iteration="i">
+            <tr>
+                <th scope="row">{i.cycle}</th>
+                <td>{product.uid}</td>
+                <td>{product.name}</td>
+                <td>{product.sku}</td>
+                <td>
+                    <f:if condition="{ppm:isPricingEnabled()}">
+                        <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatPrice}" />
+                    </f:if>
+                </td>
+                <td>{orderProducts.{product.uid}}</td>
+            </tr>
+        </f:for>
+        <f:if condition="{ppm:isPricingEnabled()}">
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th><f:translate key="fe.total_price" extensionName="PxaProductManager" /></th>
+                <th><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalPrice}" /></th>
+            </tr>
+        </f:if>
+        </tbody>
+    </table>
+
+    <br />
+    <h4><f:translate key="fe.email.orderForm.userFields" extensionName="PxaProductManager" /></h4>
+    <f:for each="{orderFields}" key="field" as="fieldConf">
+        <p>
+            <strong><f:translate key="fe.fields.{field}" default="{field}" extensionName="PxaProductManager" /></strong>:
+            <f:if condition="{fieldConf.feUserValue}" then="{fieldConf.feUserValue}" else="{fieldConf.value}"/>
+        </p>
+    </f:for>
+</f:section>
+</html>

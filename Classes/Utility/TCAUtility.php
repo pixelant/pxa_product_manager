@@ -224,9 +224,66 @@ class TCAUtility
         ];
     }
 
-    protected static function getDynamicForeignTableWhere($setting, $table)
+    /**
+     * Table where for accessories
+     *
+     * @return string
+     */
+    public static function getAccessoriesForeignTableWherePid(): string
     {
-        $configuration = \Pixelant\PxaProductManager\Utility\MainUtility::getExtMgrConfiguration();
+        return self::getDynamicForeignTableWhere(
+            'accessoriesRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    /**
+     * Table where for related-products
+     *
+     * @return string
+     */
+    public static function getRelatedProductsForeignTableWherePid(): string
+    {
+        return self::getDynamicForeignTableWhere(
+            'relatedProductsRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    /**
+     * Table where for sub-products
+     *
+     * @return string
+     */
+    public static function getSubProductsForeignTableWherePid(): string
+    {
+        return self::getDynamicForeignTableWhere(
+            'subProductsRestriction',
+            'tx_pxaproductmanager_domain_model_product'
+        );
+    }
+
+    /**
+     * TCA where clause for categories
+     * @return string
+     */
+    public static function getCategoriesTCAWhereClause(): string
+    {
+        return (int)MainUtility::getExtMgrConfiguration()['dontCheckPidForSysCategory'] === 1
+            ? '' : 'AND sys_category.pid=###CURRENT_PID### ';
+    }
+
+
+    /**
+     * Generate dynamic foreign table where
+     *
+     * @param $setting
+     * @param $table
+     * @return string
+     */
+    protected static function getDynamicForeignTableWhere(string $setting, string $table): string
+    {
+        $configuration = MainUtility::getExtMgrConfiguration();
 
         // we will use current_pid as default to keep backward compatibility
         $foreignTableWhere = 'AND ' . $table . '.pid = ###CURRENT_PID###';
@@ -249,30 +306,7 @@ class TCAUtility
                     break;
             }
         }
+
         return $foreignTableWhere;
-    }
-
-    public static function getAccessoriesForeignTableWherePid()
-    {
-        return self::getDynamicForeignTableWhere(
-            'accessoriesRestriction',
-            'tx_pxaproductmanager_domain_model_product'
-        );
-    }
-
-    public static function getRelatedProductsForeignTableWherePid()
-    {
-        return self::getDynamicForeignTableWhere(
-            'relatedProductsRestriction',
-            'tx_pxaproductmanager_domain_model_product'
-        );
-    }
-
-    public static function getSubProductsForeignTableWherePid()
-    {
-        return self::getDynamicForeignTableWhere(
-            'subProductsRestriction',
-            'tx_pxaproductmanager_domain_model_product'
-        );
     }
 }

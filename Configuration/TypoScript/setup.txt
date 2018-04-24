@@ -45,6 +45,35 @@ plugin.tx_pxaproductmanager {
             cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/like.svg
             buttonIcon = EXT:pxa_product_manager/Resources/Public/Icons/like_combine.png
             pageType = 201702
+
+            # Available validations: email,required,url
+            # Available fields types: input,textarea
+            orderForm {
+                replaceWithFeUserValues = {$plugin.tx_pxaproductmanager.settings.wishList.replaceWithFeUserValues}
+                sendEmailToUser = {$plugin.tx_pxaproductmanager.settings.wishList.sendEmailToUser}
+
+                emailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmail.html
+
+                fields {
+                    name {
+                        type = input
+                        validation = required
+                    }
+                    # Email is reserved field name where email will be send to user
+                    email {
+                        type = input
+                        validation = required,email
+                    }
+                    notes {
+                        type = textarea
+                    }
+                }
+            }
+        }
+
+        email {
+            senderName = {$plugin.tx_pxaproductmanager.settings.email.senderName}
+            senderEmail = {$plugin.tx_pxaproductmanager.settings.email.senderEmail}
         }
 
         compareList {
@@ -120,6 +149,11 @@ plugin.tx_pxaproductmanager {
                 maxWidth = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxWidth}
                 maxHeight = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxHeight}
             }
+
+            orderView {
+                maxWidth = {$plugin.tx_pxaproductmanager.settings.images.orderView.maxWidth}
+                maxHeight = {$plugin.tx_pxaproductmanager.settings.images.orderView.maxHeight}
+            }
         }
 
         # comma list of labels available through ProductManager.Main.translate
@@ -130,12 +164,30 @@ plugin.tx_pxaproductmanager {
         # don't compare images and links
         ignoreAttributeTypesInCompareView = 6,7
     }
+
+    _LOCAL_LANG {
+        default {
+            fe.fields {
+                name = Name
+                email = E-mail
+                notes = Order notes
+            }
+
+            # Default pricing format
+            # |decimals|dec_point|thousands_sep|
+            priceFormat = |2|.| |
+        }
+        sv {
+            priceFormat = |2|,| |
+        }
+    }
 }
 
 # include scripts
 page {
     includeJSFooterlibs {
         pxa_pm_select2 = EXT:pxa_product_manager/Resources/Public/JavaScript/select2/dist/js/select2.min.js
+        pxa_pm_sprintf = EXT:pxa_product_manager/Resources/Public/JavaScript/sprintf/sprintf.min.js
         pxaPmSettings = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Settings.js
         pxaPmLazyLoading = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.LazyLoading.js
         pxaPmFiltering = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Filtering.js

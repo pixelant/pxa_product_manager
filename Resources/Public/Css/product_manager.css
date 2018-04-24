@@ -12,6 +12,32 @@
   margin-bottom: 20px;
   border: 0;
 }
+.tx-pxa-product-manager .item-order-row {
+  background-color: #f2f2f2;
+  margin-bottom: 5px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.tx-pxa-product-manager .item-order-row > div {
+  vertical-align: auto;
+  display: inline-block;
+  float: none;
+  margin: 0 -5px;
+}
+.tx-pxa-product-manager .item-order-header > div {
+  vertical-align: auto;
+  display: inline-block;
+  float: none;
+  margin: 0 -5px;
+}
+.tx-pxa-product-manager .order-product-amount {
+  width: 100%;
+  padding: 5px 8px;
+}
+.tx-pxa-product-manager .item-order-img img {
+  width: 100%;
+  height: auto;
+}
 .tx-pxa-product-manager .item-body {
   border: solid #288FB4;
   border-width: 0 1px 1px 1px;
@@ -279,6 +305,7 @@
 }
 .tx-pxa-product-manager .compare-list-btn.list-clear__icon:hover {
   fill: #707070;
+  cursor: pointer;
 }
 .tx-pxa-product-manager .pm-like-button {
   width: 24px;
@@ -305,6 +332,15 @@
 .tx-pxa-product-manager .wish-list-btn.ongoing-initialization .pm-like-button {
   display: none;
 }
+.tx-pxa-product-manager .wish-list-btn.order-clear__icon {
+  position: relative;
+  top: 5px;
+  fill: #909090;
+}
+.tx-pxa-product-manager .wish-list-btn.order-clear__icon:hover {
+  fill: #707070;
+  cursor: pointer;
+}
 .tx-pxa-product-manager .wish-list-btn.list-clear__icon {
   position: absolute;
   top: 5px;
@@ -313,6 +349,7 @@
 }
 .tx-pxa-product-manager .wish-list-btn.list-clear__icon:hover {
   fill: #707070;
+  cursor: pointer;
 }
 .tx-pxa-product-manager .pm-products-user-list .list-no-products-found {
   display: none;

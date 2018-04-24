@@ -16,10 +16,8 @@
     "php": ">=7.0.0"
   },
   "require-dev": {
-    "apache-solr-for-typo3/solr": "~7.0.0",
     "squizlabs/php_codesniffer": "2.*",
-    "phpunit/phpunit": "~5.6.0",
-    "nimut/testing-framework": "^1.1"
+    "nimut/testing-framework": "^3.0"
   },
   "replace": {
     "pxa_product_manager": "self.version"
@@ -44,12 +42,6 @@
       "[ -L .Build/Web/typo3conf/ext/pxa_product_manager ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/pxa_product_manager"
     ]
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/TYPO3-Solr/ext-solr.git"
-    }
-  ],
   "extra": {
     "branch-alias": {
       "dev-master": "0.0.x-dev"

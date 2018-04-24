@@ -45,6 +45,12 @@
                 <div class="row">
                     <div class="col-md-12 product-name">
                         <h1>{product.name}</h1>
+                        <f:if condition="{ppm:isPricingEnabled()} && {product.price}">
+                            <h5>
+                                <f:translate key="fe.price" />:
+                                <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
+                            </h5>
+                        </f:if>
                     </div>
                 </div>
 

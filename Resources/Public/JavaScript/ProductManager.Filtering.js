@@ -1,38 +1,38 @@
 (function (w, $) {
-	var ProductManager = w.ProductManager || {};
+	const ProductManager = w.ProductManager || {};
 
 	// Filtering
 	ProductManager.Filtering = (function () {
 		/**
 		 * Filtering settings
 		 */
-		var _settings;
+		let _settings;
 
 		/**
 		 * if script should do something on select change
 		 * @type {boolean}
 		 */
-		var _triggerSelectBoxChange = true;
+		let _triggerSelectBoxChange = true;
 
 		/**
 		 * Jquery objects
 		 */
-		var $selectBoxes,
+		let $selectBoxes,
 			$resetButton;
 
 		/**
 		 * Select box instances
 		 * @type object
 		 */
-		var _selectInstances = {};
+		let _selectInstances = {};
 
 		/**
 		 * Available options and categories for filtering
 		 */
-		var _availableOptionsList = '',
+		let _availableOptionsList = '',
 			_availableCategoriesList = '';
 
-		var _filterTypeCategories = 1,
+		let _filterTypeCategories = 1,
 			_filterTypeAttributeOptions = 2,
 			_filterTypeAttributeMinMax = 3;
 
@@ -43,13 +43,13 @@
 		 * @type {null}
 		 * @private
 		 */
-		var _lastFilterBoxIdentifier = null;
+		let _lastFilterBoxIdentifier = null;
 
 		/**
 		 * Main initialize filtering
 		 * @param initializeSettings
 		 */
-		var init = function (initializeSettings) {
+		const init = function (initializeSettings) {
 			_initVariables(initializeSettings);
 
 			$selectBoxes.each(function () {
@@ -74,23 +74,25 @@
 		 * If url with hash
 		 * @private
 		 */
-		var _initUrlStashState = function () {
-			var hash = decodeURIComponent(window.location.hash);
+		const _initUrlStashState = function () {
+			let hash = decodeURIComponent(window.location.hash),
+				filters;
 
 			if (hash.length > 0 && hash.substring(0, 8) === '#filter:') {
 				hash = hash.substring(8);
 
 				try {
-					var filters = JSON.parse(hash);
+					filters = JSON.parse(hash);
 				} catch (e) {
+					filters = null;
 					console.log(e);
 				}
 
-				if (typeof filters !== 'undefined' && filters.length) {
+				if (filters !== null && filters.length) {
 					// disable select box onchange
 					_triggerSelectBoxChange = false;
 
-					for (var i = 0; i < filters.length; i++) {
+					for (let i = 0; i < filters.length; i++) {
 						if (_selectInstances.hasOwnProperty(filters[i].id)) {
 							_selectInstances[filters[i].id].val(filters[i].v.split(',')).trigger('change');
 						}
@@ -110,7 +112,7 @@
 		 * @param $selectBox
 		 * @private
 		 */
-		var _selectBoxChanged = function (event, $selectBox) {
+		const _selectBoxChanged = function (event, $selectBox) {
 			if (_triggerSelectBoxChange) {
 				_lastFilterBoxIdentifier = $selectBox.data('identifier');
 				_triggerUpdate();
@@ -121,7 +123,7 @@
 		 * Reset filtering
 		 * @private
 		 */
-		var _resetFiltering = function () {
+		const _resetFiltering = function () {
 			// while reset disable onchange
 			_triggerSelectBoxChange = false;
 			// remove last filter box
@@ -139,15 +141,15 @@
 		 * Trigger filter update and build filtering data
 		 * @private
 		 */
-		var _triggerUpdate = function () {
+		const _triggerUpdate = function () {
 			// build fitering array
-			var filteringData = buildFilteringData(),
+			let filteringData = buildFilteringData(),
 				urlData = [];
 
 			// update url hash
-			for (var key in filteringData) {
+			for (let key in filteringData) {
 				if (!filteringData.hasOwnProperty(key)) continue;
-				var singleFilter = {
+				let singleFilter = {
 					id: key,
 					v: filteringData[key]['value'].join(',')
 				};
@@ -171,7 +173,7 @@
 		 * @param initializeSettings
 		 * @private
 		 */
-		var _initVariables = function (initializeSettings) {
+		const _initVariables = function (initializeSettings) {
 			_settings = initializeSettings;
 
 			// jquery
@@ -192,13 +194,13 @@
 		 * @return {{}}
 		 * @private
 		 */
-		var buildFilteringData = function () {
-			var filteringData = {},
+		const buildFilteringData = function () {
+			let filteringData = {},
 				currentValue = '',
 				key = '';
 
 			$selectBoxes.each(function () {
-				var $this = $(this),
+				let $this = $(this),
 					type = parseInt($this.data('filter-type')),
 					uid = parseInt($this.data('attribute-uid'));
 				// select box type
@@ -237,23 +239,23 @@
 		 * Update options of filter
 		 * We need to show only options that has product results
 		 */
-		var updateFilteringOptions = function () {
-			var minMaxFilter = null;
+		const updateFilteringOptions = function () {
+			let minMaxFilter = null;
 
 			// Go for each filter
 			$selectBoxes.each(function () {
-				var identifier = $(this).data('identifier'),
+				let identifier = $(this).data('identifier'),
 					filterType = $(this).data('filter-type');
 
 				if (identifier !== _lastFilterBoxIdentifier) {
-					var $selectFilter = $(this);
+					let $selectFilter = $(this);
 
 					$selectFilter.find('option').each(function () {
-						var $option = $(this);
+						let $option = $(this);
 
 						// If it's selected then it's active by default
 						if ($option.is(':selected') === false) {
-							var inList;
+							let inList;
 
 							switch (filterType) {
 								// categories and simple attributes select
@@ -291,17 +293,17 @@
 			// If last changed filter was min-max type
 			// we need to disable options with bigger/lower values
 			if (minMaxFilter !== null) {
-				var isCurrentMinMaxFilterRangeMin = minMaxFilter.data('range') === 'min',
+				let isCurrentMinMaxFilterRangeMin = minMaxFilter.data('range') === 'min',
 					identifierParts = _lastFilterBoxIdentifier.split('-'),
 					secondMinMaxFilterIdentifier = identifierParts[0] + '-' + identifierParts[1] + '-' + (isCurrentMinMaxFilterRangeMin ? 'max' : 'min'),
 					secondMinMaxFilter = $('[data-identifier="' + secondMinMaxFilterIdentifier + '"]');
 
 				if (secondMinMaxFilter.length === 1) {
-					var currentFilterValue = parseInt(minMaxFilter.val()),
+					let currentFilterValue = parseInt(minMaxFilter.val()),
 						secondFilterValue = parseInt(secondMinMaxFilter.val());
 
 					secondMinMaxFilter.find('option').each(function () {
-						var $optionMinMax = $(this),
+						let $optionMinMax = $(this),
 							value = parseInt($optionMinMax.attr('value'));
 
 						if ((isCurrentMinMaxFilterRangeMin && value < currentFilterValue)
@@ -318,7 +320,7 @@
 		 *
 		 * @param newAvailableCategoriesList
 		 */
-		var setAvailableCategoriesList = function (newAvailableCategoriesList) {
+		const setAvailableCategoriesList = function (newAvailableCategoriesList) {
 			_availableCategoriesList = newAvailableCategoriesList;
 		};
 
@@ -327,7 +329,7 @@
 		 *
 		 * @param newAvailableOptionsList
 		 */
-		var setAvailableOptionsList = function (newAvailableOptionsList) {
+		const setAvailableOptionsList = function (newAvailableOptionsList) {
 			_availableOptionsList = newAvailableOptionsList;
 		};
 

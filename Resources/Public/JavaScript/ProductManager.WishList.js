@@ -1,35 +1,54 @@
 (function (w, $) {
-	var ProductManager = w.ProductManager || {};
+	const ProductManager = w.ProductManager || {};
 
 	// Lazy loading main function
 	ProductManager.WishList = (function () {
 		/**
 		 * Main settings
 		 */
-		var settings;
+		let settings;
 
-		var ajaxLoadingInProgress = true;
+		let ajaxLoadingInProgress = true;
+
+		/**
+		 * Name of cookie
+		 * @type {string}
+		 */
+		const ORDER_STATE_COOKIE_NAME = 'pxa_pm_order_state';
+
+		/**
+		 * Save order information for number of days
+		 * @type {number}
+		 */
+		const EXPIRE_ORDER_COOKIE_DAYS = 1;
 
 		/**
 		 * Dom elements
 		 */
-		var $buttons,
+		let $buttons,
 			$cart,
-			$cartCounter;
+			$cartCounter,
+			$orderItemsAmount,
+			$orderItemsPrices,
+			$totalPrice;
 
 		/**
 		 * Main wish list function
 		 *
 		 * @param wishListSettings
 		 */
-		var init = function (wishListSettings) {
+		const init = function (wishListSettings) {
 			_initVars(wishListSettings);
 
 			initButtons($buttons);
-			var currentList = ProductManager.Main.getCookie('pxa_pm_wish_list');
+			let currentList = ProductManager.Main.getCookie('pxa_pm_wish_list');
 
 			ProductManager.Main.updateCartCounter($cartCounter, currentList !== false ? currentList.split(',').length : 0);
 			ajaxLoadingInProgress = false;
+
+			_updateTotalPrice();
+			_saveCurrentStateOfAmountOfProducts();
+			_trackOrderAmountChanges();
 		};
 
 		/**
@@ -38,12 +57,15 @@
 		 * @param wishListSettings
 		 * @private
 		 */
-		var _initVars = function (wishListSettings) {
+		const _initVars = function (wishListSettings) {
 			settings = wishListSettings;
 
 			$buttons = $(wishListSettings.buttonIdentifier + '.' + wishListSettings.loadingClass);
 			$cart = $(wishListSettings.cartIdentifier);
 			$cartCounter = $(wishListSettings.cartCounter);
+			$orderItemsAmount = $(wishListSettings.orderItemAmountClass);
+			$orderItemsPrices = $(wishListSettings.orderItemPriceClass);
+			$totalPrice = $(wishListSettings.totalPriceClass);
 		};
 
 		/**
@@ -52,15 +74,15 @@
 		 * @param button
 		 * @private
 		 */
-		var _toggleWishListAjaxAction = function (button) {
+		const _toggleWishListAjaxAction = function (button) {
 			ajaxLoadingInProgress = true;
 
-			var parentToRemove = button.data('delete-parent-on-remove'),
+			let parentToRemove = button.data('delete-parent-on-remove'),
 				productUid = parseInt(button.data('product-uid')),
 				uri = button.data('ajax-uri');
 
 			if(parentToRemove) {
-				parentToRemove = button.parents(parentToRemove);
+				parentToRemove = button.closest(parentToRemove);
 			}
 
 			button
@@ -79,7 +101,7 @@
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
 
 					if ($cart.length === 1 && data.inList) {
-						var itemImg = button.parents(settings.itemClass).find('img').eq(0);
+						let itemImg = button.closest(settings.itemClass).find('img').eq(0);
 
 						ProductManager.Main.flyToElement($(itemImg), $cart);
 					}
@@ -87,6 +109,10 @@
 					if(parentToRemove.length === 1) {
 						parentToRemove.fadeOut('fast', function () {
 							parentToRemove.remove();
+
+							// Update order changes
+							_updateTotalPrice();
+							_saveCurrentStateOfAmountOfProducts();
 						});
 					}
 
@@ -118,13 +144,119 @@
 		};
 
 		/**
+		 * Update total price if pricing enabled
+		 *
+		 * @returns {boolean}
+		 * @private
+		 */
+		const _updateTotalPrice = function () {
+			if ($orderItemsPrices.length === 0 || $totalPrice.length === 0) {
+				return false;
+			}
+
+			let sum = 0,
+				currencyFormat = $totalPrice.first().data('currency-format') || '',
+				numberFormat = $totalPrice.first().data('nubmer-format') || '',
+				format = ProductManager.Main.trimChar(numberFormat, '|').split('|'),
+
+				decimals = parseInt(format[0]) || 2,
+				decimalSep = format[1] || '.',
+				thousandsSep = format[2] || ',';
+
+			$orderItemsPrices.each(function () {
+				const $this = $(this);
+
+				let productUid = parseInt($this.data('product-uid'));
+				if (productUid > 0) {
+					let $amountItem = $(_convertClassToIdWithProductId(settings.orderItemAmountClass, productUid));
+					if ($amountItem.length === 1) {
+						let amount = parseInt($amountItem.val());
+						sum += amount * parseFloat($this.data('price'));
+					}
+				}
+			});
+
+			$totalPrice.text(
+				sprintf(
+					currencyFormat,
+					ProductManager.Main.numberFormat(sum, decimals, decimalSep, thousandsSep)
+				)
+			);
+		};
+
+		/**
+		 * Check if amount was changed
+		 *
+		 * @returns {boolean}
+		 * @private
+		 */
+		const _trackOrderAmountChanges = function () {
+			if ($orderItemsAmount.length === 0) {
+				return false;
+			}
+
+			$orderItemsAmount.on('change', function () {
+				const $this = $(this);
+				let value = parseInt($this.val());
+
+				if (value <= 0) {
+					$this.val(1);
+				}
+
+				_updateTotalPrice();
+				_saveCurrentStateOfAmountOfProducts();
+			});
+		};
+
+		/**
+		 * Save state of order
+		 *
+		 * @returns {boolean}
+		 * @private
+		 */
+		const _saveCurrentStateOfAmountOfProducts = function () {
+			if ($orderItemsAmount.length === 0) {
+				return false;
+			}
+
+			let currentState = {};
+			$orderItemsAmount.each(function () {
+				const $this = $(this);
+				let productUid = parseInt($this.data('product-uid'));
+
+				if (productUid > 0) {
+					currentState[productUid] = parseInt($this.val());
+				}
+			});
+
+			ProductManager.Main.setCookie(
+				ORDER_STATE_COOKIE_NAME,
+				ProductManager.Main.utf8_to_b64(JSON.stringify(currentState)),
+				EXPIRE_ORDER_COOKIE_DAYS,
+				true // disable encoding, because it was already done
+			)
+		};
+
+		/**
+		 * Make ID selector from class + product uid
+		 *
+		 * @param className
+		 * @param productUid
+		 * @returns {*}
+		 * @private
+		 */
+		const _convertClassToIdWithProductId = function (className, productUid) {
+			return className.replace('.', '#') + '-' + productUid;
+		};
+
+		/**
 		 * Init buttons state
 		 *
 		 * @param $buttons
 		 * @public
 		 */
-		var initButtons = function ($buttons) {
-			var productsWishList = ProductManager.Main.getCookie('pxa_pm_wish_list') || '';
+		const initButtons = function ($buttons) {
+			const productsWishList = ProductManager.Main.getCookie('pxa_pm_wish_list') || '';
 
 			$buttons.on('click', function (e) {
 				e.preventDefault();
@@ -135,7 +267,7 @@
 			});
 
 			$buttons.each(function () {
-				var button = $(this),
+				let button = $(this),
 					productUid = parseInt(button.data('product-uid')),
 					text = '',
 					className = '';
@@ -161,7 +293,7 @@
 		 *
 		 * @return string
 		 */
-		var getSettings = function () {
+		const getSettings = function () {
 			return settings;
 		};
 

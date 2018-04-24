@@ -1,9 +1,9 @@
 (function ($) {
 	$(document).ready(function () {
-		var productWrapper = $('.single-product-wrapper');
+		const productWrapper = $('.single-product-wrapper');
 
 		if (productWrapper.length > 0) { // only run if .single-product-wrapper is found
-			var showButtons = !!productWrapper.data('gallery-mode');
+			const showButtons = !!productWrapper.data('gallery-mode');
 
 			$('.single-product-gallery__items').tosrus({
 				infinite: true,

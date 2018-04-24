@@ -39,14 +39,11 @@ class ProductControllerTest extends UnitTestCase
     {
         $this->categoryRepository = $this->prophesize(CategoryRepository::class);
         $this->productRepository = $this->prophesize(ProductRepository::class);
-
-        $tsfe = $this->createPartialMock(TypoScriptFrontendController::class, ['pageNotFoundAndExit']);
-        $GLOBALS['TSFE'] = $tsfe;
     }
 
     public function tearDown()
     {
-        unset($this->categoryRepository, $this->productRepository, $GLOBALS['TSFE']);
+        unset($this->categoryRepository, $this->productRepository);
     }
 
     /**
@@ -439,10 +436,214 @@ class ProductControllerTest extends UnitTestCase
             ProductController::class,
             ['dummy']
         );
+        $tsfe = $this->createPartialMock(TypoScriptFrontendController::class, ['pageNotFoundAndExit']);
+        $GLOBALS['TSFE'] = $tsfe;
 
         $GLOBALS['TSFE']->expects($this->once())->method('pageNotFoundAndExit');
 
         $mockedController->_call('handleNoProductFoundError');
+
+        unset($GLOBALS['TSFE']);
+    }
+
+
+    /**
+     * @test
+     */
+    public function orderFormFieldsReplacedWithFeUserFieldsIfEnabled()
+    {
+        $tsfe = $this->createMock(TypoScriptFrontendController::class);
+        $tsfe->loginUser = true;
+        $tsfe->fe_user = new \StdClass();
+        $tsfe->fe_user->user = [
+            'name' => 'TEST',
+            'email' => 'email@site.com'
+        ];
+
+        $GLOBALS['TSFE'] = $tsfe;
+
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+        $mockedController->_set('settings', [
+            'wishList' => [
+                'orderForm' => [
+                    'fields' => [
+                        'name' => [
+                            'type' => 'input'
+                        ],
+                        'email' => [
+                            'type' => 'input'
+                        ],
+                        'textarea' => [
+                            'type' => 'textarea'
+                        ],
+                    ],
+                    // Enable replacement
+                    'replaceWithFeUserValues' => '1'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(
+            [
+                'name' => [
+                    'type' => 'input',
+                    'feUserValue' => 'TEST'
+                ],
+                'email' => [
+                    'type' => 'input',
+                    'feUserValue' => 'email@site.com'
+                ],
+                'textarea' => [
+                    'type' => 'textarea'
+                ]
+            ],
+            $mockedController->_call('getProcessedOrderFormFields')
+        );
+
+        unset($GLOBALS['TSFE']);
+    }
+
+    /**
+     * @test
+     */
+    public function orderFormFieldsWillNotReplacedWithFeUserFieldsIfDisable()
+    {
+        $tsfe = $this->createMock(TypoScriptFrontendController::class);
+        $tsfe->loginUser = true;
+        $tsfe->fe_user = new \StdClass();
+        $tsfe->fe_user->user = [
+            'name' => 'TEST',
+            'email' => 'email@site.com'
+        ];
+
+        $GLOBALS['TSFE'] = $tsfe;
+
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+        $mockedController->_set('settings', [
+            'wishList' => [
+                'orderForm' => [
+                    'fields' => [
+                        'name' => [
+                            'type' => 'input'
+                        ],
+                        'email' => [
+                            'type' => 'input'
+                        ],
+                        'textarea' => [
+                            'type' => 'textarea'
+                        ],
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(
+            [
+                'name' => [
+                    'type' => 'input'
+                ],
+                'email' => [
+                    'type' => 'input'
+                ],
+                'textarea' => [
+                    'type' => 'textarea'
+                ]
+            ],
+            $mockedController->_call('getProcessedOrderFormFields')
+        );
+
+        unset($GLOBALS['TSFE']);
+    }
+
+    /**
+     * @test
+     */
+    public function orderFormWillNotPassValidationIfNotValidData()
+    {
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['translate']
+        );
+        $mockedController
+            ->expects($this->atLeastOnce())
+            ->method('translate')
+            ->willReturn('error');
+
+        $fields = [
+            'name' => [
+                'type' => 'input',
+                'validation' => 'required'
+            ],
+            'required' => [
+                'type' => 'input',
+                'validation' => 'required'
+            ],
+            'notrequired' => [
+                'type' => 'input',
+                'validation' => ''
+            ],
+            'email' => [
+                'type' => 'input',
+                'validation' => 'required,email'
+            ],
+            'textarea' => [
+                'type' => 'textarea',
+                'validation' => 'url'
+            ]
+        ];
+
+        $values = [
+            'name' => '',
+            'required' => 'required',
+            'notrequired' => '',
+            'email' => '',
+            'textarea' => 'test'
+        ];
+
+        $result = [
+            'name' => [
+                'type' => 'input',
+                'validation' => 'required',
+                'value' => '',
+                'errors' => ['error']
+            ],
+            'required' => [
+                'type' => 'input',
+                'validation' => 'required',
+                'value' => 'required',
+                'errors' => []
+            ],
+            'notrequired' => [
+                'type' => 'input',
+                'validation' => '',
+                'value' => ''
+            ],
+            'email' => [
+                'type' => 'input',
+                'validation' => 'required,email',
+                'value' => '',
+                'errors' => ['error', 'error']
+            ],
+            'textarea' => [
+                'type' => 'textarea',
+                'value' => 'test',
+                'validation' => 'url',
+                'errors' => ['error']
+            ]
+        ];
+
+        $this->assertFalse($mockedController->_callRef('validateOrderFields', $fields, $values));
+
+        $this->assertEquals(
+            $result,
+            $fields
+        );
     }
 
     protected function getAttributesStorage($value, $amount, $isOption = false)
