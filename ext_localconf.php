@@ -7,7 +7,9 @@ call_user_func(
             'Pixelant.' . $_EXTKEY,
             'Pi1',
             [
+                // @codingStandardsIgnoreStart
                 'Product' => 'list, show, wishList, finishOrder, lazyList, comparePreView, compareView, groupedList, promotionList',
+                // @codingStandardsIgnoreEnd
                 'Navigation' => 'show',
                 'AjaxProducts' => 'ajaxLazyList',
                 'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList',
