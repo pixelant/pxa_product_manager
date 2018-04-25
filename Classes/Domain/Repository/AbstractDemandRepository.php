@@ -109,14 +109,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
                     $orderDirection = QueryInterface::ORDER_ASCENDING;
             }
 
-            // Build orderings array
-            $orderings = [$demand->getOrderBy() => $orderDirection];
-            // Include name as second sorting if not already choosen
-            if (!array_key_exists('name', $orderings)) {
-                $orderings['name'] = QueryInterface::ORDER_ASCENDING;
-            }
-
-            $query->setOrderings($orderings);
+            $query->setOrderings([$demand->getOrderBy() => $orderDirection]);
         }
     }
 

@@ -27,6 +27,11 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -44,6 +49,104 @@ class ProductRepository extends AbstractDemandRepository
      * @inject
      */
     protected $attributeValueRepository;
+
+    /**
+     * Override basic method. Set special ordering for categories if it's not multiple
+     *
+     * @param Demand $demand
+     * @return QueryResultInterface
+     */
+    public function findDemanded(Demand $demand): QueryResultInterface
+    {
+        if ($demand->getOrderBy() !== 'categories' || count($demand->getCategories()) > 1) {
+            return parent::findDemanded($demand);
+        } else {
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getQueryBuilderForTable('sys_category_record_mm');
+            $queryBuilder->getRestrictions()->removeAll();
+
+            $statement = $queryBuilder
+                ->select('uid_foreign')
+                ->from('sys_category_record_mm')
+                ->where(
+                    $queryBuilder->expr()->eq(
+                        'uid_local',
+                        $queryBuilder->createNamedParameter(
+                            $demand->getCategories()[0],
+                            Connection::PARAM_INT
+                        )
+                    ),
+                    $queryBuilder->expr()->eq(
+                        'tablenames',
+                        $queryBuilder->createNamedParameter(
+                            'tx_pxaproductmanager_domain_model_product',
+                            Connection::PARAM_STR
+                        )
+                    ),
+                    $queryBuilder->expr()->eq(
+                        'fieldname',
+                        $queryBuilder->createNamedParameter(
+                            'categories',
+                            Connection::PARAM_STR
+                        )
+                    )
+                )
+                ->orderBy('sorting')
+                ->execute();
+
+            $uidsOrder = '';
+            while ($uid = $statement->fetchColumn(0)) {
+                $uidsOrder .= ',' . $uid;
+            }
+            unset($statement);
+
+            if (empty($uidsOrder)) {
+                return parent::findDemanded($demand);
+            } else {
+                // If sorting is set to categories and we have one category
+                $query = $this->createDemandQuery($demand);
+                /** @var Typo3DbQueryParser $queryParser */
+                $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
+
+                $productsQueryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
+                $queryParameters = [];
+
+                foreach ($productsQueryBuilder->getParameters() as $key => $value) {
+                    // prefix array keys with ':'
+                    //all non numeric values have to be quoted
+                    $queryParameters[':' . $key] = (is_numeric($value)) ? $value : "'" . $value . "'";
+                }
+
+                $statement = strtr($productsQueryBuilder->getSQL(), $queryParameters)
+                    . ' ORDER BY FIELD(`tx_pxaproductmanager_domain_model_product`.`uid`' . $uidsOrder . ')';
+
+                return $query->statement($statement)->execute();
+            }
+        }
+    }
+
+    /**
+     * If order is by category need to override basic order function
+     *
+     * @param QueryInterface $query
+     * @param Demand $demand
+     */
+    public function setOrderings(QueryInterface $query, Demand $demand)
+    {
+        // If sorting is set by categories, we need to create a special query
+        if ($demand->getOrderBy() !== 'categories') {
+            parent::setOrderings($query, $demand);
+
+            $orderings = $query->getOrderings();
+            // Include name as second sorting if not already chosen
+            if (!array_key_exists('name', $orderings)) {
+                $orderings['name'] = QueryInterface::ORDER_ASCENDING;
+
+                $query->setOrderings($orderings);
+            }
+        }
+    }
 
     /**
      * Find all product with storage or all
