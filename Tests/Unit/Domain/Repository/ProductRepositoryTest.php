@@ -302,7 +302,7 @@ class ProductRepositoryTest extends UnitTestCase
     public function canSetOrderOnlyIfAllowed()
     {
         $mockedQuery = $this->getMockBuilder(Query::class)
-            ->setMethods(['setOrderings'])
+            ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -318,11 +318,14 @@ class ProductRepositoryTest extends UnitTestCase
         $demand->setOrderByAllowed('name,title');
         $demand->setOrderBy('test');
 
-        $mockedQuery
-            ->expects($this->never())
-            ->method('setOrderings');
-
         $mockedRepository->_call('setOrderings', $mockedQuery, $demand);
+
+        $this->assertEquals(
+            [
+                'name' => QueryInterface::ORDER_ASCENDING
+            ],
+            $mockedQuery->getOrderings()
+        );
     }
 
     /**
@@ -331,7 +334,7 @@ class ProductRepositoryTest extends UnitTestCase
     public function canSetOrderByByAllowedFields()
     {
         $mockedQuery = $this->getMockBuilder(Query::class)
-            ->setMethods(['setOrderings'])
+            ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -347,15 +350,17 @@ class ProductRepositoryTest extends UnitTestCase
 
         $demand = new Demand();
         $demand->setOrderByAllowed('name,title');
-        $demand->setOrderBy('name');
+        $demand->setOrderBy('title');
         $demand->setOrderDirection($orderDirection);
 
-        $mockedQuery
-            ->expects($this->once())
-            ->method('setOrderings')
-            ->with(['name' => $orderDirection]);
-
         $mockedRepository->_call('setOrderings', $mockedQuery, $demand);
+        $this->assertEquals(
+            [
+                'title' => QueryInterface::ORDER_DESCENDING,
+                'name' => QueryInterface::ORDER_ASCENDING
+            ],
+            $mockedQuery->getOrderings()
+        );
     }
 
     /**
@@ -364,7 +369,7 @@ class ProductRepositoryTest extends UnitTestCase
     public function canSetOrderByByAllowedFieldsAddsNameWhenNotName()
     {
         $mockedQuery = $this->getMockBuilder(Query::class)
-            ->setMethods(['setOrderings'])
+            ->setMethods(['dummy'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -383,14 +388,14 @@ class ProductRepositoryTest extends UnitTestCase
         $demand->setOrderBy('custom_sorting');
         $demand->setOrderDirection($orderDirection);
 
-        $mockedQuery
-            ->expects($this->once())
-            ->method('setOrderings')
-            ->with([
-                'custom_sorting' => $orderDirection,
-                'name' => 'ASC'
-            ]);
-
         $mockedRepository->_call('setOrderings', $mockedQuery, $demand);
+
+        $this->assertEquals(
+            [
+                'custom_sorting' => QueryInterface::ORDER_DESCENDING,
+                'name' => QueryInterface::ORDER_ASCENDING
+            ],
+            $mockedQuery->getOrderings()
+        );
     }
 }
