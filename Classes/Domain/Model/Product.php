@@ -78,7 +78,7 @@ class Product extends AbstractEntity
      *
      * @var \string
      */
-    protected $description;
+    protected $description = '';
 
     /**
      * importId
@@ -243,7 +243,7 @@ class Product extends AbstractEntity
      *
      * @var \string
      */
-    protected $attributesDescription;
+    protected $attributesDescription = '';
 
     /**
      * Assets
@@ -258,21 +258,21 @@ class Product extends AbstractEntity
      *
      * @var \string
      */
-    protected $additionalInformation;
+    protected $additionalInformation = '';
 
     /**
      * teaser
      *
      * @var \string
      */
-    protected $teaser;
+    protected $teaser = '';
 
     /**
      * usp
      *
      * @var \string
      */
-    protected $usp;
+    protected $usp = '';
 
     /**
      * @var \DateTime|NULL
