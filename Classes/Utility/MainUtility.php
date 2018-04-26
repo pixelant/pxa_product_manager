@@ -100,7 +100,7 @@ class MainUtility
      */
     public static function getActiveCategoryFromRequest(): int
     {
-        $args = GeneralUtility::_GP('tx_pxaproductmanager_pi1');
+        $args = GeneralUtility::_GET('tx_pxaproductmanager_pi1');
         static $activeCategoryUid;
 
         if ($activeCategoryUid === null && is_array($args)) {

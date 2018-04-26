@@ -110,6 +110,14 @@ class ProductRepository extends AbstractDemandRepository
                 $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
 
                 $productsQueryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
+
+                // add orderings
+                $productsQueryBuilder->add(
+                    'orderBy',
+                    'FIELD(`tx_pxaproductmanager_domain_model_product`.`uid`' . $uidsOrder . ') '
+                    . $demand->getOrderDirection()
+                );
+
                 $queryParameters = [];
 
                 foreach ($productsQueryBuilder->getParameters() as $key => $value) {
@@ -118,8 +126,7 @@ class ProductRepository extends AbstractDemandRepository
                     $queryParameters[':' . $key] = (is_numeric($value)) ? $value : "'" . $value . "'";
                 }
 
-                $statement = strtr($productsQueryBuilder->getSQL(), $queryParameters)
-                    . ' ORDER BY FIELD(`tx_pxaproductmanager_domain_model_product`.`uid`' . $uidsOrder . ')';
+                $statement = strtr($productsQueryBuilder->getSQL(), $queryParameters);
 
                 return $query->statement($statement)->execute();
             }
