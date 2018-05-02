@@ -81,7 +81,7 @@
 				productUid = parseInt(button.data('product-uid')),
 				uri = button.data('ajax-uri');
 
-			if(parentToRemove) {
+			if (parentToRemove) {
 				parentToRemove = button.closest(parentToRemove);
 			}
 
@@ -101,12 +101,14 @@
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
 
 					if ($cart.length === 1 && data.inList) {
-						let itemImg = button.closest(settings.itemClass).find('img').eq(0);
+						let itemImg = $('[data-fly-image="' + productUid + '"]');
 
-						ProductManager.Main.flyToElement($(itemImg), $cart);
+						if (itemImg.length === 1) {
+							ProductManager.Main.flyToElement(itemImg, $cart);
+						}
 					}
 
-					if(parentToRemove.length === 1) {
+					if (parentToRemove.length === 1) {
 						parentToRemove.fadeOut('fast', function () {
 							parentToRemove.remove();
 

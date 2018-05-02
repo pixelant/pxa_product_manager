@@ -183,7 +183,7 @@ class AbstractController extends ActionController
      */
     protected function translate(string $key, array $arguments = []): string
     {
-        if ($result = LocalizationUtility::translate($key, $this->extensionName, $arguments)) {
+        if ($result = LocalizationUtility::translate($key, 'PxaProductManager', $arguments)) {
             return $result;
         }
 
