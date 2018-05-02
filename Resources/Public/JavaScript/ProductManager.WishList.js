@@ -104,7 +104,7 @@
 						let itemImg = $('[data-fly-image="' + productUid + '"]');
 
 						if (itemImg.length === 1) {
-							ProductManager.Main.flyToElement($(itemImg), $cart);
+							ProductManager.Main.flyToElement(itemImg, $cart);
 						}
 					}
 
