@@ -20,7 +20,7 @@
 <f:section name="item">
     <div class="item {product.additionalClasses}">
         <!-- Image -->
-        <f:render partial="Product/ListImage" arguments="{image: image, title: '{f:if(condition: title, then: title, else: product.name)}'}"/>
+        <f:render partial="Product/ListImage" arguments="{product: product, image: image, title: '{f:if(condition: title, then: title, else: product.name)}'}"/>
 
         <!-- Options bar -->
         <f:if condition="{product}">
