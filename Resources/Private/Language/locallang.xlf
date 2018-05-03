@@ -171,6 +171,10 @@
                 <source>Order form information</source>
             </trans-unit>
 
+            <trans-unit id="fe.solr.type_facet_name">
+                <target>Products</target>
+            </trans-unit>
+
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>
