@@ -5,7 +5,7 @@
 <f:layout name="Email" />
 
 <f:section name="main">
-    <table>
+    <table border="1" cellpadding="2" cellspacing="2">
         <thead>
         <tr>
             <th>#</th>
@@ -22,7 +22,7 @@
                 <th scope="row">{i.cycle}</th>
                 <td>{product.uid}</td>
                 <td>{product.name}</td>
-                <td>{product.sku}</td>
+                <td><f:if condition="{product.sku}" then="{product.sku}" else=" -- "></f:if></td>
                 <td>
                     <f:if condition="{ppm:isPricingEnabled()}">
                         <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatPrice}" />
@@ -33,11 +33,12 @@
         </f:for>
         <f:if condition="{ppm:isPricingEnabled()}">
             <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th><f:translate key="fe.total_price" extensionName="PxaProductManager" /></th>
-                <th><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalPrice}" /></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"><f:translate key="fe.total_price" extensionName="PxaProductManager" />:</th>
+                <th style="border: none;"><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalPrice}" /></th>
             </tr>
         </f:if>
         </tbody>

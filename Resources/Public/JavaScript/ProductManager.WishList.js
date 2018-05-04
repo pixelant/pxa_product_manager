@@ -112,6 +112,9 @@
 						parentToRemove.fadeOut('fast', function () {
 							parentToRemove.remove();
 
+							// Update items after remove
+							$orderItemsAmount = $(settings.orderItemAmountClass);
+
 							// Update order changes
 							_updateTotalPrice();
 							_saveCurrentStateOfAmountOfProducts();
@@ -152,7 +155,7 @@
 		 * @private
 		 */
 		const _updateTotalPrice = function () {
-			if ($orderItemsPrices.length === 0 || $totalPrice.length === 0) {
+			if ($totalPrice.length === 0) {
 				return false;
 			}
 
@@ -217,19 +220,18 @@
 		 * @private
 		 */
 		const _saveCurrentStateOfAmountOfProducts = function () {
-			if ($orderItemsAmount.length === 0) {
-				return false;
-			}
-
 			let currentState = {};
-			$orderItemsAmount.each(function () {
-				const $this = $(this);
-				let productUid = parseInt($this.data('product-uid'));
 
-				if (productUid > 0) {
-					currentState[productUid] = parseInt($this.val());
-				}
-			});
+			if ($orderItemsAmount.length > 0) {
+				$orderItemsAmount.each(function () {
+					const $this = $(this);
+					let productUid = parseInt($this.data('product-uid'));
+
+					if (productUid > 0) {
+						currentState[productUid] = parseInt($this.val());
+					}
+				});
+			}
 
 			ProductManager.Main.setCookie(
 				ORDER_STATE_COOKIE_NAME,
