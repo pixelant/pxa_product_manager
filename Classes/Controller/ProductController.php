@@ -7,6 +7,7 @@ use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\OrderMailService;
+use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -55,7 +56,7 @@ class ProductController extends AbstractController
         $this->getFrontendLabels();
 
         // Set the pagePid using the flexform -> typoscript -> 0 priority
-        $this->settings['pagePid'] = $this->settings['pagePid'] ?: MainUtility::getTsSettings()['pagePid'];
+        $this->settings['pagePid'] = $this->settings['pagePid'] ?: ConfigurationUtility::getSettings()['pagePid'];
     }
 
     /**

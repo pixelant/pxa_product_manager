@@ -293,21 +293,4 @@ class MainUtility
 
         return $cacheManager;
     }
-
-    /**
-     * @return array
-     */
-    public static function getTsSettings(): array
-    {
-        $objectManager = self::getObjectManager();
-
-        $tsSettings = $objectManager->get(ConfigurationManagerInterface::class)->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_FULL_TYPOSCRIPT
-        );
-
-        $tsSettings = $objectManager->get(TypoScriptService::class)
-            ->convertTypoScriptArrayToPlainArray($tsSettings);
-
-        return $tsSettings['plugin']['tx_pxaproductmanager']['settings'];
-    }
 }

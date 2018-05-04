@@ -17,7 +17,7 @@ namespace Pixelant\PxaProductManager\Hook;
  */
 
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
-use Pixelant\PxaProductManager\Utility\MainUtility;
+use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -452,7 +452,7 @@ class PageLayoutView
     protected function getPagePidInfo(int $pageUid): string
     {
         // Set the pagePid using the flexform -> typoscript -> 0 priority
-        $pageUid = $pageUid ?: MainUtility::getTsSettings()['pagePid'];
+        $pageUid = $pageUid ?: ConfigurationUtility::getSettings((int)GeneralUtility::_GP('id'))['pagePid'];
         $pageUid = (int)$pageUid;
 
         if ($pageUid) {
