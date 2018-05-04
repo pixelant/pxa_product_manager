@@ -9,6 +9,9 @@
             <trans-unit id="fe.clear_filter">
                 <target>Wissen</target>
             </trans-unit>
+            <trans-unit id="fe.solr.type_facet_name">
+                <target>Producten</target>
+            </trans-unit>
         </body>
 	</file>
 </xliff>

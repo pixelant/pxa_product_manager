@@ -28,6 +28,9 @@
             <trans-unit id="fe.no_products_found">
                 <target>Inga sökresultat</target>
             </trans-unit>
+            <trans-unit id="fe.solr.type_facet_name">
+                <target>Produkter</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
