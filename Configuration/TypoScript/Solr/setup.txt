@@ -75,7 +75,7 @@ plugin.tx_solr.search.faceting.facets.type {
     renderingInstruction {
         # products
         tx_pxaproductmanager_domain_model_product = TEXT
-        tx_pxaproductmanager_domain_model_product.value = Products
+        tx_pxaproductmanager_domain_model_product.value = {LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf:fe.solr.type_facet_name}
         tx_pxaproductmanager_domain_model_product.insertData = 1
     }
 }

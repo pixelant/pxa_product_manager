@@ -25,6 +25,9 @@
             <trans-unit id="fe.number_of_results_found">
                 <target>hittade produkter</target>
             </trans-unit>
+            <trans-unit id="fe.solr.type_facet_name">
+                <target>Produkter</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

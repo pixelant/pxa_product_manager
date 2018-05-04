@@ -12,6 +12,9 @@
             <trans-unit id="fe.clear_filter">
                 <target>Leeren</target>
             </trans-unit>
+            <trans-unit id="fe.solr.type_facet_name">
+                <target>Produkte</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>
