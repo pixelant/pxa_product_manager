@@ -53,6 +53,9 @@ class ProductController extends AbstractController
     public function initializeAction()
     {
         $this->getFrontendLabels();
+
+        // Set the pagePid using the flexform -> typoscript -> 0 priority
+        $this->settings['pagePid'] = $this->settings['pagePid'] ?: MainUtility::getTsSettings()['pagePid'];
     }
 
     /**
