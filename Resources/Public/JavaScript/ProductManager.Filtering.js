@@ -52,16 +52,16 @@
 		const init = function (initializeSettings) {
 			_initVariables(initializeSettings);
 
-            $selectBoxes.each(function () {
-                _selectInstances[$(this).data('identifier')] = $(this).select2();
+			$selectBoxes.each(function () {
+				_selectInstances[$(this).data('identifier')] = $(this).select2();
 
-                // Disable search on mobile
-                if ($(window).width() <= 739) {
-                    $(this).on('select2:opening select2:closing', function (event) {
-                        $(this).parent().find('.select2-search__field').prop('disabled', true);
-                    });
-                }
-            });
+				// Disable search on mobile
+				if ($(window).width() <= 739) {
+					$(this).on('select2:opening select2:closing', function (event) {
+						$(this).parent().find('.select2-search__field').prop('disabled', true);
+					});
+				}
+			});
 
 			updateFilteringOptions();
 
