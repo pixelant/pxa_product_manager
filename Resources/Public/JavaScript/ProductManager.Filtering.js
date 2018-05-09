@@ -53,7 +53,15 @@
 			_initVariables(initializeSettings);
 
 			$selectBoxes.each(function () {
-				_selectInstances[$(this).data('identifier')] = $(this).select2();
+				let select = $(this);
+				_selectInstances[select.data('identifier')] = select.select2();
+
+				// Disable search on mobile
+				if ($(window).width() <= 739) {
+					select.on('select2:opening select2:closing', function (event) {
+						$(this).parent().find('.select2-search__field').prop('disabled', true);
+					});
+				}
 			});
 
 			updateFilteringOptions();
