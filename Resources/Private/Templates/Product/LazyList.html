@@ -15,17 +15,16 @@
             <p><f:translate key="fe.nothing_were_found"/></p>
         </div>
         <div class="results-count-container">
-            <span class="results-count">{countResults}</span>
+            <span class="results-count">0</span>
             <f:translate key="fe.number_of_results_found"/>
         </div>
 
         <div class="cards-container row">
-            <f:for each="{products}" as="product">
-                <f:render partial="Product/LazyListProductItem"
-                          arguments="{product: product}"/>
-            </f:for>
+            <f:comment>
+                Products container
+            </f:comment>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12 loader-wrapper hidden">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-xxs-12 loader-wrapper">
             <f:render partial="Product/Loader" arguments="{class: 'big'}"/>
         </div>
 

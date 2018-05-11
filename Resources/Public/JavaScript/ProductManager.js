@@ -197,6 +197,51 @@
 		},
 
 		/**
+		 * Write to status by key
+		 *
+		 * @param key
+		 * @param value
+		 */
+		writeToHash: function (key, value) {
+			let status = this.readStatusFromHash();
+			status[key] = value;
+
+			window.location.hash = $.isEmptyObject(status) ? '' : encodeURIComponent('pm:' + JSON.stringify(status));
+		},
+
+		/**
+		 * Read data from hash status in url
+		 *
+		 * @returns null|object
+		 */
+		readStatusFromHash: function () {
+			let hash = decodeURIComponent(window.location.hash);
+
+			if (hash.length > 0 && hash.substring(0, 4) === '#pm:') {
+				hash = hash.substring(4);
+
+				try {
+					return JSON.parse(hash);
+				} catch (e) {
+					console.log(e);
+				}
+			}
+
+			return {};
+		},
+
+		/**
+		 * Animate scroll
+		 *
+		 * @param scroll
+		 */
+		scrollTo: function (scroll) {
+			$('html, body').animate({
+				scrollTop: scroll
+			}, 200);
+		},
+
+		/**
 		 * Special trim with char
 		 *
 		 * @param string

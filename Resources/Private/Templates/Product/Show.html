@@ -51,6 +51,12 @@
                                 <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
                             </h5>
                         </f:if>
+
+                        <f:if condition="{settings.showGoBackButton}">
+                            <button type="button" class="btn btn-default back-button" onclick="window.history.back();">
+                                <f:translate key="fe.go_back" />
+                            </button>
+                        </f:if>
                     </div>
                 </div>
 
@@ -234,6 +240,12 @@
         <f:if condition="{latestVisitedProducts}">
             <f:render partial="Product/Related"
                       arguments="{relatedProducts: latestVisitedProducts, headerTranslationIndex: 'fe.latest_visited_products'}"/>
+        </f:if>
+
+        <f:if condition="{settings.showGoBackButton}">
+            <button type="button" class="btn btn-default back-button" onclick="window.history.back();">
+                <f:translate key="fe.go_back" />
+            </button>
         </f:if>
     </div>
 </f:section>

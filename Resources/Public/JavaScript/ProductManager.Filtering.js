@@ -83,33 +83,22 @@
 		 * @private
 		 */
 		const _initUrlStashState = function () {
-			let hash = decodeURIComponent(window.location.hash),
-				filters;
+			let hash = ProductManager.Main.readStatusFromHash(),
+				filters = hash['filters'] || null;
 
-			if (hash.length > 0 && hash.substring(0, 8) === '#filter:') {
-				hash = hash.substring(8);
+			if (filters !== null && filters.length) {
+				// disable select box onchange
+				_triggerSelectBoxChange = false;
 
-				try {
-					filters = JSON.parse(hash);
-				} catch (e) {
-					filters = null;
-					console.log(e);
-				}
-
-				if (filters !== null && filters.length) {
-					// disable select box onchange
-					_triggerSelectBoxChange = false;
-
-					for (let i = 0; i < filters.length; i++) {
-						if (_selectInstances.hasOwnProperty(filters[i].id)) {
-							_selectInstances[filters[i].id].val(filters[i].v.split(',')).trigger('change');
-						}
+				for (let i = 0; i < filters.length; i++) {
+					if (_selectInstances.hasOwnProperty(filters[i].id)) {
+						_selectInstances[filters[i].id].val(filters[i].v.split(',')).trigger('change');
 					}
-
-					_triggerUpdate();
-					// enable it back
-					_triggerSelectBoxChange = true;
 				}
+
+				_triggerUpdate();
+				// enable it back
+				_triggerSelectBoxChange = true;
 			}
 		};
 
@@ -165,8 +154,7 @@
 				urlData.push(singleFilter);
 			}
 
-			window.location.hash = urlData.length ? encodeURIComponent('filter:' + JSON.stringify(urlData)) : '';
-
+			ProductManager.Main.writeToHash('filters', urlData);
 			ProductManager.Main.trigger(
 				'FILTER_UPDATE',
 				{

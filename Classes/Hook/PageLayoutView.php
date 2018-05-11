@@ -268,7 +268,8 @@ class PageLayoutView
         $checkboxes = [
             'showLatestVisitedProducts',
             'enableMessageInsteadOfPage404',
-            'showGalleryPagination'
+            'showGalleryPagination',
+            'showGoBackButton'
         ];
 
         foreach ($checkboxes as $checkbox) {
@@ -312,7 +313,8 @@ class PageLayoutView
         $checkboxes = [
             'showLatestVisitedProducts',
             'enableMessageInsteadOfPage404',
-            'showGalleryPagination'
+            'showGalleryPagination',
+            'showGoBackButton'
         ];
 
         foreach ($checkboxes as $checkbox) {
@@ -365,7 +367,8 @@ class PageLayoutView
             'hr',
             'showLatestVisitedProducts',
             'enableMessageInsteadOfPage404',
-            'showGalleryPagination'
+            'showGalleryPagination',
+            'showGoBackButton'
         ];
 
         foreach ($checkboxes as $checkbox) {

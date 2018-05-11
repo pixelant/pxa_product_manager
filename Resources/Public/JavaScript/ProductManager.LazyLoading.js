@@ -49,6 +49,8 @@
 			filteringData = {},
 			wishListEnable = false,
 			compareListEnable = false,
+			firstLoadingLimit = 0,
+			lazyListInitialized = false,
 			hideFilterOptionsNoResult = 0;
 
 		/**
@@ -66,6 +68,9 @@
 				} else {
 					_initLoadMoreButton();
 				}
+
+				// Check status hash and run loading if needed
+				_checkHashStatusAndRunLoading();
 			}
 
 			// On filter update, reset some values and save filtering data
@@ -79,7 +84,7 @@
 					$loadMoreButton.removeClass(settings.hiddenClass);
 				}
 
-				_runAjax(true);
+				_runAjax(true, lazyListInitialized === false ? firstLoadingLimit : false);
 			});
 		};
 
@@ -95,7 +100,6 @@
 			// double check for limit
 			let limit = parseInt(settings.limit, 10);
 			settings.limit = isNaN(limit) ? 8 : limit;
-			offSet = limit;
 
 			if (typeof settings.storagePid !== 'undefined' && settings.storagePid !== '') {
 				storage = settings.storagePid.split(',');
@@ -113,12 +117,40 @@
 			// Jquery objects
 			$wrapper = $(settings.wrapper);
 			$loaderOverlay = $(settings.loaderOverlay);
-			$lastItem = $wrapper.find(settings.item).last();
 			$template = $(settings.template);
 			$loadMoreButton = $(settings.loadMoreButton);
 			$itemsContainer = $(settings.itemsContainer);
 			$countContainer = $(settings.countContainer);
 			$nothingFound = $(settings.nothingFound);
+		};
+
+		/**
+		 * Check if filter or limit are set in hash url
+		 *
+		 * @private
+		 */
+		const _checkHashStatusAndRunLoading = function () {
+			let statusHash = ProductManager.Main.readStatusFromHash();
+
+			firstLoadingLimit = statusHash['limit'] ? parseInt(statusHash['limit']) : 0;
+
+			if (typeof statusHash['filters'] === 'undefined' || statusHash['filters'].length === 0) {
+				// If no filter run first load, otherwise filters will trigger loading
+				_runAjax(false, firstLoadingLimit);
+			}
+		};
+
+		/**
+		 * If clicked on product same current scroll state
+		 * @param items
+		 * @param event
+		 * @private
+		 */
+		const _itemsLinkClick = function (items) {
+			// Track click on items
+			items.find('a').on('click', function (e) {
+				ProductManager.Main.writeToHash('scroll', $(window).scrollTop());
+			});
 		};
 
 		/**
@@ -153,19 +185,22 @@
 		 * Ajax request to load more items
 		 *
 		 * @param updateFilteringOptions // Update options only on filter changes
+		 * @param overrideLimit allow to override settings limit
 		 * @private
 		 */
-		const _runAjax = function (updateFilteringOptions) {
+		const _runAjax = function (updateFilteringOptions, overrideLimit) {
 			updateFilteringOptions = updateFilteringOptions || false;
 			lazyLoadingInProgress = true;
 			$loaderOverlay.removeClass(settings.hiddenClass);
+
+			let limit = overrideLimit || settings.limit;
 
 			let data = {
 				tx_pxaproductmanager_pi1: {
 					demand: {
 						offSet: offSet,
 						categories: (settings.demandCategories.length > 0) ? settings.demandCategories.split(',') : [],
-						limit: settings.limit,
+						limit: limit,
 						filters: filteringData,
 						storagePid: storage,
 						orderBy: settings.orderBy,
@@ -183,7 +218,7 @@
 				dataType: 'json'
 			}).done(function (data) {
 				$loaderOverlay.addClass(settings.hiddenClass);
-				offSet += settings.limit;
+				offSet += limit;
 				lazyLoadingInProgress = false;
 
 				// if button, enable it again
@@ -197,7 +232,12 @@
 				if (data.countResults > 0) {
 					$nothingFound.addClass(settings.hiddenClass);
 					$itemsContainer.append(data.html);
-					$lastItem = $itemsContainer.find(settings.item).last();
+
+					let items = $itemsContainer.find(settings.item);
+					$lastItem = items.last();
+
+					// Track scroll state when go single view
+					_itemsLinkClick(items);
 
 					// Update wish list buttons
 					if (wishListEnable) {
@@ -230,6 +270,21 @@
 
 				// update count
 				$countContainer.text(data.countResults);
+
+				// Scroll on first load
+				if (!lazyListInitialized) {
+					lazyListInitialized = true;
+
+					let state = ProductManager.Main.readStatusFromHash(),
+						scroll = state['scroll'] || 0;
+
+					if (scroll > 0) {
+						ProductManager.Main.scrollTo(scroll);
+					}
+				}
+
+				// Save page / limit
+				ProductManager.Main.writeToHash('limit', offSet);
 
 				ProductManager.Main.trigger(
 					'LAZY_LOADING_REQUEST_COMPLETE',
