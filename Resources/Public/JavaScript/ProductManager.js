@@ -226,6 +226,17 @@
 		},
 
 		/**
+		 * Animate scroll
+		 *
+		 * @param scroll
+		 */
+		scrollTo: function (scroll) {
+			$('html, body').animate({
+				scrollTop: scroll
+			}, 200);
+		},
+
+		/**
 		 * Special trim with char
 		 *
 		 * @param string
