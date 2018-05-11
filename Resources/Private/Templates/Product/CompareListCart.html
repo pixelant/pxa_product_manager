@@ -5,7 +5,7 @@
 
 <f:section name="main">
 	<f:link.page pageUid="{settings.compareList.pagePid}">
-		<span class="pxa-pm-compare-list-cart main-cart">
+		<span class="pxa-pm-compare-list-cart{f:if(condition:settings.isMainCart, then:' main-cart')}">
 		<ppm:svg
 				width="32"
 				height="32"

@@ -5,7 +5,7 @@
 
 <f:section name="main">
 	<f:link.page pageUid="{settings.wishList.pagePid}">
-		<span class="pxa-pm-wish-list-cart main-cart">
+		<span class="pxa-pm-wish-list-cart{f:if(condition:settings.isMainCart, then:' main-cart')}">
 		<ppm:svg
 				width="32"
 				height="32"
