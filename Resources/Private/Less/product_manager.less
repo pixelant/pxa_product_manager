@@ -393,10 +393,16 @@
         &.in-progress .lds-dual-ring {
             display: inline-block;
         }
-        &.selected,
-        &:hover {
+        &.selected {
             .pm-like-button {
                 background-position: 0 0;
+            }
+        }
+        @media (hover: hover) {
+            &:hover {
+                .pm-like-button {
+                    background-position: 0 0;
+                }
             }
         }
         &.ongoing-initialization {
