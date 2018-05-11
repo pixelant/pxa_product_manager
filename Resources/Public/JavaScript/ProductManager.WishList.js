@@ -26,8 +26,9 @@
 		 * Dom elements
 		 */
 		let $buttons,
-			$cart,
-			$cartCounter,
+			$mainCart,
+            $mainCartCounter,
+			$cartCounters,
 			$orderItemsAmount,
 			$orderItemsPrices,
 			$totalPrice;
@@ -43,7 +44,11 @@
 			initButtons($buttons);
 			let currentList = ProductManager.Main.getCookie('pxa_pm_wish_list');
 
-			ProductManager.Main.updateCartCounter($cartCounter, currentList !== false ? currentList.split(',').length : 0);
+			ProductManager.Main.updateCartCounter(
+				$mainCartCounter,
+				$cartCounters,
+				currentList !== false ? currentList.split(',').length : 0
+			);
 			ajaxLoadingInProgress = false;
 
 			_updateTotalPrice();
@@ -61,8 +66,9 @@
 			settings = wishListSettings;
 
 			$buttons = $(wishListSettings.buttonIdentifier + '.' + wishListSettings.loadingClass);
-			$cart = $(wishListSettings.cartIdentifier);
-			$cartCounter = $(wishListSettings.cartCounter);
+			$mainCart = $(wishListSettings.mainCartIdentifier);
+			$mainCartCounter = $mainCart.find(wishListSettings.cartCounterIdentifier);
+			$cartCounters = $(wishListSettings.cartsIdentifier).find(wishListSettings.cartCounterIdentifier);
 			$orderItemsAmount = $(wishListSettings.orderItemAmountClass);
 			$orderItemsPrices = $(wishListSettings.orderItemPriceClass);
 			$totalPrice = $(wishListSettings.totalPriceClass);
@@ -100,11 +106,11 @@
 						.prop('disabled', false)
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
 
-					if ($cart.length === 1 && data.inList) {
+					if ($mainCart.length === 1 && data.inList) {
 						let itemImg = $('[data-fly-image="' + productUid + '"]');
 
 						if (itemImg.length === 1) {
-							ProductManager.Main.flyToElement(itemImg, $cart);
+							ProductManager.Main.flyToElement(itemImg, $mainCart);
 						}
 					}
 
@@ -121,7 +127,7 @@
 						});
 					}
 
-					ProductManager.Main.updateCartCounter($cartCounter, data.inList ? 1 : -1);
+					ProductManager.Main.updateCartCounter($mainCartCounter, $cartCounters, data.inList ? 1 : -1);
 					ProductManager.Messanger.showSuccessMessage(data.message);
 				} else {
 					button

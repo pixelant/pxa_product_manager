@@ -18,8 +18,9 @@
 		 * Dom elements
 		 */
 		let $buttons,
-			$cart,
-			$cartCounter;
+			$mainCart,
+			$mainCartCounter,
+			$cartCounters;
 
 		/**
 		 * Main wish list function
@@ -42,8 +43,9 @@
 			settings = listSettings;
 
 			$buttons = $(listSettings.buttonIdentifier + '.' + listSettings.loadingClass);
-			$cart = $(listSettings.cartIdentifier);
-			$cartCounter = $(listSettings.cartCounter);
+            $mainCart = $(listSettings.mainCartIdentifier);
+            $mainCartCounter = $(listSettings.mainCartIdentifier).find(listSettings.cartCounterIdentifier);
+            $cartCounters = $(listSettings.cartsIdentifier).find(listSettings.cartCounterIdentifier);
 		};
 
 		/**
@@ -65,7 +67,7 @@
 				}
 
 				initButtons($buttons);
-				ProductManager.Main.updateCartCounter($cartCounter, productsList.length);
+				ProductManager.Main.updateCartCounter($mainCartCounter, $cartCounters, productsList.length);
 			}).fail(function (jqXHR, textStatus) {
 				console.log('Request failed: ' + textStatus);
 			}).always(function () {
@@ -105,11 +107,11 @@
 						.prop('disabled', false)
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
 
-					if ($cart.length === 1 && data.inList) {
+					if ($mainCart.length === 1 && data.inList) {
 						let itemImg = $('[data-fly-image="' + productUid + '"]');
 
 						if (itemImg.length === 1) {
-							ProductManager.Main.flyToElement(itemImg, $cart);
+							ProductManager.Main.flyToElement(itemImg, $mainCart);
 						}
 					}
 
@@ -119,7 +121,7 @@
 						});
 					}
 
-					ProductManager.Main.updateCartCounter($cartCounter, data.inList ? 1 : -1);
+					ProductManager.Main.updateCartCounter($mainCartCounter, $cartCounters, data.inList ? 1 : -1);
 
 					ProductManager.Messanger.showSuccessMessage(data.message);
 				}

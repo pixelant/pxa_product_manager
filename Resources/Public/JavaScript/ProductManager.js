@@ -145,20 +145,25 @@
 		/**
 		 * Update carts counter
 		 *
-		 * @param $cartCounter
+		 * @param $mainCartCounter
+		 * @param $cartCounters
 		 * @param modifier
 		 */
-		updateCartCounter: function ($cartCounter, modifier) {
+		updateCartCounter: function ($mainCartCounter, $cartCounters, modifier) {
 			modifier = modifier || 0;
 
-			if ($cartCounter.length === 1) {
-				let currentValue = parseInt($cartCounter.text().trim());
+			if ($mainCartCounter.length === 1) {
+				let currentValue = parseInt($mainCartCounter.text().trim());
 				if (isNaN(currentValue)) {
 					currentValue = 0;
 				}
 
-				const newValue = currentValue + modifier;
-				$cartCounter.text(newValue > 0 ? newValue : 0);
+				let newValue = currentValue + modifier;
+				newValue = newValue > 0 ? newValue : 0;
+
+				if ($cartCounters.length > 1) {
+					$cartCounters.text(newValue);
+				}
 			}
 		},
 
