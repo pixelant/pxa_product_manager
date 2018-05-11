@@ -27,7 +27,7 @@
 		 */
 		let $buttons,
 			$mainCart,
-            $mainCartCounter,
+			$mainCartCounter,
 			$cartCounters,
 			$orderItemsAmount,
 			$orderItemsPrices,

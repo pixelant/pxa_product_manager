@@ -43,9 +43,9 @@
 			settings = listSettings;
 
 			$buttons = $(listSettings.buttonIdentifier + '.' + listSettings.loadingClass);
-            $mainCart = $(listSettings.mainCartIdentifier);
-            $mainCartCounter = $(listSettings.mainCartIdentifier).find(listSettings.cartCounterIdentifier);
-            $cartCounters = $(listSettings.cartsIdentifier).find(listSettings.cartCounterIdentifier);
+			$mainCart = $(listSettings.mainCartIdentifier);
+			$mainCartCounter = $(listSettings.mainCartIdentifier).find(listSettings.cartCounterIdentifier);
+			$cartCounters = $(listSettings.cartsIdentifier).find(listSettings.cartCounterIdentifier);
 		};
 
 		/**
