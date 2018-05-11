@@ -4,6 +4,9 @@
           product-name="pxa_product_manager">
         <header/>
         <body>
+            <trans-unit id="fe.go_back">
+                <source>Go back</source>
+            </trans-unit>
             <trans-unit id="fe.single_view_disabled">
                 <source>Single view disabled for this item!</source>
             </trans-unit>

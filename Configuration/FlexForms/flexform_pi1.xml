@@ -231,7 +231,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.include_discontinued</label>
                             <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->groupedList;Product->show,Product->lazyList;AjaxProducts->ajaxLazyList,Product->promotionList</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -243,7 +242,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.allowed_categories</label>
                             <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList,Product->promotionList</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>select</type>
                                 <renderMode>tree</renderMode>
@@ -289,7 +287,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.exclude_categories</label>
                             <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList,Navigation->show,Product->groupedList;Product->show</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>select</type>
                                 <renderMode>tree</renderMode>
@@ -362,7 +359,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_navigation_list_view</label>
                             <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</displayCond>
-                            <exclude>1</exclude>
                             <onChange>reload</onChange>
                             <config>
                                 <type>check</type>
@@ -375,7 +371,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.hide_navigation_list_view_on_detail_mode</label>
                             <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -395,7 +390,6 @@
                                     </AND>
                                 </OR>
                             </displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -415,7 +409,6 @@
                                     </AND>
                                 </OR>
                             </displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -432,11 +425,21 @@
                 </TCEforms>
                 <type>array</type>
                 <el>
+                    <settings.showGoBackButton>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_go_back_button</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->show,Product->groupedList;Product->show</displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>1</default>
+                            </config>
+                        </TCEforms>
+                    </settings.showGoBackButton>
+
                     <settings.showLatestVisitedProducts>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_latest_visited_products</label>
                             <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->show,Product->groupedList;Product->show</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -448,7 +451,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.enable_message_instead_of_page404</label>
                             <displayCond> FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show,Product->groupedList;Product->show</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -460,7 +462,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.show_gallery_pagination</label>
                             <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->show,Product->list;Product->show,Product->groupedList;Product->show</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -678,7 +679,6 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters</label>
                             <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
-                            <exclude>1</exclude>
                             <config>
                                 <type>select</type>
                                 <foreign_table>tx_pxaproductmanager_domain_model_filter</foreign_table>

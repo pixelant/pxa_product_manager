@@ -238,6 +238,9 @@
             <trans-unit id="flexform.no_recipients">
                 <source>No recipients were set. No one will get notification about new order</source>
             </trans-unit>
+            <trans-unit id="flexform.show_go_back_button">
+                <source>Show "Go back button"</source>
+            </trans-unit>
 
             <trans-unit id="flexform.custom_products_list.mode">
                 <source>Custom products list mode</source>

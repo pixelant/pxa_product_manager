@@ -183,13 +183,24 @@
     }
 
     .product-name {
+        position: relative;
         h1 {
             margin: 0 0 30px 0;
             padding-bottom: 15px;
             border-bottom: 1px solid tint(@main-color, 50%);
         }
+        .back-button {
+            position: absolute;
+            top: 0;
+            right: 15px;
+        }
     }
 
+    .single-product-wrapper {
+        > .back-button {
+            margin-bottom: 15px;
+        }
+    }
     /* Related files */
 
     .single-product-related-title {
