@@ -112,8 +112,6 @@ class ProductController extends AbstractController
 
         $demand = $this->createDemandFromSettings($this->settings);
 
-        //$products = $this->productRepository->findDemanded($demand);
-
         if (!empty($this->settings['filters'])) {
             $filtersUids = GeneralUtility::intExplode(',', $this->settings['filters'], true);
             $filters = $this->sortQueryResultsByUidList(
@@ -141,11 +139,9 @@ class ProductController extends AbstractController
         }
 
         $this->view->assignMultiple([
-            /*'products' => $products,*/
             'demandCategories' => implode(',', $this->settings['demandCategories']),
             'ajaxUrl' => $this->getLazyLoadingUrl(),
             'storagePid' => $storagePid ?? '',
-            /*'countResults' => $countResults,*/
             'lazyLoadingStop' => ($limit === 0 || $limit >= $countResults) ? 1 : 0,
             'filters' => $filters ?? [],
             'availableOptionsList' => implode(',', $availableOptions ?? []),
