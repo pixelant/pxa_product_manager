@@ -117,7 +117,6 @@
 			// Jquery objects
 			$wrapper = $(settings.wrapper);
 			$loaderOverlay = $(settings.loaderOverlay);
-			//$lastItem = $wrapper.find(settings.item).last(); It's empty on first load
 			$template = $(settings.template);
 			$loadMoreButton = $(settings.loadMoreButton);
 			$itemsContainer = $(settings.itemsContainer);
