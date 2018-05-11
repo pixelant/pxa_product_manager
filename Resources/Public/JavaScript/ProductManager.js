@@ -161,7 +161,7 @@
 				let newValue = currentValue + modifier;
 				newValue = newValue > 0 ? newValue : 0;
 
-				if ($cartCounters.length > 1) {
+				if ($cartCounters.length >= 1) {
 					$cartCounters.text(newValue);
 				}
 			}
