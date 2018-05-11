@@ -13,6 +13,8 @@ lib.pxaProductManager {
                     1 = compareListCart
                 }
             }
+
+            settings.isMainCart = true
         }
     }
 }

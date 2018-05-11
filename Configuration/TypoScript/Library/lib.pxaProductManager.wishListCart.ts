@@ -13,6 +13,8 @@ lib.pxaProductManager {
                     1 = wishListCart
                 }
             }
+
+            settings.isMainCart = true
         }
     }
 }

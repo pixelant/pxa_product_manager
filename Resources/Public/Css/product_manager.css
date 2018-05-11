@@ -325,9 +325,13 @@
 .tx-pxa-product-manager .wish-list-btn.in-progress .lds-dual-ring {
   display: inline-block;
 }
-.tx-pxa-product-manager .wish-list-btn.selected .pm-like-button,
-.tx-pxa-product-manager .wish-list-btn:hover .pm-like-button {
+.tx-pxa-product-manager .wish-list-btn.selected .pm-like-button {
   background-position: 0 0;
+}
+@media (hover: hover) {
+  .tx-pxa-product-manager .wish-list-btn:hover .pm-like-button {
+    background-position: 0 0;
+  }
 }
 .tx-pxa-product-manager .wish-list-btn.ongoing-initialization .pm-like-button {
   display: none;
