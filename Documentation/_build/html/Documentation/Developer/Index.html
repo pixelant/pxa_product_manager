@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Developer Corner &mdash; test 0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/jquery-ui/jquery-ui.min.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/css/t3more.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="test 0.1 documentation" href="#"/> 
+  <script src="../../_static/js/modernizr.min.js"></script>
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        <ul class="sidebartop">
+
+          <li class="docsite">
+            <a href="https://docs.typo3.org"><img src="../../_static/img/typo3-documentation.png" class="logo" /></a>
+          </li>
+
+          <li class="project">
+            <a href="../../index.html">
+              test<br>0.1</a>
+          </li><li class="nolink search">
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search this project" id="searchinput" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div></li>
+
+        </ul>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Introduction/Index.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../Introduction/WhatDoesItDo/Index.html">What does it do?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Introduction/WhatDoYouNeed/Index.html">What do you need?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Introduction/Screenshots/Index.html">Screenshots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../Introduction/Screenshots/Frontend/Index.html">Screenshots Frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../Introduction/Screenshots/Backend/Index.html">Screenshots Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../User/Index.html">Users Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Administrator/Index.html">Administrator Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Configuration/Index.html">Configuration Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Developer/Index.html">Developer Corner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../KnownProblems/Index.html">Known Problems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ToDoList/Index.html">To-Do list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChangeLog/Index.html">ChangeLog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Links.html">Links</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">test</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    <li>Developer Corner</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/Documentation/Developer/Index.rst.txt" rel="nofollow">
+                <span class="fa fa-binoculars"></span>&#32;View page source
+            </a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody" class="toBeIndexed">
+            
+  <div class="section" id="developer-corner">
+<span id="developer"></span><h1>Developer Corner<a class="headerlink" href="#developer-corner" title="Permalink to this headline">¶</a></h1>
+<p>Target group: <strong>Developers</strong></p>
+<p>Use this section for <em>providing code examples</em> or any <strong>useful</strong> information code wise.</p>
+<div class="section" id="hooks">
+<span id="developer-hooks"></span><h2>Hooks<a class="headerlink" href="#hooks" title="Permalink to this headline">¶</a></h2>
+<p>Possible hook examples. Input parameters are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="23%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Data type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>$table</td>
+<td>string</td>
+<td>Name of the table</td>
+</tr>
+<tr class="row-odd"><td>$field</td>
+<td>string</td>
+<td>Name of the field</td>
+</tr>
+</tbody>
+</table>
+<p>Use parameter <code class="code docutils literal notranslate"><span class="pre">$table</span></code> to retrieve the table name…</p>
+</div>
+<div class="section" id="api">
+<span id="developer-api"></span><h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>How to use the API…</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">$stuff = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(</span>
+<span class="x">        &#39;\\Foo\\Bar\\Utility\\Stuff&#39;</span>
+<span class="x">);</span>
+<span class="x">$stuff-&gt;do();</span>
+</pre></div>
+</div>
+<p>or some other language:</p>
+<div class="highlight-javascript notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span>     <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span>
+<span class="hll">             <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class="hll">                     <span class="nx">doStuff</span><span class="p">();</span>
+</span><span class="hll">             <span class="p">}</span>
+</span>     <span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+           </div><!-- /.toBeIndexed -->
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo" class="contentinfo">
+      <p class="show_source">
+        <a href="../../_sources/Documentation/Developer/Index.rst.txt" rel="nofollow">
+          <span class="fa fa-binoculars"></span>&#32;View page source
+        </a>
+      </p>
+      <p class="show_copyright">
+            &copy; Copyright 2018, mosa
+      </p>
+      <p class="show_sphinx">
+        Built with <a href="http://sphinx-doc.org/" target="_blank">Sphinx</a> and
+        <a href="https://github.com/TYPO3-Documentation/t3SphinxThemeRtd" target="_blank">t3SphinxThemeRtd.</a>
+        Report theme issues <a href="https://github.com/TYPO3-Documentation/t3SphinxThemeRtd/issues" target="_blank">here.</a>
+      </p>
+      <p class="show_legalinfo">
+        <a href="https://typo3.org/legal-info/" rel="nofollow">
+          <span class="fa fa-legal"></span>&#32;Legal Info
+        </a>
+      </p>
+
+
+
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/jquery-ui/jquery-ui.min.js"></script>
+      <script type="text/javascript" src="../../_static/js/theme.js"></script>
+      <script type="text/javascript" src="../../_static/js/t3autocomplete.js"></script>
+
+  
+
+  
+   
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   <script type="text/javascript" id="idPiwikScriptPlaceholder"></script></body>
+</html>
