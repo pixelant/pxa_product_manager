@@ -3,8 +3,19 @@
 
 .. _user-manual:
 
-Users Manual
+Editors
 ============
+
+**Table of Contents**
+
+.. toctree::
+  :maxdepth: 2
+  :titlesonly:
+
+  ProductAttributes/Index
+  CategoryManagement/Index
+  ProductManagement/Index
+  ProductPluginSettings/Index
 
 Target group: **Editors**
 
