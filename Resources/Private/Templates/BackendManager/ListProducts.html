@@ -30,7 +30,7 @@
                                 <div class="row panel-title">
                                     <div class="col-xs-4">
                                         <a href="{pxa:recordEditUrl(uid: product.uid, table: 'tx_pxaproductmanager_domain_model_product')}"
-                                           title="{pxa:translate(key: 'be.edit_product', arguments: '{0: product.title}')}"
+                                           title="{pxa:translate(key: 'be.edit_product', arguments: '{0: product.name}')}"
                                            class="record-title">
                                             <f:format.raw>
                                                 <pxa:getRecordIcon uid="{product.uid}" table="tx_pxaproductmanager_domain_model_product"/>
@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="col-xs-8">
                                         <a class="btn btn-default"
-                                           title="{pxa:translate(key: 'be.edit_product', arguments: '{0: product.title}')}"
+                                           title="{pxa:translate(key: 'be.edit_product', arguments: '{0: product.name}')}"
                                            href="{pxa:recordEditUrl(uid: product.uid, table: 'tx_pxaproductmanager_domain_model_product')}">
                                             <core:icon identifier="actions-open"/>
                                         </a>
