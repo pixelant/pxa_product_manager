@@ -19,55 +19,53 @@ Editors
 
 Target group: **Editors**
 
-Here should be described how to use the extension from the editor perspective.
+The product viewing is based on a structure of categories, sub categories, attributes and products, that are stored in a separate system folder in the page tree.
+The pages containing products are using the :ref:`product module plugin <product-plugin-settings>`. If you use the filter view (Img. 1), categories and attributes can be used to filter the products. It is also possible to use the product structure (Img. 2) based on the categories, which will add a left hand side category menu instead. The final option is to show the products grouped by category (Img. 3) where the visitor can choose to show products as cards, or in a list.
 
-- How does it work?
+.. figure:: ../Images/Editors/img1.png
+  :width: 350px
+  :align: left
 
-  - works well when doing this.
+  (Img. 1)
 
-  - does not work so well when doing that
-    but we can live with it.
+.. figure:: ../Images/Editors/img2.png
+  :width: 350px
+  :align: left
 
-  - **mind indentation when nesting lists**.
+  (Img. 2)
 
-- How to install the plugin on a web page?
+.. figure:: ../Images/Editors/img3.png
+  :width: 500px
+  
+  (Img. 3)
 
-- What options are available?
+The order to create the different components are:
 
-Language should be non-technical, explaining, using small examples.
-Don't use to many acronyms unless they have been explained.
-Don't be confusing by putting information targeting administrators.
+Step 1. :ref:`Attributes <product-attribute>`.
 
-.. tip::
+Step 2. :ref:`Attribute sets <product-attribute-sets>`.
 
-   Take a break from time to time.
+Step 3. :ref:`Categories <product-category>`.
 
-Admonitions should be used to warn the users about potential
-pitfalls, attract their attention to important elements
-or just add some notes for for information (further reading,
-for example).
+Step 4. Subcategories
 
-.. important::
+Step 5. :ref:`Products <product-management>`.
 
-   Remember to always say "please" when asking your software to
-   do something.
+Step 6. Filters (only used in filter view, and attributes must be of certain type).
 
-Provide screenshots as needed for making things clear. When creating
-screenshots, try using the `Introduction Package <http://demo.typo3.org/>`_
-as a neutral TYPO3 CMS instance.
+With the product module main features you can:
 
-.. figure:: ../Images/UserManual/BackendView.png
-   :width: 500px
-   :alt: Backend view
+- Add :ref:`products <product-plugin-settings>`
+- Add :ref:`categories <product-category>`, :ref:`attributes <product-attribute>` and :ref:`attribute sets <product-attribute-sets>`
+- Add images to products and categories
+- Add related files and links to products
+- Add related products, accessories and sub productor to products
+- Use navigation through filter function, using side navigation based on categories or using the grouped view also based on categories
+- :ref:`Sorting products listing <product-plugin-settings>` on the frontend alphabetically or via date
+- Allows visitor to add products to wishlist
+- Allows visitor to compare products
 
-   Default Backend view (caption of the image)
+The product module standard feature does not support:
 
-   The Backend view of TYPO3 after the user has clicked on module "Page". (legend of the image)
-
-
-.. _user-faq:
-
-FAQ
----
-
-Possible subsection: FAQ
+- Payment
+- Ordering from product selection
