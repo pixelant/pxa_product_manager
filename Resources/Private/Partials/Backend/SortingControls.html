@@ -1,0 +1,32 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:if condition="{positions}">
+    <f:if condition="{positions.prev.{record.uid}}">
+        <f:then>
+            <a class="btn btn-default"
+               title="{pxa:translate(key: 'be.move_up')}"
+               href="{pxa:getMoveLink(uid: record.uid, positionUid: '{positions.prev.{record.uid}}', table: tableName)}">
+                <core:icon identifier="actions-move-up"/>
+            </a>
+        </f:then>
+        <f:else>
+            <span class="btn btn-default disabled">
+                <core:icon identifier="empty-empty"/>
+            </span>
+        </f:else>
+    </f:if>
+    <f:if condition="{positions.next.{record.uid}}">
+        <f:then>
+            <a class="btn btn-default"
+               title="{pxa:translate(key: 'be.move_down')}"
+               href="{pxa:getMoveLink(uid: record.uid, positionUid: '{positions.next.{record.uid}}', table: tableName)}">
+                <core:icon identifier="actions-move-down"/>
+            </a>
+        </f:then>
+        <f:else>
+            <span class="btn btn-default disabled">
+                <core:icon identifier="empty-empty"/>
+            </span>
+        </f:else>
+    </f:if>
+</f:if>
+</html>

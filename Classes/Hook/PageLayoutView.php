@@ -439,8 +439,11 @@ class PageLayoutView
         $info .= sprintf(
             '<b>%s</b>: %s<br>',
             $this->translate('flexform.product_sort_direction'),
-            $this->translate($settings['orderProductDirection'] === 'desc' ?
-                'flexform.sort_direction_desc' : 'flexform.sort_direction_asc')
+            $this->translate(
+                $settings['orderProductDirection'] === 'desc'
+                    ? 'flexform.sort_direction_desc'
+                    : 'flexform.sort_direction_asc'
+            )
         );
 
         return $info;
@@ -576,7 +579,7 @@ class PageLayoutView
         $info .= sprintf(
             '<b>%s</b>: %s<br>',
             $this->translate('flexform.order_recipients_emails'),
-            empty($recipients) ? $this->translate('flexform.no_recipients'): implode(', ', $recipients)
+            empty($recipients) ? $this->translate('flexform.no_recipients') : implode(', ', $recipients)
         );
 
         $info .= self::$hrMarkup;

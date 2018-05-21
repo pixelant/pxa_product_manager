@@ -185,7 +185,7 @@ class ProductRepository extends AbstractDemandRepository
     public function findProductsByCategories(
         array $categories,
         bool $showHidden = false,
-        array $orderings = ['name' => QueryInterface::ORDER_DESCENDING],
+        array $orderings = ['sorting' => QueryInterface::ORDER_ASCENDING],
         string $conjunction = 'and',
         int $limit = 0
     ) {

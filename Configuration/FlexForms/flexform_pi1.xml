@@ -512,6 +512,10 @@
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_customSorting</numIndex>
                                         <numIndex index="1">custom_sorting</numIndex>
                                     </numIndex>
+                                    <numIndex index="5" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_sorting</numIndex>
+                                        <numIndex index="1">sorting</numIndex>
+                                    </numIndex>
                                 </items>
                             </config>
                         </TCEforms>
