@@ -44,12 +44,6 @@
             <trans-unit id="be.extension_info.page_pid">
                 <source>Product single view page</source>
             </trans-unit>
-            <trans-unit id="be.extension_info.hide_compare_icon">
-                <source>Hide compare icon (Could be override by TS)</source>
-            </trans-unit>
-            <trans-unit id="be.extension_info.hide_wish_icon">
-                <source>Hide wish icon (Could be override by TS)</source>
-            </trans-unit>
             <trans-unit id="be.extension_info.no_title">
                 <source>[NO TITLE]</source>
             </trans-unit>
@@ -183,12 +177,6 @@
             </trans-unit>
             <trans-unit id="flexform.lists_sheet__title">
                 <source>Comapre &amp; Wish lists</source>
-            </trans-unit>
-            <trans-unit id="flexform.compare_list_enable">
-                <source>Show compare list icons</source>
-            </trans-unit>
-            <trans-unit id="flexform.wish_list_enable">
-                <source>Show wish list icons</source>
             </trans-unit>
             <trans-unit id="flexform.sortby_name">
                 <source>Name</source>

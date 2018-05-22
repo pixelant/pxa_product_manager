@@ -615,52 +615,6 @@
                 </el>
             </ROOT>
         </categoriesOrderings>
-        <productLists>
-            <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lists_sheet__title</sheetTitle>
-                </TCEforms>
-                <type>array</type>
-                <el>
-                    <settings.wishList.enable>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.wish_list_enable</label>
-                            <displayCond>
-                                <OR>
-                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->comparePreView;Product->compareView</numIndex>
-                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->compareView;Product->comparePreView</numIndex>
-                                    <numIndex index="3">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
-                                    <numIndex index="4">FIELD:sDEF.switchableControllerActions:=:Product->promotionList</numIndex>
-                                </OR>
-                            </displayCond>
-                            <config>
-                                <type>check</type>
-                                <default>0</default>
-                            </config>
-                        </TCEforms>
-                    </settings.wishList.enable>
-
-                    <settings.compareList.enable>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.compare_list_enable</label>
-                            <displayCond>
-                                <OR>
-                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->finishOrder</numIndex>
-                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
-                                    <numIndex index="3">FIELD:sDEF.switchableControllerActions:=:Product->promotionList</numIndex>
-                                </OR>
-                            </displayCond>
-                            <config>
-                                <type>check</type>
-                                <default>0</default>
-                            </config>
-                        </TCEforms>
-                    </settings.compareList.enable>
-                </el>
-            </ROOT>
-        </productLists>
         <filtering>
             <ROOT>
             <TCEforms>
