@@ -332,10 +332,6 @@ class PageLayoutView
             );
         }
 
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'compareList');
-        $info .= $this->getIconListOptionsInfo($settings, 'wishList');
-
         $info .= $this->getCategoriesOrderingsInfo($settings);
 
         return $info;
@@ -385,10 +381,6 @@ class PageLayoutView
                     ($settings[$checkbox] ? 'yes' : 'no'))
             );
         }
-
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'compareList');
-        $info .= $this->getIconListOptionsInfo($settings, 'wishList');
 
         if ((int)$settings['showNavigationListView'] === 1) {
             $info .= $this->getCategoriesOrderingsInfo($settings);
@@ -548,9 +540,6 @@ class PageLayoutView
             }
         }
 
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'wishList');
-
         return $info;
     }
 
@@ -578,9 +567,6 @@ class PageLayoutView
             $this->translate('flexform.order_recipients_emails'),
             empty($recipients) ? $this->translate('flexform.no_recipients'): implode(', ', $recipients)
         );
-
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'compareList');
 
         return $info;
     }
@@ -695,32 +681,5 @@ class PageLayoutView
         } else {
             $settings[$fieldNameParts[0]] = $value;
         }
-    }
-
-    /**
-     * Info for some of the list types
-     *
-     * @param array $settings
-     * @param string $listType
-     * @return string
-     */
-    protected function getIconListOptionsInfo(array $settings, string $listType): string
-    {
-        switch ($listType) {
-            case 'compareList':
-                $langKey = 'be.extension_info.hide_compare_icon';
-                break;
-            default:
-                $langKey = 'be.extension_info.hide_wish_icon';
-        }
-
-        $info = sprintf(
-            '<b>%s:</b> %s',
-            $this->translate($langKey),
-            $this->translate('be.extension_info.checkbox_' .
-                ((int)$settings[$listType]['enable'] ? 'no' : 'yes'))
-        );
-
-        return $info . '<br>';
     }
 }

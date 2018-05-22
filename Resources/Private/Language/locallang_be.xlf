@@ -184,12 +184,6 @@
             <trans-unit id="flexform.lists_sheet__title">
                 <source>Comapre &amp; Wish lists</source>
             </trans-unit>
-            <trans-unit id="flexform.compare_list_enable">
-                <source>Show compare list icons</source>
-            </trans-unit>
-            <trans-unit id="flexform.wish_list_enable">
-                <source>Show wish list icons</source>
-            </trans-unit>
             <trans-unit id="flexform.sortby_name">
                 <source>Name</source>
             </trans-unit>
