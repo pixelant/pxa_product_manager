@@ -89,9 +89,12 @@ class BackendManagerController extends ActionController
      */
     public function listProductsAction(Category $category)
     {
+        $products = $this->productRepository->findProductsByCategories([$category], true);
+
         $this->view->assignMultiple([
-            'products' =>$this->productRepository->findProductsByCategories([$category], true),
+            'products' => $products,
             'activeCategory' => $category,
+            'productsPositions' => $this->generatePositionsArray($products),
             'newRecordUrl' => $this->buildNewRecordUrl('tx_pxaproductmanager_domain_model_product', $category),
             'categoryBreadCrumbs' => $this->buildCategoryBreadCrumbs($category),
             'pageTitle' => BackendUtility::getRecord('pages', $this->pid, 'title')['title']

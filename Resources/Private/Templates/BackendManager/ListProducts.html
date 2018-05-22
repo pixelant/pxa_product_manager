@@ -45,6 +45,9 @@
                                             <core:icon identifier="actions-open"/>
                                         </a>
 
+                                        <f:render partial="Backend/SortingControls"
+                                                  arguments="{positions: productsPositions, record: product, tableName: 'tx_pxaproductmanager_domain_model_product'}"/>
+
                                         <f:render partial="Backend/TranslationsButton" arguments="{uid: product.uid, translations: translations}"/>
                                     </div>
                                 </div>

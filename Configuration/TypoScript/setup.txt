@@ -119,7 +119,7 @@ plugin.tx_pxaproductmanager {
             allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy
         }
 
-        orderByAllowed = name,tstamp,crdate,categories,custom_sorting
+        orderByAllowed = name,tstamp,crdate,categories,custom_sorting,sorting
 
         attributes {
             includeSkuInAttributeListing = {$plugin.tx_pxaproductmanager.settings.attributes.includeSkuInAttributeListing}
