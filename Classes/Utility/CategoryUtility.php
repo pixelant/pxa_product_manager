@@ -81,22 +81,22 @@ class CategoryUtility
         /** @var Category $parent */
         $parent = $category->getParent();
 
-        $parentMet = array_key_exists($parent->getUid(), $results);
-        if ($parentMet && (TYPO3_MODE === 'BE' || MainUtility::getTSFE()->beUserLogin)) {
-            throw new \RuntimeException(
-            // @codingStandardsIgnoreStart
-                'Same parent with UID "' . $parent->getUid() . '" was met second time, that should never happen. Check you categories relation.',
-                // @codingStandardsIgnoreEnd
-                1527151818303
-            );
-        }
+        if (is_object($parent)) {
+            $parentMet = array_key_exists($parent->getUid(), $results);
 
-        if (is_object($parent)
-            && $parent->getUid() !== $category->getUid()
-            && !$parentMet
-        ) {
-            $results[$parent->getUid()] = $parent;
-            $results = self::getParentCategories($parent, $results, ++$level);
+            if ($parentMet && (TYPO3_MODE === 'BE' || MainUtility::getTSFE()->beUserLogin)) {
+                throw new \RuntimeException(
+                // @codingStandardsIgnoreStart
+                    'Same parent with UID "' . $parent->getUid() . '" was met second time, that should never happen. Check you categories relation.',
+                    // @codingStandardsIgnoreEnd
+                    1527151818303
+                );
+            }
+
+            if ($parent->getUid() !== $category->getUid() && !$parentMet) {
+                $results[$parent->getUid()] = $parent;
+                $results = self::getParentCategories($parent, $results, ++$level);
+            }
         }
 
         return $results;
