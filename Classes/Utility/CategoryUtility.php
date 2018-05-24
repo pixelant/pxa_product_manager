@@ -69,16 +69,34 @@ class CategoryUtility
      *
      * @param Category $category
      * @param array $results
+     * @param int $level
      * @return array
      */
-    public static function getParentCategories(Category $category, array $results = []): array
+    public static function getParentCategories(Category $category, array $results = [], int $level = 0): array
     {
+        if ($level > 50) {
+            throw new \RuntimeException('Rich maximum recursive level', 1527144059977);
+        }
+
         /** @var Category $parent */
         $parent = $category->getParent();
 
-        if (is_object($parent) && $parent->getUid() != $category->getUid()) {
-            $results[] = $parent;
-            $results = self::getParentCategories($parent, $results);
+        if (is_object($parent)) {
+            $parentMet = array_key_exists($parent->getUid(), $results);
+
+            if ($parentMet && (TYPO3_MODE === 'BE' || MainUtility::getTSFE()->beUserLogin)) {
+                throw new \RuntimeException(
+                // @codingStandardsIgnoreStart
+                    'Same parent with UID "' . $parent->getUid() . '" was met second time, that should never happen. Check you categories relation.',
+                    // @codingStandardsIgnoreEnd
+                    1527151818303
+                );
+            }
+
+            if ($parent->getUid() !== $category->getUid() && !$parentMet) {
+                $results[$parent->getUid()] = $parent;
+                $results = self::getParentCategories($parent, $results, ++$level);
+            }
         }
 
         return $results;
