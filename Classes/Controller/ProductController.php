@@ -504,27 +504,37 @@ class ProductController extends AbstractController
      */
     protected function sendOrderEmail(array $orderFields, array $orderProducts)
     {
-        $template = $this->settings['wishList']['orderForm']['emailTemplatePath'];
-
-        $products = $this->getProductByUidsList(array_keys($orderProducts));
-
-        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
-        // @TODO make field name configurable
-        if (!empty($orderFields['email']['value'])
-            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
-            $recipients[] = $orderFields['email']['value'];
-        }
+        $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'];
+        $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'];
 
         /** @var OrderMailService $orderMailService */
         $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
         $orderMailService
-            ->generateMailBody($template, $orderFields, $orderProducts, $products)
-            ->setSubject($this->translate('fe.email.orderForm.subject'))
-            ->setReceivers($recipients)
             ->setSenderName($this->settings['email']['senderName'])
             ->setSenderEmail($this->settings['email']['senderEmail']);
 
-        $orderMailService->send();
+        // Send email to admins
+        $products = $this->getProductByUidsList(array_keys($orderProducts));
+
+        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
+
+        $orderMailService
+            ->generateMailBody($adminTemplate, $orderFields, $orderProducts, $products)
+            ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
+            ->setReceivers($recipients)
+            ->send();
+
+        // Send email to user if enabled
+        // @TODO make field name configurable
+        if (!empty($orderFields['email']['value'])
+            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
+            $recipients = [$orderFields['email']['value']];
+            $orderMailService
+                ->generateMailBody($userTemplate, $orderFields, $orderProducts, $products)
+                ->setSubject($this->translate('fe.userEmail.orderForm.subject'))
+                ->setReceivers($recipients)
+                ->send();
+        }
     }
 
     /**

@@ -5,6 +5,7 @@
 <f:layout name="Email" />
 
 <f:section name="main">
+    <h4><f:translate key="fe.userEmail.orderForm.title" extensionName="PxaProductManager" /></h4>
     <table border="1" cellpadding="2" cellspacing="2">
         <thead>
         <tr>
@@ -22,7 +23,7 @@
                 <th scope="row">{i.cycle}</th>
                 <td>{product.uid}</td>
                 <td>{product.name}</td>
-                <td><f:if condition="{product.sku}" then="{product.sku}" else=" -- "></f:if></td>
+                <td><f:if condition="{product.sku}" then="{product.sku}" else=" -- "/></td>
                 <td>
                     <f:if condition="{ppm:isPricingEnabled()}">
                         <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatPrice}" />
@@ -45,12 +46,6 @@
     </table>
 
     <br />
-    <h4><f:translate key="fe.email.orderForm.userFields" extensionName="PxaProductManager" /></h4>
-    <f:for each="{orderFields}" key="field" as="fieldConf">
-        <p>
-            <strong><f:translate key="fe.fields.{field}" default="{field}" extensionName="PxaProductManager" /></strong>:
-            <f:if condition="{fieldConf.feUserValue}" then="{fieldConf.feUserValue}" else="{fieldConf.value}"/>
-        </p>
-    </f:for>
+    <p><f:translate key="fe.userEmail.orderForm.admin_contact" extensionName="PxaProductManager" /></p>
 </f:section>
 </html>
