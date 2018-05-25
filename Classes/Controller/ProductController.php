@@ -49,6 +49,13 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 class ProductController extends AbstractController
 {
     /**
+     * Terms statuses
+     */
+    const ACCEPT_TERMS_OK = 1;
+    const DECLINE_TERMS = 0;
+    const TERMS_NOT_REQUIRED = -1;
+
+    /**
      * Add JS labels for each action
      */
     public function initializeAction()
@@ -235,10 +242,13 @@ class ProductController extends AbstractController
             try {
                 $orderProducts = $this->request->getArgument('orderProducts');
                 $values = $this->request->getArgument('orderFields');
+                $termsStatus = $this->getAcceptTermsStatus();
 
-                if ($this->validateOrderFields($orderFormFields, $values)) {
+                if ($termsStatus !== self::DECLINE_TERMS & $this->validateOrderFields($orderFormFields, $values)) {
                     $this->sendOrderEmail($orderFormFields, $orderProducts);
                     $this->redirect('finishOrder');
+                } else {
+                    $this->view->assign('acceptTerms', $termsStatus);
                 }
             } catch (NoSuchArgumentException $exception) {
                 // orderProducts and orderFields are required to send email
@@ -494,6 +504,28 @@ class ProductController extends AbstractController
         $this->view->assign('products', $products);
     }
 
+    /**
+     * Return status of terms accept
+     * -1 Not required
+     * 0 Not accepted and enabled
+     * 1 Accepted and enabled
+     *
+     * @return int
+     */
+    protected function getAcceptTermsStatus(): int
+    {
+        if ((int)$this->settings['needToAcceptOrderTerms'] === 1) {
+            try {
+                return (int)$this->request->getArgument('acceptTerms') === 1
+                    ? self::ACCEPT_TERMS_OK
+                    : self::DECLINE_TERMS;
+            } catch (NoSuchArgumentException $exception) {
+                return self::DECLINE_TERMS;
+            }
+        }
+
+        return self::TERMS_NOT_REQUIRED;
+    }
 
     /**
      * Send emails with order

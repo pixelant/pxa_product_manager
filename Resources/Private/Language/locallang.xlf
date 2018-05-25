@@ -166,6 +166,12 @@
             <trans-unit id="fe.validation_error.email">
                 <source>This is not a valid E-mail address</source>
             </trans-unit>
+            <trans-unit id="fe.accept_terms">
+                <source>Accept terms of usage</source>
+            </trans-unit>
+            <trans-unit id="fe.terms_link">
+                <source>Terms of usage</source>
+            </trans-unit>
 
             <trans-unit id="fe.userEmail.orderForm.subject">
                 <source>Thank you for your order</source>

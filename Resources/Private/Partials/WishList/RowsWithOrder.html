@@ -50,6 +50,28 @@
                         <f:for each="{orderFormFields}" key="field" as="fieldConf">
                             <f:render partial="OrderFormFields/{fieldConf.type}" arguments="{fieldConf: fieldConf, field: field}" />
                         </f:for>
+                        <f:if condition="{settings.needToAcceptOrderTerms}">
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="checkbox{f:if(condition: '{acceptTerms} == 0', then: ' has-error')}">
+                                        <label>
+                                            <f:form.checkbox value="1" name="acceptTerms" checked="{f:if(condition: '{acceptTerms} == 1', then: '1')}"/> <f:translate key="fe.accept_terms" />
+                                        </label>
+                                        <f:if condition="{acceptTermsError}">
+                                            <p class="text-danger"><f:translate key="fe.validation_error.required" /></p>
+                                        </f:if>
+                                        <f:if condition="{settings.pageTermsLink}">
+                                            <br>
+                                            <em>
+                                                <f:link.typolink parameter="{settings.pageTermsLink}" target="_blank">
+                                                    <f:translate key="fe.terms_link" />
+                                                </f:link.typolink>
+                                            </em>
+                                        </f:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </f:if>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-default"><f:translate key="fe.make_order" /></button>

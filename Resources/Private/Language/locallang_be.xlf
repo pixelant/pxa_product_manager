@@ -245,6 +245,12 @@
             <trans-unit id="flexform.custom_products_list.products_categories">
                 <source>Products categories</source>
             </trans-unit>
+            <trans-unit id="flexform.need_to_accept_order_terms">
+                <source>User need to accept terms before making order</source>
+            </trans-unit>
+            <trans-unit id="flexform.page_terms_link">
+                <source>Accept terms link</source>
+            </trans-unit>
             <!--FlexForm:END-->
 
             <!--Extension manager configuration:START-->

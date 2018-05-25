@@ -650,13 +650,43 @@
                 </el>
             </ROOT>
         </filtering>
-        <orderFucntion>
+        <orderFunction>
             <ROOT>
                 <TCEforms>
                     <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_function_sheet__title</sheetTitle>
                 </TCEforms>
                 <type>array</type>
                 <el>
+                    <settings.needToAcceptOrderTerms>
+                        <TCEforms>
+                            <onChange>reload</onChange>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.need_to_accept_order_terms</label>
+                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.needToAcceptOrderTerms>
+
+                    <settings.pageTermsLink>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.page_terms_link</label>
+                            <displayCond>FIELD:settings.needToAcceptOrderTerms:REQ:true</displayCond>
+                            <config>
+                                <type>input</type>
+                                <renderType>inputLink</renderType>
+                                <fieldControl>
+                                    <linkPopup>
+                                        <options>
+                                            <blindLinkOptions>file,folder,mail,spec</blindLinkOptions>
+                                        </options>
+                                    </linkPopup>
+                                </fieldControl>
+                            </config>
+                        </TCEforms>
+                    </settings.pageTermsLink>
+
                     <settings.orderRecipientsEmails>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_recipients_emails</label>
@@ -670,6 +700,6 @@
                     </settings.orderRecipientsEmails>
                 </el>
             </ROOT>
-        </orderFucntion>
+        </orderFunction>
     </sheets>
 </T3DataStructure>
