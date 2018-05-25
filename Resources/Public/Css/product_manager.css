@@ -24,6 +24,9 @@
   float: none;
   margin: 0 -5px;
 }
+.tx-pxa-product-manager .item-order-row .order-clear__icon.in-progress svg {
+  display: none;
+}
 .tx-pxa-product-manager .item-order-header > div {
   vertical-align: auto;
   display: inline-block;
