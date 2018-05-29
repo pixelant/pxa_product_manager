@@ -650,7 +650,7 @@ class ProductControllerTest extends UnitTestCase
     /**
      * @test
      */
-    public function ifTermsAreNotReuqiredGetNotRequiredTermsStatus()
+    public function ifTermsAreNotRequiredGetNotRequiredTermsStatus()
     {
         $settings = [
             'needToAcceptOrderTerms' => 0
