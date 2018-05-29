@@ -564,14 +564,61 @@ class PageLayoutView
                 ($settings['enableOrderFunction'] ? 'yes' : 'no'))
         );
 
-        $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.order_recipients_emails'),
-            empty($recipients) ? $this->translate('flexform.no_recipients') : implode(', ', $recipients)
-        );
+        if ($settings['enableOrderFunction']) {
+            $info .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->translate('flexform.order_form_require_login'),
+                $this->translate('be.extension_info.checkbox_' .
+                    ($settings['orderFormRequireLogin'] ? 'yes' : 'no'))
+            );
+            $info .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->translate('flexform.need_to_accept_order_terms'),
+                $this->translate('be.extension_info.checkbox_' .
+                    ($settings['needToAcceptOrderTerms'] ? 'yes' : 'no'))
+            );
+
+            if ($settings['needToAcceptOrderTerms']) {
+                $info .= sprintf(
+                    '<b>%s</b>: %s<br>',
+                    $this->translate('flexform.page_terms_link'),
+                    $this->getLinkInfo($settings['pageTermsLink'])
+                );
+            }
+
+            $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
+            $info .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->translate('flexform.order_recipients_emails'),
+                empty($recipients) ? $this->translate('flexform.no_recipients') : implode(', ', $recipients)
+            );
+        }
 
         return $info;
+    }
+
+    /**
+     * Get short info about typolink
+     *
+     * @param string $typoLink
+     * @return string
+     */
+    protected function getLinkInfo(string $typoLink): string
+    {
+        if (empty($typoLink)) {
+            return $this->translate('be.extension_info.none');
+        }
+
+        if (GeneralUtility::isFirstPartOfStr($typoLink, 't3://page?uid=')) {
+            $pageUid = (int)substr($typoLink, 14);
+            $pageRecord = BackendUtility::readPageAccess($pageUid, '1=1');
+            // Is this a real page
+            if ($pageRecord['uid']) {
+                return $pageRecord['_thePathFull'] . '[' . $pageRecord['uid'] . ']';
+            }
+        }
+
+        return $typoLink;
     }
 
     /**

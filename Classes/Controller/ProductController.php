@@ -49,6 +49,13 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 class ProductController extends AbstractController
 {
     /**
+     * Terms statuses
+     */
+    const ACCEPT_TERMS_OK = 1;
+    const DECLINE_TERMS = 0;
+    const TERMS_NOT_REQUIRED = -1;
+
+    /**
      * Add JS labels for each action
      */
     public function initializeAction()
@@ -229,16 +236,23 @@ class ProductController extends AbstractController
      */
     public function wishListAction(bool $sendOrder = false)
     {
+        $orderFormAllowed = $this->isOrderFormAllowed();
+
         $orderFormFields = $this->getProcessedOrderFormFields();
 
-        if ($sendOrder) {
+        if ($sendOrder && $orderFormAllowed) {
             try {
                 $orderProducts = $this->request->getArgument('orderProducts');
                 $values = $this->request->getArgument('orderFields');
+                $termsStatus = $this->getAcceptTermsStatus();
 
-                if ($this->validateOrderFields($orderFormFields, $values)) {
+                if ($termsStatus !== self::DECLINE_TERMS & $this->validateOrderFields($orderFormFields, $values)) {
                     $this->sendOrderEmail($orderFormFields, $orderProducts);
                     $this->redirect('finishOrder');
+                } else {
+                    $this->view
+                        ->assign('acceptTerms', $termsStatus)
+                        ->assign('acceptTermsError', $termsStatus === self::DECLINE_TERMS);
                 }
             } catch (NoSuchArgumentException $exception) {
                 // orderProducts and orderFields are required to send email
@@ -264,7 +278,8 @@ class ProductController extends AbstractController
             'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
             'orderFormFields' => $orderFormFields,
             'orderProducts' => $orderState ?? [],
-            'sendOrder' => $sendOrder
+            'sendOrder' => $sendOrder,
+            'orderFormAllowed' => $orderFormAllowed
         ]);
     }
 
@@ -494,6 +509,40 @@ class ProductController extends AbstractController
         $this->view->assign('products', $products);
     }
 
+    /**
+     * Return status of terms accept
+     * -1 Not required
+     * 0 Not accepted and enabled
+     * 1 Accepted and enabled
+     *
+     * @return int
+     */
+    protected function getAcceptTermsStatus(): int
+    {
+        if ((int)$this->settings['needToAcceptOrderTerms'] === 1) {
+            try {
+                return (int)$this->request->getArgument('acceptTerms') === 1
+                    ? self::ACCEPT_TERMS_OK
+                    : self::DECLINE_TERMS;
+            } catch (NoSuchArgumentException $exception) {
+                return self::DECLINE_TERMS;
+            }
+        }
+
+        return self::TERMS_NOT_REQUIRED;
+    }
+
+    /**
+     * Check if order form is allowed
+     *
+     * @return bool
+     */
+    protected function isOrderFormAllowed(): bool
+    {
+        $requireLogin = (int)$this->settings['orderFormRequireLogin'] === 1;
+
+        return !$requireLogin || MainUtility::getTSFE()->loginUser;
+    }
 
     /**
      * Send emails with order
@@ -504,27 +553,37 @@ class ProductController extends AbstractController
      */
     protected function sendOrderEmail(array $orderFields, array $orderProducts)
     {
-        $template = $this->settings['wishList']['orderForm']['emailTemplatePath'];
-
-        $products = $this->getProductByUidsList(array_keys($orderProducts));
-
-        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
-        // @TODO make field name configurable
-        if (!empty($orderFields['email']['value'])
-            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
-            $recipients[] = $orderFields['email']['value'];
-        }
+        $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'];
+        $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'];
 
         /** @var OrderMailService $orderMailService */
         $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
         $orderMailService
-            ->generateMailBody($template, $orderFields, $orderProducts, $products)
-            ->setSubject($this->translate('fe.email.orderForm.subject'))
-            ->setReceivers($recipients)
             ->setSenderName($this->settings['email']['senderName'])
             ->setSenderEmail($this->settings['email']['senderEmail']);
 
-        $orderMailService->send();
+        // Send email to admins
+        $products = $this->getProductByUidsList(array_keys($orderProducts));
+
+        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
+
+        $orderMailService
+            ->generateMailBody($adminTemplate, $orderFields, $orderProducts, $products)
+            ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
+            ->setReceivers($recipients)
+            ->send();
+
+        // Send email to user if enabled
+        // @TODO make field name configurable
+        if (!empty($orderFields['email']['value'])
+            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
+            $recipients = [$orderFields['email']['value']];
+            $orderMailService
+                ->generateMailBody($userTemplate, $orderFields, $orderProducts, $products)
+                ->setSubject($this->translate('fe.userEmail.orderForm.subject'))
+                ->setReceivers($recipients)
+                ->send();
+        }
     }
 
     /**
