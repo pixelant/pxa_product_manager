@@ -224,6 +224,24 @@
             </trans-unit>
             <!--Link TCA:END-->
 
+            <!--Order TCA:START-->
+            <trans-unit id="tx_pxaproductmanager_domain_model_order">
+                <source>Products Order</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.products">
+                <source>Ordered products</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.order_information">
+                <source>Order information</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.fe_user">
+                <source>Frontend user</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.fe_user.none_is_selected">
+                <source>No user connected</source>
+            </trans-unit>
+            <!--Order TCA:END-->
+
             <!--sys_file_reference TCA:START-->
             <trans-unit id="sys_file_reference.pxapm_use_in_listing">
                 <source>Use in product listing</source>
