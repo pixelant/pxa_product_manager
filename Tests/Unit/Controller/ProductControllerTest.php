@@ -713,6 +713,60 @@ class ProductControllerTest extends UnitTestCase
         $this->assertEquals(ProductController::ACCEPT_TERMS_OK, $mockedController->_call('getAcceptTermsStatus'));
     }
 
+    /**
+     * @test
+     */
+    public function loginRequiredAndNonLoggedInUserDoesNotAllowOrderForm()
+    {
+        $tsfe = $this->createMock(TypoScriptFrontendController::class);
+        $GLOBALS['TSFE'] = $tsfe;
+
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $mockedController->_set('settings', ['orderFormRequireLogin' => 1]);
+
+        $this->assertFalse($mockedController->_call('isOrderFormAllowed'));
+        unset($GLOBALS['TSFE']);
+    }
+
+    /**
+     * @test
+     */
+    public function loginRequiredAndLoggedInUserAllowOrderForm()
+    {
+        $tsfe = $this->createMock(TypoScriptFrontendController::class);
+        $tsfe->loginUser = true;
+        $GLOBALS['TSFE'] = $tsfe;
+
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $mockedController->_set('settings', ['orderFormRequireLogin' => 1]);
+
+        $this->assertTrue($mockedController->_call('isOrderFormAllowed'));
+        unset($GLOBALS['TSFE']);
+    }
+
+    /**
+     * @test
+     */
+    public function loginNotRequiredAllowOrderForm()
+    {
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $mockedController->_set('settings', ['orderFormRequireLogin' => 0]);
+
+        $this->assertTrue($mockedController->_call('isOrderFormAllowed'));
+    }
+
     protected function getAttributesStorage($value, $amount, $isOption = false)
     {
         $objectStorage = new ObjectStorage();

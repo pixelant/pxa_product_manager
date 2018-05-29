@@ -236,9 +236,11 @@ class ProductController extends AbstractController
      */
     public function wishListAction(bool $sendOrder = false)
     {
+        $orderFormAllowed = $this->isOrderFormAllowed();
+
         $orderFormFields = $this->getProcessedOrderFormFields();
 
-        if ($sendOrder) {
+        if ($sendOrder && $orderFormAllowed) {
             try {
                 $orderProducts = $this->request->getArgument('orderProducts');
                 $values = $this->request->getArgument('orderFields');
@@ -276,7 +278,8 @@ class ProductController extends AbstractController
             'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
             'orderFormFields' => $orderFormFields,
             'orderProducts' => $orderState ?? [],
-            'sendOrder' => $sendOrder
+            'sendOrder' => $sendOrder,
+            'orderFormAllowed' => $orderFormAllowed
         ]);
     }
 
@@ -527,6 +530,18 @@ class ProductController extends AbstractController
         }
 
         return self::TERMS_NOT_REQUIRED;
+    }
+
+    /**
+     * Check if order form is allowed
+     *
+     * @return bool
+     */
+    protected function isOrderFormAllowed(): bool
+    {
+        $requireLogin = (int)$this->settings['orderFormRequireLogin'] === 1;
+
+        return !$requireLogin || MainUtility::getTSFE()->loginUser;
     }
 
     /**

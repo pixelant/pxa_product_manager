@@ -657,6 +657,17 @@
                 </TCEforms>
                 <type>array</type>
                 <el>
+                    <settings.orderFormRequireLogin>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_require_login</label>
+                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.orderFormRequireLogin>
+
                     <settings.needToAcceptOrderTerms>
                         <TCEforms>
                             <onChange>reload</onChange>
