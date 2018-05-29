@@ -12,6 +12,7 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -644,6 +645,72 @@ class ProductControllerTest extends UnitTestCase
             $result,
             $fields
         );
+    }
+
+    /**
+     * @test
+     */
+    public function ifTermsAreNotReuqiredGetNotRequiredTermsStatus()
+    {
+        $settings = [
+            'needToAcceptOrderTerms' => 0
+        ];
+
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $mockedController->_set('settings', $settings);
+
+        $this->assertEquals(ProductController::TERMS_NOT_REQUIRED, $mockedController->_call('getAcceptTermsStatus'));
+    }
+
+    /**
+     * @test
+     */
+    public function ifTermsRequiredAndNoArgumentDeclinedStatusReturned()
+    {
+        $settings = [
+            'needToAcceptOrderTerms' => 1
+        ];
+        $request = $this->createMock(Request::class);
+
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $mockedController->_set('settings', $settings);
+        $mockedController->_set('request', $request);
+
+        $this->assertEquals(ProductController::DECLINE_TERMS, $mockedController->_call('getAcceptTermsStatus'));
+    }
+
+    /**
+     * @test
+     */
+    public function ifTermsRequiredAndArgumentExistCorrectStatusAcceptReturned()
+    {
+        $settings = [
+            'needToAcceptOrderTerms' => 1
+        ];
+        $request = $this->createPartialMock(Request::class, ['getArgument']);
+        $request
+            ->expects($this->once())
+            ->method('getArgument')
+            ->with('acceptTerms')
+            ->willReturn(1);
+
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $mockedController->_set('settings', $settings);
+        $mockedController->_set('request', $request);
+
+        $this->assertEquals(ProductController::ACCEPT_TERMS_OK, $mockedController->_call('getAcceptTermsStatus'));
     }
 
     protected function getAttributesStorage($value, $amount, $isOption = false)

@@ -248,7 +248,9 @@ class ProductController extends AbstractController
                     $this->sendOrderEmail($orderFormFields, $orderProducts);
                     $this->redirect('finishOrder');
                 } else {
-                    $this->view->assign('acceptTerms', $termsStatus);
+                    $this->view
+                        ->assign('acceptTerms', $termsStatus)
+                        ->assign('acceptTermsError', $termsStatus === self::DECLINE_TERMS);
                 }
             } catch (NoSuchArgumentException $exception) {
                 // orderProducts and orderFields are required to send email

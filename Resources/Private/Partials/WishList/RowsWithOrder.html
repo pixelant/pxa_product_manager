@@ -53,7 +53,7 @@
                         <f:if condition="{settings.needToAcceptOrderTerms}">
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <div class="checkbox{f:if(condition: '{acceptTerms} == 0', then: ' has-error')}">
+                                    <div class="checkbox{f:if(condition: '{acceptTermsError}', then: ' has-error')}">
                                         <label>
                                             <f:form.checkbox value="1" name="acceptTerms" checked="{f:if(condition: '{acceptTerms} == 1', then: '1')}"/> <f:translate key="fe.accept_terms" />
                                         </label>
