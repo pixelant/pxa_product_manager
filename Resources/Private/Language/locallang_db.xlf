@@ -226,13 +226,10 @@
 
             <!--Order TCA:START-->
             <trans-unit id="tx_pxaproductmanager_domain_model_order">
-                <source>Products Order</source>
+                <source>Order</source>
             </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_order.products">
                 <source>Ordered products</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_order.order_information">
-                <source>Order information</source>
             </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_order.fe_user">
                 <source>Frontend user</source>

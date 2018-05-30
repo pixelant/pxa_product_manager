@@ -21,13 +21,14 @@ return [
             'endtime' => 'endtime',
         ],
         'searchFields' => 'products',
-        'iconfile' => 'EXT:pxa_pixelant/Resources/Public/Icons/tx_pxaproductmanager_domain_model_order.gif'
+        'hideTable' => true,
+        'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/cart_tca.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, serialized_products_quantity, serialized_order_fields',
     ],
     'types' => [
-        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, order_information, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
     ],
     'columns' => [
         'sys_language_uid' => [
@@ -110,8 +111,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.pid = ###CURRENT_PID###' .
-                    ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid <= 0',
+                'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.sys_language_uid <= 0',
                 'MM' => 'tx_pxaproductmanager_order_product_mm',
                 'size' => 10,
                 'autoSizeMax' => 30,
@@ -126,15 +126,6 @@ return [
                     ]
                 ]
             ],
-        ],
-        'order_information' => [
-            'exclude' => 0,
-            'label' => $ll . '.order_information',
-            'config' => [
-                'type' => 'text',
-                'cols' => 40,
-                'rows' => 15
-            ]
         ],
         'fe_user' => [
             'exclude' => 0,
@@ -157,6 +148,20 @@ return [
                     ]
                 ]
             ],
+        ],
+        'serialized_order_fields' => [
+            'exclude' => 1,
+            'label' => 'serialized_order_fields',
+            'config' => [
+                'type' => 'passthrough'
+            ]
+        ],
+        'serialized_products_quantity' => [
+            'exclude' => 1,
+            'label' => 'serialized_products_quantity',
+            'config' => [
+                'type' => 'passthrough'
+            ]
         ],
     ],
 ];
