@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
@@ -12,6 +13,8 @@ use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
+use TYPO3\CMS\Extbase\Domain\Repository\FrontendUserRepository;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -257,6 +260,7 @@ class ProductController extends AbstractController
 
                 if ($termsStatus !== self::DECLINE_TERMS & $this->validateOrderFields($orderFormFields, $values)) {
                     $this->sendOrderEmail($orderFormFields, $orderProducts);
+                    $this->saveOrder($orderFormFields, $orderProducts);
                     $this->redirect('finishOrder');
                 } else {
                     $this->view
@@ -565,6 +569,7 @@ class ProductController extends AbstractController
     {
         $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'];
         $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'];
+        $products = $this->getProductByUidsList(array_keys($orderProducts));
 
         /** @var OrderMailService $orderMailService */
         $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
@@ -573,10 +578,7 @@ class ProductController extends AbstractController
             ->setSenderEmail($this->settings['email']['senderEmail']);
 
         // Send email to admins
-        $products = $this->getProductByUidsList(array_keys($orderProducts));
-
         $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
-
         $orderMailService
             ->generateMailBody($adminTemplate, $orderFields, $orderProducts, $products)
             ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
@@ -594,6 +596,40 @@ class ProductController extends AbstractController
                 ->setReceivers($recipients)
                 ->send();
         }
+    }
+
+    /**
+     * Save order
+     *
+     * @param array $orderFields
+     * @param array $orderProducts
+     * @return void
+     */
+    protected function saveOrder(array $orderFields, array $orderProducts)
+    {
+        $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
+
+        $order = $this->objectManager->get(Order::class);
+
+        $order->setOrderFields($orderFields);
+        $order->setProductsQuantity($orderProducts);
+
+        /** @var Product $product */
+        foreach ($products as $product) {
+            $order->addProduct($product);
+        }
+
+        if (MainUtility::getTSFE()->loginUser) {
+            $uid = (int)MainUtility::getTSFE()->fe_user->user['uid'];
+            /** @var FrontendUser $feUser */
+            $feUser = $this->objectManager->get(FrontendUserRepository::class)->findByUid($uid);
+
+            if ($feUser !== null) {
+                $order->setFeUser($feUser);
+            }
+        }
+
+        $this->orderRepository->add($order);
     }
 
     /**

@@ -131,8 +131,8 @@ return [
             'label' => $ll . 'tx_pxaproductmanager_domain_model_link.link',
             'config' => [
                 'type' => 'input',
-                'size' => '30',
-                'max' => '256',
+                'size' => 30,
+                'max' => 256,
                 'eval' => 'trim,required',
                 'renderType' => 'inputLink',
                 'softref' => 'typolink'
