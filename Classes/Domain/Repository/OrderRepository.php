@@ -2,6 +2,10 @@
 declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
+use TYPO3\CMS\Core\Database\QueryGenerator;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /***************************************************************
@@ -33,5 +37,28 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class OrderRepository extends Repository
 {
+    /**
+     * @var array
+     */
+    protected $defaultOrderings = array(
+        'crdate' => QueryInterface::ORDER_DESCENDING
+    );
 
+    /**
+     * Find all order in current root line
+     * @param int $pid
+     * @return QueryResultInterface
+     */
+    public function findAllInRootLine(int $pid): QueryResultInterface
+    {
+        $queryGenerator = $this->objectManager->get(QueryGenerator::class);
+        $storage = $queryGenerator->getTreeList($pid, 99, 0, 1);
+
+        $query = $this->createQuery();
+        $query->getQuerySettings()
+            ->setStoragePageIds(GeneralUtility::intExplode(',', $storage))
+            ->setRespectSysLanguage(false);
+
+        return $query->execute();
+    }
 }

@@ -45,6 +45,14 @@ class Order extends AbstractDomainObject
     protected $products = null;
 
     /**
+     * be users
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUser>
+     * @lazy
+     */
+    protected $seenByBeUsers = null;
+
+    /**
      * @var \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
      */
     protected $feUser = null;
@@ -79,6 +87,7 @@ class Order extends AbstractDomainObject
     protected function initStorageObjects()
     {
         $this->products = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->seenByBeUsers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -122,6 +131,49 @@ class Order extends AbstractDomainObject
     public function setProducts(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $products)
     {
         $this->products = $products;
+    }
+
+    /**
+     * Adds a BE user
+     *
+     * @param \TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser
+     * @return void
+     */
+    public function addSeenByBeUsers(\TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser)
+    {
+        $this->seenByBeUsers->attach($beUser);
+    }
+
+    /**
+     * Removes a BE user
+     *
+     * @param \TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser
+     * @return void
+     */
+    public function removeSeenByBeUsers(\TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser)
+    {
+        $this->seenByBeUsers->detach($beUser);
+    }
+
+    /**
+     * Returns the be users
+     *
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUser> $seenByBeUsers
+     */
+    public function getSeenByBeUsers(): ObjectStorage
+    {
+        return $this->seenByBeUsers;
+    }
+
+    /**
+     * Sets the products
+     *
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUser> $seenByBeUsers
+     * @return void
+     */
+    public function setSeenByBeUsers(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $seenByBeUsers)
+    {
+        $this->seenByBeUsers = $seenByBeUsers;
     }
 
     /**
