@@ -314,6 +314,12 @@
             <trans-unit id="be.no_categories_text">
                 <source>No categories were found, try to choose different folder.</source>
             </trans-unit>
+            <trans-unit id="be.no_orders">
+                <source>No orders</source>
+            </trans-unit>
+            <trans-unit id="be.no_orders_text">
+                <source>No orders were found, try to choose different folder.</source>
+            </trans-unit>
             <trans-unit id="be.edit_category">
                 <source>Edit category - "%s"</source>
             </trans-unit>
@@ -352,6 +358,18 @@
             </trans-unit>
             <trans-unit id="be.move_down">
                 <source>Move down</source>
+            </trans-unit>
+            <trans-unit id="be.preview_title">
+                <source>Product manager modules</source>
+            </trans-unit>
+            <trans-unit id="be.action.index">
+                <source>Preview</source>
+            </trans-unit>
+            <trans-unit id="be.action.listCategories">
+                <source>List of categories</source>
+            </trans-unit>
+            <trans-unit id="be.action.listOrders">
+                <source>List of orders</source>
             </trans-unit>
             <!--Backend module:END-->
 

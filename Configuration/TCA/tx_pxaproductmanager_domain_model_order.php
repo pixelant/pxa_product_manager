@@ -21,14 +21,14 @@ return [
             'endtime' => 'endtime',
         ],
         'searchFields' => 'products',
-        'hideTable' => true,
+        #'hideTable' => true,
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/cart_tca.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, serialized_products_quantity, serialized_order_fields',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, serialized_products_quantity, serialized_order_fields, fe_user, seen_by_be_users',
     ],
     'types' => [
-        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, seen_by_be_users, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
     ],
     'columns' => [
         'sys_language_uid' => [
@@ -127,6 +127,28 @@ return [
                 ]
             ],
         ],
+        'seen_by_be_users' => [
+            'exclude' => 0,
+            'label' => $ll . '.seen_by_be_users',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'foreign_table' => 'be_users',
+                'MM' => 'tx_pxaproductmanager_order_seen_by_be_users_mm',
+                'size' => 10,
+                'autoSizeMax' => 30,
+                'maxitems' => 9999,
+                'multiple' => 0,
+                'fieldControl' => [
+                    'editPopup' => [
+                        'disabled' => false
+                    ],
+                    'addRecord' => [
+                        'disabled' => false,
+                    ]
+                ]
+            ],
+        ],
         'fe_user' => [
             'exclude' => 0,
             'label' => $ll . '.fe_user',
@@ -137,7 +159,7 @@ return [
                 'size' => 1,
                 'maxitems' => 1,
                 'items' => [
-                    [0 => $ll . '.fe_user.none_is_selected']
+                    [$ll . '.fe_user.none_is_selected', 0]
                 ],
                 'fieldControl' => [
                     'editPopup' => [

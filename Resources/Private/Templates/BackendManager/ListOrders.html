@@ -1,0 +1,40 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers/Backend" data-namespace-typo3-fluid="true">
+
+<f:layout name="BELayout" />
+<f:debug>{_all}</f:debug>
+
+<f:section name="main">
+    <h1>
+        <pxa:translate key="be.module_name" />
+        - "{pageTitle}"
+    </h1>
+
+    <f:flashMessages />
+
+    <f:if condition="{orders}">
+        <f:then>
+            <div class="bs-example">
+                <span class="title"><pxa:translate key="be.action.listOrders" /></span>
+                <ul class="nav nav-pills" role="tablist">
+                    <li role="presentation" class="active"><a href="#">Inbox <span class="badge">14</span></a></li>
+                    <li role="presentation"><a href="#">Trash <span class="badge">328</span></a></li>
+                    <li role="presentation"><a href="#">Spam <span class="badge">94327</span></a></li>
+                </ul>
+
+                <div class="list-group">
+                    <a href="#" class="list-group-item">These Boots Are Made For Walking</a>
+                    <a href="#" class="list-group-item active">Eleanor, Put Your Boots On</a>
+                    <a href="#" class="list-group-item">Puss 'n' Boots</a>
+                    <a href="#" class="list-group-item">Die With Your Boots On</a>
+                    <a href="#" class="list-group-item">Fairies Wear Boots</a>
+                </div>
+            </div>
+        </f:then>
+        <f:else>
+            <f:render partial="Backend/Notification"
+                      arguments="{title: '{pxa:translate(key: \'be.no_orders\')}', body: '{pxa:translate(key: \'be.no_orders_text\')}'}" />
+        </f:else>
+    </f:if>
+</f:section>
+</html>
