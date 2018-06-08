@@ -99,7 +99,7 @@ class AttributeHolderUtility
         foreach (array_reverse($categories) as $category) {
             /** @var AttributeSet $attributesSet */
             foreach ($category->getAttributeSets() as $attributesSet) {
-                if (in_array($attributesSet->getUid(), $uniqueAttributeSetsList)) {
+                if (in_array($attributesSet->getUid(), $uniqueAttributeSetsList, true)) {
                     continue;
                 } else {
                     $uniqueAttributeSetsList[] = $attributesSet->getUid();
