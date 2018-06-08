@@ -79,6 +79,7 @@ class AttributeHolderUtility
     public function start(array $categories, bool $onlyMarkedForShowInListing = false)
     {
         $uniqueAttributesList = [];
+        $uniqueAttributeSetsList = [];
 
         /**
          * Get all unique categories
@@ -98,6 +99,12 @@ class AttributeHolderUtility
         foreach (array_reverse($categories) as $category) {
             /** @var AttributeSet $attributesSet */
             foreach ($category->getAttributeSets() as $attributesSet) {
+                if (in_array($attributesSet->getUid(), $uniqueAttributeSetsList)) {
+                    continue;
+                } else {
+                    $uniqueAttributeSetsList[] = $attributesSet->getUid();
+                }
+
                 $currentSetAttributes = new ObjectStorage();
 
                 /** @var Attribute $attribute */
