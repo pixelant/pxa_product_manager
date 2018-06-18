@@ -15,6 +15,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /***************************************************************
  *  Copyright notice
@@ -236,6 +237,14 @@ class ProductController extends AbstractController
      */
     public function wishListAction(bool $sendOrder = false)
     {
+        $checkout = [
+            'type' => 'default'
+        ];
+
+        // SetCheckout signal slot to register external e-commerce integrations
+        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
+        $signalSlotDispatcher->dispatch(__CLASS__, 'SetCheckout', [&$checkout]);
+
         $orderFormAllowed = $this->isOrderFormAllowed();
 
         $orderFormFields = $this->getProcessedOrderFormFields();
@@ -275,6 +284,7 @@ class ProductController extends AbstractController
         }
 
         $this->view->assignMultiple([
+            'checkout' => $checkout,
             'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
             'orderFormFields' => $orderFormFields,
             'orderProducts' => $orderState ?? [],
