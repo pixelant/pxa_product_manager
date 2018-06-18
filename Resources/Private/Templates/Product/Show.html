@@ -108,7 +108,7 @@
                                         <f:alias map="{sizes: settings.images.singleView}">
                                             <f:switch expression="{file.originalResource.type}">
                                                 <f:case value="4">
-                                                    <f:variable name="videos">{videos + 1}</f:variable>
+                                                    <f:variable name="videos">{ppm:math(value:'videos + 1')}</f:variable>
                                                 </f:case>
                                                 <f:defaultCase>
                                                     <a href="{f:uri.image(image: file, maxWidth:'1920', maxHeight:'1080')}">
