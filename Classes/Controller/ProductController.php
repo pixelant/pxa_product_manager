@@ -2,7 +2,6 @@
 
 namespace Pixelant\PxaProductManager\Controller;
 
-use Pixelant\PxaKlarnaPmIntegration\Controller\CheckoutController;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
