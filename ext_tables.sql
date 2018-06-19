@@ -426,6 +426,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
 	seen_by_be_users int(11) unsigned DEFAULT '0' NOT NULL,
   serialized_order_fields blob,
   serialized_products_quantity blob,
+  external_id varchar(255) DEFAULT '' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,

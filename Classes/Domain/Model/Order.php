@@ -68,6 +68,13 @@ class Order extends AbstractDomainObject
     protected $serializedProductsQuantity = '';
 
     /**
+     * externalId
+     *
+     * @var string
+     */
+    protected $externalId = '';
+
+    /**
      * __construct
      */
     public function __construct()
@@ -270,5 +277,26 @@ class Order extends AbstractDomainObject
         $this->setSerializedOrderFields(
             serialize($orderFields)
         );
+    }
+
+    /**
+     * Returns the externalId
+     *
+     * @return string $externalId
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
+    }
+
+    /**
+     * Sets the externalId
+     *
+     * @param string $externalId
+     * @return void
+     */
+    public function setExternalId($externalId)
+    {
+        $this->externalId = $externalId;
     }
 }

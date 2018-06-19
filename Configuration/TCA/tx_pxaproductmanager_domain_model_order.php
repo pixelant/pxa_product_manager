@@ -25,7 +25,7 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/cart_tca.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, serialized_products_quantity, serialized_order_fields, fe_user, seen_by_be_users',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user, seen_by_be_users',
     ],
     'types' => [
         '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, seen_by_be_users, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
@@ -185,5 +185,12 @@ return [
                 'type' => 'passthrough'
             ]
         ],
+        'external_id' => [
+            'exclude' => 1,
+            'label' => 'External id',
+            'config' => [
+                'type' => 'passthrough'
+            ]
+        ]
     ],
 ];
