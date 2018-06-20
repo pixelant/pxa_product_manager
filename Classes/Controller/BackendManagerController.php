@@ -101,8 +101,6 @@ class BackendManagerController extends ActionController
     {
         if ($this->pid > 0) {
             $allOrders = $this->orderRepository->findAllInRootLine($this->pid);
-\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->orderRepository->findByUid(1),'Debug',16);
-\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($allOrders,'Debug',16);
             $this->view->assignMultiple([
                 'listOrders' => $allOrders,
                 'activeTab' => $activeTab,
