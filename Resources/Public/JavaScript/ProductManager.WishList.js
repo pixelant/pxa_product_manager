@@ -228,16 +228,18 @@
 		const _saveCurrentStateOfAmountOfProducts = function () {
 			let currentState = {};
 
-			if ($orderItemsAmount.length > 0) {
-				$orderItemsAmount.each(function () {
-					const $this = $(this);
-					let productUid = parseInt($this.data('product-uid'));
-
-					if (productUid > 0) {
-						currentState[productUid] = parseInt($this.val());
-					}
-				});
+			if ($orderItemsAmount.length <= 0) {
+				return false;
 			}
+
+			$orderItemsAmount.each(function () {
+				const $this = $(this);
+				let productUid = parseInt($this.data('product-uid'));
+
+				if (productUid > 0) {
+					currentState[productUid] = parseInt($this.val());
+				}
+			});
 
 			ProductManager.Main.setCookie(
 				ORDER_STATE_COOKIE_NAME,
