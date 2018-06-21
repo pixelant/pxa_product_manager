@@ -274,17 +274,8 @@ class ProductController extends AbstractController
 
         if ($this->request->hasArgument('orderProducts')) {
             $orderState = $this->request->getArgument('orderProducts');
-        } elseif (!empty($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])) {
-            $orderState = json_decode(
-                urldecode(
-                    base64_decode($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])
-                ),
-                true
-            );
-
-            if (!is_array($orderState)) {
-                $orderState = [];
-            }
+        } else {
+            $orderState = ProductUtility::getOrderState();
         }
 
         $this->view->assignMultiple([

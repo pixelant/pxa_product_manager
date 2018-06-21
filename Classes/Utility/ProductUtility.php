@@ -233,10 +233,40 @@ class ProductUtility
         return $customSorting;
     }
 
+    /**
+     * Clean ongoing order info
+     */
     public static function cleanOngoingOrderInfo() : void
     {
         // Clean list
         MainUtility::cleanCookieValue(self::WISH_LIST_COOKIE_NAME);
         MainUtility::cleanCookieValue(self::ORDER_STATE_COOKIE_NAME);
+    }
+
+    /**
+     * Get order state
+     *
+     * @return array
+     */
+    public static function getOrderState() : array
+    {
+        // If no cookie set - return empty set
+        if (empty($_COOKIE[self::ORDER_STATE_COOKIE_NAME])) {
+            return [];
+        }
+
+        // Otherwise get order state from cookie
+        $orderState = json_decode(
+            urldecode(
+                base64_decode($_COOKIE[self::ORDER_STATE_COOKIE_NAME])
+            ),
+            true
+        );
+
+        if (!is_array($orderState)) {
+            $orderState = [];
+        }
+
+        return $orderState;
     }
 }
