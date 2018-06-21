@@ -232,4 +232,11 @@ class ProductUtility
 
         return $customSorting;
     }
+
+    public static function cleanOngoingOrderInfo() : void
+    {
+        // Clean list
+        MainUtility::cleanCookieValue(self::WISH_LIST_COOKIE_NAME);
+        MainUtility::cleanCookieValue(self::ORDER_STATE_COOKIE_NAME);
+    }
 }

@@ -303,7 +303,7 @@ class ProductController extends AbstractController
      */
     public function finishOrderAction()
     {
-        $this->cleanCheckoutCookies();
+        ProductUtility::cleanOngoingOrderInfo();
     }
 
     /**
@@ -955,12 +955,5 @@ class ProductController extends AbstractController
         } else {
             MainUtility::getTSFE()->pageNotFoundAndExit('No product entry found.');
         }
-    }
-
-    public function cleanOngoingOrderInfo() : void
-    {
-        // Clean list
-        MainUtility::cleanCookieValue(ProductUtility::WISH_LIST_COOKIE_NAME);
-        MainUtility::cleanCookieValue(ProductUtility::ORDER_STATE_COOKIE_NAME);
     }
 }
