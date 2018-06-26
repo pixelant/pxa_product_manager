@@ -299,4 +299,38 @@ class Order extends AbstractDomainObject
     {
         $this->externalId = $externalId;
     }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function setOrderField(string $name, $value) : void
+    {
+        $orderFields = $this->getOrderFields() ?: [];
+        $orderFields[$name] = $value;
+        $this->setOrderFields($orderFields);
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function getOrderField(string $name)
+    {
+        $orderFields = $this->getOrderFields() ?: [];
+        return $orderFields[$name] ?: null;
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function removeOrderField(string $name)
+    {
+        $orderFields = $this->getOrderFields() ?: [];
+        if (!empty($orderFields[$name])) {
+            unset($orderFields[$name]);
+        }
+        $this->setOrderFields($orderFields);
+    }
 }
