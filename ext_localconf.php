@@ -1,4 +1,7 @@
 <?php
+
+use Pixelant\PxaProductManager\Backend\FormDataProvider\OrderEditFormInitialize;
+
 defined('TYPO3_MODE') || die;
 
 call_user_func(
@@ -43,6 +46,13 @@ call_user_func(
 
         // Form data provider hook, to generate attributes TCA
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\ProductEditFormInitialize::class] = [
+            'depends' => [
+                \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class,
+                \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class
+            ]
+        ];
+
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][OrderEditFormInitialize::class] = [
             'depends' => [
                 \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class,
                 \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class

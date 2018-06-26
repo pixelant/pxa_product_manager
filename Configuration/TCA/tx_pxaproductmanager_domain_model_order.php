@@ -28,7 +28,11 @@ return [
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user, seen_by_be_users',
     ],
     'types' => [
-        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, seen_by_be_users, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => [
+            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, seen_by_be_users,
+            --div--;Order fields,|order_fields|,
+            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'
+        ],
     ],
     'columns' => [
         'sys_language_uid' => [
