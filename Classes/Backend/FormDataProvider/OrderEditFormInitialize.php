@@ -31,6 +31,10 @@ class OrderEditFormInitialize implements FormDataProviderInterface
 
         $orderFields = unserialize($result['databaseRow']['serialized_order_fields']);
 
+        if (empty($orderFields)) {
+            return $result;
+        }
+
         foreach ($orderFields as $fieldName => $fieldValue) {
             // Add TCA
             $result['processedTca']['columns'][$fieldName] = [
