@@ -5,10 +5,10 @@
         <header/>
         <body>
             <trans-unit id="fe.go_back">
-                <source>Tillbaka</source>
+                <target>Tillbaka</target>
             </trans-unit>
             <trans-unit id="fe.single_view_disabled">
-                <source>Detaljvisning är avstängd för den här artikeln!</source>
+                <target>Detaljvisning är avstängd för den här artikeln!</target>
             </trans-unit>
             <trans-unit id="fe.sku">
                 <target>RSK nr / ART nr</target>
@@ -23,40 +23,40 @@
                 <target>Produktdata</target>
             </trans-unit>
             <trans-unit id="fe.latest_visited_products">
-                <source>Senast besökta produkterna</source>
+                <target>Senast besökta produkterna</target>
             </trans-unit>
             <trans-unit id="fe.related_links">
-                <source>Relaterade länkar</source>
+                <target>Relaterade länkar</target>
             </trans-unit>
             <trans-unit id="fe.compare_list.add_title">
-                <source>Lägg till i jämförelselista</source>
+                <target>Lägg till i jämförelselista</target>
             </trans-unit>
             <trans-unit id="fe.compare_list.remove_title">
-                <source>Ta bort från jämförelselista</source>
+                <target>Ta bort från jämförelselista</target>
             </trans-unit>
             <trans-unit id="fe.wish_list.add_title">
-                <source>Lägg till i önskelista</source>
+                <target>Lägg till i önskelista</target>
             </trans-unit>
             <trans-unit id="fe.wish_list.remove_title">
-                <source>Ta bort från önskelista</source>
+                <target>Ta bort från önskelista</target>
             </trans-unit>
             <trans-unit id="fe.added_to_list">
-                <source>Tillagd till listan "%s"</source>
+                <target>Tillagd till listan "%s"</target>
             </trans-unit>
             <trans-unit id="fe.remove_from_list">
-                <source>Borttagen från listan "%s"</source>
+                <target>Borttagen från listan "%s"</target>
             </trans-unit>
             <trans-unit id="fe.wish_list">
-                <source>Önskelista</source>
+                <target>Önskelista</target>
             </trans-unit>
             <trans-unit id="fe.compare_list">
-                <source>jämförelselista</source>
+                <target>jämförelselista</target>
             </trans-unit>
             <trans-unit id="fe.clear_filter">
                 <target>Rensa</target>
             </trans-unit>
             <trans-unit id="fe.compare_goto">
-                <source>Visa jämförelse</source>
+                <target>Visa jämförelse</target>
             </trans-unit>
             <trans-unit id="fe.no_products_found">
                 <target>Inga sökresultat</target>
@@ -65,140 +65,140 @@
                 <target>hittade produkter</target>
             </trans-unit>
             <trans-unit id="fe.red_rows_indicates_differences">
-                <source>Röda rader indikerar skillnader</source>
+                <target>Röda rader indikerar skillnader</target>
             </trans-unit>
             <trans-unit id="fe.nothing_were_found">
-                <source>Inget hittades</source>
+                <target>Inget hittades</target>
             </trans-unit>
             <trans-unit id="fe.no_products_found">
-                <source>Inga produkter hittade</source>
+                <target>Inga produkter hittade</target>
             </trans-unit>
             <trans-unit id="fe.load_more">
-                <source>Ladda in fler</source>
+                <target>Ladda in fler</target>
             </trans-unit>
             <trans-unit id="fe.not_found_header">
-                <source>Hittades inte</source>
+                <target>Hittades inte</target>
             </trans-unit>
             <trans-unit id="fe.not_found_text">
-                <source>Produkten hittades inte</source>
+                <target>Produkten hittades inte</target>
             </trans-unit>
             <trans-unit id="fe.error_request">
-                <source>Fel begäran</source>
+                <target>Fel begäran</target>
             </trans-unit>
             <trans-unit id="fe.error_limit">
-                <source>Du har nått gränsen</source>
+                <target>Du har nått gränsen</target>
             </trans-unit>
             <trans-unit id="fe.checkbox.yes">
-                <source>Ja</source>
+                <target>Ja</target>
             </trans-unit>
             <trans-unit id="fe.checkbox.no">
-                <source>Nej</source>
+                <target>Nej</target>
             </trans-unit>
             <trans-unit id="fe.pdf">
-                <source>PDF</source>
+                <target>PDF</target>
             </trans-unit>
             <trans-unit id="fe.product">
-                <source>Produkt</source>
+                <target>Produkt</target>
             </trans-unit>
             <trans-unit id="fe.minmax.from">
-                <source>Från</source>
+                <target>Från</target>
             </trans-unit>
             <trans-unit id="fe.minmax.to">
-                <source>Till</source>
+                <target>Till</target>
             </trans-unit>
             <trans-unit id="fe.accessories">
-                <source>Tillbehör</source>
+                <target>Tillbehör</target>
             </trans-unit>
             <trans-unit id="fe.usp">
-                <source>Unika funktioner</source>
+                <target>Unika funktioner</target>
             </trans-unit>
             <trans-unit id="fe.launched">
-                <source>Lanserad</source>
+                <target>Lanserad</target>
             </trans-unit>
             <trans-unit id="fe.is_discontinued">
-                <source>Utgått</source>
+                <target>Utgått</target>
             </trans-unit>
             <trans-unit id="fe.will_be_discontinued">
-                <source>Kommer att utgå</source>
+                <target>Kommer att utgå</target>
             </trans-unit>
             <trans-unit id="fe.product_status">
-                <source>Produkt status</source>
+                <target>Produkt status</target>
             </trans-unit>
             <trans-unit id="fe.price">
-                <source>Pris</source>
+                <target>Pris</target>
             </trans-unit>
             <trans-unit id="fe.price_currency_format">
-                <source>%1$s $</source>
+                <target>%1$s $</target>
             </trans-unit>
             <trans-unit id="fe.product_name">
-                <source>Produkt namn</source>
+                <target>Produkt namn</target>
             </trans-unit>
             <trans-unit id="fe.price_per">
-                <source>Pris per artikel.</source>
+                <target>Pris per artikel.</target>
             </trans-unit>
             <trans-unit id="fe.add">
-                <source>Lägg till</source>
+                <target>Lägg till</target>
             </trans-unit>
             <trans-unit id="fe.amount">
-                <source>Antal</source>
+                <target>Antal</target>
             </trans-unit>
             <trans-unit id="fe.total_price">
-                <source>Totalbelopp</source>
+                <target>Totalbelopp</target>
             </trans-unit>
             <trans-unit id="fe.continue_to_order">
-                <source>Fortsätt till beställning</source>
+                <target>Fortsätt till beställning</target>
             </trans-unit>
             <trans-unit id="fe.make_order">
-                <source>Gör beställning</source>
+                <target>Gör beställning</target>
             </trans-unit>
             <trans-unit id="fe.order_sent_header">
-                <source>Din order har skickats</source>
+                <target>Din order har skickats</target>
             </trans-unit>
             <trans-unit id="fe.order_sent_text">
-                <source>Administratören kommer snart att kontakta dig.</source>
+                <target>Administratören kommer snart att kontakta dig.</target>
             </trans-unit>
             <trans-unit id="fe.no_order_fields">
-                <source>Inga orderfält har definierats</source>
+                <target>Inga orderfält har definierats</target>
             </trans-unit>
             <trans-unit id="fe.validation_error.required">
-                <source>Detta fält är obligatoriskt</source>
+                <target>Detta fält är obligatoriskt</target>
             </trans-unit>
             <trans-unit id="fe.validation_error.ulr">
-                <source>Detta är inte en giltig url</source>
+                <target>Detta är inte en giltig url</target>
             </trans-unit>
             <trans-unit id="fe.validation_error.email">
-                <source>Detta är inte en giltig E-postadress</source>
+                <target>Detta är inte en giltig E-postadress</target>
             </trans-unit>
             <trans-unit id="fe.accept_terms">
-                <source>Acceptera användarvillkor</source>
+                <target>Acceptera användarvillkor</target>
             </trans-unit>
             <trans-unit id="fe.terms_link">
-                <source>Användarvillkor</source>
+                <target>Användarvillkor</target>
             </trans-unit>
             <trans-unit id="fe.userEmail.orderForm.subject">
-                <source>Tack för din beställning</source>
+                <target>Tack för din beställning</target>
             </trans-unit>
             <trans-unit id="fe.userEmail.orderForm.title">
-                <source>Nedan hittar du dina beställningsuppgifter</source>
+                <target>Nedan hittar du dina beställningsuppgifter</target>
             </trans-unit>
             <trans-unit id="fe.userEmail.orderForm.admin_contact">
-                <source>Administratören kontaktar dig inom kort.</source>
+                <target>Administratören kontaktar dig inom kort.</target>
             </trans-unit>
             <trans-unit id="fe.adminEmail.orderForm.subject">
-                <source>Ny beställning</source>
+                <target>Ny beställning</target>
             </trans-unit>
             <trans-unit id="fe.adminEmail.orderForm.title">
-                <source>Ny beställning på en hemsida</source>
+                <target>Ny beställning på en hemsida</target>
             </trans-unit>
             <trans-unit id="fe.adminEmail.orderForm.userFields">
-                <source>Beställningsformulär information</source>
+                <target>Beställningsformulär information</target>
             </trans-unit>
             <trans-unit id="fe.solr.type_facet_name">
                 <target>Produkter</target>
             </trans-unit>
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
-                <source>Inga resultat</source>
+                <target>Inga resultat</target>
             </trans-unit>
         </body>
     </file>
