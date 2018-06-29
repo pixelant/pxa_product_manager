@@ -4,6 +4,12 @@
           product-name="pxa_product_manager" target-language="sv">
         <header/>
         <body>
+            <trans-unit id="fe.go_back">
+                <source>Tillbaka</source>
+            </trans-unit>
+            <trans-unit id="fe.single_view_disabled">
+                <source>Detaljvisning är avstängd för den här artikeln!</source>
+            </trans-unit>
             <trans-unit id="fe.sku">
                 <target>RSK nr / ART nr</target>
             </trans-unit>
@@ -16,8 +22,41 @@
             <trans-unit id="fe.attributes">
                 <target>Produktdata</target>
             </trans-unit>
+            <trans-unit id="fe.latest_visited_products">
+                <source>Senast besökta produkterna</source>
+            </trans-unit>
+            <trans-unit id="fe.related_links">
+                <source>Relaterade länkar</source>
+            </trans-unit>
+            <trans-unit id="fe.compare_list.add_title">
+                <source>Lägg till i jämförelselista</source>
+            </trans-unit>
+            <trans-unit id="fe.compare_list.remove_title">
+                <source>Ta bort från jämförelselista</source>
+            </trans-unit>
+            <trans-unit id="fe.wish_list.add_title">
+                <source>Lägg till i önskelista</source>
+            </trans-unit>
+            <trans-unit id="fe.wish_list.remove_title">
+                <source>Ta bort från önskelista</source>
+            </trans-unit>
+            <trans-unit id="fe.added_to_list">
+                <source>Tillagd till listan "%s"</source>
+            </trans-unit>
+            <trans-unit id="fe.remove_from_list">
+                <source>Borttagen från listan "%s"</source>
+            </trans-unit>
+            <trans-unit id="fe.wish_list">
+                <source>Önskelista</source>
+            </trans-unit>
+            <trans-unit id="fe.compare_list">
+                <source>jämförelselista</source>
+            </trans-unit>
             <trans-unit id="fe.clear_filter">
                 <target>Rensa</target>
+            </trans-unit>
+            <trans-unit id="fe.compare_goto">
+                <source>Visa jämförelse</source>
             </trans-unit>
             <trans-unit id="fe.no_products_found">
                 <target>Inga sökresultat</target>
@@ -25,8 +64,141 @@
             <trans-unit id="fe.number_of_results_found">
                 <target>hittade produkter</target>
             </trans-unit>
+            <trans-unit id="fe.red_rows_indicates_differences">
+                <source>Röda rader indikerar skillnader</source>
+            </trans-unit>
+            <trans-unit id="fe.nothing_were_found">
+                <source>Inget hittades</source>
+            </trans-unit>
+            <trans-unit id="fe.no_products_found">
+                <source>Inga produkter hittade</source>
+            </trans-unit>
+            <trans-unit id="fe.load_more">
+                <source>Ladda in fler</source>
+            </trans-unit>
+            <trans-unit id="fe.not_found_header">
+                <source>Hittades inte</source>
+            </trans-unit>
+            <trans-unit id="fe.not_found_text">
+                <source>Produkten hittades inte</source>
+            </trans-unit>
+            <trans-unit id="fe.error_request">
+                <source>Fel begäran</source>
+            </trans-unit>
+            <trans-unit id="fe.error_limit">
+                <source>Du har nått gränsen</source>
+            </trans-unit>
+            <trans-unit id="fe.checkbox.yes">
+                <source>Ja</source>
+            </trans-unit>
+            <trans-unit id="fe.checkbox.no">
+                <source>Nej</source>
+            </trans-unit>
+            <trans-unit id="fe.pdf">
+                <source>PDF</source>
+            </trans-unit>
+            <trans-unit id="fe.product">
+                <source>Produkt</source>
+            </trans-unit>
+            <trans-unit id="fe.minmax.from">
+                <source>Från</source>
+            </trans-unit>
+            <trans-unit id="fe.minmax.to">
+                <source>Till</source>
+            </trans-unit>
+            <trans-unit id="fe.accessories">
+                <source>Tillbehör</source>
+            </trans-unit>
+            <trans-unit id="fe.usp">
+                <source>Unika funktioner</source>
+            </trans-unit>
+            <trans-unit id="fe.launched">
+                <source>Lanserad</source>
+            </trans-unit>
+            <trans-unit id="fe.is_discontinued">
+                <source>Utgått</source>
+            </trans-unit>
+            <trans-unit id="fe.will_be_discontinued">
+                <source>Kommer att utgå</source>
+            </trans-unit>
+            <trans-unit id="fe.product_status">
+                <source>Produkt status</source>
+            </trans-unit>
+            <trans-unit id="fe.price">
+                <source>Pris</source>
+            </trans-unit>
+            <trans-unit id="fe.price_currency_format">
+                <source>%1$s $</source>
+            </trans-unit>
+            <trans-unit id="fe.product_name">
+                <source>Produkt namn</source>
+            </trans-unit>
+            <trans-unit id="fe.price_per">
+                <source>Pris per artikel.</source>
+            </trans-unit>
+            <trans-unit id="fe.add">
+                <source>Lägg till</source>
+            </trans-unit>
+            <trans-unit id="fe.amount">
+                <source>Antal</source>
+            </trans-unit>
+            <trans-unit id="fe.total_price">
+                <source>Totalbelopp</source>
+            </trans-unit>
+            <trans-unit id="fe.continue_to_order">
+                <source>Fortsätt till beställning</source>
+            </trans-unit>
+            <trans-unit id="fe.make_order">
+                <source>Gör beställning</source>
+            </trans-unit>
+            <trans-unit id="fe.order_sent_header">
+                <source>Din order har skickats</source>
+            </trans-unit>
+            <trans-unit id="fe.order_sent_text">
+                <source>Administratören kommer snart att kontakta dig.</source>
+            </trans-unit>
+            <trans-unit id="fe.no_order_fields">
+                <source>Inga orderfält har definierats</source>
+            </trans-unit>
+            <trans-unit id="fe.validation_error.required">
+                <source>Detta fält är obligatoriskt</source>
+            </trans-unit>
+            <trans-unit id="fe.validation_error.ulr">
+                <source>Detta är inte en giltig url</source>
+            </trans-unit>
+            <trans-unit id="fe.validation_error.email">
+                <source>Detta är inte en giltig E-postadress</source>
+            </trans-unit>
+            <trans-unit id="fe.accept_terms">
+                <source>Acceptera användarvillkor</source>
+            </trans-unit>
+            <trans-unit id="fe.terms_link">
+                <source>Användarvillkor</source>
+            </trans-unit>
+            <trans-unit id="fe.userEmail.orderForm.subject">
+                <source>Tack för din beställning</source>
+            </trans-unit>
+            <trans-unit id="fe.userEmail.orderForm.title">
+                <source>Nedan hittar du dina beställningsuppgifter</source>
+            </trans-unit>
+            <trans-unit id="fe.userEmail.orderForm.admin_contact">
+                <source>Administratören kontaktar dig inom kort.</source>
+            </trans-unit>
+            <trans-unit id="fe.adminEmail.orderForm.subject">
+                <source>Ny beställning</source>
+            </trans-unit>
+            <trans-unit id="fe.adminEmail.orderForm.title">
+                <source>Ny beställning på en hemsida</source>
+            </trans-unit>
+            <trans-unit id="fe.adminEmail.orderForm.userFields">
+                <source>Beställningsformulär information</source>
+            </trans-unit>
             <trans-unit id="fe.solr.type_facet_name">
                 <target>Produkter</target>
+            </trans-unit>
+            <!--Javascript labels-->
+            <trans-unit id="fe.js.no_options_found">
+                <source>Inga resultat</source>
             </trans-unit>
         </body>
     </file>
