@@ -8,7 +8,7 @@
                 <source>Tillbaka</source>
             </trans-unit>
             <trans-unit id="fe.single_view_disabled">
-                <source>Enkel visning är avstängd för den här artikeln!</source>
+                <source>Detaljvisning är avstängd för den här artikeln!</source>
             </trans-unit>
             <trans-unit id="fe.sku">
                 <target>RSK nr / ART nr</target>
@@ -23,7 +23,7 @@
                 <target>Produktdata</target>
             </trans-unit>
             <trans-unit id="fe.latest_visited_products">
-                <source>Senaste besökta produkterna</source>
+                <source>Senast besökta produkterna</source>
             </trans-unit>
             <trans-unit id="fe.related_links">
                 <source>Relaterade länkar</source>
@@ -80,7 +80,7 @@
                 <source>Hittades inte</source>
             </trans-unit>
             <trans-unit id="fe.not_found_text">
-                <source>Porudkten hittades inte</source>
+                <source>Produkten hittades inte</source>
             </trans-unit>
             <trans-unit id="fe.error_request">
                 <source>Fel begäran</source>
