@@ -246,7 +246,7 @@ class ProductController extends AbstractController
 
         // SetCheckout signal slot to register external e-commerce integrations
         $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        $signalSlotDispatcher->dispatch(__CLASS__, 'SetCheckout', [&$checkout]);
+        $signalSlotDispatcher->dispatch(__CLASS__, 'SetCheckout', [&$checkout, $this]);
 
         $orderFormAllowed = $this->isOrderFormAllowed();
 
