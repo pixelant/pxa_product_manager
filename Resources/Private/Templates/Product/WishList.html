@@ -3,6 +3,8 @@
 <f:layout name="Default" />
 
 <f:section name="main">
+    <f:flashMessages />
+
     <f:if condition="{settings.enableOrderFunction}">
         <f:then>
             <f:render partial="WishList/RowsWithOrder" arguments="{_all}" />
