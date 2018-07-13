@@ -74,6 +74,13 @@ class Product extends AbstractEntity
     protected $price = 0.0;
 
     /**
+     * taxRate
+     *
+     * @var float $taxRate
+     */
+    protected $taxRate = 0.00;
+
+    /**
      * description
      *
      * @var \string
@@ -406,6 +413,27 @@ class Product extends AbstractEntity
     public function setPrice(float $price)
     {
         $this->price = $price;
+    }
+
+    /**
+     * Returns the taxRate
+     *
+     * @return float $taxRate
+     */
+    public function getTaxRate() : float
+    {
+        return $this->taxRate;
+    }
+
+    /**
+     * Sets the taxRate
+     *
+     * @param float $taxRate
+     * @return void
+     */
+    public function setTaxRate(float $taxRate)
+    {
+        $this->taxRate = $taxRate;
     }
 
     /**
@@ -1620,5 +1648,28 @@ class Product extends AbstractEntity
     public function setCustomSorting(int $customSorting)
     {
         $this->customSorting = $customSorting;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTaxRateRecursively() : float
+    {
+        // If tax rate is set on product level - return it
+        if (!empty($this->taxRate)) {
+            return $this->taxRate;
+        }
+
+        // Else get the tax rate from category
+        // TODO: implement
+        return $this->taxRate;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTax() : float
+    {
+        return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
     }
 }
