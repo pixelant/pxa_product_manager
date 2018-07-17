@@ -1,0 +1,77 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="BELayout" />
+
+<f:section name="main">
+    <f:flashMessages />
+
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>UID</th>
+            <th><f:translate key="fe.product_name" /></th>
+            <th><f:translate key="fe.sku"  /></th>
+            <th><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per')}" else=""/></th>
+            <th><f:translate key="fe.amount" /></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <f:for each="{order.products}" as="product" iteration="i">
+            <tr>
+                <th scope="row">{i.cycle}</th>
+                <td>{product.uid}</td>
+                <td>{product.name}</td>
+                <td><f:if condition="{product.sku}" then="{product.sku}" else=" -- "/></td>
+                <td>
+                    <f:if condition="{ppm:isPricingEnabled()}">
+                        <f:translate key="fe.price_currency_format"  arguments="{0: product.formatPrice}" />
+                    </f:if>
+                </td>
+                <td>{order.productsQuantity.{product.uid}}</td>
+            </tr>
+        </f:for>
+        <f:if condition="{ppm:isPricingEnabled()}">
+            <tr>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"><f:translate key="fe.total_price" />:</th>
+                <th style="border: none;"><f:translate key="fe.price_currency_format"  arguments="{0: totalPrice}" /></th>
+            </tr>
+        </f:if>
+        </tbody>
+    </table>
+
+    <div class="bs-example">
+        <span class="title"><f:translate key="fe.adminEmail.orderForm.userFields" /></span>
+        <dl class="dl-horizontal">
+            <f:for each="{order.orderFields}" key="field" as="fieldConf">
+                <dt>
+                    <f:translate key="fe.fields.{field}" default="{field}" />
+                </dt>
+                <dd>
+                    <f:if condition="{fieldConf.feUserValue}" then="{fieldConf.feUserValue}" else="{fieldConf.value}" />
+                </dd>
+            </f:for>
+        </dl>
+    </div>
+
+    <br>
+    <f:if condition="{backUrl}">
+        <f:then>
+            <a href="{backUrl}" class="btn btn-default">
+                <ppm:backend.translate key="be.go_back"/>
+            </a>
+        </f:then>
+        <f:else>
+            <a href="javascript: {}" class="btn btn-default" onclick="window.history.back();">
+                <ppm:backend.translate key="be.go_back"/>
+            </a>
+        </f:else>
+    </f:if>
+</f:section>
+</html>

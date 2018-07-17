@@ -12,22 +12,30 @@
 
     <f:flashMessages />
 
-    <f:if condition="{orders}">
+    <f:if condition="{listOrders}">
         <f:then>
             <div class="bs-example">
                 <span class="title"><pxa:translate key="be.action.listOrders" /></span>
+
                 <ul class="nav nav-pills" role="tablist">
-                    <li role="presentation" class="active"><a href="#">Inbox <span class="badge">14</span></a></li>
-                    <li role="presentation"><a href="#">Trash <span class="badge">328</span></a></li>
-                    <li role="presentation"><a href="#">Spam <span class="badge">94327</span></a></li>
+                    <f:for each="{0: 'new', 1: 'all', 2: 'archive'}" as="tab">
+                        <li role="presentation" class="{f:if(condition: '{tab} == {activeTab}', then: 'active')}">
+                            <f:link.action action="listOrders" arguments="{activeTab: tab}">
+                                <pxa:translate key="be.{tab}_order_nav_tab" />
+                                <span class="badge">{ordersCount.{tab}}</span>
+                            </f:link.action>
+                        </li>
+                    </f:for>
                 </ul>
 
                 <div class="list-group">
-                    <a href="#" class="list-group-item">These Boots Are Made For Walking</a>
-                    <a href="#" class="list-group-item active">Eleanor, Put Your Boots On</a>
-                    <a href="#" class="list-group-item">Puss 'n' Boots</a>
-                    <a href="#" class="list-group-item">Die With Your Boots On</a>
-                    <a href="#" class="list-group-item">Fairies Wear Boots</a>
+                    <f:widget.paginate objects="{listOrders}" as="paginatedListOrders" configuration="{itemsPerPage: settings.listOrders.itemsPerPage, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 10}">
+                        <f:for each="{paginatedListOrders}" as="order">
+                            <f:link.action class="list-group-item" action="showOrder" arguments="{order: order, backUrl: backUrl}">
+                                UID - {order.uid}. <pxa:orderTitle titleTemplate="{settings.listOrders.title}">{order}</pxa:orderTitle>
+                            </f:link.action>
+                        </f:for>
+                    </f:widget.paginate>
                 </div>
             </div>
         </f:then>
