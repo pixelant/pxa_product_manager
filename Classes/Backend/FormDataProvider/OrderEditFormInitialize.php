@@ -39,7 +39,7 @@ class OrderEditFormInitialize implements FormDataProviderInterface
             // Add TCA
             $result['processedTca']['columns'][$fieldName] = [
                 'exclude' => 0,
-                'label' => $label = ucfirst(str_replace('_', ' ', $fieldName)),
+                'label' => ucfirst(str_replace('_', ' ', $fieldName)),
                 'config' => [
                     'type' => 'input',
                     'size' => 30,

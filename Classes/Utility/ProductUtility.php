@@ -236,7 +236,7 @@ class ProductUtility
     /**
      * Clean ongoing order info
      */
-    public static function cleanOngoingOrderInfo() : void
+    public static function cleanOngoingOrderInfo(): void
     {
         // Clean list
         MainUtility::cleanCookieValue(self::WISH_LIST_COOKIE_NAME);
@@ -248,7 +248,7 @@ class ProductUtility
      *
      * @return array
      */
-    public static function getOrderState() : array
+    public static function getOrderState(): array
     {
         // If no cookie set - return empty set
         if (empty($_COOKIE[self::ORDER_STATE_COOKIE_NAME])) {
