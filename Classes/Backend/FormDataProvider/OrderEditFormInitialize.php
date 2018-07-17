@@ -35,21 +35,32 @@ class OrderEditFormInitialize implements FormDataProviderInterface
             return $result;
         }
 
-        foreach ($orderFields as $fieldName => $fieldValue) {
+        foreach ($orderFields as $fieldName => $fieldConfiguration) {
             // Add TCA
-            $result['processedTca']['columns'][$fieldName] = [
-                'exclude' => 0,
-                'label' => ucfirst(str_replace('_', ' ', $fieldName)),
-                'config' => [
-                    'type' => 'input',
-                    'size' => 30,
-                    'eval' => 'trim',
-                    'readOnly' => true
-                ]
-            ];
+            switch ($fieldConfiguration['type']) {
+                case 'textarea':
+                    $result['processedTca']['columns'][$fieldName] = [
+                        'label' => ucfirst(str_replace('_', ' ', $fieldName)),
+                        'config' => [
+                            'type' => 'text',
+                            'readOnly' => true
+                        ]
+                    ];
+                    break;
+                default:
+                    $result['processedTca']['columns'][$fieldName] = [
+                        'label' => ucfirst(str_replace('_', ' ', $fieldName)),
+                        'config' => [
+                            'type' => 'input',
+                            'size' => 30,
+                            'eval' => 'trim',
+                            'readOnly' => true
+                        ]
+                    ];
+            }
 
             // Add values
-            $result['databaseRow'][$fieldName] = $fieldValue;
+            $result['databaseRow'][$fieldName] = $fieldConfiguration['value'];
         }
 
         // Add field to types
