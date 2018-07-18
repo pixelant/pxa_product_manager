@@ -74,7 +74,9 @@ call_user_func(
                 'mod1',         // Name of the module
                 '',             // Position of the module
                 [
+                    // @codingStandardsIgnoreStart
                     'BackendManager' => 'index, listCategories, listProducts, listOrders, showOrder, markComplete, toggleArchiveOrder, deleteOrder'
+                    // @codingStandardsIgnoreEnd
                 ],
                 [          // Additional configuration
                     'access' => 'user,group',
