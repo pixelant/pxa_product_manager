@@ -10,7 +10,6 @@ return [
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
         'dividers2tabs' => true,
-        'origUid' => 't3_origuid',
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
@@ -25,11 +24,11 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/cart_tca.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user, seen_by_be_users',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user',
     ],
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, products, fe_user, seen_by_be_users,
+            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, fe_user,
             --div--;Order fields,|order_fields|,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'
         ],
@@ -108,6 +107,18 @@ return [
                 ]
             ],
         ],
+        'complete' => [
+            'exclude' => true,
+            'label' => $ll . '.complete',
+            'config' => [
+                'type' => 'check',
+                'items' => [
+                    '1' => [
+                        '0' => $ll . '.complete.yes'
+                    ]
+                ],
+            ],
+        ],
         'products' => [
             'exclude' => 0,
             'label' => $ll . '.products',
@@ -117,28 +128,6 @@ return [
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
                 'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.sys_language_uid <= 0',
                 'MM' => 'tx_pxaproductmanager_order_product_mm',
-                'size' => 10,
-                'autoSizeMax' => 30,
-                'maxitems' => 9999,
-                'multiple' => 0,
-                'fieldControl' => [
-                    'editPopup' => [
-                        'disabled' => false
-                    ],
-                    'addRecord' => [
-                        'disabled' => false,
-                    ]
-                ]
-            ],
-        ],
-        'seen_by_be_users' => [
-            'exclude' => 0,
-            'label' => $ll . '.seen_by_be_users',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectMultipleSideBySide',
-                'foreign_table' => 'be_users',
-                'MM' => 'tx_pxaproductmanager_order_seen_by_be_users_mm',
                 'size' => 10,
                 'autoSizeMax' => 30,
                 'maxitems' => 9999,
@@ -195,6 +184,11 @@ return [
             'config' => [
                 'type' => 'passthrough'
             ]
+        ],
+        'crdate' => [
+            'config' => [
+                'type' => 'passthrough',
+            ]
         ]
-    ],
+    ]
 ];

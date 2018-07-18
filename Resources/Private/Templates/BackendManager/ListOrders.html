@@ -12,7 +12,7 @@
 
     <f:flashMessages />
 
-    <f:if condition="{listOrders}">
+    <f:if condition="{ordersCount.total}">
         <f:then>
             <div class="bs-example">
                 <span class="title"><pxa:translate key="be.action.listOrders" /></span>
@@ -28,15 +28,36 @@
                     </f:for>
                 </ul>
 
-                <div class="list-group">
-                    <f:widget.paginate objects="{listOrders}" as="paginatedListOrders" configuration="{itemsPerPage: settings.listOrders.itemsPerPage, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 10}">
-                        <f:for each="{paginatedListOrders}" as="order">
-                            <f:link.action class="list-group-item" action="showOrder" arguments="{order: order, backUrl: backUrl}">
-                                UID - {order.uid}. <pxa:orderTitle titleTemplate="{settings.listOrders.title}">{order}</pxa:orderTitle>
-                            </f:link.action>
-                        </f:for>
-                    </f:widget.paginate>
-                </div>
+                <f:if condition="{listOrders}">
+                    <f:then>
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        ID
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <pxa:translate key="be.crdate" />
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <pxa:translate key="be.title" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <f:widget.paginate objects="{listOrders}" as="paginatedListOrders" configuration="{itemsPerPage: settings.listOrders.itemsPerPage, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 10}">
+                                <f:for each="{paginatedListOrders}" as="order">
+                                    <f:render section="orderRow" arguments="{order: order, backUrl: backUrl, activeTab: activeTab}" />
+                                </f:for>
+                            </f:widget.paginate>
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <div class="list-group">
+                            <span class="list-group-item"><pxa:translate key="be.empty_list" /></span>
+                        </div>
+                    </f:else>
+                </f:if>
             </div>
         </f:then>
         <f:else>
@@ -44,5 +65,88 @@
                       arguments="{title: '{pxa:translate(key: \'be.no_orders\')}', body: '{pxa:translate(key: \'be.no_orders_text\')}'}" />
         </f:else>
     </f:if>
+</f:section>
+
+<f:section name="orderRow">
+    <div class="list-group-item">
+    <div class="row">
+        <div class="col-xs-1">
+            {order.uid}
+        </div>
+        <div class="col-xs-1">
+            <f:format.date format="{settings.listOrders.dateFormat}" date="{order.crdate}" />
+        </div>
+        <div class="col-xs-5">
+            <f:link.action action="showOrder" arguments="{order: order, backUrl: backUrl}">
+                <pxa:orderTitle titleTemplate="{settings.listOrders.title}">{order}</pxa:orderTitle>
+            </f:link.action>
+        </div>
+        <div class="col-xs-5">
+            <f:switch expression="{activeTab}">
+                <f:case value="new">
+                    <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
+                    <f:render section="buttonCompleteOrder" arguments="{order: order}" />
+                    <f:render section="buttonArchiveOrder" arguments="{order: order, activeTab: activeTab}" />
+                </f:case>
+                <f:case value="all">
+                    <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
+                    <f:render section="buttonArchiveOrder" arguments="{order: order, activeTab: activeTab}" />
+                </f:case>
+                <f:case value="archive">
+                    <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
+                    <f:render section="buttonUnArchiveOrder" arguments="{order: order, activeTab: activeTab}" />
+                    <f:render section="buttonDeleteOrder" arguments="{order: order, activeTab: activeTab}" />
+                </f:case>
+            </f:switch>
+        </div>
+    </div>
+    </div>
+</f:section>
+
+<f:section name="buttonShowOrder">
+    <f:link.action action="showOrder"
+                   title="{pxa:translate(key: 'be.details')}"
+                   class="btn btn-default"
+                   arguments="{order: order, backUrl: backUrl}">
+        <core:icon identifier="actions-document-view"/>
+    </f:link.action>
+</f:section>
+
+<f:section name="buttonCompleteOrder">
+    <f:link.action action="markComplete"
+                   title="{pxa:translate(key: 'be.complete_order')}"
+                   class="btn btn-default"
+                   arguments="{order: order}">
+        <core:icon identifier="actions-check"/>
+    </f:link.action>
+
+</f:section>
+
+<f:section name="buttonArchiveOrder">
+    <f:link.action action="toggleArchiveOrder"
+                   title="{pxa:translate(key: 'be.move_to_archive')}"
+                   class="btn btn-default"
+                   arguments="{order: order, activeTab: activeTab}">
+        <core:icon identifier="actions-delete"/>
+    </f:link.action>
+</f:section>
+
+<f:section name="buttonDeleteOrder">
+    <f:link.action action="deleteOrder"
+                   title="{pxa:translate(key: 'be.delete_order')}"
+                   class="btn btn-default delete-action"
+                   data="{title: '{pxa:translate(key: \'be.delete_order\')}', text: '{pxa:translate(key: \'be.delete_confirm\')}'}"
+                   arguments="{order: order, activeTab: activeTab}">
+        <core:icon identifier="actions-delete"/>
+    </f:link.action>
+</f:section>
+
+<f:section name="buttonUnArchiveOrder">
+    <f:link.action action="toggleArchiveOrder"
+                   title="{pxa:translate(key: 'be.restore_from_archive')}"
+                   class="btn btn-default"
+                   arguments="{order: order, activeTab: activeTab}">
+        <core:icon identifier="actions-edit-restore"/>
+    </f:link.action>
 </f:section>
 </html>

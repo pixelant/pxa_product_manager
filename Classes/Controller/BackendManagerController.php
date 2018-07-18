@@ -3,12 +3,20 @@
 namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
+use Pixelant\PxaProductManager\Domain\Model\Order;
+use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
+use Pixelant\PxaProductManager\Utility\ProductUtility;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\BackendUser;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -73,6 +81,7 @@ class BackendManagerController extends ActionController
 
         // create select box menu
         $this->createMenu();
+        $this->createButtons();
     }
 
     /**
@@ -90,23 +99,109 @@ class BackendManagerController extends ActionController
      */
     public function indexAction()
     {
+        $newOrdersCount = $this->orderRepository->findNewOrders($this->pid)->count();
+        $this->view->assign('newOrdersCount', $newOrdersCount);
     }
 
     /**
      * Order view
      *
-     * @param int $activeTab - Current active tab. 1 - All orders, 2 - Deleted, 0 default new
+     * @param string $activeTab - Current active tab. 'all' - All orders, 'archive' - Archived, 'new' default new
      */
-    public function listOrdersAction(int $activeTab = 0)
+    public function listOrdersAction(string $activeTab = 'new')
     {
         if ($this->pid > 0) {
-            $allOrders = $this->orderRepository->findAllInRootLine($this->pid);
+            $allOrders = $this->orderRepository->findAllCompleted($this->pid);
+            $newOrders = $this->orderRepository->findNewOrders($this->pid);
+            $archiveOrders = $this->orderRepository->findAllArchivedInRootLine($this->pid);
+
+            switch ($activeTab) {
+                case 'all':
+                    $listOrders = $allOrders;
+                    break;
+                case 'archive':
+                    $listOrders = $archiveOrders;
+                    break;
+                default:
+                    $listOrders = $newOrders;
+            }
             $this->view->assignMultiple([
-                'listOrders' => $allOrders,
+                'listOrders' => $listOrders,
+                'ordersCount' => [
+                    'new' => $newOrders->count(),
+                    'all' => $allOrders->count(),
+                    'archive' => $archiveOrders->count(),
+                    'total' => $newOrders->count() + $archiveOrders->count() + $allOrders->count()
+                ],
+                'backUrl' => GeneralUtility::getIndpEnv('REQUEST_URI'),
                 'activeTab' => $activeTab,
                 'pageTitle' => BackendUtility::getRecord('pages', $this->pid, 'title')['title']
             ]);
         }
+    }
+
+    /**
+     * Show action
+     *
+     * @param int $order
+     * @param string $backUrl
+     */
+    public function showOrderAction(int $order, string $backUrl = '')
+    {
+        $order = $this->orderRepository->findByIdIgnoreHidden($order);
+
+        $totalPrice = 0.00;
+        /** @var Product $product */
+        foreach ($order->getProducts() as $product) {
+            $totalPrice += ($product->getPrice() * (int)($orderProducts[$product->getUid()] ?? 1));
+        }
+
+        $this->view
+            ->assign('totalPrice', ProductUtility::formatPrice($totalPrice))
+            ->assign('backUrl', $backUrl)
+            ->assign('order', $order);
+    }
+
+    /**
+     * Mark as complete
+     *
+     * @param Order $order
+     */
+    public function markCompleteAction(Order $order)
+    {
+        $order->setComplete(true);
+        $this->orderRepository->update($order);
+
+        $this->redirect('listOrders');
+    }
+
+    /**
+     * Archive
+     *
+     * @param int $order
+     * @param string $activeTab
+     */
+    public function toggleArchiveOrderAction(int $order, string $activeTab = 'new')
+    {
+        $order = $this->orderRepository->findByIdIgnoreHidden($order);
+        $order->setHidden(!$order->isHidden());
+        $this->orderRepository->update($order);
+
+        $this->redirect('listOrders', null, null, ['activeTab' => $activeTab]);
+    }
+
+    /**
+     * delete
+     *
+     * @param int $order
+     * @param string $activeTab
+     */
+    public function deleteOrderAction(int $order, string $activeTab = 'new')
+    {
+        $order = $this->orderRepository->findByIdIgnoreHidden($order);
+        $this->orderRepository->remove($order);
+
+        $this->redirect('listOrders', null, null, ['activeTab' => $activeTab]);
     }
 
     /**
@@ -270,6 +365,64 @@ class BackendManagerController extends ActionController
             }
 
             $this->view->getModuleTemplate()->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
+        }
+    }
+
+    /**
+     * Add menu buttons for specific actions
+     *
+     * @return void
+     */
+    protected function createButtons()
+    {
+        $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+
+        if ($this->view->getModuleTemplate() !== null) {
+            $buttonBar = $this->view->getModuleTemplate()->getDocHeaderComponent()->getButtonBar();
+            $uriBuilder = $this->objectManager->get(UriBuilder::class);
+            $uriBuilder->setRequest($this->request);
+
+            $buttons = [];
+            switch ($this->request->getControllerActionName()) {
+                case 'listCategories':
+                case 'listOrders':
+                    $buttons[] = $buttonBar->makeLinkButton()
+                        ->setHref($uriBuilder->reset()->uriFor('index'))
+                        ->setTitle($this->translate('be.go_back'))
+                        ->setIcon($iconFactory->getIcon('actions-view-go-back', Icon::SIZE_SMALL));
+                    break;
+                case 'showOrder':
+                    try {
+                        $backUrl = $this->request->getArgument('backUrl');
+                    } catch (NoSuchArgumentException $exception) {
+                        $backUrl = $uriBuilder->reset()->uriFor('listOrders');
+                    }
+
+                    // It might be empty in arguments
+                    $backUrl = $backUrl ?: $uriBuilder->reset()->uriFor('listOrders');
+
+                    $buttons[] = $buttonBar->makeLinkButton()
+                        ->setHref($backUrl)
+                        ->setTitle($this->translate('be.go_back'))
+                        ->setIcon($iconFactory->getIcon('actions-view-go-back', Icon::SIZE_SMALL));
+
+                    try {
+                        $orderUid = $this->request->getArgument('order');
+                        $order = $this->orderRepository->findByIdIgnoreHidden($orderUid);
+                        if (!$order->isComplete()) {
+                            $buttons[] = $buttonBar->makeLinkButton()
+                                ->setHref($uriBuilder->reset()->uriFor('markComplete', ['order' => $order]))
+                                ->setTitle($this->translate('be.complete_order'))
+                                ->setIcon($iconFactory->getIcon('actions-check', Icon::SIZE_SMALL));
+                        }
+                    } catch (NoSuchArgumentException $exception) {
+                    }
+                    break;
+            }
+
+            foreach ($buttons as $button) {
+                $buttonBar->addButton($button, ButtonBar::BUTTON_POSITION_LEFT);
+            }
         }
     }
 }

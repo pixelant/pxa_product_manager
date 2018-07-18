@@ -425,7 +425,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
 
 	products int(11) unsigned DEFAULT '0' NOT NULL,
 	fe_user int(11) unsigned DEFAULT '0' NOT NULL,
-	seen_by_be_users int(11) unsigned DEFAULT '0' NOT NULL,
+	complete tinyint(4) unsigned DEFAULT '0' NOT NULL,
   serialized_order_fields blob,
   serialized_products_quantity blob,
   external_id varchar(255) DEFAULT '' NOT NULL,
@@ -445,19 +445,6 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
 	PRIMARY KEY (uid),
 	KEY parent (pid),
 	KEY language (l10n_parent,sys_language_uid)
-);
-
-#
-# Table structure for table 'tx_pxaproductmanager_order_seen_by_be_users_mm'
-#
-CREATE TABLE tx_pxaproductmanager_order_seen_by_be_users_mm (
-  uid_local int(11) unsigned DEFAULT '0' NOT NULL,
-  uid_foreign int(11) unsigned DEFAULT '0' NOT NULL,
-  sorting int(11) unsigned DEFAULT '0' NOT NULL,
-  sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
-
-  KEY uid_local (uid_local),
-  KEY uid_foreign (uid_foreign)
 );
 
 #

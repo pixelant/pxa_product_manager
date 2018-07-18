@@ -371,6 +371,42 @@
             <trans-unit id="be.action.listOrders">
                 <source>List of orders</source>
             </trans-unit>
+            <trans-unit id="be.new_order_nav_tab">
+                <source>New orders</source>
+            </trans-unit>
+            <trans-unit id="be.all_order_nav_tab">
+                <source>All orders</source>
+            </trans-unit>
+            <trans-unit id="be.archive_order_nav_tab">
+                <source>Archived orders</source>
+            </trans-unit>
+            <trans-unit id="be.crdate">
+                <source>Creation date</source>
+            </trans-unit>
+            <trans-unit id="be.empty_list">
+                <source>Empty list</source>
+            </trans-unit>
+            <trans-unit id="be.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="be.go_back">
+                <source>Go back</source>
+            </trans-unit>
+            <trans-unit id="be.details">
+                <source>Detail info</source>
+            </trans-unit>
+            <trans-unit id="be.complete_order">
+                <source>Mark order as done</source>
+            </trans-unit>
+            <trans-unit id="be.move_to_archive">
+                <source>Remove (Move to archive)</source>
+            </trans-unit>
+            <trans-unit id="be.delete_order">
+                <source>Delete order</source>
+            </trans-unit>
+            <trans-unit id="be.delete_confirm">
+                <source>Are you sure you want to delete?</source>
+            </trans-unit>
             <!--Backend module:END-->
 
             <!--TCA notifications:START-->

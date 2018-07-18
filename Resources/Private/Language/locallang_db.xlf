@@ -243,8 +243,11 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_order.fe_user.none_is_selected">
                 <source>No user connected</source>
             </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_order.seen_by_be_users">
-                <source>Order seen by backend users</source>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.complete">
+                <source>Order is complete</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.complete.yes">
+                <source>Yes</source>
             </trans-unit>
             <!--Order TCA:END-->
 

@@ -184,6 +184,26 @@ plugin.tx_pxaproductmanager {
     }
 }
 
+# BE module
+module.tx_pxaproductmanager {
+    settings {
+        listOrders {
+            itemsPerPage = 10
+            title = ###NAME###, ###EMAIL###
+            dateFormat = %d/%m/%Y
+        }
+    }
+    view {
+        widget {
+            TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper {
+                templateRootPath = EXT:pxa_product_manager/Resources/Private/Backend/Templates/
+            }
+        }
+    }
+
+    _LOCAL_LANG < plugin.tx_pxaproductmanager._LOCAL_LANG
+}
+
 # include scripts
 page {
     includeJSFooterlibs {

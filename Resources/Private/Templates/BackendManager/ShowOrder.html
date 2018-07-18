@@ -49,6 +49,12 @@
     <div class="bs-example">
         <span class="title"><f:translate key="fe.adminEmail.orderForm.userFields" /></span>
         <dl class="dl-horizontal">
+            <dt>
+                <ppm:backend.translate key="be.crdate" />
+            </dt>
+            <dd>
+                <f:format.date format="{settings.listOrders.dateFormat}" date="{order.crdate}" />
+            </dd>
             <f:for each="{order.orderFields}" key="field" as="fieldConf">
                 <dt>
                     <f:translate key="fe.fields.{field}" default="{field}" />

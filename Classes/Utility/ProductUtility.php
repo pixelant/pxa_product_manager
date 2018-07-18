@@ -235,8 +235,10 @@ class ProductUtility
 
     /**
      * Clean ongoing order info
+     *
+     * @return void
      */
-    public static function cleanOngoingOrderInfo(): void
+    public static function cleanOngoingOrderInfo()
     {
         // Clean list
         MainUtility::cleanCookieValue(self::WISH_LIST_COOKIE_NAME);

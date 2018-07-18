@@ -37,6 +37,11 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 class Order extends AbstractDomainObject
 {
     /**
+     * @var bool
+     */
+    protected $hidden = false;
+
+    /**
      * products
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
@@ -45,12 +50,11 @@ class Order extends AbstractDomainObject
     protected $products = null;
 
     /**
-     * be users
+     * Complete
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUser>
-     * @lazy
+     * @var bool
      */
-    protected $seenByBeUsers = null;
+    protected $complete = false;
 
     /**
      * @var \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
@@ -75,6 +79,11 @@ class Order extends AbstractDomainObject
     protected $externalId = '';
 
     /**
+     * @var \DateTime
+     */
+    protected $crdate = null;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -94,7 +103,6 @@ class Order extends AbstractDomainObject
     protected function initStorageObjects()
     {
         $this->products = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->seenByBeUsers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -138,49 +146,6 @@ class Order extends AbstractDomainObject
     public function setProducts(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $products)
     {
         $this->products = $products;
-    }
-
-    /**
-     * Adds a BE user
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser
-     * @return void
-     */
-    public function addSeenByBeUsers(\TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser)
-    {
-        $this->seenByBeUsers->attach($beUser);
-    }
-
-    /**
-     * Removes a BE user
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser
-     * @return void
-     */
-    public function removeSeenByBeUsers(\TYPO3\CMS\Extbase\Domain\Model\BackendUser $beUser)
-    {
-        $this->seenByBeUsers->detach($beUser);
-    }
-
-    /**
-     * Returns the be users
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUser> $seenByBeUsers
-     */
-    public function getSeenByBeUsers(): ObjectStorage
-    {
-        return $this->seenByBeUsers;
-    }
-
-    /**
-     * Sets the products
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUser> $seenByBeUsers
-     * @return void
-     */
-    public function setSeenByBeUsers(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $seenByBeUsers)
-    {
-        $this->seenByBeUsers = $seenByBeUsers;
     }
 
     /**
@@ -301,10 +266,26 @@ class Order extends AbstractDomainObject
     }
 
     /**
+     * @return bool
+     */
+    public function isComplete(): bool
+    {
+        return $this->complete;
+    }
+
+    /**
+     * @param bool $complete
+     */
+    public function setComplete(bool $complete)
+    {
+        $this->complete = $complete;
+    }
+
+    /**
      * @param string $name
      * @param mixed $value
      */
-    public function setOrderField(string $name, $value) : void
+    public function setOrderField(string $name, $value)
     {
         $orderFields = $this->getOrderFields() ?: [];
         $orderFields[$name] = $value;
@@ -323,7 +304,7 @@ class Order extends AbstractDomainObject
 
     /**
      * @param string $name
-     * @return string
+     * @return void
      */
     public function removeOrderField(string $name)
     {
@@ -332,5 +313,29 @@ class Order extends AbstractDomainObject
             unset($orderFields[$name]);
         }
         $this->setOrderFields($orderFields);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCrdate(): \DateTime
+    {
+        return $this->crdate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param bool $hidden
+     */
+    public function setHidden(bool $hidden)
+    {
+        $this->hidden = $hidden;
     }
 }

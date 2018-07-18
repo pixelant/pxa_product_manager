@@ -5,13 +5,16 @@
 
 <f:section name="main">
     <div class="bs-example">
-        <span class="title"><pxa:translate key="be.preview_title" />:</span>
+        <span class="title"><pxa:translate key="be.preview_title" /></span>
 
         <f:link.action action="listCategories" class="btn btn-default">
             <pxa:translate key="be.action.listCategories" />
         </f:link.action>
         <f:link.action action="listOrders" class="btn btn-default">
             <pxa:translate key="be.action.listOrders" />
+            <f:if condition="{newOrdersCount}">
+                <span class="badge">+{newOrdersCount}</span>
+            </f:if>
         </f:link.action>
     </div>
 </f:section>

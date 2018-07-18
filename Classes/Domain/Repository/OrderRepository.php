@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
+use Pixelant\PxaProductManager\Domain\Model\Order;
 use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\BackendUser;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -46,19 +49,100 @@ class OrderRepository extends Repository
 
     /**
      * Find all order in current root line
+     *
      * @param int $pid
      * @return QueryResultInterface
      */
-    public function findAllInRootLine(int $pid): QueryResultInterface
+    public function findAllCompleted(int $pid): QueryResultInterface
     {
-        $queryGenerator = $this->objectManager->get(QueryGenerator::class);
-        $storage = $queryGenerator->getTreeList($pid, 99, 0, 1);
-
         $query = $this->createQuery();
         $query->getQuerySettings()
-            ->setStoragePageIds(GeneralUtility::intExplode(',', $storage))
+            ->setStoragePageIds($this->getTreeListArrayForPid($pid))
             ->setRespectSysLanguage(false);
 
+        $query->matching(
+            $query->equals('complete', true)
+        );
+
         return $query->execute();
+    }
+
+    /**
+     * Find all archived orders in current root line
+     * @param int $pid
+     * @return QueryResultInterface
+     */
+    public function findAllArchivedInRootLine(int $pid): QueryResultInterface
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()
+            ->setIgnoreEnableFields(true)
+            ->setEnableFieldsToBeIgnored(['disabled'])
+            ->setStoragePageIds($this->getTreeListArrayForPid($pid))
+            ->setRespectSysLanguage(false);
+
+        $query->matching(
+            $query->equals('hidden', true)
+        );
+
+        return $query->execute();
+    }
+
+    /**
+     * Find all new orders for current BE user
+     *
+     * @param int $pid
+     * @param BackendUser $backendUser
+     * @return QueryResultInterface
+     */
+    public function findNewOrders(int $pid): QueryResultInterface
+    {
+        $query = $this->createQuery();
+
+        $query->getQuerySettings()
+            ->setStoragePageIds($this->getTreeListArrayForPid($pid))
+            ->setRespectSysLanguage(false);
+
+        $query->matching(
+            $query->equals('complete', false)
+        );
+
+        return $query->execute();
+    }
+
+    /**
+     * Find by id, even hidden
+     *
+     * @param int $pid
+     * @return Order|null
+     */
+    public function findByIdIgnoreHidden(int $uid)
+    {
+        $query = $this->createQuery();
+
+        $query->getQuerySettings()
+            ->setIgnoreEnableFields(true)
+            ->setEnableFieldsToBeIgnored(['disabled'])
+            ->setRespectStoragePage(false)
+            ->setRespectSysLanguage(false);
+
+        $query->matching(
+            $query->equals('uid', $uid)
+        );
+
+        return $query->execute()->getFirst();
+    }
+
+    /**
+     * Get array of recursive pids
+     *
+     * @param int $pid
+     * @return array
+     */
+    protected function getTreeListArrayForPid(int $pid): array
+    {
+        $queryGenerator = $this->objectManager->get(QueryGenerator::class);
+
+        return GeneralUtility::intExplode(',', $queryGenerator->getTreeList($pid, 99, 0, 1));
     }
 }
