@@ -189,7 +189,8 @@ module.tx_pxaproductmanager {
     settings {
         listOrders {
             itemsPerPage = 10
-            title = ###NAME###, ###EMAIL###
+            # Title of order in BE module view. Support fluid. Accessible variable {order}
+            title = {order.orderFields.name.value}, {order.orderFields.email.value}
             dateFormat = %d/%m/%Y
         }
     }

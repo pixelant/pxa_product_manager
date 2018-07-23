@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\ViewHelpers\Backend;
 
 use Pixelant\PxaProductManager\Domain\Model\Order;
-use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
@@ -45,27 +44,7 @@ class OrderTitleViewHelper extends AbstractViewHelper
             return '';
         }
         $titleTemplate = $arguments['titleTemplate'];
-        $orderFields = [];
 
-        foreach ($order->getOrderFields() as $field => $fieldConfiguration) {
-            $orderFields['###' . $field . '###'] = $fieldConfiguration['value'];
-        }
-
-        $markerBasedTemplateService = self::getMarkerBasedTemplateService();
-
-        return $markerBasedTemplateService->substituteMarkerArray($titleTemplate, $orderFields, '', true);
-    }
-
-    /**
-     * @return MarkerBasedTemplateService
-     */
-    protected static function getMarkerBasedTemplateService(): MarkerBasedTemplateService
-    {
-        static $markerBasedTemplateService;
-        if ($markerBasedTemplateService === null) {
-            $markerBasedTemplateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
-        }
-
-        return $markerBasedTemplateService;
+        return MainUtility::parseFluidString($titleTemplate, ['order' => $order]);
     }
 }
