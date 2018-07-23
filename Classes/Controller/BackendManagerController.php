@@ -13,6 +13,7 @@ use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Extbase\Domain\Model\BackendUser;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -20,6 +21,7 @@ use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 /**
  * Class BackendManagerController
@@ -99,7 +101,7 @@ class BackendManagerController extends ActionController
      */
     public function indexAction()
     {
-        $newOrdersCount = $this->orderRepository->findNewOrders($this->pid)->count();
+        $newOrdersCount = $this->orderRepository->findNonCompleteOrders($this->pid)->count();
         $this->view->assign('newOrdersCount', $newOrdersCount);
     }
 
@@ -112,7 +114,7 @@ class BackendManagerController extends ActionController
     {
         if ($this->pid > 0) {
             $allOrders = $this->orderRepository->findAllCompleted($this->pid);
-            $newOrders = $this->orderRepository->findNewOrders($this->pid);
+            $newOrders = $this->orderRepository->findNonCompleteOrders($this->pid);
             $archiveOrders = $this->orderRepository->findAllArchivedInRootLine($this->pid);
 
             switch ($activeTab) {
@@ -163,31 +165,26 @@ class BackendManagerController extends ActionController
     }
 
     /**
-     * Mark as complete
-     *
-     * @param Order $order
-     */
-    public function markCompleteAction(Order $order)
-    {
-        $order->setComplete(true);
-        $this->orderRepository->update($order);
-
-        $this->redirect('listOrders');
-    }
-
-    /**
-     * Archive
+     * Toggle order state like: hidden, complete
      *
      * @param int $order
-     * @param string $activeTab
+     * @param string $state
+     * @param string $backUrl
      */
-    public function toggleArchiveOrderAction(int $order, string $activeTab = 'new')
+    public function toggleOrderStateAction(int $order, string $state, string $backUrl = '')
     {
         $order = $this->orderRepository->findByIdIgnoreHidden($order);
-        $order->setHidden(!$order->isHidden());
+        $currentState = ObjectAccess::getProperty($order, $state);
+
+        ObjectAccess::setProperty($order, $state, !$currentState);
+
         $this->orderRepository->update($order);
 
-        $this->redirect('listOrders', null, null, ['activeTab' => $activeTab]);
+        if (empty($backUrl)) {
+            $this->redirect('listOrders');
+        } else {
+            $this->redirectToUri($backUrl);
+        }
     }
 
     /**

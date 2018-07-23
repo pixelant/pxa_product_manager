@@ -196,7 +196,7 @@ module.tx_pxaproductmanager {
     }
     view {
         widget {
-            TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper {
+            Pixelant\PxaProductManager\ViewHelpers\Widget\PaginateViewHelper {
                 templateRootPath = EXT:pxa_product_manager/Resources/Private/Backend/Templates/
             }
         }

@@ -1,5 +1,6 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers/Backend" data-namespace-typo3-fluid="true">
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers/Backend"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers"data-namespace-typo3-fluid="true">
 
 <f:layout name="BELayout" />
 <f:debug>{_all}</f:debug>
@@ -45,11 +46,11 @@
                                 </div>
                             </div>
 
-                            <f:widget.paginate objects="{listOrders}" as="paginatedListOrders" configuration="{itemsPerPage: settings.listOrders.itemsPerPage, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 10}">
+                            <ppm:widget.paginate objects="{listOrders}" as="paginatedListOrders" configuration="{itemsPerPage: settings.listOrders.itemsPerPage, insertAbove: 0, insertBelow: 1, maximumNumberOfLinks: 10}">
                                 <f:for each="{paginatedListOrders}" as="order">
                                     <f:render section="orderRow" arguments="{order: order, backUrl: backUrl, activeTab: activeTab}" />
                                 </f:for>
-                            </f:widget.paginate>
+                            </ppm:widget.paginate>
                         </div>
                     </f:then>
                     <f:else>
@@ -85,17 +86,18 @@
             <f:switch expression="{activeTab}">
                 <f:case value="new">
                     <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
-                    <f:render section="buttonCompleteOrder" arguments="{order: order}" />
-                    <f:render section="buttonArchiveOrder" arguments="{order: order, activeTab: activeTab}" />
+                    <f:render section="buttonCompleteOrder" arguments="{order: order, backUrl: backUrl}" />
+                    <f:render section="buttonArchiveOrder" arguments="{order: order, backUrl: backUrl}" />
                 </f:case>
                 <f:case value="all">
                     <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
-                    <f:render section="buttonArchiveOrder" arguments="{order: order, activeTab: activeTab}" />
+                    <f:render section="buttonUndoCompletedOrder" arguments="{order: order, backUrl: backUrl}" />
+                    <f:render section="buttonArchiveOrder" arguments="{order: order, backUrl: backUrl}" />
                 </f:case>
                 <f:case value="archive">
                     <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
-                    <f:render section="buttonUnArchiveOrder" arguments="{order: order, activeTab: activeTab}" />
-                    <f:render section="buttonDeleteOrder" arguments="{order: order, activeTab: activeTab}" />
+                    <f:render section="buttonUnArchiveOrder" arguments="{order: order, backUrl: backUrl}" />
+                    <f:render section="buttonDeleteOrder" arguments="{order: order, backUrl: backUrl}" />
                 </f:case>
             </f:switch>
         </div>
@@ -113,21 +115,29 @@
 </f:section>
 
 <f:section name="buttonCompleteOrder">
-    <f:link.action action="markComplete"
+    <f:link.action action="toggleOrderState"
                    title="{pxa:translate(key: 'be.complete_order')}"
                    class="btn btn-default"
-                   arguments="{order: order}">
+                   arguments="{order: order, state: 'complete', backUrl: backUrl}">
         <core:icon identifier="actions-check"/>
     </f:link.action>
+</f:section>
 
+<f:section name="buttonUndoCompletedOrder">
+    <f:link.action action="toggleOrderState"
+                   title="{pxa:translate(key: 'be.undo_complete_order')}"
+                   class="btn btn-default"
+                   arguments="{order: order, state: 'complete', backUrl: backUrl}">
+        <core:icon identifier="actions-move-left"/>
+    </f:link.action>
 </f:section>
 
 <f:section name="buttonArchiveOrder">
-    <f:link.action action="toggleArchiveOrder"
+    <f:link.action action="toggleOrderState"
                    title="{pxa:translate(key: 'be.move_to_archive')}"
                    class="btn btn-default"
-                   arguments="{order: order, activeTab: activeTab}">
-        <core:icon identifier="actions-delete"/>
+                   arguments="{order: order, state: 'hidden', backUrl: backUrl}">
+        <core:icon identifier="actions-close"/>
     </f:link.action>
 </f:section>
 
@@ -142,10 +152,10 @@
 </f:section>
 
 <f:section name="buttonUnArchiveOrder">
-    <f:link.action action="toggleArchiveOrder"
+    <f:link.action action="toggleOrderState"
                    title="{pxa:translate(key: 'be.restore_from_archive')}"
                    class="btn btn-default"
-                   arguments="{order: order, activeTab: activeTab}">
+                   arguments="{order: order, state: 'hidden', backUrl: backUrl}">
         <core:icon identifier="actions-edit-restore"/>
     </f:link.action>
 </f:section>

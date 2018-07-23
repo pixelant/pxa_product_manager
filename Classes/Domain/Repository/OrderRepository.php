@@ -89,13 +89,13 @@ class OrderRepository extends Repository
     }
 
     /**
-     * Find all new orders for current BE user
+     * Find all un-completed
      *
      * @param int $pid
      * @param BackendUser $backendUser
      * @return QueryResultInterface
      */
-    public function findNewOrders(int $pid): QueryResultInterface
+    public function findNonCompleteOrders(int $pid): QueryResultInterface
     {
         $query = $this->createQuery();
 

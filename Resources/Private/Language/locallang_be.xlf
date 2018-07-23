@@ -175,9 +175,6 @@
             <trans-unit id="flexform.categoriesOrderings">
                 <source>Categories ordering</source>
             </trans-unit>
-            <trans-unit id="flexform.lists_sheet__title">
-                <source>Comapre &amp; Wish lists</source>
-            </trans-unit>
             <trans-unit id="flexform.sortby_name">
                 <source>Name</source>
             </trans-unit>
@@ -406,6 +403,9 @@
             </trans-unit>
             <trans-unit id="be.delete_confirm">
                 <source>Are you sure you want to delete?</source>
+            </trans-unit>
+            <trans-unit id="be.undo_complete_order">
+                <source>Add order back to "New orders"</source>
             </trans-unit>
             <!--Backend module:END-->
 
