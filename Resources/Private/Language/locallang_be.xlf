@@ -363,10 +363,10 @@
                 <source>Preview</source>
             </trans-unit>
             <trans-unit id="be.action.listCategories">
-                <source>List of categories</source>
+                <source>Categories and products manager</source>
             </trans-unit>
             <trans-unit id="be.action.listOrders">
-                <source>List of orders</source>
+                <source>Orders manager</source>
             </trans-unit>
             <trans-unit id="be.active_order_nav_tab">
                 <source>Active orders</source>
