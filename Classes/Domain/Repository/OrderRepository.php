@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\Order;
+use Pixelant\PxaProductManager\Exception\UnknownOrdersTabException;
 use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\BackendUser;
@@ -48,12 +49,34 @@ class OrderRepository extends Repository
     );
 
     /**
+     * Get order for tab
+     *
+     * @param string $tab
+     * @param int $pid
+     * @return QueryResultInterface
+     * @throws UnknownOrdersTabException
+     */
+    public function getOrderForTab(string $tab, int $pid): QueryResultInterface
+    {
+        switch ($tab) {
+            case 'active':
+                return $this->findActive($pid);
+            case 'complete':
+                return $this->findCompleted($pid);
+            case 'archive':
+                return $this->findArchived($pid);
+            default:
+                throw new UnknownOrdersTabException('Tab "' . $tab . '" is not supported', 1532519130852);
+        }
+    }
+
+    /**
      * Find all order in current root line
      *
      * @param int $pid
      * @return QueryResultInterface
      */
-    public function findAllCompleted(int $pid): QueryResultInterface
+    public function findCompleted(int $pid): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->getQuerySettings()
@@ -72,7 +95,7 @@ class OrderRepository extends Repository
      * @param int $pid
      * @return QueryResultInterface
      */
-    public function findAllArchivedInRootLine(int $pid): QueryResultInterface
+    public function findArchived(int $pid): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->getQuerySettings()
@@ -95,7 +118,7 @@ class OrderRepository extends Repository
      * @param BackendUser $backendUser
      * @return QueryResultInterface
      */
-    public function findNonCompleteOrders(int $pid): QueryResultInterface
+    public function findActive(int $pid): QueryResultInterface
     {
         $query = $this->createQuery();
 
@@ -113,7 +136,7 @@ class OrderRepository extends Repository
     /**
      * Find by id, even hidden
      *
-     * @param int $pid
+     * @param int $uid
      * @return Order|null
      */
     public function findByIdIgnoreHidden(int $uid)
@@ -141,8 +164,13 @@ class OrderRepository extends Repository
      */
     protected function getTreeListArrayForPid(int $pid): array
     {
-        $queryGenerator = $this->objectManager->get(QueryGenerator::class);
+        static $treeListCache = [];
+        if (!isset($treeListCache[$pid])) {
+            $queryGenerator = $this->objectManager->get(QueryGenerator::class);
 
-        return GeneralUtility::intExplode(',', $queryGenerator->getTreeList($pid, 99, 0, 1));
+            $treeListCache[$pid] = GeneralUtility::intExplode(',', $queryGenerator->getTreeList($pid, 99, 0, 1));
+        }
+
+        return $treeListCache[$pid];
     }
 }

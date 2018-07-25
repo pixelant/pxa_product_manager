@@ -192,6 +192,15 @@ module.tx_pxaproductmanager {
             # Title of order in BE module view. Support fluid. Accessible variable {order}
             title = {order.orderFields.name.value}, {order.orderFields.email.value}
             dateFormat = %d/%m/%Y
+
+            tabs {
+                list {
+                    0 = active
+                    1 = complete
+                    2 = archive
+                }
+                defaultActive = active
+            }
         }
     }
     view {

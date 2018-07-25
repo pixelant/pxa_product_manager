@@ -368,11 +368,11 @@
             <trans-unit id="be.action.listOrders">
                 <source>List of orders</source>
             </trans-unit>
-            <trans-unit id="be.new_order_nav_tab">
-                <source>New orders</source>
+            <trans-unit id="be.active_order_nav_tab">
+                <source>Active orders</source>
             </trans-unit>
-            <trans-unit id="be.all_order_nav_tab">
-                <source>All orders</source>
+            <trans-unit id="be.complete_order_nav_tab">
+                <source>Complete orders</source>
             </trans-unit>
             <trans-unit id="be.archive_order_nav_tab">
                 <source>Archived orders</source>
@@ -405,7 +405,10 @@
                 <source>Are you sure you want to delete?</source>
             </trans-unit>
             <trans-unit id="be.undo_complete_order">
-                <source>Add order back to "New orders"</source>
+                <source>Move to active</source>
+            </trans-unit>
+            <trans-unit id="be.restore_from_archive">
+                <source>Undo archive</source>
             </trans-unit>
             <!--Backend module:END-->
 

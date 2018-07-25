@@ -101,40 +101,37 @@ class BackendManagerController extends ActionController
      */
     public function indexAction()
     {
-        $newOrdersCount = $this->orderRepository->findNonCompleteOrders($this->pid)->count();
-        $this->view->assign('newOrdersCount', $newOrdersCount);
+        /*$newOrdersCount = $this->orderRepository->findNonCompleteOrders($this->pid)->count();
+        $this->view->assign('newOrdersCount', $newOrdersCount);*/
     }
 
     /**
      * Order view
      *
-     * @param string $activeTab - Current active tab. 'all' - All orders, 'archive' - Archived, 'new' default new
+     * @param string $activeTab - Current active tab
      */
-    public function listOrdersAction(string $activeTab = 'new')
+    public function listOrdersAction(string $activeTab = '')
     {
-        if ($this->pid > 0) {
-            $allOrders = $this->orderRepository->findAllCompleted($this->pid);
-            $newOrders = $this->orderRepository->findNonCompleteOrders($this->pid);
-            $archiveOrders = $this->orderRepository->findAllArchivedInRootLine($this->pid);
+        $activeTab = $activeTab ?: $this->settings['listOrders']['tabs']['defaultActive'];
 
-            switch ($activeTab) {
-                case 'all':
-                    $listOrders = $allOrders;
-                    break;
-                case 'archive':
-                    $listOrders = $archiveOrders;
-                    break;
-                default:
-                    $listOrders = $newOrders;
+        if ($this->pid > 0) {
+            $orderCount = 0;
+            $tabsOrders = [];
+            foreach ($this->settings['listOrders']['tabs']['list'] as $tab) {
+                $orders = $this->orderRepository->getOrderForTab($tab, $this->pid);
+
+                $orderCount += $orders->count();
+                $tabsOrders[$tab] = $orders;
+
+                if ($activeTab === $tab) {
+                    $listOrders = $orders;
+                }
             }
+
             $this->view->assignMultiple([
-                'listOrders' => $listOrders,
-                'ordersCount' => [
-                    'new' => $newOrders->count(),
-                    'all' => $allOrders->count(),
-                    'archive' => $archiveOrders->count(),
-                    'total' => $newOrders->count() + $archiveOrders->count() + $allOrders->count()
-                ],
+                'listOrders' => $listOrders ?? [],
+                'ordersCount' => $orderCount,
+                'tabsOrders' => $tabsOrders,
                 'backUrl' => GeneralUtility::getIndpEnv('REQUEST_URI'),
                 'activeTab' => $activeTab,
                 'pageTitle' => BackendUtility::getRecord('pages', $this->pid, 'title')['title']
@@ -153,9 +150,11 @@ class BackendManagerController extends ActionController
         $order = $this->orderRepository->findByIdIgnoreHidden($order);
 
         $totalPrice = 0.00;
+        $orderProductsQuantity = $order->getProductsQuantity();
+
         /** @var Product $product */
         foreach ($order->getProducts() as $product) {
-            $totalPrice += ($product->getPrice() * (int)($orderProducts[$product->getUid()] ?? 1));
+            $totalPrice += ($product->getPrice() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
         }
 
         $this->view

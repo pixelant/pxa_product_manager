@@ -13,17 +13,17 @@
 
     <f:flashMessages />
 
-    <f:if condition="{ordersCount.total}">
+    <f:if condition="{ordersCount}">
         <f:then>
             <div class="bs-example">
                 <span class="title"><pxa:translate key="be.action.listOrders" /></span>
 
                 <ul class="nav nav-pills" role="tablist">
-                    <f:for each="{0: 'new', 1: 'all', 2: 'archive'}" as="tab">
+                    <f:for each="{settings.listOrders.tabs.list}" as="tab">
                         <li role="presentation" class="{f:if(condition: '{tab} == {activeTab}', then: 'active')}">
                             <f:link.action action="listOrders" arguments="{activeTab: tab}">
                                 <pxa:translate key="be.{tab}_order_nav_tab" />
-                                <span class="badge">{ordersCount.{tab}}</span>
+                                <span class="badge"><f:count subject="{tabsOrders.{tab}}" /></span>
                             </f:link.action>
                         </li>
                     </f:for>
@@ -84,12 +84,12 @@
         </div>
         <div class="col-xs-5">
             <f:switch expression="{activeTab}">
-                <f:case value="new">
+                <f:case value="active">
                     <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
                     <f:render section="buttonCompleteOrder" arguments="{order: order, backUrl: backUrl}" />
                     <f:render section="buttonArchiveOrder" arguments="{order: order, backUrl: backUrl}" />
                 </f:case>
-                <f:case value="all">
+                <f:case value="complete">
                     <f:render section="buttonShowOrder" arguments="{order: order, backUrl: backUrl}" />
                     <f:render section="buttonUndoCompletedOrder" arguments="{order: order, backUrl: backUrl}" />
                     <f:render section="buttonArchiveOrder" arguments="{order: order, backUrl: backUrl}" />
