@@ -60,7 +60,7 @@ class OrderEditFormInitialize implements FormDataProviderInterface
             }
 
             // Add values
-            $result['databaseRow'][$fieldName] = $fieldConfiguration['feUserValue'] ?? $fieldConfiguration['value'];
+            $result['databaseRow'][$fieldName] = $fieldConfiguration['value'];
         }
 
         // Add field to types

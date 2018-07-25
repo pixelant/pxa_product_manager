@@ -18,7 +18,7 @@
         </tr>
         </thead>
         <tbody>
-        <f:for each="{products}" as="product" iteration="i">
+        <f:for each="{order.products}" as="product" iteration="i">
             <tr>
                 <th scope="row">{i.cycle}</th>
                 <td>{product.uid}</td>
@@ -29,7 +29,7 @@
                         <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatPrice}" />
                     </f:if>
                 </td>
-                <td>{orderProducts.{product.uid}}</td>
+                <td>{order.productsQuantity.{product.uid}}</td>
             </tr>
         </f:for>
         <f:if condition="{ppm:isPricingEnabled()}">

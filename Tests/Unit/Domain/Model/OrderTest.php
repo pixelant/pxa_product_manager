@@ -220,7 +220,7 @@ class OrderTest extends UnitTestCase
     /**
      * @test
      */
-    public function setOrderFieldWillSetOrderFieldWhenFieldsAlreadySet()
+    public function setOrderFieldValueWillSetNewOrderFieldValue()
     {
         $orderFields = [
             'name' => [
@@ -229,33 +229,17 @@ class OrderTest extends UnitTestCase
         ];
         $this->subject->setOrderFields($orderFields);
 
-        $newField = ['value' => 'new field'];
-        $expect = ['newField' => $newField] + $orderFields;
+        $newValue = 'new field value';
 
-        $this->subject->setOrderField('newField', $newField);
+        $this->subject->setOrderField('name', $newValue);
 
-        $this->assertEquals($expect, $this->subject->getOrderFields());
+        $this->assertEquals($newValue, $this->subject->getOrderField('name'));
     }
 
     /**
      * @test
      */
-    public function setOrderFieldWillSetOrderFieldifFieldsNotSet()
-    {
-        $this->subject->setSerializedOrderFields('');
-
-        $newField = ['value' => 'new field'];
-        $expect = ['newField' => $newField];
-
-        $this->subject->setOrderField('newField', $newField);
-
-        $this->assertEquals($expect, $this->subject->getOrderFields());
-    }
-
-    /**
-     * @test
-     */
-    public function getOrderFieldWillReturnOrderFieldIfExist()
+    public function getOrderFieldValueWillReturnOrderFieldValueIfExist()
     {
         $orderFields = [
             'name' => [
@@ -267,9 +251,7 @@ class OrderTest extends UnitTestCase
         ];
         $this->subject->setOrderFields($orderFields);
 
-        $expect = [
-            'value' => 'email@site.com'
-        ];
+        $expect = 'email@site.com';
 
         $this->assertEquals($expect, $this->subject->getOrderField('email'));
     }

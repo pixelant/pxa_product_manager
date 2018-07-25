@@ -259,8 +259,8 @@ class ProductController extends AbstractController
                 $termsStatus = $this->getAcceptTermsStatus();
 
                 if ($termsStatus !== self::DECLINE_TERMS & $this->validateOrderFields($orderFormFields, $values)) {
-                    $this->sendOrderEmail($orderFormFields, $orderProducts);
-                    $this->saveOrder($orderFormFields, $orderProducts);
+                    $order = $this->createAndSaveOrder($orderFormFields, $orderProducts);
+                    $this->sendOrderEmail($order);
                     $this->redirect('finishOrder');
                 } else {
                     $this->view
@@ -550,15 +550,13 @@ class ProductController extends AbstractController
     /**
      * Send emails with order
      *
-     * @param array $orderFields
-     * @param array $orderProducts
+     * @param Order $order
      * @return void
      */
-    protected function sendOrderEmail(array $orderFields, array $orderProducts)
+    protected function sendOrderEmail(Order $order)
     {
         $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'];
         $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'];
-        $products = $this->getProductByUidsList(array_keys($orderProducts));
 
         /** @var OrderMailService $orderMailService */
         $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
@@ -569,18 +567,18 @@ class ProductController extends AbstractController
         // Send email to admins
         $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
         $orderMailService
-            ->generateMailBody($adminTemplate, $orderFields, $orderProducts, $products)
+            ->generateMailBody($adminTemplate, $order)
             ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
             ->setReceivers($recipients)
             ->send();
 
         // Send email to user if enabled
         // @TODO make field name configurable
-        if (!empty($orderFields['email']['value'])
+        if (!empty($order->getOrderField('email'))
             && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
-            $recipients = [$orderFields['email']['value']];
+            $recipients = [$order->getOrderField('email')];
             $orderMailService
-                ->generateMailBody($userTemplate, $orderFields, $orderProducts, $products)
+                ->generateMailBody($userTemplate, $order)
                 ->setSubject($this->translate('fe.userEmail.orderForm.subject'))
                 ->setReceivers($recipients)
                 ->send();
@@ -592,9 +590,9 @@ class ProductController extends AbstractController
      *
      * @param array $orderFields
      * @param array $orderProducts
-     * @return void
+     * @return Order
      */
-    protected function saveOrder(array $orderFields, array $orderProducts)
+    protected function createAndSaveOrder(array $orderFields, array $orderProducts): Order
     {
         $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
 
@@ -619,6 +617,8 @@ class ProductController extends AbstractController
         }
 
         $this->orderRepository->add($order);
+
+        return $order;
     }
 
     /**

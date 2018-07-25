@@ -288,7 +288,8 @@ class Order extends AbstractDomainObject
     public function setOrderField(string $name, $value)
     {
         $orderFields = $this->getOrderFields() ?: [];
-        $orderFields[$name] = $value;
+        $orderFields[$name]['value'] = $value;
+
         $this->setOrderFields($orderFields);
     }
 
@@ -299,7 +300,8 @@ class Order extends AbstractDomainObject
     public function getOrderField(string $name)
     {
         $orderFields = $this->getOrderFields() ?: [];
-        return $orderFields[$name] ?: null;
+
+        return $orderFields[$name]['value'] ?: null;
     }
 
     /**

@@ -101,8 +101,8 @@ class BackendManagerController extends ActionController
      */
     public function indexAction()
     {
-        /*$newOrdersCount = $this->orderRepository->findNonCompleteOrders($this->pid)->count();
-        $this->view->assign('newOrdersCount', $newOrdersCount);*/
+        $activeOrdersCount = $this->orderRepository->findActive($this->pid)->count();
+        $this->view->assign('activeOrdersCount', $activeOrdersCount);
     }
 
     /**

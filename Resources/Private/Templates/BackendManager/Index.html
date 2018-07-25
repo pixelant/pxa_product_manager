@@ -12,8 +12,8 @@
         </f:link.action>
         <f:link.action action="listOrders" class="btn btn-default">
             <pxa:translate key="be.action.listOrders" />
-            <f:if condition="{newOrdersCount}">
-                <span class="badge">+{newOrdersCount}</span>
+            <f:if condition="{activeOrdersCount}">
+                <span class="badge">(<pxa:translate key="be.active_order_nav_tab" />: {activeOrdersCount})</span>
             </f:if>
         </f:link.action>
     </div>

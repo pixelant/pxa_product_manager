@@ -21,7 +21,7 @@ class OrderMailService extends AbstractMailService
      */
     public function generateMailBody(...$variables)
     {
-        list($template, $orderFields, $orderProducts, $products) = $variables;
+        list($template, $order) = $variables;
 
         $standAloneView = $this->initializeStandaloneView(
             $template
@@ -29,19 +29,17 @@ class OrderMailService extends AbstractMailService
 
         if (MainUtility::isPricingEnabled()) {
             $totalPrice = 0.00;
+            $orderProductsQuantity = $order->getProductsQuantity();
+
             /** @var Product $product */
-            foreach ($products as $product) {
-                $totalPrice += ($product->getPrice() * (int)($orderProducts[$product->getUid()] ?? 1));
+            foreach ($order->getProducts() as $product) {
+                $totalPrice += ($product->getPrice() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
             }
             
             $standAloneView->assign('totalPrice', ProductUtility::formatPrice($totalPrice));
         }
 
-        $standAloneView->assignMultiple([
-            'orderFields' => $orderFields,
-            'orderProducts' => $orderProducts,
-            'products' => $products
-        ]);
+        $standAloneView->assign('order', $order);
 
         $this->message = $standAloneView->render();
 
