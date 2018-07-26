@@ -574,8 +574,8 @@ class ProductController extends AbstractController
 
         // Send email to user if enabled
         // @TODO make field name configurable
-        if (!empty($order->getOrderField('email'))
-            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
+        if ((int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1
+            && !empty($order->getOrderField('email'))) {
             $recipients = [$order->getOrderField('email')];
             $orderMailService
                 ->generateMailBody($userTemplate, $order)
