@@ -5,6 +5,45 @@
   /* asseccories */
   /* usp */
   /** loader **/
+  /*.wish-list-btn {
+        &:not(.list-clear__icon) {
+            width: 55px;
+            margin-top: 3px;
+        }
+
+        &.in-progress .lds-dual-ring {
+            display: inline-block;
+        }
+        &.active-icon {
+            .pm-like-button {
+                background-position: 0 0;
+            }
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                .pm-like-button {
+                    background-position: 0 0;
+                }
+            }
+        }
+        &.ongoing-initialization {
+            .pm-like-button {
+                display: none;
+            }
+        }
+        &.order-clear__icon {
+            position: relative;
+            top: 5px;
+
+            fill: #909090;
+            &:hover {
+                fill: #707070;
+                cursor: pointer;
+            }
+        }
+
+    }*/
 }
 .tx-pxa-product-manager .item {
   height: auto;
@@ -293,81 +332,72 @@
   -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
   transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
 }
-.tx-pxa-product-manager .compare-list-btn .lds-dual-ring {
-  margin-bottom: 7px;
-  margin-left: 5px;
-  display: none;
-}
-.tx-pxa-product-manager .compare-list-btn.ongoing-initialization .toggle-compare-icon {
-  display: none;
-}
-.tx-pxa-product-manager .compare-list-btn .toggle-compare-icon path {
-  fill: #939393;
-}
-.tx-pxa-product-manager .compare-list-btn:hover .toggle-compare-icon path,
-.tx-pxa-product-manager .compare-list-btn.selected .toggle-compare-icon path {
-  fill: #545454;
-}
-.tx-pxa-product-manager .compare-list-btn.in-progress .lds-dual-ring {
-  display: inline-block;
-}
-.tx-pxa-product-manager .compare-list-btn.list-clear__icon {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  fill: #909090;
-}
-.tx-pxa-product-manager .compare-list-btn.list-clear__icon:hover {
-  fill: #707070;
-  cursor: pointer;
-}
 .tx-pxa-product-manager .pm-like-button {
   width: 24px;
   height: 24px;
   display: inline-block;
   background-position: 0 24px;
 }
-.tx-pxa-product-manager .wish-list-btn:not(.list-clear__icon) {
-  width: 55px;
-  margin-top: 3px;
-}
-.tx-pxa-product-manager .wish-list-btn .lds-dual-ring {
-  margin-bottom: 3px;
-  margin-left: 3px;
-  display: none;
-}
-.tx-pxa-product-manager .wish-list-btn.in-progress .lds-dual-ring {
-  display: inline-block;
-}
-.tx-pxa-product-manager .wish-list-btn.selected .pm-like-button {
-  background-position: 0 0;
-}
-@media (hover: hover) {
-  .tx-pxa-product-manager .wish-list-btn:hover .pm-like-button {
-    background-position: 0 0;
-  }
-}
-.tx-pxa-product-manager .wish-list-btn.ongoing-initialization .pm-like-button {
-  display: none;
-}
-.tx-pxa-product-manager .wish-list-btn.order-clear__icon {
+.tx-pxa-product-manager .pm-action-button {
   position: relative;
-  top: 5px;
-  fill: #909090;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  margin-right: 5px;
 }
-.tx-pxa-product-manager .wish-list-btn.order-clear__icon:hover {
+.tx-pxa-product-manager .pm-action-button:hover {
   fill: #707070;
   cursor: pointer;
 }
-.tx-pxa-product-manager .wish-list-btn.list-clear__icon {
+.tx-pxa-product-manager .pm-action-button .lds-dual-ring {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+.tx-pxa-product-manager .pm-action-button.in-progress .lds-dual-ring,
+.tx-pxa-product-manager .pm-action-button.ongoing-initialization .lds-dual-ring {
+  display: inline-block;
+}
+.tx-pxa-product-manager .pm-action-button.in-progress .pm-action-icon,
+.tx-pxa-product-manager .pm-action-button.ongoing-initialization .pm-action-icon {
+  display: none;
+}
+.tx-pxa-product-manager .pm-action-button.list-clear__icon {
   position: absolute;
   top: 5px;
   right: 5px;
   fill: #909090;
+  width: 20px;
+  height: 20px;
 }
-.tx-pxa-product-manager .wish-list-btn.list-clear__icon:hover {
+.tx-pxa-product-manager .pm-action-button.list-clear__icon:hover {
   fill: #707070;
-  cursor: pointer;
+}
+.tx-pxa-product-manager .list-clear__icon._order-clear__icon {
+  position: relative;
+}
+.tx-pxa-product-manager .wish-list-btn.active-icon .pm-like-button {
+  background-position: 0 0;
+}
+.tx-pxa-product-manager .wish-list-btn .lds-dual-ring {
+  left: 5px;
+}
+.tx-pxa-product-manager .compare-list-btn {
+  bottom: 3px;
+}
+.tx-pxa-product-manager .compare-list-btn .lds-dual-ring {
+  top: 6px;
+  left: 6px;
+}
+.tx-pxa-product-manager .compare-list-btn .toggle-compare-icon path {
+  fill: #939393;
+}
+.tx-pxa-product-manager .compare-list-btn:hover .toggle-compare-icon path,
+.tx-pxa-product-manager .compare-list-btn.active-icon .toggle-compare-icon path {
+  fill: #545454;
 }
 .tx-pxa-product-manager .pm-products-user-list .list-no-products-found {
   display: none;

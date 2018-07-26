@@ -150,7 +150,7 @@
                 data="{product-uid: product.uid}" />
     </div>
     <div class="col-sm-2 col-md-1">
-            <div class="wish-list-btn in-progress order-clear__icon"
+            <div class="pm-action-button in-progress list-clear__icon _order-clear__icon"
                   data-wish-list-button="1"
                   data-delete-parent-on-remove=".row"
                   data-product-uid="{product.uid}"
@@ -158,7 +158,8 @@
                   data-remove-from-list-text="{f:translate(key: 'fe.wish_list.remove_title')}"
                   data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleWishList', absolute: '1', arguments: '{wishProduct: product}', pageType: '{settings.wishList.pageType}')}">
             <ppm:svg
-                    source="{f:uri.resource(path: 'Icons/circle-cross.svg', extensionName: 'pxa_product_manager')}" />
+                    class="pm-action-icon"
+                    source="{f:uri.resource(path: 'Icons/Svg/circle-cross.svg', extensionName: 'pxa_product_manager')}" />
                 <div class="lds-dual-ring"><div class="small"></div></div>
             </div>
     </div>

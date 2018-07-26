@@ -351,43 +351,6 @@
         transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
     }
 
-    .compare-list-btn {
-        .lds-dual-ring {
-            margin-bottom: 7px;
-            margin-left: 5px;
-            display: none;
-        }
-        &.ongoing-initialization {
-            .toggle-compare-icon {
-                display: none;
-            }
-        }
-        .toggle-compare-icon path {
-            fill: #939393;
-        }
-        &:hover,
-        &.selected {
-            .toggle-compare-icon path {
-                fill: #545454;
-            }
-        }
-        &.in-progress {
-            .lds-dual-ring {
-                display: inline-block;
-            }
-        }
-        &.list-clear__icon {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            fill: #909090;
-            &:hover {
-                fill: #707070;
-                cursor: pointer;
-            }
-        }
-    }
-
     .pm-like-button {
         width: 24px;
         height: 24px;
@@ -395,24 +358,101 @@
         background-position: 0 24px;
     }
 
-    .wish-list-btn {
-        &:not(.list-clear__icon) {
-            width: 55px;
-            margin-top: 3px;
+    .pm-action-button {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        margin-right: 5px;
+
+        &:hover {
+            fill: #707070;
+            cursor: pointer;
         }
+
         .lds-dual-ring {
-            margin-bottom: 3px;
-            margin-left: 3px;
             display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
         }
-        &.in-progress .lds-dual-ring {
-            display: inline-block;
+
+        &.in-progress,
+        &.ongoing-initialization {
+            .lds-dual-ring {
+                display: inline-block;
+            }
+            .pm-action-icon {
+                display: none;
+            }
         }
-        &.selected {
+
+        &.list-clear__icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            fill: #909090;
+            width: 20px;
+            height: 20px;
+            &:hover {
+                fill: #707070;
+            }
+        }
+    }
+
+    .list-clear__icon._order-clear__icon {
+        position: relative;
+    }
+
+    .wish-list-btn {
+        &.active-icon {
             .pm-like-button {
                 background-position: 0 0;
             }
         }
+
+        .lds-dual-ring {
+            left: 5px;
+        }
+    }
+
+    .compare-list-btn {
+        bottom: 3px;
+
+        .lds-dual-ring {
+            top: 6px;
+            left: 6px;
+        }
+
+        .toggle-compare-icon path {
+            fill: #939393;
+        }
+
+        &:hover,
+        &.active-icon {
+            .toggle-compare-icon path {
+                fill: #545454;
+            }
+        }
+    }
+
+    /*.wish-list-btn {
+        &:not(.list-clear__icon) {
+            width: 55px;
+            margin-top: 3px;
+        }
+
+        &.in-progress .lds-dual-ring {
+            display: inline-block;
+        }
+        &.active-icon {
+            .pm-like-button {
+                background-position: 0 0;
+            }
+        }
+
         @media (hover: hover) {
             &:hover {
                 .pm-like-button {
@@ -435,17 +475,8 @@
                 cursor: pointer;
             }
         }
-        &.list-clear__icon {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            fill: #909090;
-            &:hover {
-                fill: #707070;
-                cursor: pointer;
-            }
-        }
-    }
+
+    }*/
 
     .pm-products-user-list {
         .list-no-products-found {

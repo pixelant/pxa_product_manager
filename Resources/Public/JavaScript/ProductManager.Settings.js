@@ -14,7 +14,7 @@
 		cartsIdentifier: '.pxa-pm-wish-list-cart',
 		mainCartIdentifier: '.pxa-pm-wish-list-cart.main-cart:first',
 		cartCounterIdentifier: '.pxa-pm-wish-list-cart__counter',
-		inListClass: 'selected',
+		inListClass: 'active-icon',
 		notInListClass: 'inactive-icon',
 		initializationClass: 'ongoing-initialization',
 		loadingClass: 'in-progress'
@@ -27,7 +27,7 @@
 		cartsIdentifier: '.pxa-pm-compare-list-cart',
 		mainCartIdentifier: '.pxa-pm-compare-list-cart.main-cart:first',
 		cartCounterIdentifier: '.pxa-pm-compare-list-cart__counter',
-		inListClass: 'selected',
+		inListClass: 'active-icon',
 		notInListClass: 'inactive-icon',
 		loadingClass: 'in-progress',
 		initializationClass: 'ongoing-initialization',
