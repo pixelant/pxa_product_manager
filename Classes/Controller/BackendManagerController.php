@@ -3,18 +3,16 @@
 namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
-use TYPO3\CMS\Extbase\Domain\Model\BackendUser;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
@@ -97,11 +95,14 @@ class BackendManagerController extends ActionController
     /**
      * Main view
      *
-     * @param Category $category
      */
     public function indexAction()
     {
-        $activeOrdersCount = $this->orderRepository->findActive($this->pid)->count();
+        $activeOrdersCount = $this->orderRepository
+            ->findActive(
+                $this->getTreeListArrayForPid($this->pid)
+            )
+            ->count();
         $this->view->assign('activeOrdersCount', $activeOrdersCount);
     }
 
@@ -117,8 +118,9 @@ class BackendManagerController extends ActionController
         if ($this->pid > 0) {
             $orderCount = 0;
             $tabsOrders = [];
+            $storage = $this->getTreeListArrayForPid($this->pid);
             foreach ($this->settings['listOrders']['tabs']['list'] as $tab) {
-                $orders = $this->orderRepository->getOrderForTab($tab, $this->pid);
+                $orders = $this->orderRepository->getOrderForTab($tab, $storage);
 
                 $orderCount += $orders->count();
                 $tabsOrders[$tab] = $orders;
@@ -420,5 +422,17 @@ class BackendManagerController extends ActionController
                 $buttonBar->addButton($button, ButtonBar::BUTTON_POSITION_LEFT);
             }
         }
+    }
+
+    /**
+     * Get array of recursive pids
+     *
+     * @param int $pid
+     * @return array
+     */
+    protected function getTreeListArrayForPid(int $pid): array
+    {
+        $queryGenerator = $this->objectManager->get(QueryGenerator::class);
+        return GeneralUtility::intExplode(',', $queryGenerator->getTreeList($pid, 99, 0, 1));
     }
 }

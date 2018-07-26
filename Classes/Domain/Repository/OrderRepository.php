@@ -5,9 +5,6 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Exception\UnknownOrdersTabException;
-use TYPO3\CMS\Core\Database\QueryGenerator;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\BackendUser;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -52,19 +49,19 @@ class OrderRepository extends Repository
      * Get order for tab
      *
      * @param string $tab
-     * @param int $pid
+     * @param array $storage
      * @return QueryResultInterface
      * @throws UnknownOrdersTabException
      */
-    public function getOrderForTab(string $tab, int $pid): QueryResultInterface
+    public function getOrderForTab(string $tab, array $storage = []): QueryResultInterface
     {
         switch ($tab) {
             case 'active':
-                return $this->findActive($pid);
+                return $this->findActive($storage);
             case 'complete':
-                return $this->findCompleted($pid);
+                return $this->findCompleted($storage);
             case 'archive':
-                return $this->findArchived($pid);
+                return $this->findArchived($storage);
             default:
                 throw new UnknownOrdersTabException('Tab "' . $tab . '" is not supported', 1532519130852);
         }
@@ -73,15 +70,13 @@ class OrderRepository extends Repository
     /**
      * Find all order in current root line
      *
-     * @param int $pid
+     * @param array $customStorage
      * @return QueryResultInterface
      */
-    public function findCompleted(int $pid): QueryResultInterface
+    public function findCompleted(array $customStorage = []): QueryResultInterface
     {
         $query = $this->createQuery();
-        $query->getQuerySettings()
-            ->setStoragePageIds($this->getTreeListArrayForPid($pid))
-            ->setRespectSysLanguage(false);
+        $this->setCustomStorage($query, $customStorage);
 
         $query->matching(
             $query->equals('complete', true)
@@ -92,17 +87,17 @@ class OrderRepository extends Repository
 
     /**
      * Find all archived orders in current root line
-     * @param int $pid
+     * @param array $customStorage
      * @return QueryResultInterface
      */
-    public function findArchived(int $pid): QueryResultInterface
+    public function findArchived(array $customStorage = []): QueryResultInterface
     {
         $query = $this->createQuery();
         $query->getQuerySettings()
             ->setIgnoreEnableFields(true)
-            ->setEnableFieldsToBeIgnored(['disabled'])
-            ->setStoragePageIds($this->getTreeListArrayForPid($pid))
-            ->setRespectSysLanguage(false);
+            ->setEnableFieldsToBeIgnored(['disabled']);
+
+        $this->setCustomStorage($query, $customStorage);
 
         $query->matching(
             $query->equals('hidden', true)
@@ -114,17 +109,13 @@ class OrderRepository extends Repository
     /**
      * Find all un-completed
      *
-     * @param int $pid
-     * @param BackendUser $backendUser
+     * @param array $customStorage
      * @return QueryResultInterface
      */
-    public function findActive(int $pid): QueryResultInterface
+    public function findActive(array $customStorage = []): QueryResultInterface
     {
         $query = $this->createQuery();
-
-        $query->getQuerySettings()
-            ->setStoragePageIds($this->getTreeListArrayForPid($pid))
-            ->setRespectSysLanguage(false);
+        $this->setCustomStorage($query, $customStorage);
 
         $query->matching(
             $query->equals('complete', false)
@@ -157,20 +148,17 @@ class OrderRepository extends Repository
     }
 
     /**
-     * Get array of recursive pids
+     * Override storage of query
      *
-     * @param int $pid
-     * @return array
+     * @param QueryInterface $query
+     * @param array $customStorage
      */
-    protected function getTreeListArrayForPid(int $pid): array
+    protected function setCustomStorage(QueryInterface $query, array $customStorage)
     {
-        static $treeListCache = [];
-        if (!isset($treeListCache[$pid])) {
-            $queryGenerator = $this->objectManager->get(QueryGenerator::class);
-
-            $treeListCache[$pid] = GeneralUtility::intExplode(',', $queryGenerator->getTreeList($pid, 99, 0, 1));
+        if (!empty($customStorage)) {
+            $query
+                ->getQuerySettings()
+                ->setStoragePageIds($customStorage);
         }
-
-        return $treeListCache[$pid];
     }
 }
