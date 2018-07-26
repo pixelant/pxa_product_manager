@@ -674,7 +674,7 @@ class ProductController extends AbstractController
                             }
                             break;
                         case 'email':
-                            if (!GeneralUtility::validEmail($value)) {
+                            if (!empty($value) && !GeneralUtility::validEmail($value)) {
                                 $fieldConf['errors'][] = $this->translate('fe.validation_error.email');
                                 $isValid = false;
                             }

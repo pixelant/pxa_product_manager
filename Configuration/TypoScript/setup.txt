@@ -47,6 +47,7 @@ plugin.tx_pxaproductmanager {
             pageType = 201702
 
             # Available validations: email,required,url
+            # Email validation allow empty values
             # Available fields types: input,textarea
             orderForm {
                 replaceWithFeUserValues = {$plugin.tx_pxaproductmanager.settings.wishList.replaceWithFeUserValues}
