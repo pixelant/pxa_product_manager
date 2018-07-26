@@ -102,6 +102,7 @@
 				if (data.success) {
 					button
 						.toggleClass(settings.inListClass)
+						.toggleClass(settings.notInListClass)
 						.removeClass(settings.loadingClass)
 						.prop('disabled', false)
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
