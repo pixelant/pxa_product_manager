@@ -36,6 +36,11 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Order extends AbstractDomainObject
 {
+
+    const ORDERFIELD_INPUT = 'input';
+    const ORDERFIELD_TEXTAREA = 'textarea';
+    const ORDERFIELD_INPUT_GROUP = 'input_group';
+
     /**
      * @var bool
      */
@@ -284,11 +289,16 @@ class Order extends AbstractDomainObject
     /**
      * @param string $name
      * @param mixed $value
+     * @param string $type
      */
-    public function setOrderField(string $name, $value)
+    public function setOrderField(string $name, $value, string $type = '')
     {
         $orderFields = $this->getOrderFields() ?: [];
         $orderFields[$name]['value'] = $value;
+
+        if (!empty($type)) {
+            $orderFields[$name]['type'] = $type;
+        }
 
         $this->setOrderFields($orderFields);
     }

@@ -313,4 +313,13 @@ class MainUtility
 
         return $cacheManager;
     }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    public static function snakeCasePhraseToWords(string $value) : string
+    {
+        return ucfirst(str_replace('_', ' ', $value));
+    }
 }

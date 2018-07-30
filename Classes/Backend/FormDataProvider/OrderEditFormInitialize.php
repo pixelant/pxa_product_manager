@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
+use Pixelant\PxaProductManager\Backend\ExtendedTca\ExtendedTca;
+use Pixelant\PxaProductManager\Domain\Model\Order;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
@@ -38,18 +41,32 @@ class OrderEditFormInitialize implements FormDataProviderInterface
         foreach ($orderFields as $fieldName => $fieldConfiguration) {
             // Add TCA
             switch ($fieldConfiguration['type']) {
-                case 'textarea':
+                case Order::ORDERFIELD_TEXTAREA:
                     $result['processedTca']['columns'][$fieldName] = [
-                        'label' => ucfirst(str_replace('_', ' ', $fieldName)),
+                        'label' => MainUtility::snakeCasePhraseToWords($fieldName),
                         'config' => [
                             'type' => 'text',
                             'readOnly' => true
                         ]
                     ];
                     break;
+                case Order::ORDERFIELD_INPUT_GROUP:
+                    $result['processedTca']['columns'][$fieldName] = [
+                        'label' => MainUtility::snakeCasePhraseToWords($fieldName),
+                        'config' => [
+                            'type' => 'user',
+                            'size' => '30',
+                            'userFunc' => ExtendedTca::class . '->renderMultirowDataField',
+                            'parameters' => [
+                                'fieldConfig' => $fieldConfiguration['value']
+                            ],
+                            'readOnly' => true
+                        ]
+                    ];
+                    break;
                 default:
                     $result['processedTca']['columns'][$fieldName] = [
-                        'label' => ucfirst(str_replace('_', ' ', $fieldName)),
+                        'label' => MainUtility::snakeCasePhraseToWords($fieldName),
                         'config' => [
                             'type' => 'input',
                             'size' => 30,
