@@ -25,6 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
@@ -305,6 +306,11 @@ class Product extends AbstractEntity
     protected $customSorting = 0;
 
     /**
+     * @var CategoryRepository $categoryRepository
+     */
+    protected $categoryRepository = null;
+
+    /**
      * __construct
      *
      */
@@ -345,6 +351,14 @@ class Product extends AbstractEntity
         $this->assets = new ObjectStorage();
 
         $this->accessories = new ObjectStorage();
+    }
+
+    /**
+     * @param CategoryRepository $categoryRepository
+     */
+    public function injectCategoryRepository(CategoryRepository $categoryRepository) : void
+    {
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -1660,9 +1674,19 @@ class Product extends AbstractEntity
             return $this->taxRate;
         }
 
-        // Else get the tax rate from category
-        // TODO: implement
-        return $this->taxRate;
+        // Else get the tax rate from categories
+        $taxRate = 0;
+
+        $levelTree = $this->categoryRepository->getCategoriesLevelTreeForProduct($this->getUid());
+
+        foreach ($levelTree as $levelTreeItem) {
+            $taxRate = $levelTreeItem['category']->getTaxRate();
+            if ($taxRate > 0) {
+                break;
+            }
+        }
+
+        return $taxRate;
     }
 
     /**
@@ -1671,5 +1695,10 @@ class Product extends AbstractEntity
     public function getTax() : float
     {
         return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+    }
+
+    public function getFormatTax(): string
+    {
+        return ProductUtility::formatPrice($this->getTax());
     }
 }
