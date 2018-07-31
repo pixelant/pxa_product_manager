@@ -100,11 +100,11 @@ class Category extends CategoryExtbase
     protected $bannerImage;
 
     /**
-     * pxaPmTaxRate
+     * taxRate
      *
-     * @var float $pxaPmTaxRate
+     * @var float $taxRate
      */
-    protected $pxaPmTaxRate = 0.00;
+    protected $taxRate = 0.00;
 
     /**
      * @var \string
@@ -365,20 +365,20 @@ class Category extends CategoryExtbase
      *
      * @return float $pxaPmTaxRate
      */
-    public function getPxaPmTaxRate() : float
+    public function getTaxRate() : float
     {
-        return $this->pxaPmTaxRate;
+        return $this->taxRate;
     }
 
     /**
-     * Sets the pxaPmTaxRate
+     * Sets the taxRate
      *
-     * @param float $pxaPmTaxRate
+     * @param float $taxRate
      * @return void
      */
-    public function setPxaPmTaxRate(float $pxaPmTaxRate)
+    public function setTaxRate(float $taxRate)
     {
-        $this->pxaPmTaxRate = $pxaPmTaxRate;
+        $this->taxRate = $taxRate;
     }
 
     /**
