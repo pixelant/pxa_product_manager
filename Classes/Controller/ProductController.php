@@ -2,6 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Controller;
 
+use Pixelant\PxaKlarnaPmIntegration\Domain\Model\Configuration;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
@@ -237,17 +238,20 @@ class ProductController extends AbstractController
      * Wish list of products
      *
      * @param bool $sendOrder
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function wishListAction(bool $sendOrder = false)
     {
-        $checkout = [
-            'type' => 'default'
-        ];
+        // Select the checkout system to use
+        $checkoutToUse = $this->settings['wishList']['checkoutSystem']
+            ?: MainUtility::getExtMgrConfiguration()['checkoutSystem']
+            ?: 'default';
+        
+        $checkOutSystems = ConfigurationUtility::getCheckoutSystems();
+        $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
 
-        // SetCheckout signal slot to register external e-commerce integrations
-        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        $signalSlotDispatcher->dispatch(__CLASS__, 'SetCheckout', [&$checkout, $this]);
-
+        //
         $orderFormAllowed = $this->isOrderFormAllowed();
 
         $orderFormFields = $this->getProcessedOrderFormFields();
