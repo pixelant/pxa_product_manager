@@ -2,7 +2,6 @@
 
 namespace Pixelant\PxaProductManager\Controller;
 
-use Pixelant\PxaKlarnaPmIntegration\Domain\Model\Configuration;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
@@ -250,6 +249,10 @@ class ProductController extends AbstractController
         
         $checkOutSystems = ConfigurationUtility::getCheckoutSystems();
         $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
+
+        // Add after checkout system selected slot
+        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
+        $signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
 
         //
         $orderFormAllowed = $this->isOrderFormAllowed();

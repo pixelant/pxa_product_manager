@@ -107,7 +107,7 @@ class ConfigurationUtility
         ];
 
         $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        $signalSlotDispatcher->dispatch(__CLASS__, 'GetCheckoutSystems', [&$checkoutSystems]);
+        $signalSlotDispatcher->dispatch(__CLASS__, 'BeforeReturningCheckoutSystems', [&$checkoutSystems]);
 
         return $checkoutSystems;
     }
