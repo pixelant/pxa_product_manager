@@ -29,14 +29,17 @@ class OrderMailService extends AbstractMailService
 
         if (MainUtility::isPricingEnabled()) {
             $totalPrice = 0.00;
+            $totalTax = 0.00;
             $orderProductsQuantity = $order->getProductsQuantity();
 
             /** @var Product $product */
             foreach ($order->getProducts() as $product) {
                 $totalPrice += ($product->getPrice() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
+                $totalTax += ($product->getTax() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
             }
             
             $standAloneView->assign('totalPrice', ProductUtility::formatPrice($totalPrice));
+            $standAloneView->assign('totalTax', ProductUtility::formatPrice($totalTax));
         }
 
         $standAloneView->assign('order', $order);

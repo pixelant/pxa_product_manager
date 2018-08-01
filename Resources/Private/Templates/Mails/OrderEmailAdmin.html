@@ -6,6 +6,7 @@
 
 <f:section name="main">
     <h4><f:translate key="fe.adminEmail.orderForm.title" extensionName="PxaProductManager" /></h4>
+
     <table border="1" cellpadding="2" cellspacing="2">
         <thead>
         <tr>
@@ -14,6 +15,11 @@
             <th><f:translate key="fe.product_name" extensionName="PxaProductManager" /></th>
             <th><f:translate key="fe.sku"  extensionName="PxaProductManager" /></th>
             <th><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per',  extensionName: 'PxaProductManager')}" else=""/></th>
+            <f:if condition="{ppm:isPricingEnabled()} && {settings.wishList.showTaxInfo}">
+                <th>
+                    <f:translate key="fe.tax" extensionName="PxaProductManager" />
+                </th>
+            </f:if>
             <th><f:translate key="fe.amount" extensionName="PxaProductManager" /></th>
         </tr>
         </thead>
@@ -29,6 +35,11 @@
                         <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatPrice}" />
                     </f:if>
                 </td>
+                <f:if condition="{ppm:isPricingEnabled()} && {settings.wishList.showTaxInfo}">
+                    <td>
+                        <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.tax}" />
+                    </td>
+                </f:if>
                 <td>{order.productsQuantity.{product.uid}}</td>
             </tr>
         </f:for>
@@ -38,9 +49,19 @@
                 <th style="border: none;"></th>
                 <th style="border: none;"></th>
                 <th style="border: none;"></th>
-                <th style="border: none;"><f:translate key="fe.total_price" extensionName="PxaProductManager" />:</th>
-                <th style="border: none;"><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalPrice}" /></th>
+                <th style="border: none; text-align: right;"><f:translate key="fe.total_price" extensionName="PxaProductManager" />:</th>
+                <th style="border: none; text-align: right;"><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalPrice}" /></th>
             </tr>
+            <f:if condition="{settings.wishList.showTaxInfo}">
+                <tr>
+                    <th style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th style="border: none; text-align: right;"><f:translate key="fe.tax" extensionName="PxaProductManager" />:</th>
+                    <th style="border: none; text-align: right;"><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalTax}" /></th>
+                </tr>
+            </f:if>
         </f:if>
         </tbody>
     </table>
