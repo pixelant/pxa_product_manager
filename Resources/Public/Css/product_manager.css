@@ -45,6 +45,9 @@
   margin-right: 30px;
   margin-top: 25px;
 }
+.tx-pxa-product-manager .tax-price {
+  color: #9e9e9e;
+}
 .tx-pxa-product-manager .item-order-img img {
   width: 100%;
   height: auto;

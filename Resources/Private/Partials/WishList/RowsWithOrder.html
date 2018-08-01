@@ -33,6 +33,20 @@
                                       data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
                                     <div class="lds-dual-ring"><div class="small"></div></div>
                                 </span>
+                                <f:if condition="{settings.wishList.showTaxInfo}">
+                                    <small class="tax-price">
+                                        (
+                                        <f:translate key="fe.tax" />
+                                        <span class="pxa-pm-order-total-tax"
+                                              data-nubmer-format="{f:translate(key: 'priceFormat')}"
+                                              data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                                        <div class="lds-dual-ring">
+                                            <div class="small"></div>
+                                        </div>
+                                    </span>
+                                        )
+                                    </small>
+                                </f:if>
                             </div>
                         </f:if>
                         <f:if condition="{orderFormAllowed}">
@@ -141,6 +155,14 @@
             <span class="item-order-price" id="item-order-price-{product.uid}" data-price="{product.price}" data-product-uid="{product.uid}">
                 <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
             </span>
+            <f:if condition="{settings.wishList.showTaxInfo}">
+                <div class="item-order-tax tax-price" id="item-order-tax-{product.uid}" data-tax="{product.tax}" data-product-uid="{product.uid}">
+                    <small>
+                        <f:translate key="fe.tax" />
+                        <f:translate key="fe.price_currency_format" arguments="{0: product.tax}" />
+                    </small>
+                </div>
+            </f:if>
         </f:if>
     </div>
     <div class="col-sm-2 col-md-2">
