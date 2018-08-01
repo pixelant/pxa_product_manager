@@ -39,7 +39,6 @@ class Order extends AbstractDomainObject
 
     const ORDERFIELD_INPUT = 'input';
     const ORDERFIELD_TEXTAREA = 'textarea';
-    const ORDERFIELD_INPUT_GROUP = 'input_group';
 
     /**
      * @var bool
