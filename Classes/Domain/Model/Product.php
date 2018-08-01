@@ -356,7 +356,7 @@ class Product extends AbstractEntity
     /**
      * @param CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository) : void
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
     }
