@@ -23,36 +23,39 @@
             </f:for>
 
             <div class="row">
-                <div class="col-md-2 col-md-offset-8">
-                    <f:if condition="{ppm:isPricingEnabled()}">
-                        <f:translate key="fe.total_price"/> -
-                        <span class="pxa-pm-order-total-price"
-                              data-nubmer-format="{f:translate(key: 'priceFormat')}"
-                              data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
-                        <div class="lds-dual-ring"><div class="small"></div></div>
-                    </span>
-                    </f:if>
-                </div>
-                <f:if condition="{orderFormAllowed}">
-                    <div class="col-md-2">
-                        <f:if condition="{checkout.type} == 'default'">
-                            <f:then>
-                                <button aria-expanded="false"
-                                        class="btn btn-primary"
-                                        data-target="#pm-collapse-order-form"
-                                        data-toggle="collapse"
-                                        type="button">
-                                    <f:translate key="fe.continue_to_order"/>
-                                </button>
-                            </f:then>
-                            <f:else>
-                                <f:render section="makeOrderButton" />
-                            </f:else>
+                <div class="col-sm-12 col-md-12">
+                    <div class="pull-right">
+                        <f:if condition="{ppm:isPricingEnabled()}">
+                            <div class="total-price-section">
+                                <f:translate key="fe.total_price"/> -
+                                <span class="pxa-pm-order-total-price"
+                                      data-nubmer-format="{f:translate(key: 'priceFormat')}"
+                                      data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                                    <div class="lds-dual-ring"><div class="small"></div></div>
+                                </span>
+                            </div>
+                        </f:if>
+                        <f:if condition="{orderFormAllowed}">
+                            <div class="make-order-button-section">
+                                <f:if condition="{checkout.type} == 'default'">
+                                    <f:then>
+                                        <button aria-expanded="false"
+                                                class="btn btn-primary"
+                                                data-target="#pm-collapse-order-form"
+                                                data-toggle="collapse"
+                                                type="button">
+                                            <f:translate key="fe.continue_to_order"/>
+                                        </button>
+                                    </f:then>
+                                    <f:else>
+                                        <f:render section="makeOrderButton" />
+                                    </f:else>
+                                </f:if>
+                            </div>
                         </f:if>
                     </div>
-                </f:if>
+                </div>
             </div>
-
 
             <f:if condition="{orderFormAllowed} && {checkout.type} == 'default'">
                 <div class="collapse{f:if(condition: sendOrder, then: ' in')}" id="pm-collapse-order-form" aria-expanded="true">
