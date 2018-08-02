@@ -25,6 +25,7 @@ config.tx_extbase {
                         pxapm_card_view_template.mapOnProperty = cardViewTemplate
                         pxapm_single_view_template.mapOnProperty = singleViewTemplate
                         pxapm_subcategories.mapOnProperty = subCategories
+                        pxapm_tax_rate.mapOnProperty = taxRate
                     }
                 }
             }

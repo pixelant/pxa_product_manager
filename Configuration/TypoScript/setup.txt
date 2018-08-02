@@ -45,6 +45,8 @@ plugin.tx_pxaproductmanager {
             cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/like.svg
             buttonIcon = EXT:pxa_product_manager/Resources/Public/Icons/like_combine.png
             pageType = 201702
+            showTaxInfo = {$plugin.tx_pxaproductmanager.settings.wishList.showTaxInfo}
+            checkoutSystem = {$plugin.tx_pxaproductmanager.settings.wishList.checkoutSystem}
 
             # Available validations: email,required,url
             # Email validation allow empty values

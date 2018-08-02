@@ -125,6 +125,12 @@ plugin.tx_pxaproductmanager {
 
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=boolean; label=Send order email to user if "email" field is set
             sendEmailToUser = 1
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/080; type=options[Enable=1,Disable=0]; label=Show tax info
+            showTaxInfo = 0
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/090; type=string; label=Checkout system
+            checkoutSystem =
         }
     }
 

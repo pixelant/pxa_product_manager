@@ -19,6 +19,7 @@ namespace Pixelant\PxaProductManager\Utility;
 use Pixelant\PxaProductManager\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class ConfigurationUtility
@@ -92,5 +93,22 @@ class ConfigurationUtility
     {
         $tsConfig = self::getTSConfig($currentPageId);
         return $tsConfig['settings'] ?: [];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCheckoutSystems() : array
+    {
+        $checkoutSystems = [
+            'default' => [
+                'type' => 'default'
+            ]
+        ];
+
+        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
+        $signalSlotDispatcher->dispatch(__CLASS__, 'BeforeReturningCheckoutSystems', [&$checkoutSystems]);
+
+        return $checkoutSystems;
     }
 }

@@ -25,6 +25,8 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
@@ -420,7 +422,7 @@ class Product extends AbstractEntity
      *
      * @return float $taxRate
      */
-    public function getTaxRate() : float
+    public function getTaxRate(): float
     {
         return $this->taxRate;
     }
@@ -1280,15 +1282,9 @@ class Product extends AbstractEntity
     {
         $this->attributes = new ObjectStorage();
 
-        $categories = [];
-        /** @var Category $category */
-        foreach ($this->getCategories() as $category) {
-            $categories[] = $category->getUid();
-        }
-
         /** @var AttributeHolderUtility $attributeHolder */
         $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-        $attributeHolder->start($categories);
+        $attributeHolder->start($this->getUid());
 
         $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
 
@@ -1502,7 +1498,7 @@ class Product extends AbstractEntity
      *
      * @return bool
      */
-    public function getIsDiscontinued():  bool
+    public function getIsDiscontinued(): bool
     {
         $isDiscontinued = false;
         if (!empty($this->getDiscontinued())) {
@@ -1561,7 +1557,7 @@ class Product extends AbstractEntity
      *
      * @return bool
      */
-    public function getIsNew():  bool
+    public function getIsNew(): bool
     {
         $isNew = false;
         if (!empty($this->getLaunched())) {
@@ -1653,23 +1649,43 @@ class Product extends AbstractEntity
     /**
      * @return float
      */
-    public function getTaxRateRecursively() : float
+    public function getTaxRateRecursively(): float
     {
         // If tax rate is set on product level - return it
+        // or it was set from category tax
         if (!empty($this->taxRate)) {
             return $this->taxRate;
         }
 
-        // Else get the tax rate from category
-        // TODO: implement
-        return $this->taxRate;
+        // Else get the tax rate from categories
+        $taxRate = 0;
+
+        $categoriesTree = ProductUtility::getProductCategoriesParentsTree($this->getUid());
+        /** @var Category $category */
+        foreach ($categoriesTree as $category) {
+            $taxRate = $category->getTaxRate();
+            if ($taxRate > 0) {
+                $this->taxRate = $taxRate; // Save value for future calls
+                break;
+            }
+        }
+
+        return $taxRate;
     }
 
     /**
      * @return float
      */
-    public function getTax() : float
+    public function getTax(): float
     {
         return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormatTax(): string
+    {
+        return ProductUtility::formatPrice($this->getTax());
     }
 }

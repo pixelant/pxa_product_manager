@@ -49,6 +49,14 @@
                             <h5>
                                 <f:translate key="fe.price" />:
                                 <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
+                                <f:if condition="{settings.wishList.showTaxInfo}">
+                                    <span class="tax-price">
+                                        (
+                                            <f:translate key="fe.tax" />:
+                                            <f:translate key="fe.price_currency_format" arguments="{0: product.formatTax}" />
+                                        )
+                                    </span>
+                                </f:if>
                             </h5>
                         </f:if>
 

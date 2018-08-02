@@ -31,7 +31,9 @@
 			$cartCounters,
 			$orderItemsAmount,
 			$orderItemsPrices,
-			$totalPrice;
+			$orderItemsTaxes,
+			$totalPrice,
+			$totalTax;
 
 		/**
 		 * Main wish list function
@@ -51,7 +53,7 @@
 			);
 			ajaxLoadingInProgress = false;
 
-			_updateTotalPrice();
+			_updatePriceAndTax();
 			_saveCurrentStateOfAmountOfProducts();
 			_trackOrderAmountChanges();
 		};
@@ -71,7 +73,9 @@
 			$cartCounters = $(wishListSettings.cartsIdentifier).find(wishListSettings.cartCounterIdentifier);
 			$orderItemsAmount = $(wishListSettings.orderItemAmountClass);
 			$orderItemsPrices = $(wishListSettings.orderItemPriceClass);
+			$orderItemsTaxes = $(wishListSettings.orderItemTaxClass);
 			$totalPrice = $(wishListSettings.totalPriceClass);
+			$totalTax = $(wishListSettings.totalTaxClass);
 		};
 
 		/**
@@ -123,7 +127,7 @@
 							$orderItemsAmount = $(settings.orderItemAmountClass);
 
 							// Update order changes
-							_updateTotalPrice();
+							_updatePriceAndTax();
 							_saveCurrentStateOfAmountOfProducts();
 						});
 					}
@@ -197,6 +201,52 @@
 		};
 
 		/**
+		 * Update total tax if pricing enabled
+		 *
+		 * @returns {boolean}
+		 * @private
+		 */
+		const _updateTotalTax = function () {
+			if ($totalTax.length === 0) {
+				return false;
+			}
+
+			let sum = 0,
+				currencyFormat = $totalTax.first().data('currency-format') || '',
+				numberFormat = $totalTax.first().data('nubmer-format') || '',
+				format = ProductManager.Main.trimChar(numberFormat, '|').split('|'),
+
+				decimals = parseInt(format[0]) || 2,
+				decimalSep = format[1] || '.',
+				thousandsSep = format[2] || ',';
+
+			$orderItemsTaxes.each(function () {
+				const $this = $(this);
+
+				let productUid = parseInt($this.data('product-uid'));
+				if (productUid > 0) {
+					let $amountItem = $(_convertClassToIdWithProductId(settings.orderItemAmountClass, productUid));
+					if ($amountItem.length === 1) {
+						let amount = parseInt($amountItem.val());
+						sum += amount * parseFloat($this.data('tax'));
+					}
+				}
+			});
+
+			$totalTax.text(
+				sprintf(
+					currencyFormat,
+					ProductManager.Main.numberFormat(sum, decimals, decimalSep, thousandsSep)
+				)
+			);
+		};
+
+		const _updatePriceAndTax = function () {
+			_updateTotalPrice();
+			_updateTotalTax();
+		};
+
+		/**
 		 * Check if amount was changed
 		 *
 		 * @returns {boolean}
@@ -215,7 +265,7 @@
 					$this.val(1);
 				}
 
-				_updateTotalPrice();
+				_updatePriceAndTax();
 				_saveCurrentStateOfAmountOfProducts();
 			});
 		};
