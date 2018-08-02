@@ -290,6 +290,9 @@
             <trans-unit id="extconf.enablePrices">
                 <source>Enable products pricing</source>
             </trans-unit>
+            <trans-unit id="extconf.checkoutSystem">
+                <source>Checkout system</source>
+            </trans-unit>
             <!--Extension manager configuration:END-->
 
             <!-- Scheduler tasks:START-->
