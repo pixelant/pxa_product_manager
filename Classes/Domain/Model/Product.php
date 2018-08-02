@@ -307,11 +307,6 @@ class Product extends AbstractEntity
     protected $customSorting = 0;
 
     /**
-     * @var CategoryRepository $categoryRepository
-     */
-    protected $categoryRepository = null;
-
-    /**
      * __construct
      *
      */
@@ -352,14 +347,6 @@ class Product extends AbstractEntity
         $this->assets = new ObjectStorage();
 
         $this->accessories = new ObjectStorage();
-    }
-
-    /**
-     * @param CategoryRepository $categoryRepository
-     */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
-    {
-        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -435,7 +422,7 @@ class Product extends AbstractEntity
      *
      * @return float $taxRate
      */
-    public function getTaxRate() : float
+    public function getTaxRate(): float
     {
         return $this->taxRate;
     }
@@ -1297,7 +1284,7 @@ class Product extends AbstractEntity
 
         /** @var AttributeHolderUtility $attributeHolder */
         $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-        $attributeHolder->start($this->uid);
+        $attributeHolder->start($this->getUid());
 
         $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
 
@@ -1511,7 +1498,7 @@ class Product extends AbstractEntity
      *
      * @return bool
      */
-    public function getIsDiscontinued():  bool
+    public function getIsDiscontinued(): bool
     {
         $isDiscontinued = false;
         if (!empty($this->getDiscontinued())) {
@@ -1570,7 +1557,7 @@ class Product extends AbstractEntity
      *
      * @return bool
      */
-    public function getIsNew():  bool
+    public function getIsNew(): bool
     {
         $isNew = false;
         if (!empty($this->getLaunched())) {
@@ -1662,9 +1649,10 @@ class Product extends AbstractEntity
     /**
      * @return float
      */
-    public function getTaxRateRecursively() : float
+    public function getTaxRateRecursively(): float
     {
         // If tax rate is set on product level - return it
+        // or it was set from category tax
         if (!empty($this->taxRate)) {
             return $this->taxRate;
         }
@@ -1672,11 +1660,12 @@ class Product extends AbstractEntity
         // Else get the tax rate from categories
         $taxRate = 0;
 
-        $levelTree = $this->categoryRepository->getCategoriesLevelTreeForProduct($this->getUid());
-
-        foreach ($levelTree as $levelTreeItem) {
-            $taxRate = $levelTreeItem['category']->getTaxRate();
+        $categoriesTree = ProductUtility::getProductCategoriesParentsTree($this->getUid());
+        /** @var Category $category */
+        foreach ($categoriesTree as $category) {
+            $taxRate = $category->getTaxRate();
             if ($taxRate > 0) {
+                $this->taxRate = $taxRate; // Save value for future calls
                 break;
             }
         }
@@ -1687,11 +1676,14 @@ class Product extends AbstractEntity
     /**
      * @return float
      */
-    public function getTax() : float
+    public function getTax(): float
     {
         return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
     }
 
+    /**
+     * @return string
+     */
     public function getFormatTax(): string
     {
         return ProductUtility::formatPrice($this->getTax());
