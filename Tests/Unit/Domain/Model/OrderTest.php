@@ -239,6 +239,28 @@ class OrderTest extends UnitTestCase
     /**
      * @test
      */
+    public function setOrderFieldValueWithTypeWillSetNewOrderFieldValue()
+    {
+        $orderFields = [
+            'test' => [
+                'value' => 'test value',
+                'type' => Order::ORDERFIELD_TEXTAREA
+            ]
+        ];
+        $this->subject->setOrderFields($orderFields);
+
+        $newValue = 'new value 123';
+
+        $this->subject->setOrderField('test', $newValue, Order::ORDERFIELD_INPUT);
+        $orderFields['test']['value'] = $newValue;
+        $orderFields['test']['type'] = Order::ORDERFIELD_INPUT;
+
+        $this->assertEquals($orderFields, $this->subject->getOrderFields());
+    }
+
+    /**
+     * @test
+     */
     public function getOrderFieldValueWillReturnOrderFieldValueIfExist()
     {
         $orderFields = [
