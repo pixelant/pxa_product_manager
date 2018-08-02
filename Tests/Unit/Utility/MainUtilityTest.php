@@ -132,6 +132,17 @@ class MainUtilityTest extends UnitTestCase
     }
 
     /**
+     * @test
+     */
+    public function snakeCasePhraseToWordsTransferUndeScoreToWords()
+    {
+        $value = 'string_with_underscore';
+        $expect = 'String with underscore';
+
+        self::assertEquals($expect, MainUtility::snakeCasePhraseToWords($value));
+    }
+
+    /**
      * Custom categories set
      *
      * @return array
