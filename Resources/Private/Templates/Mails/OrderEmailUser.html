@@ -37,7 +37,7 @@
                 </td>
                 <f:if condition="{ppm:isPricingEnabled()} && {settings.wishList.showTaxInfo}">
                     <td>
-                        <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.tax}" />
+                        <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatTax}" />
                     </td>
                 </f:if>
                 <td>{order.productsQuantity.{product.uid}}</td>
