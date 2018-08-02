@@ -28,7 +28,9 @@ namespace Pixelant\PxaProductManager\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -96,6 +98,73 @@ class ProductUtility
         }
 
         return $result;
+    }
+
+    /**
+     * Get tree of parent categories of product, include product categories as top level
+     *
+     * @param int $productUid
+     * @param bool $reverseOrder Default it goes from product categories up to top parents, could reverse order
+     * @return array
+     */
+    public static function getProductCategoriesParentsTree(int $productUid, bool $reverseOrder = false): array
+    {
+        if ($productUid <= 0) {
+            return [];
+        }
+
+        $categoryRepository = MainUtility::getObjectManager()->get(CategoryRepository::class);
+        $categories = [];
+
+        // Get product categories first
+        /** @var Category $category */
+        foreach ($categoryRepository->findByUidList(self::getProductCategoriesUids($productUid)) as $category) {
+            $categories[$category->getUid()] = $category;
+        }
+
+        // Build parents tree for each category of product
+        $trees = [];
+        // Get parent categories
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $parents = CategoryUtility::getParentCategories($category);
+            if (!empty($parents)) {
+                $trees[] = array_reverse($parents); // Later we need to take top level parent first
+            }
+        }
+
+        // Find the largest tree
+        $biggestTreeCount = 0;
+        foreach ($trees as $tree) {
+            $treeCount = count($tree);
+            if ($treeCount > $biggestTreeCount) {
+                $biggestTreeCount = $treeCount;
+            }
+        }
+
+        // Go through each tree at take top level parent to build descending tree.
+        $rootLineCategories = [];
+        if ($biggestTreeCount > 0) {
+            for ($i = 0; $i < $biggestTreeCount; $i++) {
+                foreach ($trees as &$tree) {
+                    if (count($tree) > 0) {
+                        $category = array_shift($tree);
+                        if (!array_key_exists($category->getUid(), $rootLineCategories)) {
+                            $rootLineCategories[$category->getUid()] = $category;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add parents tree to product categories
+        foreach (array_reverse($rootLineCategories) as $category) {
+            if (!array_key_exists($category->getUid(), $categories)) {
+                $categories[$category->getUid()] = $category;
+            }
+        }
+
+        return $reverseOrder ? array_reverse($categories) : $categories;
     }
 
     /**

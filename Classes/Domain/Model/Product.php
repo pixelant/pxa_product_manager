@@ -25,6 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
@@ -1294,15 +1295,9 @@ class Product extends AbstractEntity
     {
         $this->attributes = new ObjectStorage();
 
-        $categories = [];
-        /** @var Category $category */
-        foreach ($this->getCategories() as $category) {
-            $categories[] = $category->getUid();
-        }
-
         /** @var AttributeHolderUtility $attributeHolder */
         $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-        $attributeHolder->start($categories);
+        $attributeHolder->start($this->uid);
 
         $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
 
