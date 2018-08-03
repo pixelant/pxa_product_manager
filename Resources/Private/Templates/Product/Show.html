@@ -98,8 +98,8 @@
                     <div class="col-md-4">
                         <div class="single-product-gallery">
                             <div class="single-product-gallery__items">
-                                <f:for each="{product.imagesSorted}" as="image" iteration="i">
-                                    <f:alias map="{sizes: settings.images.singleView}">
+                                <f:alias map="{sizes: settings.images.singleView}">
+                                    <f:for each="{product.imagesSorted}" as="image" iteration="i">
                                         <a href="{f:uri.image(image: image, maxWidth:'1920', maxHeight:'1080')}">
                                             <f:image
                                                     maxWidth="{sizes.mainMaxWidth}"
@@ -108,17 +108,17 @@
                                                     alt="{image.title}"
                                                     data="{description: image.description, fly-image: '{f:if(condition: i.isFirst, then: product.uid, else: 0)}'}"/>
                                         </a>
-                                    </f:alias>
-                                </f:for>
-                                <f:variable name="videos">0</f:variable>
+                                    </f:for>
+                                </f:alias>
+                                <f:variable name="videos" value="0" />
                                 <f:if condition="{product.assets}">
-                                    <f:for each="{product.assets}" as="file">
-                                        <f:alias map="{sizes: settings.images.singleView}">
-                                            <f:switch expression="{file.originalResource.type}">
-                                                <f:case value="4">
-                                                    <f:variable name="videos">{ppm:math(value:'videos + 1')}</f:variable>
-                                                </f:case>
-                                                <f:defaultCase>
+                                    <f:alias map="{sizes: settings.images.singleView}">
+                                        <f:for each="{product.assets}" as="file">
+                                            <f:if condition="{file.originalResource.type} == 4">
+                                                <f:then>
+                                                    <f:variable name="videos" value="1" />
+                                                </f:then>
+                                                <f:else>
                                                     <a href="{f:uri.image(image: file, maxWidth:'1920', maxHeight:'1080')}">
                                                         <f:media
                                                                 width="{sizes.mainMaxWidth}m"
@@ -128,10 +128,10 @@
                                                                 title="{file.title}"
                                                                 data="{description: file.description}"/>
                                                     </a>
-                                                </f:defaultCase>
-                                            </f:switch>
-                                        </f:alias>
-                                    </f:for>
+                                                </f:else>
+                                            </f:if>
+                                        </f:for>
+                                    </f:alias>
                                 </f:if>
                             </div>
                             <f:if condition="{settings.showGalleryPagination}">
@@ -140,23 +140,21 @@
 
                             <f:if condition="{videos}">
                                 <div class="single-product-gallery__assets">
-                                    <f:for each="{product.assets}" as="file">
-                                        <f:alias map="{sizes: settings.images.singleView}">
-                                            <f:switch expression="{file.originalResource.type}">
-                                                <f:case value="4">
-                                                    <div align="center" class="embed-responsive embed-responsive-16by9">
-                                                        <f:media
+                                    <f:alias map="{sizes: settings.images.singleView}">
+                                        <f:for each="{product.assets}" as="file">
+                                            <f:if condition="{file.originalResource.type} == 4">
+                                                <div align="center" class="embed-responsive embed-responsive-16by9">
+                                                    <f:media
                                                             width="{sizes.mainMaxWidth}"
                                                             height="{sizes.mainMaxHeight}"
                                                             file="{file}"
                                                             alt="{file.alternative}"
                                                             data="{description: file.description}"
                                                             title="{file.title}" />
-                                                    </div>
-                                                </f:case>
-                                            </f:switch>
-                                        </f:alias>
-                                    </f:for>
+                                                </div>
+                                            </f:if>
+                                        </f:for>
+                                    </f:alias>
                                 </div>
                                 <f:if condition="{settings.showGalleryPagination}">
                                     <div align="center" class="single-product-gallery-assets__pagination"></div>

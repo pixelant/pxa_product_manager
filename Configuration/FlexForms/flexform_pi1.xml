@@ -54,19 +54,19 @@
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_view</numIndex>
                                         <numIndex index="1">Product->compareView;Product->comparePreView</numIndex>
                                     </numIndex>
-                                    <numIndex index="9">
+                                    <numIndex index="10">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_promotion_list</numIndex>
                                         <numIndex index="1">Product->promotionList</numIndex>
                                     </numIndex>
-                                    <numIndex index="10">
+                                    <numIndex index="11">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
-                                    <numIndex index="11">
+                                    <numIndex index="12">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_show</numIndex>
                                         <numIndex index="1">Navigation->show</numIndex>
                                     </numIndex>
-                                    <numIndex index="12">
+                                    <numIndex index="13">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.filtering_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
