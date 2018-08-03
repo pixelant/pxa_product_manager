@@ -56,7 +56,7 @@ class AbstractController extends ActionController
      * @var \Pixelant\PxaProductManager\Domain\Repository\ProductRepository
      * @inject
      */
-    protected $productRepository;
+    protected $productRepository = null;
 
     /**
      * productRepository
@@ -64,7 +64,7 @@ class AbstractController extends ActionController
      * @var \Pixelant\PxaProductManager\Domain\Repository\FilterRepository
      * @inject
      */
-    protected $filterRepository;
+    protected $filterRepository = null;
 
     /**
      * categoryRepository
@@ -72,7 +72,13 @@ class AbstractController extends ActionController
      * @var \Pixelant\PxaProductManager\Domain\Repository\CategoryRepository
      * @inject
      */
-    protected $categoryRepository;
+    protected $categoryRepository = null;
+
+    /**
+     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderRepository
+     * @inject
+     */
+    protected $orderRepository = null;
 
     /**
      * Get category
@@ -181,13 +187,9 @@ class AbstractController extends ActionController
      * @param array $arguments
      * @return string
      */
-    protected function translate(string $key, array $arguments = []): string
+    protected function translate(string $key, array $arguments = null): string
     {
-        if ($result = LocalizationUtility::translate($key, 'PxaProductManager', $arguments)) {
-            return $result;
-        }
-
-        return '';
+        return LocalizationUtility::translate($key, 'PxaProductManager', $arguments) ?? '';
     }
 
     /**

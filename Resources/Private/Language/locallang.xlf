@@ -124,6 +124,9 @@
             <trans-unit id="fe.price">
                 <source>Price</source>
             </trans-unit>
+            <trans-unit id="fe.tax">
+                <source>VAT</source>
+            </trans-unit>
             <trans-unit id="fe.price_currency_format">
                 <source>%1$s $</source>
             </trans-unit>

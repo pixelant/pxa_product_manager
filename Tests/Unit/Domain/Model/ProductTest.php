@@ -1314,4 +1314,19 @@ class ProductTest extends UnitTestCase
             $this->fixture->getCustomSorting()
         );
     }
+
+    /**
+     * @test
+     */
+    public function taxRateCanBeSet()
+    {
+        $value = 21.99;
+
+        $this->fixture->setTaxRate($value);
+
+        self::assertEquals(
+            $value,
+            $this->fixture->getTaxRate()
+        );
+    }
 }

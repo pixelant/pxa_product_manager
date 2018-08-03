@@ -207,6 +207,20 @@ call_user_func(function () {
                 $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
             ),
         ],
+        'pxapm_tax_rate' => [
+            'exclude' => 0,
+            'label' => $ll . 'sys_category.pxapm_tax_rate',
+            'config' => [
+                'type' => 'input',
+                'size' => 5,
+                'range' => [
+                    'lower' => 0,
+                    'upper' => 100,
+                ],
+                'eval' => 'double2',
+                'default' => 0.00
+            ],
+        ],
         'pxapm_card_view_template' => [
             'exclude' => 0,
             'onChange' => 'reload',
@@ -246,6 +260,7 @@ call_user_func(function () {
         '--div--;' . $ll . 'sys_category.additional_fields_tab,
         pxapm_image,
         pxapm_banner_image,
+        pxapm_tax_rate,
         pxapm_card_view_template,
         pxapm_single_view_template,
         pxapm_description',
@@ -287,5 +302,11 @@ call_user_func(function () {
         $categoriesCongifuration = &$GLOBALS['TCA']['sys_category']['columns']['parent']['config'];
         $categoriesCongifuration['foreign_table_where'] =
             $categoryWhere . ' ' . $categoriesCongifuration['foreign_table_where'];
+    }
+
+    if (!\Pixelant\PxaProductManager\Utility\MainUtility::isPricingEnabled()) {
+        $columns = &$GLOBALS['TCA']['sys_category']['columns'];
+        $columns['pxapm_tax_rate']['config']['readOnly'] = true;
+        $columns['pxapm_tax_rate']['label'] = $ll . 'sys_category.pxapm_tax_rate.disabled';
     }
 });

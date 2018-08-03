@@ -3,12 +3,12 @@
     <div class="back-button">
         <f:if condition="{activeCategory.parent}">
             <f:then>
-                <f:link.action class="btn btn-default" arguments="{category: activeCategory.parent}">
+                <f:link.action class="btn btn-default" action="listCategories" arguments="{category: activeCategory.parent}">
                     <pxa:translate key="be.go_back"/>
                 </f:link.action>
             </f:then>
             <f:else>
-                <f:link.action class="btn btn-default">
+                <f:link.action class="btn btn-default" action="listCategories">
                     <pxa:translate key="be.go_back"/>
                 </f:link.action>
             </f:else>

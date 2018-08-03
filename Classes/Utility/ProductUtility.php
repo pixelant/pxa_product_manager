@@ -28,7 +28,10 @@ namespace Pixelant\PxaProductManager\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaProductManager\Domain\Model\Category;
+use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -99,6 +102,73 @@ class ProductUtility
     }
 
     /**
+     * Get tree of parent categories of product, include product categories as top level
+     *
+     * @param int $productUid
+     * @param bool $reverseOrder Default it goes from product categories up to top parents, could reverse order
+     * @return array
+     */
+    public static function getProductCategoriesParentsTree(int $productUid, bool $reverseOrder = false): array
+    {
+        if ($productUid <= 0) {
+            return [];
+        }
+
+        $categoryRepository = MainUtility::getObjectManager()->get(CategoryRepository::class);
+        $categories = [];
+
+        // Get product categories first
+        /** @var Category $category */
+        foreach ($categoryRepository->findByUidList(self::getProductCategoriesUids($productUid)) as $category) {
+            $categories[$category->getUid()] = $category;
+        }
+
+        // Build parents tree for each category of product
+        $trees = [];
+        // Get parent categories
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $parents = CategoryUtility::getParentCategories($category);
+            if (!empty($parents)) {
+                $trees[] = array_reverse($parents); // Later we need to take top level parent first
+            }
+        }
+
+        // Find the largest tree
+        $biggestTreeCount = 0;
+        foreach ($trees as $tree) {
+            $treeCount = count($tree);
+            if ($treeCount > $biggestTreeCount) {
+                $biggestTreeCount = $treeCount;
+            }
+        }
+
+        // Go through each tree at take top level parent to build descending tree.
+        $rootLineCategories = [];
+        if ($biggestTreeCount > 0) {
+            for ($i = 0; $i < $biggestTreeCount; $i++) {
+                foreach ($trees as &$tree) {
+                    if (count($tree) > 0) {
+                        $category = array_shift($tree);
+                        if (!array_key_exists($category->getUid(), $rootLineCategories)) {
+                            $rootLineCategories[$category->getUid()] = $category;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add parents tree to product categories
+        foreach (array_reverse($rootLineCategories) as $category) {
+            if (!array_key_exists($category->getUid(), $categories)) {
+                $categories[$category->getUid()] = $category;
+            }
+        }
+
+        return $reverseOrder ? array_reverse($categories) : $categories;
+    }
+
+    /**
      * Get storage for plugin record
      *
      * @param int $pluginUid
@@ -148,7 +218,6 @@ class ProductUtility
 
             return $recursiveStoragePids;
         }
-
 
         return '';
     }
@@ -231,5 +300,103 @@ class ProductUtility
         }
 
         return $customSorting;
+    }
+
+    /**
+     * Clean ongoing order info
+     *
+     * @return void
+     */
+    public static function cleanOngoingOrderInfo()
+    {
+        // Clean list
+        MainUtility::cleanCookieValue(self::WISH_LIST_COOKIE_NAME);
+        MainUtility::cleanCookieValue(self::ORDER_STATE_COOKIE_NAME);
+    }
+
+    /**
+     * Get order state
+     *
+     * @return array
+     */
+    public static function getOrderState(): array
+    {
+        // If no cookie set - return empty set
+        if (empty($_COOKIE[self::ORDER_STATE_COOKIE_NAME])) {
+            return [];
+        }
+
+        // Otherwise get order state from cookie
+        $orderState = json_decode(
+            urldecode(
+                base64_decode($_COOKIE[self::ORDER_STATE_COOKIE_NAME])
+            ),
+            true
+        );
+
+        if (!is_array($orderState)) {
+            $orderState = [];
+        }
+
+        return $orderState;
+    }
+
+    /**
+     * Get total price
+     *
+     * @param Order $order
+     * @param bool $formatPrice
+     * @return float|string
+     * @throws \Exception
+     */
+    public static function calculateOrderTotalPrice(Order $order, bool $formatPrice = false)
+    {
+        $total = self::calculateTotalForProductsOrder($order, 'price');
+
+        return $formatPrice ? self::formatPrice($total) : $total;
+    }
+
+    /**
+     * Get total tax
+     *
+     * @param Order $order
+     * @param bool $formatPrice
+     * @return float|string
+     * @throws \Exception
+     */
+    public static function calculateOrderTotalTax(Order $order, bool $formatPrice = false)
+    {
+        $total = self::calculateTotalForProductsOrder($order, 'tax');
+
+        return $formatPrice ? self::formatPrice($total) : $total;
+    }
+
+    /**
+     * Calculate total value for order tax or price
+     *
+     * @param Order $order
+     * @param string $calculationProperty
+     * @return float
+     * @throws \Exception
+     */
+    private static function calculateTotalForProductsOrder(Order $order, string $calculationProperty): float
+    {
+        $total = 0.00;
+
+        if (!GeneralUtility::inList('price,tax', $calculationProperty)) {
+            // @codingStandardsIgnoreStart
+            throw new \Exception('Property "' . $calculationProperty . 'is not supported for calculation', 1533281264216);
+            // @codingStandardsIgnoreEnd
+        }
+
+        $orderProductsQuantity = $order->getProductsQuantity();
+        $getter = 'get' . ucfirst($calculationProperty);
+
+        /** @var Product $product */
+        foreach ($order->getProducts() as $product) {
+            $total += ($product->$getter() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
+        }
+
+        return $total;
     }
 }

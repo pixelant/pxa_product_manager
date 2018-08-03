@@ -5,7 +5,6 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Service;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Exception\OrderEmailException;
 use Pixelant\PxaProductManager\Service\AbstractMailService;
-use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class AbstractMailServiceTest extends UnitTestCase

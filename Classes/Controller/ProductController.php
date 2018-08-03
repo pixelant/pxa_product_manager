@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
@@ -12,6 +13,8 @@ use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
+use TYPO3\CMS\Extbase\Domain\Repository\FrontendUserRepository;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -234,17 +237,24 @@ class ProductController extends AbstractController
      * Wish list of products
      *
      * @param bool $sendOrder
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function wishListAction(bool $sendOrder = false)
     {
-        $checkout = [
-            'type' => 'default'
-        ];
+        // Select the checkout system to use
+        $checkoutToUse = $this->settings['wishList']['checkoutSystem']
+            ?: MainUtility::getExtMgrConfiguration()['checkoutSystem']
+            ?: 'default';
+        
+        $checkOutSystems = ConfigurationUtility::getCheckoutSystems();
+        $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
 
-        // SetCheckout signal slot to register external e-commerce integrations
+        // Add after checkout system selected slot
         $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        $signalSlotDispatcher->dispatch(__CLASS__, 'SetCheckout', [&$checkout]);
+        $signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
 
+        //
         $orderFormAllowed = $this->isOrderFormAllowed();
 
         $orderFormFields = $this->getProcessedOrderFormFields();
@@ -256,7 +266,8 @@ class ProductController extends AbstractController
                 $termsStatus = $this->getAcceptTermsStatus();
 
                 if ($termsStatus !== self::DECLINE_TERMS & $this->validateOrderFields($orderFormFields, $values)) {
-                    $this->sendOrderEmail($orderFormFields, $orderProducts);
+                    $order = $this->createAndSaveOrder($orderFormFields, $orderProducts);
+                    $this->sendOrderEmail($order);
                     $this->redirect('finishOrder');
                 } else {
                     $this->view
@@ -270,17 +281,8 @@ class ProductController extends AbstractController
 
         if ($this->request->hasArgument('orderProducts')) {
             $orderState = $this->request->getArgument('orderProducts');
-        } elseif (!empty($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])) {
-            $orderState = json_decode(
-                urldecode(
-                    base64_decode($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])
-                ),
-                true
-            );
-
-            if (!is_array($orderState)) {
-                $orderState = [];
-            }
+        } else {
+            $orderState = ProductUtility::getOrderState();
         }
 
         $this->view->assignMultiple([
@@ -299,9 +301,7 @@ class ProductController extends AbstractController
      */
     public function finishOrderAction()
     {
-        // Clean list
-        MainUtility::cleanCookieValue(ProductUtility::WISH_LIST_COOKIE_NAME);
-        MainUtility::cleanCookieValue(ProductUtility::ORDER_STATE_COOKIE_NAME);
+        ProductUtility::cleanOngoingOrderInfo();
     }
 
     /**
@@ -557,11 +557,10 @@ class ProductController extends AbstractController
     /**
      * Send emails with order
      *
-     * @param array $orderFields
-     * @param array $orderProducts
+     * @param Order $order
      * @return void
      */
-    protected function sendOrderEmail(array $orderFields, array $orderProducts)
+    protected function sendOrderEmail(Order $order)
     {
         $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'];
         $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'];
@@ -573,27 +572,60 @@ class ProductController extends AbstractController
             ->setSenderEmail($this->settings['email']['senderEmail']);
 
         // Send email to admins
-        $products = $this->getProductByUidsList(array_keys($orderProducts));
-
         $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
-
         $orderMailService
-            ->generateMailBody($adminTemplate, $orderFields, $orderProducts, $products)
+            ->generateMailBody($adminTemplate, $order)
             ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
             ->setReceivers($recipients)
             ->send();
 
         // Send email to user if enabled
         // @TODO make field name configurable
-        if (!empty($orderFields['email']['value'])
-            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
-            $recipients = [$orderFields['email']['value']];
+        if ((int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1
+            && !empty($order->getOrderField('email'))) {
+            $recipients = [$order->getOrderField('email')];
             $orderMailService
-                ->generateMailBody($userTemplate, $orderFields, $orderProducts, $products)
+                ->generateMailBody($userTemplate, $order)
                 ->setSubject($this->translate('fe.userEmail.orderForm.subject'))
                 ->setReceivers($recipients)
                 ->send();
         }
+    }
+
+    /**
+     * Save order
+     *
+     * @param array $orderFields
+     * @param array $orderProducts
+     * @return Order
+     */
+    protected function createAndSaveOrder(array $orderFields, array $orderProducts): Order
+    {
+        $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
+
+        $order = $this->objectManager->get(Order::class);
+
+        $order->setOrderFields($orderFields);
+        $order->setProductsQuantity($orderProducts);
+
+        /** @var Product $product */
+        foreach ($products as $product) {
+            $order->addProduct($product);
+        }
+
+        if (MainUtility::getTSFE()->loginUser) {
+            $uid = (int)MainUtility::getTSFE()->fe_user->user['uid'];
+            /** @var FrontendUser $feUser */
+            $feUser = $this->objectManager->get(FrontendUserRepository::class)->findByUid($uid);
+
+            if ($feUser !== null) {
+                $order->setFeUser($feUser);
+            }
+        }
+
+        $this->orderRepository->add($order);
+
+        return $order;
     }
 
     /**
@@ -649,7 +681,7 @@ class ProductController extends AbstractController
                             }
                             break;
                         case 'email':
-                            if (!GeneralUtility::validEmail($value)) {
+                            if (!empty($value) && !GeneralUtility::validEmail($value)) {
                                 $fieldConf['errors'][] = $this->translate('fe.validation_error.email');
                                 $isValid = false;
                             }

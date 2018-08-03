@@ -15,3 +15,6 @@ accessoriesRestriction = current_pid
 
 # cat=basic/enable/150; type=boolean; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.enablePrices
 enablePrices = 0
+
+# cat=basic; type=user[Pixelant\PxaProductManager\Backend\ExtensionManager\ExtendedOptions->checkoutSystemsSelector]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.checkoutSystem
+checkoutSystem = default

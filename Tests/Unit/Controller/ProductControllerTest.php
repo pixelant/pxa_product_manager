@@ -564,82 +564,28 @@ class ProductControllerTest extends UnitTestCase
 
     /**
      * @test
+     * @dataProvider validationFieldsDataProvider
      */
-    public function orderFormWillNotPassValidationIfNotValidData()
+    public function orderFormWillNotPassValidationIfNotValidData($fields, $values, $result, $return)
     {
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
             ['translate']
         );
-        $mockedController
-            ->expects($this->atLeastOnce())
-            ->method('translate')
-            ->willReturn('error');
 
-        $fields = [
-            'name' => [
-                'type' => 'input',
-                'validation' => 'required'
-            ],
-            'required' => [
-                'type' => 'input',
-                'validation' => 'required'
-            ],
-            'notrequired' => [
-                'type' => 'input',
-                'validation' => ''
-            ],
-            'email' => [
-                'type' => 'input',
-                'validation' => 'required,email'
-            ],
-            'textarea' => [
-                'type' => 'textarea',
-                'validation' => 'url'
-            ]
-        ];
+        // If there are errors translate will be called
+        if ($return === false) {
+            $mockedController
+                ->expects($this->atLeastOnce())
+                ->method('translate')
+                ->willReturn('error');
+        }
 
-        $values = [
-            'name' => '',
-            'required' => 'required',
-            'notrequired' => '',
-            'email' => '',
-            'textarea' => 'test'
-        ];
 
-        $result = [
-            'name' => [
-                'type' => 'input',
-                'validation' => 'required',
-                'value' => '',
-                'errors' => ['error']
-            ],
-            'required' => [
-                'type' => 'input',
-                'validation' => 'required',
-                'value' => 'required',
-                'errors' => []
-            ],
-            'notrequired' => [
-                'type' => 'input',
-                'validation' => '',
-                'value' => ''
-            ],
-            'email' => [
-                'type' => 'input',
-                'validation' => 'required,email',
-                'value' => '',
-                'errors' => ['error', 'error']
-            ],
-            'textarea' => [
-                'type' => 'textarea',
-                'value' => 'test',
-                'validation' => 'url',
-                'errors' => ['error']
-            ]
-        ];
 
-        $this->assertFalse($mockedController->_callRef('validateOrderFields', $fields, $values));
+        $returned = $mockedController->_callRef('validateOrderFields', $fields, $values);
+
+        $this->assertEquals($returned, $return);
 
         $this->assertEquals(
             $result,
@@ -765,6 +711,150 @@ class ProductControllerTest extends UnitTestCase
         $mockedController->_set('settings', ['orderFormRequireLogin' => 0]);
 
         $this->assertTrue($mockedController->_call('isOrderFormAllowed'));
+    }
+
+    /**
+     * @return array
+     */
+    public function validationFieldsDataProvider()
+    {
+        return [
+            'no_valid' => [
+                'fields' => [
+                    'name' => [
+                        'type' => 'input',
+                        'validation' => 'required'
+                    ],
+                    'required' => [
+                        'type' => 'input',
+                        'validation' => 'required'
+                    ],
+                    'notrequired' => [
+                        'type' => 'input',
+                        'validation' => ''
+                    ],
+                    'email' => [
+                        'type' => 'input',
+                        'validation' => 'required,email'
+                    ],
+                    'textarea' => [
+                        'type' => 'textarea',
+                        'validation' => 'url'
+                    ]
+                ],
+                'values' => [
+                    'name' => '',
+                    'required' => 'required',
+                    'notrequired' => '',
+                    'email' => '',
+                    'textarea' => 'test'
+                ],
+                'result' => [
+                    'name' => [
+                        'type' => 'input',
+                        'validation' => 'required',
+                        'value' => '',
+                        'errors' => ['error']
+                    ],
+                    'required' => [
+                        'type' => 'input',
+                        'validation' => 'required',
+                        'value' => 'required',
+                        'errors' => []
+                    ],
+                    'notrequired' => [
+                        'type' => 'input',
+                        'validation' => '',
+                        'value' => ''
+                    ],
+                    'email' => [
+                        'type' => 'input',
+                        'validation' => 'required,email',
+                        'value' => '',
+                        'errors' => ['error']
+                    ],
+                    'textarea' => [
+                        'type' => 'textarea',
+                        'value' => 'test',
+                        'validation' => 'url',
+                        'errors' => ['error']
+                    ]
+                ],
+                'return' => false
+            ],
+            'no_valid_invalid_email' => [
+                'fields' => [
+                    'name' => [
+                        'type' => 'input',
+                        'validation' => ''
+                    ],
+                    'email' => [
+                        'type' => 'input',
+                        'validation' => 'email'
+                    ]
+                ],
+                'values' => [
+                    'name' => '',
+                    'email' => 'invalid'
+                ],
+                'result' => [
+                    'name' => [
+                        'type' => 'input',
+                        'validation' => '',
+                        'value' => ''
+                    ],
+                    'email' => [
+                        'type' => 'input',
+                        'validation' => 'email',
+                        'value' => 'invalid',
+                        'errors' => ['error']
+                    ]
+                ],
+                'return' => false
+            ],
+            'valid' => [
+                'fields' => [
+                    'name' => [
+                        'type' => 'input',
+                        'validation' => 'required'
+                    ],
+                    'email' => [
+                        'type' => 'input',
+                        'validation' => 'email'
+                    ],
+                    'textarea' => [
+                        'type' => 'textarea',
+                        'validation' => 'url'
+                    ]
+                ],
+                'values' => [
+                    'name' => 'value',
+                    'email' => 'valid@gmail.com',
+                    'textarea' => 'http://test.com.ua/url'
+                ],
+                'result' => [
+                    'name' => [
+                        'type' => 'input',
+                        'validation' => 'required',
+                        'value' => 'value',
+                        'errors' => []
+                    ],
+                    'email' => [
+                        'type' => 'input',
+                        'validation' => 'email',
+                        'value' => 'valid@gmail.com',
+                        'errors' => []
+                    ],
+                    'textarea' => [
+                        'type' => 'textarea',
+                        'value' => 'http://test.com.ua/url',
+                        'validation' => 'url',
+                        'errors' => []
+                    ]
+                ],
+                'return' => true
+            ]
+        ];
     }
 
     protected function getAttributesStorage($value, $amount, $isOption = false)

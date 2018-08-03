@@ -36,6 +36,7 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -232,8 +233,7 @@ class MainUtility
              * @TODO always remove first category ?
              */
             $categories = array_slice(
-                // use descending order
-                array_reverse(
+                array_reverse(// use descending order
                     CategoryUtility::getParentCategories($category)
                 ),
                 1
@@ -253,6 +253,28 @@ class MainUtility
         }
 
         return !empty($arguments) ? ['tx_pxaproductmanager_pi1' => $arguments] : [];
+    }
+
+    /**
+     * Parse fluid string
+     *
+     * @param string $string
+     * @param array $variables
+     * @return string
+     */
+    public static function parseFluidString(string $string, array $variables): string
+    {
+        if (empty($string)) {
+            return '';
+        }
+
+        /** @var StandaloneView $standAloneView */
+        $standAloneView = GeneralUtility::makeInstance(StandaloneView::class);
+
+        $standAloneView->setTemplateSource($string);
+        $standAloneView->assignMultiple($variables);
+
+        return $standAloneView->render();
     }
 
     /**
@@ -290,5 +312,14 @@ class MainUtility
         }
 
         return $cacheManager;
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    public static function snakeCasePhraseToWords(string $value) : string
+    {
+        return ucfirst(str_replace('_', ' ', $value));
     }
 }
