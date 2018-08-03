@@ -151,16 +151,9 @@ class BackendManagerController extends ActionController
     {
         $order = $this->orderRepository->findByIdIgnoreHidden($order);
 
-        $totalPrice = 0.00;
-        $orderProductsQuantity = $order->getProductsQuantity();
-
-        /** @var Product $product */
-        foreach ($order->getProducts() as $product) {
-            $totalPrice += ($product->getPrice() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
-        }
-
         $this->view
-            ->assign('totalPrice', ProductUtility::formatPrice($totalPrice))
+            ->assign('totalPrice', ProductUtility::calculateOrderTotalPrice($order, true))
+            ->assign('totalTax', ProductUtility::calculateOrderTotalTax($order, true))
             ->assign('backUrl', $backUrl)
             ->assign('order', $order);
     }

@@ -29,6 +29,7 @@ namespace Pixelant\PxaProductManager\Utility;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
+use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -218,7 +219,6 @@ class ProductUtility
             return $recursiveStoragePids;
         }
 
-
         return '';
     }
 
@@ -339,5 +339,64 @@ class ProductUtility
         }
 
         return $orderState;
+    }
+
+    /**
+     * Get total price
+     *
+     * @param Order $order
+     * @param bool $formatPrice
+     * @return float|string
+     * @throws \Exception
+     */
+    public static function calculateOrderTotalPrice(Order $order, bool $formatPrice = false)
+    {
+        $total = self::calculateTotalForProductsOrder($order, 'price');
+
+        return $formatPrice ? self::formatPrice($total) : $total;
+    }
+
+    /**
+     * Get total tax
+     *
+     * @param Order $order
+     * @param bool $formatPrice
+     * @return float|string
+     * @throws \Exception
+     */
+    public static function calculateOrderTotalTax(Order $order, bool $formatPrice = false)
+    {
+        $total = self::calculateTotalForProductsOrder($order, 'tax');
+
+        return $formatPrice ? self::formatPrice($total) : $total;
+    }
+
+    /**
+     * Calculate total value for order tax or price
+     *
+     * @param Order $order
+     * @param string $calculationProperty
+     * @return float
+     * @throws \Exception
+     */
+    private static function calculateTotalForProductsOrder(Order $order, string $calculationProperty): float
+    {
+        $total = 0.00;
+
+        if (!GeneralUtility::inList('price,tax', $calculationProperty)) {
+            // @codingStandardsIgnoreStart
+            throw new \Exception('Property "' . $calculationProperty . 'is not supported for calculation', 1533281264216);
+            // @codingStandardsIgnoreEnd
+        }
+
+        $orderProductsQuantity = $order->getProductsQuantity();
+        $getter = 'get' . ucfirst($calculationProperty);
+
+        /** @var Product $product */
+        foreach ($order->getProducts() as $product) {
+            $total += ($product->$getter() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
+        }
+
+        return $total;
     }
 }

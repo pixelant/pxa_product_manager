@@ -42,6 +42,14 @@
                 <th style="border: none;"><f:translate key="fe.total_price" />:</th>
                 <th style="border: none;"><f:translate key="fe.price_currency_format"  arguments="{0: totalPrice}" /></th>
             </tr>
+            <tr>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"><f:translate key="fe.tax" extensionName="PxaProductManager" />:</th>
+                <th style="border: none;"><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalTax}" /></th>
+            </tr>
         </f:if>
         </tbody>
     </table>
