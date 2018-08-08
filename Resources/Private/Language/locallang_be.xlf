@@ -47,6 +47,12 @@
             <trans-unit id="be.extension_info.no_title">
                 <source>[NO TITLE]</source>
             </trans-unit>
+            <trans-unit id="be.error">
+                <source>Error</source>
+            </trans-unit>
+            <trans-unit id="be.no_tabs">
+                <source>No orders tabs configuration found. Check your module "tx_pxaproductmanager" settings.</source>
+            </trans-unit>
             <!--Extension info hook:END-->
 
             <!--FlexForm:START-->

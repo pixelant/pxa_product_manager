@@ -273,6 +273,22 @@ class TCAUtility
             ? '' : 'AND sys_category.pid=###CURRENT_PID### ';
     }
 
+    /**
+     * Get core language file path, depends on TYPO3 version
+     * @return string
+     */
+    public static function getCoreLLPath(): string
+    {
+        static $llCore;
+
+        if ($llCore === null) {
+            $llCore = version_compare(TYPO3_version, '9.0', '>')
+                ? 'LLL:EXT:core/Resources/Private/Language/'
+                : 'LLL:EXT:lang/';
+        }
+
+        return $llCore;
+    }
 
     /**
      * Generate dynamic foreign table where
