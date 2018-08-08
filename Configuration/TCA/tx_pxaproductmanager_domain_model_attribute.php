@@ -4,6 +4,7 @@ defined('TYPO3_MODE') || die;
 $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
 $llType = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_attribute.type_';
 $accessTab = '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime';
+$llCore = \Pixelant\PxaProductManager\Utility\TCAUtility::getCoreLLPath();
 
 $tx_pxaproductmanager_domain_model_attribute = [
     'ctrl' => [
@@ -51,14 +52,14 @@ $tx_pxaproductmanager_domain_model_attribute = [
     'columns' => [
         'sys_language_uid' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
+            'label' => $llCore . 'locallang_general.xlf:LGL.language',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'special' => 'languages',
                 'items' => [
                     [
-                        'LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages',
+                        $llCore . 'locallang_general.xlf:LGL.allLanguages',
                         -1,
                         'flags-multiple'
                     ],
@@ -69,7 +70,7 @@ $tx_pxaproductmanager_domain_model_attribute = [
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.l18n_parent',
+            'label' => $llCore . 'locallang_general.xlf:LGL.l18n_parent',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
@@ -88,7 +89,7 @@ $tx_pxaproductmanager_domain_model_attribute = [
         ],
         'hidden' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
+            'label' => $llCore . 'locallang_general.xlf:LGL.hidden',
             'config' => [
                 'type' => 'check',
             ]
@@ -96,7 +97,7 @@ $tx_pxaproductmanager_domain_model_attribute = [
         'starttime' => [
             'exclude' => 1,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
+            'label' => $llCore . 'locallang_general.xlf:LGL.starttime',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
@@ -111,7 +112,7 @@ $tx_pxaproductmanager_domain_model_attribute = [
         'endtime' => [
             'exclude' => 1,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
+            'label' => $llCore . 'locallang_general.xlf:LGL.endtime',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
