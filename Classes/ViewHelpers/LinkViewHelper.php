@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaProductManager\ViewHelpers;
 
 /***************************************************************
@@ -27,6 +28,7 @@ use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Fluid\ViewHelpers\Link\PageViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 /**
  *
@@ -35,46 +37,75 @@ use TYPO3\CMS\Fluid\ViewHelpers\Link\PageViewHelper;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class LinkViewHelper extends PageViewHelper
+class LinkViewHelper extends AbstractTagBasedViewHelper
 {
+    /**
+     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
+     */
+    protected $objectManager;
 
+    /**
+     * @var string
+     */
+    protected $tagName = 'a';
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
+     */
+    public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
+
+    /**
+     * Arguments initialization
+     */
     public function initializeArguments()
     {
         parent::initializeArguments();
+        $this->registerUniversalTagAttributes();
+        $this->registerTagAttribute('target', 'string', 'Target of link', false);
+        $this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document', false);
+        $this->registerArgument('pageUid', 'int', 'Target page. See TypoLink destination');
+        $this->registerArgument('pageType', 'int', 'Type of the target page. See typolink.parameter');
+        $this->registerArgument('noCache', 'bool', 'Set this to disable caching for the target page. You should not need this.');
+        $this->registerArgument('noCacheHash', 'bool', 'Set this to suppress the cHash query parameter created by TypoLink. You should not need this.');
+        $this->registerArgument('section', 'string', 'The anchor to be added to the URI');
+        $this->registerArgument('linkAccessRestrictedPages', 'bool', 'If set, links pointing to access restricted pages will still link to the page even though the page cannot be accessed.');
+        $this->registerArgument('additionalParams', 'array', 'Additional query parameters that won\'t be prefixed like $arguments (overrule $arguments)');
+        $this->registerArgument('absolute', 'bool', 'If set, the URI of the rendered link is absolute');
+        $this->registerArgument('addQueryString', 'bool', 'If set, the current query parameters will be kept in the URI');
+        $this->registerArgument('argumentsToBeExcludedFromQueryString', 'array', 'Arguments to be removed from the URI. Only active if $addQueryString = TRUE');
+        $this->registerArgument('addQueryStringMethod', 'string', 'Set which parameters will be kept. Only active if $addQueryString = TRUE');
+
         $this->registerArgument('category', 'mixed', 'Category to link', false, null);
         $this->registerArgument('product', 'mixed', 'Product to link', false, null);
     }
 
-    // @codingStandardsIgnoreStart
     /**
-     * @param int|NULL $pageUid target page. See TypoLink destination
-     * @param array $additionalParams query parameters to be attached to the resulting URI
-     * @param int $pageType type of the target page. See typolink.parameter
-     * @param bool $noCache set this to disable caching for the target page. You should not need this.
-     * @param bool $noCacheHash set this to suppress the cHash query parameter created by TypoLink. You should not need this.
-     * @param string $section the anchor to be added to the URI
-     * @param bool $linkAccessRestrictedPages If set, links pointing to access restricted pages will still link to the page even though the page cannot be accessed.
-     * @param bool $absolute If set, the URI of the rendered link is absolute
-     * @param bool $addQueryString If set, the current query parameters will be kept in the URI
-     * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
-     * @param string $addQueryStringMethod Set which parameters will be kept. Only active if $addQueryString = TRUE
-     * @return string Rendered page URI
+     * Render product and categories link
      *
+     * @return string Rendered page URI or anchor tag
      */
-    // @codingStandardsIgnoreEnd
-    public function render(
-        $pageUid = null,
-        array $additionalParams = [],
-        $pageType = 0,
-        $noCache = false,
-        $noCacheHash = false,
-        $section = '',
-        $linkAccessRestrictedPages = false,
-        $absolute = false,
-        $addQueryString = false,
-        array $argumentsToBeExcludedFromQueryString = [],
-        $addQueryStringMethod = null
-    ) {
+    public function render()
+    {
+        $pageUid = isset($this->arguments['pageUid']) ? (int)$this->arguments['pageUid'] : null;
+        $pageType = isset($this->arguments['pageType']) ? (int)$this->arguments['pageType'] : 0;
+        $noCache = isset($this->arguments['noCache']) ? (bool)$this->arguments['noCache'] : false;
+        $noCacheHash = isset($this->arguments['noCacheHash']) ? (bool)$this->arguments['noCacheHash'] : false;
+        $section = isset($this->arguments['section']) ? (string)$this->arguments['section'] : '';
+        $linkAccessRestrictedPages = isset($this->arguments['linkAccessRestrictedPages'])
+            ? (bool)$this->arguments['linkAccessRestrictedPages']
+            : false;
+        $additionalParams = isset($this->arguments['additionalParams'])
+            ? (array)$this->arguments['additionalParams']
+            : [];
+        $absolute = isset($this->arguments['absolute']) ? (bool)$this->arguments['absolute'] : false;
+        $addQueryString = isset($this->arguments['addQueryString']) ? (bool)$this->arguments['addQueryString'] : false;
+        $argumentsToBeExcludedFromQueryString = isset($this->arguments['argumentsToBeExcludedFromQueryString'])
+            ? (array)$this->arguments['argumentsToBeExcludedFromQueryString']
+            : [];
+        $addQueryStringMethod = $this->arguments['addQueryStringMethod'] ?? null;
         $product = $this->arguments['product'];
         $category = $this->arguments['category'];
 
@@ -101,20 +132,31 @@ class LinkViewHelper extends PageViewHelper
         }
 
         // don't pass empty string or '0'
-        $pageUid = (int)$pageUid === 0 ? null : $pageUid;
+        if ($pageUid === 0) {
+            $pageUid = null;
+        }
 
-        return parent::render(
-            $pageUid,
-            $additionalParams,
-            $pageType,
-            $noCache,
-            $noCacheHash,
-            $section,
-            $linkAccessRestrictedPages,
-            $absolute,
-            $addQueryString,
-            $argumentsToBeExcludedFromQueryString,
-            $addQueryStringMethod
-        );
+        $uriBuilder = $this->renderingContext->getControllerContext()->getUriBuilder();
+        $uri = $uriBuilder->reset()
+            ->setTargetPageUid($pageUid)
+            ->setTargetPageType($pageType)
+            ->setNoCache($noCache)
+            ->setUseCacheHash(!$noCacheHash)
+            ->setSection($section)
+            ->setLinkAccessRestrictedPages($linkAccessRestrictedPages)
+            ->setArguments($additionalParams)
+            ->setCreateAbsoluteUri($absolute)
+            ->setAddQueryString($addQueryString)
+            ->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
+            ->setAddQueryStringMethod($addQueryStringMethod)
+            ->build();
+        if ((string)$uri !== '') {
+            $this->tag->addAttribute('href', $uri);
+            $this->tag->setContent($this->renderChildren());
+            $result = $this->tag->render();
+        } else {
+            $result = $this->renderChildren();
+        }
+        return $result;
     }
 }
