@@ -1561,8 +1561,7 @@ class Product extends AbstractEntity
     {
         $isNew = false;
         if (!empty($this->getLaunched())) {
-            $pluginSettings = ConfigurationUtility::getSettings($this->getPid());
-            $dateInterval = $pluginSettings['launched']['dateIntervalAsNew'];
+            $dateInterval = ConfigurationUtility::getSettingsByPath('launched/dateIntervalAsNew', $this->getPid());
             if (!empty($dateInterval)) {
                 try {
                     $newUntil = clone $this->getLaunched();
@@ -1585,12 +1584,11 @@ class Product extends AbstractEntity
     public function getAdditionalClasses(string $prefix = ''): string
     {
         $additionalClasses = [];
-
-        $pluginSettings = ConfigurationUtility::getSettings($this->getPid());
+        $pid = $this->getPid();
 
         // check if additional category classes are set in plugin ts setup
         // this way we can add custom classes for products based on its categories in templates
-        $categoriesAdditionalClasses = $pluginSettings['additionalClasses']['categories'];
+        $categoriesAdditionalClasses = ConfigurationUtility::getSettingsByPath('additionalClasses/categories', $pid);
         if (is_array($categoriesAdditionalClasses) && count($categoriesAdditionalClasses) > 0) {
             foreach ($this->getCategories() as $category) {
                 $className = $categoriesAdditionalClasses[$category->getUid()];
@@ -1603,7 +1601,7 @@ class Product extends AbstractEntity
         // check if product is considered new, then add class
         // based on ts setup additionalClasses.launched.isNew
         if ($this->getIsNew()) {
-            $isNewClass = $pluginSettings['additionalClasses']['launched']['isNewClass'];
+            $isNewClass = ConfigurationUtility::getSettingsByPath('additionalClasses/launched/isNewClass', $pid);
             if (!empty($isNewClass)) {
                 $additionalClasses[] = $isNewClass;
             }
@@ -1612,7 +1610,10 @@ class Product extends AbstractEntity
         // check if product is considered discontinued, then add class
         // based on ts setup additionalClasses.discontinued.isDiscontinuedClass
         if ($this->getIsDiscontinued()) {
-            $isDiscontinuedClass = $pluginSettings['additionalClasses']['discontinued']['isDiscontinuedClass'];
+            $isDiscontinuedClass = ConfigurationUtility::getSettingsByPath(
+                'additionalClasses/discontinued/isDiscontinuedClass',
+                $pid
+            );
             if (!empty($isDiscontinuedClass)) {
                 $additionalClasses[] = $isDiscontinuedClass;
             }

@@ -186,6 +186,8 @@ class ConfigurationUtility
             $value = ArrayUtility::getValueByPath($settings, $path, '/');
         } catch (MissingArrayPathException $exception) {
             return null;
+        } catch (\RuntimeException $exception) {
+            return null;
         }
 
         return $value;

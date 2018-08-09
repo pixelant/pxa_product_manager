@@ -280,19 +280,22 @@ class ProductUtility
         $customSorting = 0;
 
         if ($product->getIsNew() || $product->getCategories()->count() > 0) {
-            $pluginSettings = ConfigurationUtility::getSettings($product->getPid());
-            if ($pluginSettings['customSorting']['enable']) {
+            $pid = $product->getPid();
+            if (ConfigurationUtility::getSettingsByPath('customSorting/enable', $pid)) {
                 // Get "new" points
                 if ($product->getIsNew()) {
-                    $customSorting += (int)$pluginSettings['customSorting']['points']['new'];
+                    $customSorting += (int)ConfigurationUtility::getSettingsByPath('customSorting/points/new', $pid);
                 }
                 // Get "category" points
                 if ($product->getCategories()->count() > 0) {
+                    $pointCategories = ConfigurationUtility::getSettingsByPath('customSorting/points/categories', $pid)
+                        ?: [];
+
                     foreach ($product->getCategories() as $category) {
                         $catUid = $category->getUid();
-                        if (isset($pluginSettings['customSorting']['points']['categories'][$catUid])) {
-                            $catPoint = $pluginSettings['customSorting']['points']['categories'][$catUid];
-                            $customSorting += (int)$catPoint;
+
+                        if (isset($pointCategories[$catUid])) {
+                            $customSorting += (int)$pointCategories[$catUid];
                         }
                     }
                 }

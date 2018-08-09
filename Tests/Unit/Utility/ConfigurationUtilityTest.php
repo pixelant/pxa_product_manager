@@ -163,10 +163,35 @@ class ConfigurationUtilityTest extends UnitTestCase
             ConfigurationUtility::getSettingsByPath($path)
         );
 
-        $path = 'level1/levle2/setting';
+        $path = 'level1/level/setting';
 
         $this->assertEquals(
             'value',
+            ConfigurationUtility::getSettingsByPath($path)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function readFromSettingsByPathRecursiveReturnSettings()
+    {
+        $reflectionClass = new \ReflectionClass(ConfigurationUtility::class);
+
+        $mockedConfigurationManager = $this->createPartialMock(ConfigurationManager::class, ['isEnvironmentInFrontendMode']);
+        $mockedConfigurationManager
+            ->expects($this->atLeastOnce())
+            ->method('isEnvironmentInFrontendMode')
+            ->willReturn(true);
+
+        $reflectionProperty = $reflectionClass->getProperty('configurationManager');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($mockedConfigurationManager);
+
+        $path = 'level1/level';
+
+        $this->assertEquals(
+            ['setting' => 'value'],
             ConfigurationUtility::getSettingsByPath($path)
         );
     }
@@ -183,7 +208,7 @@ class ConfigurationUtilityTest extends UnitTestCase
                 'test' => 123,
                 'level1' => [
                     'test' => 'testing',
-                    'levle2' => [
+                    'level' => [
                         'setting' => 'value'
                     ]
                 ]
