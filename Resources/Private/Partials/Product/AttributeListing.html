@@ -56,7 +56,7 @@
                         </tr>
                     </f:if>
                 </f:case>
-                <f:case default="TRUE">
+                <f:defaultCase>
                     <tr>
                         <th>
                             <f:if condition="{attribute.icon}">
@@ -74,7 +74,7 @@
                                       arguments="{attribute: attribute}"/>
                         </td>
                     </tr>
-                </f:case>
+                </f:defaultCase>
             </f:switch>
         </f:if>
     </f:for>
