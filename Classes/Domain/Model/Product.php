@@ -186,6 +186,13 @@ class Product extends AbstractEntity
     protected $attributes;
 
     /**
+     * Attributes as array with identifier as index
+     *
+     * @var array
+     */
+    protected $attributesIdentifiersArray = [];
+
+    /**
      * Attributes grouped by sets
      *
      * @var ObjectStorage
@@ -239,13 +246,6 @@ class Product extends AbstractEntity
      * @var Image
      */
     protected $thumbnailImage;
-
-    /**
-     * Save result for __call method
-     *
-     * @var array
-     */
-    protected $magicCallMethodCache = [];
 
     /**
      * attributesDescription
@@ -1565,29 +1565,19 @@ class Product extends AbstractEntity
     }
 
     /**
-     * __call
+     * This method will return attribute by identifier
+     * Fluid usage
+     * {product.attribute.identifier.value}
      *
-     * @param $methodName
-     * @param $arguments
-     * @return object
+     * @param string $identifier
+     * @return mixed Array of all attributes with identifier or attribute object or null
      */
-    public function __call($methodName, $arguments)
+    public function getAttribute(string $identifier = '')
     {
-        if (array_key_exists($methodName, $this->magicCallMethodCache)) {
-            return $this->magicCallMethodCache[$methodName];
-        }
-        // Getting custom attributes
-        if (strpos($methodName, 'get') === 0) {
-            $identifier = lcfirst(substr($methodName, 3));
-
-            // Check identifier and name
-            /** @var Attribute $attribute */
-            foreach ($this->getAttributes() as $attribute) {
-                if ($attribute->getIdentifier() === $identifier || $attribute->getName() === $identifier) {
-                    $this->magicCallMethodCache[$methodName] = $attribute;
-                    return $attribute;
-                }
-            }
+        if (empty($identifier)) {
+            return $this->attributesIdentifiersArray;
+        } elseif (isset($this->attributesIdentifiersArray[$identifier])) {
+            return $this->attributesIdentifiersArray[$identifier];
         }
 
         return null;
@@ -1678,6 +1668,7 @@ class Product extends AbstractEntity
             }
 
             $this->attributes->attach($attribute);
+            $this->attributesIdentifiersArray[$attribute->getIdentifier() ?: $attribute->getUid()] = $attribute;
         }
     }
 }
