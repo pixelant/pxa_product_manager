@@ -17,9 +17,12 @@ namespace Pixelant\PxaProductManager\Utility;
  */
 
 use Pixelant\PxaProductManager\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use \TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Class ConfigurationUtility
@@ -40,6 +43,13 @@ class ConfigurationUtility
      * @var ConfigurationManager
      */
     protected static $configurationManager;
+
+    /**
+     * Extension manager settings
+     *
+     * @var array
+     */
+    protected static $extMgrConfiguration;
 
     /**
      * Get extension typoscript config from both FE and BE
@@ -96,9 +106,61 @@ class ConfigurationUtility
     }
 
     /**
+     * Get extension manager settings
+     *
      * @return array
      */
-    public static function getCheckoutSystems() : array
+    public static function getExtMgrConfiguration(): array
+    {
+        if (self::$extMgrConfiguration === null) {
+            if (version_compare(TYPO3_version, '9.0', '>=')) {
+                $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)
+                    ->get('pxa_product_manager');
+            } else {
+                $extensionConfiguration = unserialize(
+                    $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['pxa_product_manager'] ?? ''
+                );
+            }
+
+            self::$extMgrConfiguration = $extensionConfiguration ?: [];
+        }
+
+        return self::$extMgrConfiguration;
+    }
+
+    /**
+     * Read value from settings by path
+     * @param string $path Path separated by "/"
+     * @param int|null $currentPageId
+     * @return mixed|null
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     */
+    public static function getSettingsByPath(string $path, int $currentPageId = null)
+    {
+        return self::readArrayRecursiveByPath(
+            self::getSettings($currentPageId),
+            $path
+        );
+    }
+
+    /**
+     * Read value from extension manager configuration
+     *
+     * @param string $path Path separated by "/"
+     * @return mixed|null
+     */
+    public static function getExtManagerConfigurationByPath(string $path)
+    {
+        return self::readArrayRecursiveByPath(
+            self::getExtMgrConfiguration(),
+            $path
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCheckoutSystems(): array
     {
         $checkoutSystems = [
             'default' => [
@@ -110,5 +172,22 @@ class ConfigurationUtility
         $signalSlotDispatcher->dispatch(__CLASS__, 'BeforeReturningCheckoutSystems', [&$checkoutSystems]);
 
         return $checkoutSystems;
+    }
+
+    /**
+     * Read recursive from array settings
+     * @param array $settings
+     * @param string $path
+     * @return mixed|null
+     */
+    private static function readArrayRecursiveByPath(array $settings, string $path)
+    {
+        try {
+            $value = ArrayUtility::getValueByPath($settings, $path, '/');
+        } catch (MissingArrayPathException $exception) {
+            return null;
+        }
+
+        return $value;
     }
 }

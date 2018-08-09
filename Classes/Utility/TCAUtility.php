@@ -282,7 +282,7 @@ class TCAUtility
         static $llCore;
 
         if ($llCore === null) {
-            $llCore = version_compare(TYPO3_version, '9.0', '>')
+            $llCore = version_compare(TYPO3_version, '9.0', '>=')
                 ? 'LLL:EXT:core/Resources/Private/Language/'
                 : 'LLL:EXT:lang/';
         }
