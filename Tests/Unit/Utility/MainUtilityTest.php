@@ -16,17 +16,6 @@ class MainUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function getExtMgrConfigurationReturnEmptyConfigrationIfExtConfNotSet()
-    {
-        $this->assertEquals(
-            [],
-            MainUtility::getExtMgrConfiguration()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function buildLinkArgumentsOnlyProductWithCategories()
     {
         list($category1, $category2, $category3) = $this->getCategoriesForTest();

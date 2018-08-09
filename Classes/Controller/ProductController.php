@@ -244,7 +244,7 @@ class ProductController extends AbstractController
     {
         // Select the checkout system to use
         $checkoutToUse = $this->settings['wishList']['checkoutSystem']
-            ?: MainUtility::getExtMgrConfiguration()['checkoutSystem']
+            ?: ConfigurationUtility::getExtManagerConfigurationByPath('checkoutSystem')
             ?: 'default';
         
         $checkOutSystems = ConfigurationUtility::getCheckoutSystems();

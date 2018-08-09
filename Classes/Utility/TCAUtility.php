@@ -269,7 +269,7 @@ class TCAUtility
      */
     public static function getCategoriesTCAWhereClause(): string
     {
-        return (int)MainUtility::getExtMgrConfiguration()['dontCheckPidForSysCategory'] === 1
+        return (int)ConfigurationUtility::getExtManagerConfigurationByPath('dontCheckPidForSysCategory') === 1
             ? '' : 'AND sys_category.pid=###CURRENT_PID### ';
     }
 
@@ -299,13 +299,11 @@ class TCAUtility
      */
     protected static function getDynamicForeignTableWhere(string $setting, string $table): string
     {
-        $configuration = MainUtility::getExtMgrConfiguration();
-
         // we will use current_pid as default to keep backward compatibility
         $foreignTableWhere = 'AND ' . $table . '.pid = ###CURRENT_PID###';
 
         // check and override by typoscript setting
-        $restrictionSetting = $configuration[$setting];
+        $restrictionSetting = ConfigurationUtility::getExtManagerConfigurationByPath($setting);
         if ($restrictionSetting) {
             switch ($restrictionSetting) {
                 case 'current_pid':

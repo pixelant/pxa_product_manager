@@ -55,8 +55,7 @@ class MainUtility
         static $pricingEnabled;
 
         if ($pricingEnabled === null) {
-            $configuration = self::getExtMgrConfiguration();
-            $pricingEnabled = isset($configuration['enablePrices']) && (int)$configuration['enablePrices'] === 1;
+            $pricingEnabled = (int)ConfigurationUtility::getExtManagerConfigurationByPath('enablePrices') === 1;
         }
 
         return $pricingEnabled;
