@@ -1212,132 +1212,6 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Get image for different views
-     *
-     * @param string $propertyName
-     * @return null|object|Image
-     */
-    protected function getImageFor($propertyName)
-    {
-        if ($this->images->count()) {
-            /** @var Image $image */
-            foreach ($this->images as $image) {
-                if (ObjectAccess::isPropertyGettable($image, $propertyName)
-                    && ObjectAccess::getProperty($image, $propertyName) === true
-                ) {
-                    return $image;
-                }
-            }
-
-            // use any if no result
-            $this->images->rewind();
-            return $this->images->current();
-        }
-
-        return null;
-    }
-
-    /**
-     * __call
-     *
-     * @param $methodName
-     * @param $arguments
-     * @return object
-     */
-    public function __call($methodName, $arguments)
-    {
-        if (array_key_exists($methodName, $this->magicCallMethodCache)) {
-            return $this->magicCallMethodCache[$methodName];
-        }
-        // Getting custom attributes
-        if (strpos($methodName, 'get') === 0) {
-            $identifier = lcfirst(substr($methodName, 3));
-
-            // Check identifier
-            /** @var Attribute $attribute */
-            foreach ($this->getAttributes() as $attribute) {
-                if (lcfirst($attribute->getIdentifier()) === $identifier) {
-                    $this->magicCallMethodCache[$methodName] = $attribute;
-                    return $attribute;
-                }
-            }
-
-            // If no identifier found, then check name
-            /** @var Attribute $attribute */
-            foreach ($this->getAttributes() as $attribute) {
-                if (lcfirst($attribute->getName()) === $identifier) {
-                    $this->magicCallMethodCache[$methodName] = $attribute;
-                    return $attribute;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Initialize attributes
-     */
-    protected function initializeAttributes()
-    {
-        $this->attributes = new ObjectStorage();
-
-        /** @var AttributeHolderUtility $attributeHolder */
-        $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-        $attributeHolder->start($this->getUid());
-
-        $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
-
-        $attributesValues = (array)unserialize($this->getSerializedAttributesValues());
-
-        /** @var Attribute $attribute */
-        foreach ($attributeHolder->getAttributes() as $attribute) {
-            $id = $attribute->getUid();
-
-            if ($attribute->getType() === Attribute::ATTRIBUTE_TYPE_IMAGE) {
-                $attribute->setValue(array_filter(
-                    $this->attributeImages->toArray(),
-                    function ($item) use ($id) {
-                        return $item->getPxaAttribute() === $id;
-                    }
-                ));
-            } elseif (array_key_exists($id, $attributesValues)) {
-                $value = $attributesValues[$id];
-
-                switch ($attribute->getType()) {
-                    case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
-                    case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
-                        $options = [];
-
-                        /** @var Option $option */
-                        foreach ($attribute->getOptions() as $option) {
-                            if (GeneralUtility::inList($value, $option->getUid())) {
-                                $options[] = $option;
-                            }
-                        }
-
-                        $attribute->setValue($options);
-                        break;
-                    case Attribute::ATTRIBUTE_TYPE_DATETIME:
-                        if ($value) {
-                            try {
-                                $value = new \DateTime($value);
-                            } catch (\Exception $exception) {
-                                $value = '';
-                            }
-                        }
-                        $attribute->setValue($value);
-                        break;
-                    default:
-                        $attribute->setValue($value);
-                }
-            }
-
-            $this->attributes->attach($attribute);
-        }
-    }
-
-    /**
      * Adds an asset
      *
      * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $asset
@@ -1552,6 +1426,43 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Get custom sorting
+     *
+     * @return int
+     */
+    public function getCustomSorting(): int
+    {
+        return $this->customSorting;
+    }
+
+    /**
+     * Set custom sorting
+     *
+     * @param int $customSorting Custom sorting
+     * @return void
+     */
+    public function setCustomSorting(int $customSorting)
+    {
+        $this->customSorting = $customSorting;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTax(): float
+    {
+        return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormatTax(): string
+    {
+        return ProductUtility::formatPrice($this->getTax());
+    }
+
+    /**
      * Returns true if product is considered as new
      * based on product launched date and setup ts launched.daysAsNew
      *
@@ -1627,27 +1538,6 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Get custom sorting
-     *
-     * @return int
-     */
-    public function getCustomSorting(): int
-    {
-        return $this->customSorting;
-    }
-
-    /**
-     * Set custom sorting
-     *
-     * @param int $customSorting Custom sorting
-     * @return void
-     */
-    public function setCustomSorting(int $customSorting)
-    {
-        $this->customSorting = $customSorting;
-    }
-
-    /**
      * @return float
      */
     public function getTaxRateRecursively(): float
@@ -1675,18 +1565,119 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @return float
+     * __call
+     *
+     * @param $methodName
+     * @param $arguments
+     * @return object
      */
-    public function getTax(): float
+    public function __call($methodName, $arguments)
     {
-        return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+        if (array_key_exists($methodName, $this->magicCallMethodCache)) {
+            return $this->magicCallMethodCache[$methodName];
+        }
+        // Getting custom attributes
+        if (strpos($methodName, 'get') === 0) {
+            $identifier = lcfirst(substr($methodName, 3));
+
+            // Check identifier and name
+            /** @var Attribute $attribute */
+            foreach ($this->getAttributes() as $attribute) {
+                if ($attribute->getIdentifier() === $identifier || $attribute->getName() === $identifier) {
+                    $this->magicCallMethodCache[$methodName] = $attribute;
+                    return $attribute;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
-     * @return string
+     * Get image for different views
+     *
+     * @param string $propertyName
+     * @return null|object|Image
      */
-    public function getFormatTax(): string
+    protected function getImageFor($propertyName)
     {
-        return ProductUtility::formatPrice($this->getTax());
+        if ($this->images->count()) {
+            /** @var Image $image */
+            foreach ($this->images as $image) {
+                if (ObjectAccess::isPropertyGettable($image, $propertyName)
+                    && ObjectAccess::getProperty($image, $propertyName) === true
+                ) {
+                    return $image;
+                }
+            }
+
+            // use any if no result
+            $this->images->rewind();
+            return $this->images->current();
+        }
+
+        return null;
+    }
+
+    /**
+     * Initialize attributes
+     */
+    protected function initializeAttributes()
+    {
+        $this->attributes = new ObjectStorage();
+
+        /** @var AttributeHolderUtility $attributeHolder */
+        $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
+        $attributeHolder->start($this->getUid());
+
+        $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
+
+        $attributesValues = (array)unserialize($this->getSerializedAttributesValues());
+
+        /** @var Attribute $attribute */
+        foreach ($attributeHolder->getAttributes() as $attribute) {
+            $id = $attribute->getUid();
+
+            if ($attribute->getType() === Attribute::ATTRIBUTE_TYPE_IMAGE) {
+                $attribute->setValue(array_filter(
+                    $this->attributeImages->toArray(),
+                    function ($item) use ($id) {
+                        return $item->getPxaAttribute() === $id;
+                    }
+                ));
+            } elseif (array_key_exists($id, $attributesValues)) {
+                $value = $attributesValues[$id];
+
+                switch ($attribute->getType()) {
+                    case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
+                    case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
+                        $options = [];
+
+                        /** @var Option $option */
+                        foreach ($attribute->getOptions() as $option) {
+                            if (GeneralUtility::inList($value, $option->getUid())) {
+                                $options[] = $option;
+                            }
+                        }
+
+                        $attribute->setValue($options);
+                        break;
+                    case Attribute::ATTRIBUTE_TYPE_DATETIME:
+                        if ($value) {
+                            try {
+                                $value = new \DateTime($value);
+                            } catch (\Exception $exception) {
+                                $value = '';
+                            }
+                        }
+                        $attribute->setValue($value);
+                        break;
+                    default:
+                        $attribute->setValue($value);
+                }
+            }
+
+            $this->attributes->attach($attribute);
+        }
     }
 }
