@@ -7,6 +7,7 @@ return [
     'ctrl' => [
         'title' => $ll . 'tx_pxaproductmanager_domain_model_filter',
         'label' => 'name',
+        'label_alt' => 'label',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
@@ -183,6 +184,7 @@ return [
                 'size' => 20,
                 'minitems' => 1,
                 'maxitems' => 1,
+                'default' => 0
             ]
         ],
         'attribute' => [
