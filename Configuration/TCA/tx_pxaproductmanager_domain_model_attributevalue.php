@@ -64,6 +64,7 @@ return [
                 ],
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_attributevalue',
                 'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_attributevalue.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_attributevalue.sys_language_uid IN (-1,0)',
+                'default' => 0
             ],
         ],
         'l10n_diffsource' => [

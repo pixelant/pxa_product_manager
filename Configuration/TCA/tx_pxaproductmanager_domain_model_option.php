@@ -65,6 +65,7 @@ return [
                 ],
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_option',
                 'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_option.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_option.sys_language_uid IN (-1,0)',
+                'default' => 0
             ],
         ],
         'l10n_diffsource' => [
