@@ -6,6 +6,7 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
@@ -304,7 +305,9 @@ class BackendManagerController extends ActionController
             $urlParameters['overrideVals'][$table][$field] = $category->getUid();
         }
 
-        return BackendUtility::getModuleUrl('record_edit', $urlParameters);
+        $uriBuilder = GeneralUtility::makeInstance(BackendUriBuilder::class);
+
+        return (string)$uriBuilder->buildUriFromRoute('record_edit', $urlParameters);
     }
 
     /**
