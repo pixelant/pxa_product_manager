@@ -27,7 +27,6 @@ namespace Pixelant\PxaProductManager\ViewHelpers;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
-use TYPO3\CMS\Fluid\ViewHelpers\Link\PageViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 /**

@@ -25,7 +25,7 @@ namespace Pixelant\PxaProductManager\ViewHelpers;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Utility\MainUtility;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Class SetPageTitleViewHelper
