@@ -225,9 +225,6 @@ return [
                     'showSynchronizationLink' => 1,
                     'showPossibleLocalizationRecords' => 1,
                     'showAllLocalizationLink' => 1
-                ],
-                'behaviour' => [
-                    'localizeChildrenAtParentLocalization' => true,
                 ]
             ]
         ],
@@ -319,8 +316,7 @@ return [
                     ],
                     // @codingStandardsIgnoreEnd
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true,
-                        'localizeChildrenAtParentLocalization' => true,
+                        'allowLanguageSynchronization' => true
                     ],
                 ],
                 $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
@@ -397,7 +393,6 @@ return [
                 'fal_links',
                 [
                     'behaviour' => [
-                        'localizeChildrenAtParentLocalization' => true,
                         'allowLanguageSynchronization' => true
                     ],
                     'appearance' => [
@@ -463,10 +458,7 @@ return [
                     'showSynchronizationLink' => 1,
                     'showPossibleLocalizationRecords' => 1,
                     'showAllLocalizationLink' => 1
-                ],
-                'behaviour' => [
-                    'localizeChildrenAtParentLocalization' => true,
-                ],
+                ]
             ],
         ],
         'sub_products' => [

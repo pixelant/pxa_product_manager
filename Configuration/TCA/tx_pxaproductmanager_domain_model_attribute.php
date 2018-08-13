@@ -248,9 +248,6 @@ $tx_pxaproductmanager_domain_model_attribute = [
                     'showPossibleLocalizationRecords' => 1,
                     'showAllLocalizationLink' => 1,
                     'useSortable' => 1
-                ],
-                'behaviour' => [
-                    'localizeChildrenAtParentLocalization' => true
                 ]
             ]
         ],
@@ -293,8 +290,7 @@ $tx_pxaproductmanager_domain_model_attribute = [
                     ],
                     // @codingStandardsIgnoreEnd
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true,
-                        'localizeChildrenAtParentLocalization' => true,
+                        'allowLanguageSynchronization' => true
                     ],
                 ],
                 'svg'
