@@ -56,8 +56,7 @@ class Product extends AbstractEntity
     /**
      * name
      *
-     * @var \string
-     * @validate NotEmpty
+     * @var string
      */
     protected $name;
 

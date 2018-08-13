@@ -38,23 +38,21 @@ class Link extends AbstractEntity
     /**
      * name
      *
-     * @var \string
-     * @validate NotEmpty
+     * @var string
      */
     protected $name;
 
     /**
      * link
      *
-     * @var \string
-     * @validate NotEmpty
+     * @var string
      */
     protected $link;
 
     /**
      * description
      *
-     * @var \string
+     * @var string
      *
      */
     protected $description = '';
@@ -62,7 +60,7 @@ class Link extends AbstractEntity
     /**
      * Returns the name
      *
-     * @return \string $name
+     * @return string $name
      */
     public function getName(): string
     {
@@ -72,7 +70,7 @@ class Link extends AbstractEntity
     /**
      * Sets the name
      *
-     * @param \string $name
+     * @param string $name
      * @return void
      */
     public function setName(string $name)
@@ -83,7 +81,7 @@ class Link extends AbstractEntity
     /**
      * Returns the link
      *
-     * @return \string link
+     * @return string link
      */
     public function getLink(): string
     {
@@ -93,7 +91,7 @@ class Link extends AbstractEntity
     /**
      * Sets the link
      *
-     * @param \string $link
+     * @param string $link
      */
     public function setLink(string $link)
     {
@@ -103,7 +101,7 @@ class Link extends AbstractEntity
     /**
      * Returns the description
      *
-     * @return \string $description
+     * @return string $description
      */
     public function getDescription(): string
     {
@@ -113,7 +111,7 @@ class Link extends AbstractEntity
     /**
      * Sets the description
      *
-     * @param \string $description
+     * @param string $description
      * @return void
      */
     public function setDescription(string $description)
