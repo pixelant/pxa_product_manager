@@ -1,0 +1,22 @@
+diff --git a/Classes/Utility/ConfigurationUtility.php b/Classes/Utility/ConfigurationUtility.php
+index fd0dfb2..23713fe 100644
+--- a/Classes/Utility/ConfigurationUtility.php
++++ b/Classes/Utility/ConfigurationUtility.php
+@@ -98,6 +98,8 @@ class ConfigurationUtility
+      * @param int|null $currentPageId
+      * @return array
+      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
++     * @internal
++     * @see getSettingsByPath
+      */
+     public static function getSettings(int $currentPageId = null): array
+     {
+@@ -109,6 +111,8 @@ class ConfigurationUtility
+      * Get extension manager settings
+      *
+      * @return array
++     * @internal
++     * @see getExtManagerConfigurationByPath
+      */
+     public static function getExtMgrConfiguration(): array
+     {

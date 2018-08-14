@@ -54,8 +54,7 @@ call_user_func(
 
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][OrderEditFormInitialize::class] = [
             'depends' => [
-                \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class,
-                \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class
+                \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class
             ]
         ];
 
