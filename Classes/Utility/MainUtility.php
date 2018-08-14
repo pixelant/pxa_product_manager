@@ -46,38 +46,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class MainUtility
 {
     /**
-     * Extension manager settings
-     *
-     * @var array
-     */
-    protected static $extMgrConfiguration;
-
-    /**
-     * Plugin settings
-     *
-     * @var array
-     */
-    protected static $settings;
-
-    /**
-     * Get extension manager settings
-     *
-     * @return array
-     */
-    public static function getExtMgrConfiguration(): array
-    {
-        if (self::$extMgrConfiguration === null) {
-            $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['pxa_product_manager'] ?? '';
-
-            if ((self::$extMgrConfiguration = unserialize($configuration)) === false) {
-                self::$extMgrConfiguration = [];
-            }
-        }
-
-        return self::$extMgrConfiguration;
-    }
-
-    /**
      * Check if prices enabled
      *
      * @return bool
@@ -87,8 +55,7 @@ class MainUtility
         static $pricingEnabled;
 
         if ($pricingEnabled === null) {
-            $configuration = self::getExtMgrConfiguration();
-            $pricingEnabled = isset($configuration['enablePrices']) && (int)$configuration['enablePrices'] === 1;
+            $pricingEnabled = (int)ConfigurationUtility::getExtManagerConfigurationByPath('enablePrices') === 1;
         }
 
         return $pricingEnabled;

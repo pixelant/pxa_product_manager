@@ -450,7 +450,7 @@ class PageLayoutView
     protected function getPagePidInfo(int $pageUid): string
     {
         // Set the pagePid using the flexform -> typoscript -> 0 priority
-        $pageUid = $pageUid ?: ConfigurationUtility::getSettings((int)GeneralUtility::_GP('id'))['pagePid'];
+        $pageUid = $pageUid ?: ConfigurationUtility::getSettingsByPath('pagePid', (int)GeneralUtility::_GP('id'));
         $pageUid = (int)$pageUid;
 
         if ($pageUid) {

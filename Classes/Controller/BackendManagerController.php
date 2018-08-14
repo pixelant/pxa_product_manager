@@ -6,12 +6,14 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -119,7 +121,17 @@ class BackendManagerController extends ActionController
             $orderCount = 0;
             $tabsOrders = [];
             $storage = $this->getTreeListArrayForPid($this->pid);
-            foreach ($this->settings['listOrders']['tabs']['list'] as $tab) {
+            $tabs = $this->settings['listOrders']['tabs']['list'] ?: [];
+
+            if (!is_array($tabs) || empty($tabs)) {
+                $this->addFlashMessage(
+                    $this->translate('be.no_tabs'),
+                    $this->translate('be.error'),
+                    FlashMessage::ERROR
+                );
+            }
+
+            foreach ($tabs as $tab) {
                 $orders = $this->orderRepository->getOrderForTab($tab, $storage);
 
                 $orderCount += $orders->count();
@@ -293,7 +305,9 @@ class BackendManagerController extends ActionController
             $urlParameters['overrideVals'][$table][$field] = $category->getUid();
         }
 
-        return BackendUtility::getModuleUrl('record_edit', $urlParameters);
+        $uriBuilder = GeneralUtility::makeInstance(BackendUriBuilder::class);
+
+        return (string)$uriBuilder->buildUriFromRoute('record_edit', $urlParameters);
     }
 
     /**
