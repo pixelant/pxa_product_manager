@@ -9,7 +9,7 @@ define(['jquery'], function ($) {
 	const $inputName = $('input[data-formengine-input-name$="[name]"]');
 
 	/**
-	 * Input name element
+	 * Input identifier element
 	 *
 	 * @type {jQuery}
 	 */
@@ -34,7 +34,9 @@ define(['jquery'], function ($) {
 			}
 		}).done(function (response) {
 			if (response.success) {
-				$inputIdentifier.val(response.output);
+				$inputIdentifier
+					.val(response.output)
+					.trigger('change');
 			} else {
 				top.TYPO3.Notification.error('Error while syncing!');
 			}
