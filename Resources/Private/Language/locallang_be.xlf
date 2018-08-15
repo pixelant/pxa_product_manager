@@ -431,6 +431,9 @@
             <trans-unit id="tca.notification_no_attributes_available">
                 <source>No attributes were found. Attribute set need to be assigned to product category.</source>
             </trans-unit>
+            <trans-unit id="tca.sync_attribute_identifier">
+                <source>Sync with "Name" field</source>
+            </trans-unit>
             <!--TCA notifications:END-->
         </body>
     </file>

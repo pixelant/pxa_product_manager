@@ -188,7 +188,12 @@ $tx_pxaproductmanager_domain_model_attribute = [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,alpha,nospace,unique'
+                'eval' => 'trim,alpha,nospace,unique',
+                'fieldControl' => [
+                    'attributeIdentifierControl' => [
+                        'renderType' => 'attributeIdentifierControl'
+                    ]
+                ]
             ]
         ],
         'default_value' => [

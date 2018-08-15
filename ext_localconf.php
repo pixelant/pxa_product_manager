@@ -91,6 +91,13 @@ call_user_func(
             'title' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.title',
             'description' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.description'
         ];
+
+        // Register field control for identifier
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
+            'nodeName' => 'attributeIdentifierControl',
+            'priority' => 30,
+            'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
+        ];
     },
     $_EXTKEY
 );
