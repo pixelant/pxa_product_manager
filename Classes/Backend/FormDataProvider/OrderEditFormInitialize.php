@@ -53,10 +53,7 @@ class OrderEditFormInitialize implements FormDataProviderInterface
                     $result['processedTca']['columns'][$fieldName] = [
                         'label' => MainUtility::snakeCasePhraseToWords($fieldName),
                         'config' => [
-                            'type' => 'input',
-                            'size' => 30,
-                            'eval' => 'trim',
-                            'readOnly' => true
+                            'type' => 'none'
                         ]
                     ];
             }

@@ -9,10 +9,10 @@ use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 class ExtendedOptions
 {
     /**
-     * @param $data
+     * @param $args
      * @return string
      */
-    public function checkoutSystemsSelector($args) : string
+    public function checkoutSystemsSelector(array $args) : string
     {
         $checkoutSystems = ConfigurationUtility::getCheckoutSystems();
 
