@@ -419,6 +419,12 @@
             <trans-unit id="be.restore_from_archive">
                 <source>Undo archive</source>
             </trans-unit>
+            <trans-unit id="be.order_language">
+                <source>Language</source>
+            </trans-unit>
+            <trans-unit id="be.default">
+                <source>Default</source>
+            </trans-unit>
             <!--Backend module:END-->
 
             <!--TCA notifications:START-->

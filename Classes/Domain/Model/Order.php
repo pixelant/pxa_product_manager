@@ -349,4 +349,13 @@ class Order extends AbstractDomainObject
     {
         $this->hidden = $hidden;
     }
+
+    /**
+     * Order language uid
+     * @return int
+     */
+    public function getLanguageUid(): int
+    {
+        return $this->_getProperty('_languageUid');
+    }
 }
