@@ -153,6 +153,7 @@ return [
                 'foreign_table' => 'fe_users',
                 'size' => 1,
                 'maxitems' => 1,
+                'default' => 0,
                 'items' => [
                     [$ll . '.fe_user.none_is_selected', 0]
                 ],
