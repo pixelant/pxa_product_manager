@@ -6,11 +6,14 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\Order;
+use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
+use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use Pixelant\PxaProductManager\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
@@ -245,8 +248,8 @@ class ProductController extends AbstractController
         // Select the checkout system to use
         $checkoutToUse = $this->settings['wishList']['checkoutSystem']
             ?: ConfigurationUtility::getExtManagerConfigurationByPath('checkoutSystem')
-            ?: 'default';
-        
+                ?: 'default';
+
         $checkOutSystems = ConfigurationUtility::getCheckoutSystems();
         $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
 
@@ -254,28 +257,35 @@ class ProductController extends AbstractController
         $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
         $signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
 
-        //
-        $orderFormAllowed = $this->isOrderFormAllowed();
+        // If order form enabled
+        if ($this->isOrderFormAllowed()) {
+            /** @var OrderConfiguration $orderConfiguration */
+            $orderConfiguration = $this->orderConfigurationRepository->findByUid(
+                (int)$this->settings['orderFormConfiguration']
+            );
 
-        $orderFormFields = $this->getProcessedOrderFormFields();
+            $this->view->assign('orderConfiguration', $orderConfiguration);
 
-        if ($sendOrder && $orderFormAllowed) {
-            try {
-                $orderProducts = $this->request->getArgument('orderProducts');
-                $values = $this->request->getArgument('orderFields');
-                $termsStatus = $this->getAcceptTermsStatus();
+            if ($sendOrder && $orderConfiguration !== null) {
+                try {
+                    $orderProducts = $this->request->getArgument('orderProducts');
+                    $values = $this->request->getArgument('orderFields');
+                    $termsStatus = $this->getAcceptTermsStatus();
 
-                if ($termsStatus !== self::DECLINE_TERMS & $this->validateOrderFields($orderFormFields, $values)) {
-                    $order = $this->createAndSaveOrder($orderFormFields, $orderProducts);
-                    $this->sendOrderEmail($order);
-                    $this->redirect('finishOrder');
-                } else {
-                    $this->view
-                        ->assign('acceptTerms', $termsStatus)
-                        ->assign('acceptTermsError', $termsStatus === self::DECLINE_TERMS);
+                    if ($termsStatus !== self::DECLINE_TERMS
+                        & $this->validateOrderFields($orderConfiguration, $values)
+                    ) {
+                        $order = $this->createAndSaveOrder($orderConfiguration, $orderProducts);
+                        $this->sendOrderEmail($order);
+                        $this->redirect('finishOrder');
+                    } else {
+                        $this->view
+                            ->assign('acceptTerms', $termsStatus)
+                            ->assign('acceptTermsError', $termsStatus === self::DECLINE_TERMS);
+                    }
+                } catch (NoSuchArgumentException $exception) {
+                    // orderProducts and orderFields are required to send email
                 }
-            } catch (NoSuchArgumentException $exception) {
-                // orderProducts and orderFields are required to send email
             }
         }
 
@@ -288,10 +298,8 @@ class ProductController extends AbstractController
         $this->view->assignMultiple([
             'checkout' => $checkout,
             'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
-            'orderFormFields' => $orderFormFields,
             'orderProducts' => $orderState ?? [],
-            'sendOrder' => $sendOrder,
-            'orderFormAllowed' => $orderFormAllowed
+            'sendOrder' => $sendOrder
         ]);
     }
 
@@ -551,7 +559,7 @@ class ProductController extends AbstractController
     {
         $requireLogin = (int)$this->settings['orderFormRequireLogin'] === 1;
 
-        return !$requireLogin || MainUtility::getTSFE()->loginUser;
+        return !$requireLogin || MainUtility::isFrontendLogin();
     }
 
     /**
@@ -613,7 +621,7 @@ class ProductController extends AbstractController
             $order->addProduct($product);
         }
 
-        if (MainUtility::getTSFE()->loginUser) {
+        if (MainUtility::isFrontendLogin()) {
             $uid = (int)MainUtility::getTSFE()->fe_user->user['uid'];
             /** @var FrontendUser $feUser */
             $feUser = $this->objectManager->get(FrontendUserRepository::class)->findByUid($uid);
@@ -629,70 +637,31 @@ class ProductController extends AbstractController
     }
 
     /**
-     * Get order form fields, where value are replaced with fe user fields
-     *
-     * @return array
-     */
-    protected function getProcessedOrderFormFields(): array
-    {
-        $fields = $this->settings['wishList']['orderForm']['fields'] ?? [];
-
-        if (!empty($fields)
-            && MainUtility::getTSFE()->loginUser
-            && (int)$this->settings['wishList']['orderForm']['replaceWithFeUserValues'] === 1
-        ) {
-            $feUser = MainUtility::getTSFE()->fe_user->user;
-
-            foreach ($fields as $field => &$fieldConf) {
-                if (array_key_exists($field, $feUser)) {
-                    $fieldConf['feUserValue'] = $feUser[$field];
-                }
-            }
-        }
-
-        return $fields;
-    }
-
-    /**
      * Return false if fields fail validation. Also will add error messages to fields configuration
      *
-     * @param array $fields
+     * @param OrderConfiguration $orderConfiguration
      * @param array $values
      * @return bool
      */
-    protected function validateOrderFields(array &$fields, array $values): bool
+    protected function validateOrderFields(OrderConfiguration $orderConfiguration, array $values): bool
     {
         $isValid = true;
+        $validationResolver = GeneralUtility::makeInstance(ValidatorResolver::class);
 
-        foreach ($fields as $field => &$fieldConf) {
-            $value = $values[$field] ?? $fieldConf['feUserValue'] ?? '';
-            $fieldConf['value'] = $value;
+        /** @var OrderFormField $field */
+        foreach ($orderConfiguration->getFormFields() as $field) {
+            if ($field->isStatic()) {
+                continue;
+            }
 
-            if (!empty($fieldConf['validation'])) {
-                $validations = GeneralUtility::trimExplode(',', $fieldConf['validation'], true);
-                $fieldConf['errors'] = [];
+            $value = trim($values[$field->getUid()] ?? '');
+            $field->setValue($value);
 
-                foreach ($validations as $validation) {
-                    switch ($validation) {
-                        case 'required':
-                            if (empty($value)) {
-                                $fieldConf['errors'][] = $this->translate('fe.validation_error.required');
-                                $isValid = false;
-                            }
-                            break;
-                        case 'email':
-                            if (!empty($value) && !GeneralUtility::validEmail($value)) {
-                                $fieldConf['errors'][] = $this->translate('fe.validation_error.email');
-                                $isValid = false;
-                            }
-                            break;
-                        case 'url':
-                            if (!GeneralUtility::isValidUrl($value)) {
-                                $fieldConf['errors'][] = $this->translate('fe.validation_error.ulr');
-                                $isValid = false;
-                            }
-                            break;
-                    }
+            foreach ($field->getValidationRulesArray() as $validationRule) {
+                $validator = $validationResolver->createValidator($validationRule);
+                if (!$validator->validate($value)) {
+                    $isValid = false;
+                    $field->addError($validator->getErrorMessage());
                 }
             }
         }

@@ -718,10 +718,6 @@ class PageLayoutView
      */
     protected function getFlexFormService()
     {
-        if (MainUtility::isBelowTypo3v9()) {
-            return GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\FlexFormService');
-        } else {
-            return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Service\\FlexFormService');
-        }
+        return MainUtility::getFlexFormService();
     }
 }

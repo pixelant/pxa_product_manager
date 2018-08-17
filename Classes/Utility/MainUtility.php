@@ -338,4 +338,28 @@ class MainUtility
 
         return $isBelowTypo39;
     }
+
+    /**
+     * Get flexform service
+     *
+     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
+     */
+    public static function getFlexFormService()
+    {
+        if (self::isBelowTypo3v9()) {
+            return GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\FlexFormService');
+        } else {
+            return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Service\\FlexFormService');
+        }
+    }
+
+    /**
+     * Check if FE user is login
+     *
+     * @return bool
+     */
+    public static function isFrontendLogin(): bool
+    {
+        return self::getTSFE()->loginUser;
+    }
 }

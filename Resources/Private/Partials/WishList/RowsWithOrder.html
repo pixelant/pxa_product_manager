@@ -49,7 +49,7 @@
                                 </f:if>
                             </div>
                         </f:if>
-                        <f:if condition="{orderFormAllowed}">
+                        <f:if condition="{orderConfiguration}">
                             <div class="make-order-button-section">
                                 <f:if condition="{checkout.type} == 'default'">
                                     <f:then>
@@ -71,12 +71,12 @@
                 </div>
             </div>
 
-            <f:if condition="{orderFormAllowed} && {checkout.type} == 'default'">
+            <f:if condition="{orderConfiguration} && {checkout.type} == 'default'">
                 <div class="collapse{f:if(condition: sendOrder, then: ' in')}" id="pm-collapse-order-form" aria-expanded="true">
-                    <f:if condition="{orderFormFields}">
+                    <f:if condition="{orderConfiguration.formFields}">
                         <f:then>
-                            <f:for each="{orderFormFields}" key="field" as="fieldConf">
-                                <f:render partial="OrderFormFields/{fieldConf.type}" arguments="{fieldConf: fieldConf, field: field}" />
+                            <f:for each="{orderConfiguration.formFields}" as="field">
+                                <f:render partial="OrderFormFields/Field_type_{field.type}" arguments="{field: field}" />
                             </f:for>
                             <f:if condition="{settings.needToAcceptOrderTerms}">
                                 <div class="form-group">

@@ -98,7 +98,7 @@
                 <source>Single view</source>
             </trans-unit>
             <trans-unit id="flexform.mode.product_wish_list">
-                <source>Wishlist</source>
+                <source>Wish List (possible order form)</source>
             </trans-unit>
             <trans-unit id="flexform.mode.product_compare_view">
                 <source>Compare view</source>
@@ -256,6 +256,9 @@
             </trans-unit>
             <trans-unit id="flexform.order_form_require_login">
                 <source>Login is required to make an order</source>
+            </trans-unit>
+            <trans-unit id="flexform.order_form_configuration">
+                <source>Order form configuration</source>
             </trans-unit>
             <!--FlexForm:END-->
 

@@ -81,6 +81,12 @@ class AbstractController extends ActionController
     protected $orderRepository = null;
 
     /**
+     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository
+     * @inject
+     */
+    protected $orderConfigurationRepository = null;
+
+    /**
      * Get category
      *
      * @param int $category
