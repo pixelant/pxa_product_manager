@@ -657,6 +657,18 @@
                 </TCEforms>
                 <type>array</type>
                 <el>
+                    <settings.orderFormConfiguration>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_configuration</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <foreign_table>tx_pxaproductmanager_domain_model_orderconfiguration</foreign_table>
+                                <foreign_table_where> AND tx_pxaproductmanager_domain_model_orderconfiguration.hidden=0 AND tx_pxaproductmanager_domain_model_orderconfiguration.deleted=0 AND tx_pxaproductmanager_domain_model_orderconfiguration.sys_language_uid=0</foreign_table_where>
+                            </config>
+                        </TCEforms>
+                    </settings.orderFormConfiguration>
+
                     <settings.orderFormRequireLogin>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_require_login</label>
