@@ -322,4 +322,20 @@ class MainUtility
             strtr($string, self::$normalizeChars)
         );
     }
+
+    /**
+     * Check if typo3 version is below 9
+     * @TODO remove it after support of TYPO3 8 is stopped
+     * @return bool
+     */
+    public static function isBelowTypo3v9(): bool
+    {
+        static $isBelowTypo39;
+
+        if ($isBelowTypo39 === null) {
+            $isBelowTypo39 = version_compare(TYPO3_version, '9.0', '<');
+        }
+
+        return $isBelowTypo39;
+    }
 }
