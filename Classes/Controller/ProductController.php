@@ -596,7 +596,7 @@ class ProductController extends AbstractController
                 'type' => $formField->getType()
             ];
         }
-
+\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($orderFields,'Debug',16);die;
         $products = $this->productRepository->findProductsByUids(array_keys($processedOrderProducts));
 
         $order = $this->objectManager->get(Order::class);
@@ -607,12 +607,16 @@ class ProductController extends AbstractController
         /** @var Product $product */
         foreach ($products as $product) {
             $order->addProduct($product);
+            $pid = $product->getPid();
         }
 
         if ($orderConfiguration->getFrontendUser() !== null) {
             $order->setFeUser($orderConfiguration->getFrontendUser());
         }
 
+        if (isset($pid)) {
+            $order->setPid($pid);
+        }
         $this->orderRepository->add($order);
 
         return $order;
