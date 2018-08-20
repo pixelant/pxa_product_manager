@@ -43,11 +43,15 @@ class ValidatorResolver implements SingletonInterface
             }
         }
 
-        throw new NoSuchValidatorException('The validator "' . $validator . '" doesn\'t exist', 1534514683513);
+        throw new NoSuchValidatorException(
+            'The validator "' . $type . '" doesn\'t exist or doesn\'t implement ValidatorInterface',
+            1534514683513
+        );
     }
 
     /**
      * Register new validator or override existing
+     * For use in ext_localconf.php
      *
      * @param string $type
      * @param string $validator

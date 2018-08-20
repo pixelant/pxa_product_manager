@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Validation\Validator;
+
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**

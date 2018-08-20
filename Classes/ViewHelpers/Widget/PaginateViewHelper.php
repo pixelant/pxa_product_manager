@@ -39,7 +39,13 @@ class PaginateViewHelper extends AbstractWidgetViewHelper
         parent::initializeArguments();
         $this->registerArgument('objects', 'mixed', 'Object', true);
         $this->registerArgument('as', 'string', 'as', true);
-        $this->registerArgument('configuration', 'array', 'configuration', false, ['itemsPerPage' => 10, 'insertAbove' => false, 'insertBelow' => true, 'maximumNumberOfLinks' => 99]);
+        $this->registerArgument(
+            'configuration',
+            'array',
+            'configuration',
+            false,
+            ['itemsPerPage' => 10, 'insertAbove' => false, 'insertBelow' => true, 'maximumNumberOfLinks' => 99]
+        );
     }
 
     /**
@@ -51,7 +57,9 @@ class PaginateViewHelper extends AbstractWidgetViewHelper
         $objects = $this->arguments['objects'];
 
         if (!($objects instanceof QueryResultInterface || $objects instanceof ObjectStorage || is_array($objects))) {
+            // @codingStandardsIgnoreStart
             throw new \UnexpectedValueException('Supplied file object type ' . get_class($objects) . ' must be QueryResultInterface or ObjectStorage or be an array.', 1454510731);
+            // @codingStandardsIgnoreEnd
         }
         return $this->initiateSubRequest();
     }
