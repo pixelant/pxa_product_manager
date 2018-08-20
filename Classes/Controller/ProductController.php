@@ -626,7 +626,7 @@ class ProductController extends AbstractController
     protected function validateOrderFields(OrderConfiguration $orderConfiguration, array $values): bool
     {
         $isValid = true;
-        $validationResolver = GeneralUtility::makeInstance(ValidatorResolver::class);
+        $validationResolver = $this->getValidatorResolver();
 
         /** @var OrderFormField $field */
         foreach ($orderConfiguration->getFormFields() as $field) {
@@ -902,5 +902,13 @@ class ProductController extends AbstractController
         } else {
             MainUtility::getTSFE()->pageNotFoundAndExit('No product entry found.');
         }
+    }
+
+    /**
+     * @return ValidatorResolver
+     */
+    protected function getValidatorResolver(): ValidatorResolver
+    {
+        return GeneralUtility::makeInstance(ValidatorResolver::class);
     }
 }
