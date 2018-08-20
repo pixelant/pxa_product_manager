@@ -159,6 +159,28 @@ class OrderFormField extends AbstractDomainObject
     }
 
     /**
+     * @return string
+     */
+    public function getValueAsText(): string
+    {
+        switch ($this->value) {
+            case self::FIELD_SELECTBOX:
+                $optionUid = (int)$this->value;
+                /** @var Option $option */
+                foreach ($this->getOptions() as $option) {
+                    if ($option->getUid() === $optionUid) {
+                        return $option->getValue();
+                    }
+                }
+                break;
+            default:
+                return $this->value;
+        }
+
+        return '';
+    }
+
+    /**
      * @param string $value
      */
     public function setValue($value)

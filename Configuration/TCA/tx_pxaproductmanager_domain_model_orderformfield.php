@@ -22,7 +22,7 @@ return [
         ],
         'type' => 'type',
         'sortby' => 'sorting',
-        'hideTable' => 1,
+        'hideTable' => true,
         'searchFields' => 'name',
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/form-field.svg'
     ],

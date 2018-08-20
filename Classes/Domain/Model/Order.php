@@ -36,10 +36,6 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Order extends AbstractDomainObject
 {
-
-    const ORDERFIELD_INPUT = 'input';
-    const ORDERFIELD_TEXTAREA = 'textarea';
-
     /**
      * @var bool
      */

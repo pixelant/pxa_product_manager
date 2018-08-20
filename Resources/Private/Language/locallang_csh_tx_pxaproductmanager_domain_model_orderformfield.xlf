@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2018-08-20T15:29:57Z"
+		  product-name="pxa_product_manager">
+		<header/>
+		<body>
+			<trans-unit id="name.description">
+				<source>Name of field. Should be same as FE user field in order to replace it automatically.</source>
+			</trans-unit>
+			<trans-unit id="user_email_field.description">
+			    <source>Use this field as user email address.</source>
+			</trans-unit>
+			<trans-unit id="label.description">
+				<source>Field label.</source>
+			</trans-unit>
+			<trans-unit id="placeholder.description">
+				<source>Field placeholder.</source>
+			</trans-unit>
+			<trans-unit id="validation_rules.description">
+				<source>Select validations for field.</source>
+			</trans-unit>
+			<trans-unit id="type.description">
+			    <source>Type of form field.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

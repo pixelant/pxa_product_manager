@@ -16,8 +16,6 @@ use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
-use TYPO3\CMS\Extbase\Domain\Repository\FrontendUserRepository;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -594,7 +592,7 @@ class ProductController extends AbstractController
         /** @var OrderFormField $formField */
         foreach ($orderConfiguration->getFormFields() as $formField) {
             $orderFields[$formField->getUid()] = [
-                'value' => $formField->getValue(),
+                'value' => $formField->getValueAsText(),
                 'type' => $formField->getType()
             ];
         }
