@@ -291,6 +291,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.type.3">
                 <source>Selexbox</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.type.4">
+                <source>Checkbox</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.validation_rules">
                 <source>Validation rules</source>
             </trans-unit>
@@ -317,6 +320,9 @@
             </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.validation.email">
                 <source>Email</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.additional_text">
+                <source>Additional text</source>
             </trans-unit>
             <!--Order form field TCA:END-->
 

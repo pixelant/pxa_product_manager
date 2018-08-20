@@ -596,7 +596,7 @@ class ProductController extends AbstractController
                 'type' => $formField->getType()
             ];
         }
-\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($orderFields,'Debug',16);die;
+
         $products = $this->productRepository->findProductsByUids(array_keys($processedOrderProducts));
 
         $order = $this->objectManager->get(Order::class);

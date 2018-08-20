@@ -27,18 +27,20 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/form-field.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, label, user_email_field, type',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, label, user_email_field, additional_text, type',
     ],
     'types' => [
         \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_INPUT => ['showitem' => '--palette--;;core, --palette--;;input'],
         \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_TEXTAREA => ['showitem' => '--palette--;;core, --palette--;;textarea'],
         \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_SELECTBOX => ['showitem' => '--palette--;;core, --palette--;;selectbox'],
+        \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_CHECKBOX => ['showitem' => '--palette--;;core, --palette--;;checkbox']
     ],
     'palettes' => [
-        'core' => ['showitem' => 'hidden'],
-        'input' => ['showitem' => 'name, user_email_field, --linebreak--, label, placeholder, --linebreak--, type, --linebreak--, validation_rules'],
-        'textarea' => ['showitem' => 'name, --linebreak--, label, placeholder, --linebreak--, type, --linebreak--, validation_rules'],
-        'selectbox' => ['showitem' => 'name, --linebreak--, label, --linebreak--, type, --linebreak--, options, --linebreak--, validation_rules']
+        'core' => ['showitem' => 'hidden, --linebreak--, type'],
+        'input' => ['showitem' => 'name, user_email_field, --linebreak--, label, placeholder, --linebreak--, validation_rules'],
+        'textarea' => ['showitem' => 'name, --linebreak--, label, placeholder, --linebreak--, validation_rules'],
+        'selectbox' => ['showitem' => 'name, --linebreak--, label, --linebreak--, options, --linebreak--, validation_rules'],
+        'checkbox' => ['showitem' => 'name, --linebreak--, label, --linebreak--, additional_text, --linebreak--, validation_rules']
     ],
     'columns' => [
         'sys_language_uid' => [
@@ -143,7 +145,8 @@ return [
                 'items' => [
                     [$ll . '.type.1', \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_INPUT],
                     [$ll . '.type.2', \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_TEXTAREA],
-                    [$ll . '.type.3', \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_SELECTBOX]
+                    [$ll . '.type.3', \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_SELECTBOX],
+                    [$ll . '.type.4', \Pixelant\PxaProductManager\Domain\Model\OrderFormField::FIELD_CHECKBOX]
                 ]
             ]
         ],
@@ -204,6 +207,16 @@ return [
                 'type' => 'check',
                 'default' => 0
             ],
+        ],
+        'additional_text' => [
+            'exclude' => 0,
+            'label' => $ll . '.additional_text',
+            'config' => [
+                'type' => 'text',
+                'cols' => 15,
+                'rows' => 5,
+                'enableRichtext' => true
+            ]
         ]
     ]
 ];

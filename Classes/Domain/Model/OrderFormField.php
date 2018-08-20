@@ -29,6 +29,11 @@ class OrderFormField extends AbstractDomainObject
     const FIELD_SELECTBOX = 3;
 
     /**
+     * Type check box
+     */
+    const FIELD_CHECKBOX = 4;
+
+    /**
      * Name
      *
      * @var string
@@ -72,6 +77,13 @@ class OrderFormField extends AbstractDomainObject
      * @var bool
      */
     protected $userEmailField = false;
+
+    /**
+     * Additional text
+     *
+     * @var string
+     */
+    protected $additionalText = '';
 
     /**
      * Value of field
@@ -323,6 +335,22 @@ class OrderFormField extends AbstractDomainObject
     public function setUserEmailField(bool $userEmailField)
     {
         $this->userEmailField = $userEmailField;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditionalText(): string
+    {
+        return $this->additionalText;
+    }
+
+    /**
+     * @param string $additionalText
+     */
+    public function setAdditionalText(string $additionalText)
+    {
+        $this->additionalText = $additionalText;
     }
 
     /**

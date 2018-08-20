@@ -22,6 +22,9 @@
 			<trans-unit id="type.description">
 			    <source>Type of form field.</source>
 			</trans-unit>
+			<trans-unit id="additional_text.description">
+			    <source>Explanation text. Could have links, etc..</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
