@@ -550,13 +550,7 @@ class ProductController extends AbstractController
 
         // Send email to user if enabled
         if ($orderConfiguration->isEnabledEmailToUser()) {
-            /** @var OrderFormField $formField */
-            foreach ($orderConfiguration->getFormFields() as $formField) {
-                if ($formField->isUserEmailField()) {
-                    $email = $formField->getValue();
-                    break;
-                }
-            }
+            $email = $orderConfiguration->getUserEmailFromFormFields();
             if (!empty($email)) {
                 $orderMailService
                     ->generateMailBody($userTemplate, $order)

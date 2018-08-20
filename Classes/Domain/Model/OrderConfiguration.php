@@ -220,4 +220,21 @@ class OrderConfiguration extends AbstractDomainObject
 
         return $this->frontendUser;
     }
+
+    /**
+     * Check if there is configured email field in list of fields and return it's value
+     *
+     * @return string
+     */
+    public function getUserEmailFromFormFields(): string
+    {
+        /** @var OrderFormField $formField */
+        foreach ($this->getFormFields() as $formField) {
+            if ($formField->isUserEmailField()) {
+                return $formField->getValue();
+            }
+        }
+
+        return '';
+    }
 }
