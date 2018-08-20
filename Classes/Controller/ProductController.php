@@ -554,6 +554,7 @@ class ProductController extends AbstractController
             foreach ($orderConfiguration->getFormFields() as $formField) {
                 if ($formField->isUserEmailField()) {
                     $email = $formField->getValue();
+                    break;
                 }
             }
             if (!empty($email)) {

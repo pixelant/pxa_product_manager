@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
-use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
