@@ -574,20 +574,6 @@ class PageLayoutView
                 $this->translate('be.extension_info.checkbox_' .
                     ($settings['orderFormRequireLogin'] ? 'yes' : 'no'))
             );
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.need_to_accept_order_terms'),
-                $this->translate('be.extension_info.checkbox_' .
-                    ($settings['needToAcceptOrderTerms'] ? 'yes' : 'no'))
-            );
-
-            if ($settings['needToAcceptOrderTerms']) {
-                $info .= sprintf(
-                    '<b>%s</b>: %s<br>',
-                    $this->translate('flexform.page_terms_link'),
-                    $this->getLinkInfo($settings['pageTermsLink'])
-                );
-            }
 
             $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
             $info .= sprintf(
