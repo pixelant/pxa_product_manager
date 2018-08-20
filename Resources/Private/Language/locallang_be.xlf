@@ -223,9 +223,6 @@
             <trans-unit id="flexform.order_function_sheet__title">
                 <source>Ordering settings</source>
             </trans-unit>
-            <trans-unit id="flexform.order_recipients_emails">
-                <source>Recipients emails (each in new line)</source>
-            </trans-unit>
             <trans-unit id="flexform.no_recipients">
                 <source>No recipients were set. No one will get notification about new order</source>
             </trans-unit>

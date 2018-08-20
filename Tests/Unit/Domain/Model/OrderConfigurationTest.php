@@ -52,7 +52,9 @@ class OrderConfigurationTest extends UnitTestCase
      */
     public function getFormFieldsReturnInitialObjectStorage()
     {
-        $this->assertNotNull($this->fixture->getFormFields());
+        $objectStorage = new ObjectStorage();
+
+        $this->assertEquals($objectStorage, $this->fixture->getFormFields());
     }
 
     /**

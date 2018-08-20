@@ -679,18 +679,6 @@
                             </config>
                         </TCEforms>
                     </settings.orderFormRequireLogin>
-
-                    <settings.orderRecipientsEmails>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_recipients_emails</label>
-                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
-                            <config>
-                                <type>text</type>
-                                <cols>32</cols>
-                                <rows>2</rows>
-                            </config>
-                        </TCEforms>
-                    </settings.orderRecipientsEmails>
                 </el>
             </ROOT>
         </orderFunction>

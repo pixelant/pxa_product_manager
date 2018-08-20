@@ -72,7 +72,7 @@ class OrderFormField extends AbstractDomainObject
     /**
      * @var string
      */
-    protected $validationRules = [];
+    protected $validationRules = '';
 
     /**
      * @var bool
@@ -188,7 +188,7 @@ class OrderFormField extends AbstractDomainObject
                 break;
             case self::FIELD_CHECKBOX:
                 $key = 'fe.checkbox.' . (int)$this->getValue();
-                if ($label = LocalizationUtility::translate($key, 'PxaProductManager')) {
+                if ($label = $this->translateKey($key)) {
                     return $label;
                 }
                 break;
@@ -382,5 +382,16 @@ class OrderFormField extends AbstractDomainObject
     public function addError(string $error)
     {
         $this->errors[] = $error;
+    }
+
+    /**
+     * Translate key, wrapper for testing
+     *
+     * @param string $key
+     * @return string
+     */
+    protected function translateKey(string $key): string
+    {
+        return LocalizationUtility::translate($key, 'PxaProductManager') ?? '';
     }
 }

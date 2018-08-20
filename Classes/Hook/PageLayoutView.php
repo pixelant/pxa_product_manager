@@ -574,13 +574,6 @@ class PageLayoutView
                 $this->translate('be.extension_info.checkbox_' .
                     ($settings['orderFormRequireLogin'] ? 'yes' : 'no'))
             );
-
-            $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.order_recipients_emails'),
-                empty($recipients) ? $this->translate('flexform.no_recipients') : implode(', ', $recipients)
-            );
         }
 
         return $info;
