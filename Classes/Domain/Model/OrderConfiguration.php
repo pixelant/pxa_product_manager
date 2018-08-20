@@ -95,7 +95,7 @@ class OrderConfiguration extends AbstractDomainObject
      */
     public function getFormFields(): ObjectStorage
     {
-        if (false === $this->orderFormFieldProcessed && TYPO3_MODE === 'FE') {
+        if (false === $this->orderFormFieldProcessed && defined('TYPO3_MODE') && TYPO3_MODE === 'FE') {
             $this->orderFormFieldProcessed = true;
             $this->prepareOrderFormFields();
         }
