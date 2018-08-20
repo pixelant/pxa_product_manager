@@ -19,7 +19,6 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /***************************************************************
  *  Copyright notice
@@ -244,8 +243,7 @@ class ProductController extends AbstractController
         $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
 
         // Add after checkout system selected slot
-        $signalSlotDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        $signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
 
         // If order form enabled
         if ($this->isOrderFormAllowed()) {
@@ -593,7 +591,8 @@ class ProductController extends AbstractController
         foreach ($orderConfiguration->getFormFields() as $formField) {
             $orderFields[$formField->getUid()] = [
                 'value' => $formField->getValueAsText(),
-                'type' => $formField->getType()
+                'type' => $formField->getType(),
+                'label' => $formField->getLabel() ?: $formField->getName()
             ];
         }
 

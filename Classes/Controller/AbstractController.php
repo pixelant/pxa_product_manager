@@ -87,6 +87,12 @@ class AbstractController extends ActionController
     protected $orderConfigurationRepository = null;
 
     /**
+     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+     * @inject
+     */
+    protected $signalSlotDispatcher = null;
+
+    /**
      * Get category
      *
      * @param int $category

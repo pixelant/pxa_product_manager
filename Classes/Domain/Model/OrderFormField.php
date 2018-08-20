@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class OrderFormField
@@ -183,6 +184,12 @@ class OrderFormField extends AbstractDomainObject
                     if ($option->getUid() === $optionUid) {
                         return $option->getValue();
                     }
+                }
+                break;
+            case self::FIELD_CHECKBOX:
+                $key = 'fe.checkbox.' . (int)$this->getValue();
+                if ($label = LocalizationUtility::translate($key, 'PxaProductManager')) {
+                    return $label;
                 }
                 break;
             default:
