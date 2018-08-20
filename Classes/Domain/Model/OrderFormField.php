@@ -163,7 +163,7 @@ class OrderFormField extends AbstractDomainObject
      */
     public function getValueAsText(): string
     {
-        switch ($this->value) {
+        switch ($this->type) {
             case self::FIELD_SELECTBOX:
                 $optionUid = (int)$this->value;
                 /** @var Option $option */
