@@ -473,6 +473,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_orderconfiguration (
 	enabled_email_to_user tinyint(4) unsigned DEFAULT '0' NOT NULL,
   enabled_replace_with_fe_user_fields tinyint(4) unsigned DEFAULT '0' NOT NULL,
   form_fields  int(11) unsigned DEFAULT '0' NOT NULL,
+  admin_emails text,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,

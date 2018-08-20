@@ -24,11 +24,12 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/form_fields.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, form_fields',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, form_fields, admin_emails',
     ],
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, enabled_email_to_user, enabled_replace_with_fe_user_fields, form_fields,
+            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, enabled_email_to_user, enabled_replace_with_fe_user_fields, admin_emails,
+            --div--;' . $ll . '.tabs.form_fields, form_fields,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'
         ],
     ],
@@ -137,7 +138,7 @@ return [
             ]
         ],
         'enabled_email_to_user' => [
-            'exclude' => true,
+            'exclude' => 0,
             'label' => $ll . '.enabled_email_to_user',
             'config' => [
                 'type' => 'check',
@@ -149,7 +150,7 @@ return [
             ]
         ],
         'enabled_replace_with_fe_user_fields' => [
-            'exclude' => true,
+            'exclude' => 0,
             'label' => $ll . '.enabled_replace_with_fe_user_fields',
             'config' => [
                 'type' => 'check',
@@ -159,6 +160,15 @@ return [
                     ]
                 ]
             ]
-        ]
+        ],
+        'admin_emails' => [
+            'exclude' => 0,
+            'label' => $ll . '.admin_emails',
+            'config' => [
+                'type' => 'text',
+                'cols' => 15,
+                'rows' => 5
+            ]
+        ],
     ]
 ];

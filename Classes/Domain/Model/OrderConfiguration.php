@@ -43,6 +43,11 @@ class OrderConfiguration extends AbstractDomainObject
     protected $orderFormFieldProcessed = false;
 
     /**
+     * @var string
+     */
+    protected $adminEmails = '';
+
+    /**
      * @var \TYPO3\CMS\Extbase\Domain\Repository\FrontendUserRepository
      * @inject
      */
@@ -152,6 +157,30 @@ class OrderConfiguration extends AbstractDomainObject
     public function setEnabledReplaceWithFeUserFields(bool $enabledReplaceWithFeUserFields)
     {
         $this->enabledReplaceWithFeUserFields = $enabledReplaceWithFeUserFields;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdminEmails(): string
+    {
+        return $this->adminEmails;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminEmailsArray(): array
+    {
+        return GeneralUtility::trimExplode("\n", $this->getAdminEmails(), true);
+    }
+
+    /**
+     * @param string $adminEmails
+     */
+    public function setAdminEmails(string $adminEmails)
+    {
+        $this->adminEmails = $adminEmails;
     }
 
     /**

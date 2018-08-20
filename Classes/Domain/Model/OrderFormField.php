@@ -50,13 +50,6 @@ class OrderFormField extends AbstractDomainObject
     protected $static = false;
 
     /**
-     * Value of field
-     *
-     * @var string
-     */
-    protected $value = '';
-
-    /**
      * Placeholder
      *
      * @var string
@@ -76,7 +69,21 @@ class OrderFormField extends AbstractDomainObject
     protected $validationRules = [];
 
     /**
+     * @var bool
+     */
+    protected $userEmailField = false;
+
+    /**
+     * Value of field
+     * Has no DB field
+     *
+     * @var string
+     */
+    protected $value = '';
+
+    /**
      * Validation errors
+     * Is not stored in DB
      *
      * @var array
      */
@@ -278,6 +285,22 @@ class OrderFormField extends AbstractDomainObject
     public function setLabel(string $label)
     {
         $this->label = $label;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUserEmailField(): bool
+    {
+        return $this->userEmailField;
+    }
+
+    /**
+     * @param bool $userEmailField
+     */
+    public function setUserEmailField(bool $userEmailField)
+    {
+        $this->userEmailField = $userEmailField;
     }
 
     /**

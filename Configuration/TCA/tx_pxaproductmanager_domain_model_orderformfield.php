@@ -198,7 +198,7 @@ return [
             ]
         ],
         'user_email_field' => [
-            'exclude' => true,
+            'exclude' => 0,
             'label' => $ll . '.user_email_field',
             'config' => [
                 'type' => 'check',

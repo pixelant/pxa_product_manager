@@ -56,13 +56,6 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 class ProductController extends AbstractController
 {
     /**
-     * Terms statuses
-     */
-    const ACCEPT_TERMS_OK = 1;
-    const DECLINE_TERMS = 0;
-    const TERMS_NOT_REQUIRED = -1;
-
-    /**
      * Add JS labels for each action
      */
     public function initializeAction()
@@ -247,8 +240,7 @@ class ProductController extends AbstractController
     {
         // Select the checkout system to use
         $checkoutToUse = $this->settings['wishList']['checkoutSystem']
-            ?: ConfigurationUtility::getExtManagerConfigurationByPath('checkoutSystem')
-                ?: 'default';
+            ?: ConfigurationUtility::getExtManagerConfigurationByPath('checkoutSystem') ?: 'default';
 
         $checkOutSystems = ConfigurationUtility::getCheckoutSystems();
         $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
@@ -270,18 +262,11 @@ class ProductController extends AbstractController
                 try {
                     $orderProducts = $this->request->getArgument('orderProducts');
                     $values = $this->request->getArgument('orderFields');
-                    $termsStatus = $this->getAcceptTermsStatus();
 
-                    if ($termsStatus !== self::DECLINE_TERMS
-                        & $this->validateOrderFields($orderConfiguration, $values)
-                    ) {
+                    if ($this->validateOrderFields($orderConfiguration, $values)) {
                         $order = $this->createAndSaveOrder($orderConfiguration, $orderProducts);
-                        $this->sendOrderEmail($order);
+                        $this->sendOrderEmail($order, $orderConfiguration);
                         $this->redirect('finishOrder');
-                    } else {
-                        $this->view
-                            ->assign('acceptTerms', $termsStatus)
-                            ->assign('acceptTermsError', $termsStatus === self::DECLINE_TERMS);
                     }
                 } catch (NoSuchArgumentException $exception) {
                     // orderProducts and orderFields are required to send email
@@ -528,29 +513,6 @@ class ProductController extends AbstractController
     }
 
     /**
-     * Return status of terms accept
-     * -1 Not required
-     * 0 Not accepted and enabled
-     * 1 Accepted and enabled
-     *
-     * @return int
-     */
-    protected function getAcceptTermsStatus(): int
-    {
-        if ((int)$this->settings['needToAcceptOrderTerms'] === 1) {
-            try {
-                return (int)$this->request->getArgument('acceptTerms') === 1
-                    ? self::ACCEPT_TERMS_OK
-                    : self::DECLINE_TERMS;
-            } catch (NoSuchArgumentException $exception) {
-                return self::DECLINE_TERMS;
-            }
-        }
-
-        return self::TERMS_NOT_REQUIRED;
-    }
-
-    /**
      * Check if order form is allowed
      *
      * @return bool
@@ -566,12 +528,13 @@ class ProductController extends AbstractController
      * Send emails with order
      *
      * @param Order $order
+     * @param OrderConfiguration $orderConfiguration
      * @return void
      */
-    protected function sendOrderEmail(Order $order)
+    protected function sendOrderEmail(Order $order, OrderConfiguration $orderConfiguration)
     {
-        $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'];
-        $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'];
+        $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'] ?? '';
+        $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'] ?? '';
 
         /** @var OrderMailService $orderMailService */
         $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
@@ -580,55 +543,76 @@ class ProductController extends AbstractController
             ->setSenderEmail($this->settings['email']['senderEmail']);
 
         // Send email to admins
-        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
-        $orderMailService
-            ->generateMailBody($adminTemplate, $order)
-            ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
-            ->setReceivers($recipients)
-            ->send();
+        if (!empty($orderConfiguration->getAdminEmails())) {
+            $orderMailService
+                ->generateMailBody($adminTemplate, $order)
+                ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
+                ->setReceivers($orderConfiguration->getAdminEmailsArray())
+                ->send();
+        }
+
 
         // Send email to user if enabled
-        // @TODO make field name configurable
-        if ((int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1
-            && !empty($order->getOrderField('email'))) {
-            $recipients = [$order->getOrderField('email')];
-            $orderMailService
-                ->generateMailBody($userTemplate, $order)
-                ->setSubject($this->translate('fe.userEmail.orderForm.subject'))
-                ->setReceivers($recipients)
-                ->send();
+        if ($orderConfiguration->isEnabledEmailToUser()) {
+            /** @var OrderFormField $formField */
+            foreach ($orderConfiguration->getFormFields() as $formField) {
+                if ($formField->isUserEmailField()) {
+                    $email = $formField->getValue();
+                }
+            }
+            if (!empty($email)) {
+                $orderMailService
+                    ->generateMailBody($userTemplate, $order)
+                    ->setSubject($this->translate('fe.userEmail.orderForm.subject'))
+                    ->setReceivers([$email])
+                    ->send();
+            }
         }
     }
 
     /**
      * Save order
      *
-     * @param array $orderFields
+     * @param OrderConfiguration $orderConfiguration
      * @param array $orderProducts
      * @return Order
      */
-    protected function createAndSaveOrder(array $orderFields, array $orderProducts): Order
+    protected function createAndSaveOrder(OrderConfiguration $orderConfiguration, array $orderProducts): Order
     {
-        $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
+        $processedOrderProducts = [];
+        foreach ($orderProducts as $productUid => $productQuantity) {
+            $productUid = (int)$productUid;
+            $productQuantity = (int)$productQuantity;
+
+            if ($productUid && $productQuantity) {
+                $processedOrderProducts[$productUid] = $productQuantity;
+            }
+        }
+        unset($orderProducts);
+
+        $orderFields = [];
+        /** @var OrderFormField $formField */
+        foreach ($orderConfiguration->getFormFields() as $formField) {
+            $orderFields[$formField->getUid()] = [
+                'value' => $formField->getValue(),
+                'type' => $formField->getType()
+            ];
+        }
+
+        $products = $this->productRepository->findProductsByUids(array_keys($processedOrderProducts));
 
         $order = $this->objectManager->get(Order::class);
 
         $order->setOrderFields($orderFields);
-        $order->setProductsQuantity($orderProducts);
+        $order->setProductsQuantity($processedOrderProducts);
 
         /** @var Product $product */
         foreach ($products as $product) {
             $order->addProduct($product);
         }
 
-        if (MainUtility::isFrontendLogin()) {
-            $uid = (int)MainUtility::getTSFE()->fe_user->user['uid'];
-            /** @var FrontendUser $feUser */
-            $feUser = $this->objectManager->get(FrontendUserRepository::class)->findByUid($uid);
-
-            if ($feUser !== null) {
-                $order->setFeUser($feUser);
-            }
+        if ($orderConfiguration->getFrontendUser() !== null) {
+            $order->setFeUser($orderConfiguration->getFrontendUser());
         }
 
         $this->orderRepository->add($order);

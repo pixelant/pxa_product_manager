@@ -267,6 +267,12 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.enabled_replace_with_fe_user_fields">
                 <source>Replace form fields with frontend user fields</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.tabs.form_fields">
+                <source>Form fields</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.admin_emails">
+                <source>Admin emails (each in new line)</source>
+            </trans-unit>
             <!--Order Configuration TCA:END-->
 
             <!--Order form field TCA:START-->
