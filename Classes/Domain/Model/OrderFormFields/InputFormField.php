@@ -11,11 +11,4 @@ use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
  */
 class InputFormField extends OrderFormField
 {
-    /**
-     * @return string
-     */
-    public function getValueAsText(): string
-    {
-        return $this->value;
-    }
 }
