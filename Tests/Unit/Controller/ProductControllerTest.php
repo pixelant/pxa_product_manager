@@ -578,6 +578,77 @@ class ProductControllerTest extends UnitTestCase
         $this->assertTrue($mockedController->_call('isOrderFormAllowed'));
     }
 
+    /**
+     * @test
+     */
+    public function getOrderFormFieldsForSerializationReturnArrayWithOrderFieldsData()
+    {
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $orderConfiguration = new OrderConfiguration();
+
+        $formField = new OrderFormField();
+        $formField->setName('test');
+        $formField->setLabel('Label');
+        $formField->setValue('value');
+        $formField->_setProperty('uid', 12);
+
+        $formFieldClone = clone  $formField;
+        $formFieldClone->setValue('value 2');
+        $formFieldClone->_setProperty('uid', 21);
+
+        $orderConfiguration->addFormField($formField);
+        $orderConfiguration->addFormField($formFieldClone);
+
+        $expect = [
+            $formField->getUid() => [
+                'value' => $formField->getValueAsText(),
+                'type' => $formField->getType(),
+                'label' => $formField->getLabel(),
+                'name' => $formField->getName()
+            ],
+            $formFieldClone->getUid() => [
+                'value' => $formFieldClone->getValueAsText(),
+                'type' => $formFieldClone->getType(),
+                'label' => $formFieldClone->getLabel(),
+                'name' => $formFieldClone->getName()
+            ],
+        ];
+
+        $this->assertEquals($expect, $mockedController->_call('getOrderFormFieldsForSerialization', $orderConfiguration));
+    }
+
+    /**
+     * @test
+     */
+    public function getOrderProductsQuantityForSerializationReturnArrayWithValidProductsQuantityData()
+    {
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+
+        $orderProducts = [
+            12 => 5,
+            1 => 0,
+            '0' => 12,
+            33 => '0',
+            0 => 0,
+            1 => 1
+        ];
+
+        $expect = [
+            12 => 5,
+            1 => 1
+        ];
+
+        $this->assertEquals($expect, $mockedController->_call('getOrderProductsQuantityForSerialization', $orderProducts));
+    }
+
     protected function getAttributesStorage($value, $amount, $isOption = false)
     {
         $objectStorage = new ObjectStorage();

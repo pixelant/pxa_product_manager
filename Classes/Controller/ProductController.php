@@ -260,7 +260,10 @@ class ProductController extends AbstractController
                     $values = $this->request->getArgument('orderFields');
 
                     if ($this->validateOrderFields($orderConfiguration, $values)) {
-                        $order = $this->createAndSaveOrder($orderConfiguration, $orderProducts);
+                        $order = $this->createAndSaveOrder(
+                            $orderConfiguration,
+                            $this->getOrderProductsQuantityForSerialization($orderProducts)
+                        );
                         $this->sendOrderEmail($order, $orderConfiguration);
                         $this->redirect('finishOrder');
                     }
@@ -570,34 +573,12 @@ class ProductController extends AbstractController
      */
     protected function createAndSaveOrder(OrderConfiguration $orderConfiguration, array $orderProducts): Order
     {
-        $processedOrderProducts = [];
-        foreach ($orderProducts as $productUid => $productQuantity) {
-            $productUid = (int)$productUid;
-            $productQuantity = (int)$productQuantity;
-
-            if ($productUid && $productQuantity) {
-                $processedOrderProducts[$productUid] = $productQuantity;
-            }
-        }
-        unset($orderProducts);
-
-        $orderFields = [];
-        /** @var OrderFormField $formField */
-        foreach ($orderConfiguration->getFormFields() as $formField) {
-            $orderFields[$formField->getUid()] = [
-                'value' => $formField->getValueAsText(),
-                'type' => $formField->getType(),
-                'label' => $formField->getLabel() ?: $formField->getName()
-            ];
-        }
-
-        $products = $this->productRepository->findProductsByUids(array_keys($processedOrderProducts));
-
         $order = $this->objectManager->get(Order::class);
 
-        $order->setOrderFields($orderFields);
-        $order->setProductsQuantity($processedOrderProducts);
+        $order->setOrderFields($this->getOrderFormFieldsForSerialization($orderConfiguration));
+        $order->setProductsQuantity($orderProducts);
 
+        $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
         /** @var Product $product */
         foreach ($products as $product) {
             $order->addProduct($product);
@@ -614,6 +595,50 @@ class ProductController extends AbstractController
         $this->orderRepository->add($order);
 
         return $order;
+    }
+
+    /**
+     * Prepare order fields for serialization
+     *
+     * @param OrderConfiguration $orderConfiguration
+     * @return array
+     */
+    protected function getOrderFormFieldsForSerialization(OrderConfiguration $orderConfiguration): array
+    {
+        $orderFields = [];
+        /** @var OrderFormField $formField */
+        foreach ($orderConfiguration->getFormFields() as $formField) {
+            $orderFields[$formField->getUid()] = [
+                'value' => $formField->getValueAsText(),
+                'type' => $formField->getType(),
+                'label' => $formField->getLabel(),
+                'name' => $formField->getName()
+            ];
+        }
+
+        return $orderFields;
+    }
+
+    /**
+     * Prepare order products for serialization
+     *
+     * @param array $orderProducts
+     * @return array
+     */
+    protected function getOrderProductsQuantityForSerialization(array $orderProducts): array
+    {
+        $processedOrderProducts = [];
+
+        foreach ($orderProducts as $productUid => $productQuantity) {
+            $productUid = (int)$productUid;
+            $productQuantity = (int)$productQuantity;
+
+            if ($productUid && $productQuantity) {
+                $processedOrderProducts[$productUid] = $productQuantity;
+            }
+        }
+
+        return $processedOrderProducts;
     }
 
     /**
