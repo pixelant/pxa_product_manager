@@ -4,7 +4,6 @@
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Pixelant\PxaProductManager\Domain\Model\Option;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -16,82 +15,18 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 class OrderFormFieldTest extends UnitTestCase
 {
     /**
-     * @var OrderFormField|MockObject
+     * @var OrderFormField
      */
     protected $fixture;
 
     public function setUp()
     {
-        $this->fixture = $this
-            ->getMockBuilder(OrderFormField::class)
-            ->setMethods(['translateKey'])
-            ->getMock();
+        $this->fixture = new OrderFormField();
     }
 
     public function tearDown()
     {
         unset($this->fixture);
-    }
-
-    /**
-     * @test
-     */
-    public function getOptionsReturnInitialObjectStorage()
-    {
-        $objectStorage = new ObjectStorage();
-
-        $this->assertEquals($objectStorage, $this->fixture->getOptions());
-    }
-
-    /**
-     * @test
-     */
-    public function setOptionsWillSetOptionsStorage()
-    {
-        $objectStorage = new ObjectStorage();
-
-        $this->fixture->setOptions($objectStorage);
-
-        $this->assertSame(
-            $objectStorage,
-            $this->fixture->getOptions()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function addOptionWillAddOptionToObjectStorage()
-    {
-        $option = new Option();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($option);
-
-        $this->fixture->addOption($option);
-
-        $this->assertEquals(
-            $objectStorage,
-            $this->fixture->getOptions()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function removeOptionFromObjectStorageRemoveItFromStorage()
-    {
-        $option = new Option();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($option);
-        $objectStorage->detach($option);
-
-        $this->fixture->addOption($option);
-        $this->fixture->removeOption($option);
-
-        $this->assertEquals(
-            $objectStorage,
-            $this->fixture->getOptions()
-        );
     }
 
     /**
@@ -322,51 +257,5 @@ class OrderFormFieldTest extends UnitTestCase
         $this->fixture->setType(0);
 
         $this->assertEquals($value, $this->fixture->getValueAsText());
-    }
-
-    /**
-     * @test
-     */
-    public function getValueAsTextForSelectBoxReturnValueOfOption()
-    {
-        $expectValue = 'Nova poshta';
-        $valueUid = 23;
-
-        $option1 = new Option();
-        $option1->_setProperty('uid', 12);
-        $option1->setValue('test');
-
-        $option2 = new Option();
-        $option2->_setProperty('uid', $valueUid);
-        $option2->setValue($expectValue);
-
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($option1);
-        $objectStorage->attach($option2);
-
-        $this->fixture->setOptions($objectStorage);
-        $this->fixture->setValue($valueUid);
-        $this->fixture->setType(OrderFormField::FIELD_SELECTBOX);
-
-        $this->assertEquals($expectValue, $this->fixture->getValueAsText());
-    }
-
-    /**
-     * @test
-     */
-    public function getValueAsTextForCheckBoxTryToTranslateValue()
-    {
-        $expectKey = 'fe.checkbox.1';
-        $value = '1';
-
-        $this->fixture->setValue($value);
-        $this->fixture->setType(OrderFormField::FIELD_CHECKBOX);
-
-        $this->fixture
-            ->expects($this->once())
-            ->method('translateKey')
-            ->with($expectKey);
-
-        $this->fixture->getValueAsText();
     }
 }
