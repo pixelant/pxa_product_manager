@@ -11,7 +11,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  * Class OrderFormField
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-abstract class OrderFormField extends AbstractDomainObject
+class OrderFormField extends AbstractDomainObject
 {
     /**
      * Type simple input
@@ -307,5 +307,8 @@ abstract class OrderFormField extends AbstractDomainObject
      *
      * @return string
      */
-    abstract public function getValueAsText(): string;
+    public function getValueAsText(): string
+    {
+        return $this->value;
+    }
 }
