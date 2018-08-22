@@ -249,6 +249,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_order.complete.yes">
                 <source>Yes</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.checkout_type">
+                <source>Checkout type</source>
+            </trans-unit>
             <!--Order TCA:END-->
 
             <!--sys_file_reference TCA:START-->
