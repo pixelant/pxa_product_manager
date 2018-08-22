@@ -98,6 +98,9 @@ call_user_func(
             'priority' => 30,
             'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
         ];
+
+        // Register the class to be available in 'eval' of TCA
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][\Pixelant\PxaProductManager\Backend\Evaluation\LcFirstEvaluation::class] = '';
     },
     $_EXTKEY
 );

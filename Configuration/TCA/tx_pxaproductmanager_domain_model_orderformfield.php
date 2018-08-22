@@ -123,7 +123,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim,required'
+                'eval' => 'trim,required,uniqueInPid,alpha,nospace,Pixelant\\PxaProductManager\\Backend\\Evaluation\\LcFirstEvaluation'
             ]
         ],
         'label' => [
@@ -132,7 +132,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim,required'
             ]
         ],
         'type' => [

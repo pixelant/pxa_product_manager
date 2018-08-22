@@ -608,11 +608,10 @@ class ProductController extends AbstractController
         $orderFields = [];
         /** @var OrderFormField $formField */
         foreach ($orderConfiguration->getFormFields() as $formField) {
-            $orderFields[$formField->getUid()] = [
+            $orderFields[$formField->getName()] = [
                 'value' => $formField->getValueAsText(),
                 'type' => $formField->getType(),
-                'label' => $formField->getLabel(),
-                'name' => $formField->getName()
+                'label' => $formField->getLabel()
             ];
         }
 

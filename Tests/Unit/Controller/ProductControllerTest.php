@@ -594,27 +594,24 @@ class ProductControllerTest extends UnitTestCase
         $formField->setName('test');
         $formField->setLabel('Label');
         $formField->setValue('value');
-        $formField->_setProperty('uid', 12);
 
         $formFieldClone = clone  $formField;
         $formFieldClone->setValue('value 2');
-        $formFieldClone->_setProperty('uid', 21);
+        $formFieldClone->setName('test22');
 
         $orderConfiguration->addFormField($formField);
         $orderConfiguration->addFormField($formFieldClone);
 
         $expect = [
-            $formField->getUid() => [
+            'test' => [
                 'value' => $formField->getValueAsText(),
                 'type' => $formField->getType(),
-                'label' => $formField->getLabel(),
-                'name' => $formField->getName()
+                'label' => $formField->getLabel()
             ],
-            $formFieldClone->getUid() => [
+            'test22' => [
                 'value' => $formFieldClone->getValueAsText(),
                 'type' => $formFieldClone->getType(),
-                'label' => $formFieldClone->getLabel(),
-                'name' => $formFieldClone->getName()
+                'label' => $formFieldClone->getLabel()
             ],
         ];
 
