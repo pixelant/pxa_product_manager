@@ -88,6 +88,13 @@ class Order extends AbstractDomainObject
     protected $crdate = null;
 
     /**
+     * checkoutType
+     *
+     * @var string $checkoutType
+     */
+    protected $checkoutType = 'default';
+
+    /**
      * __construct
      */
     public function __construct()
@@ -348,5 +355,21 @@ class Order extends AbstractDomainObject
     public function setHidden(bool $hidden)
     {
         $this->hidden = $hidden;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCheckoutType() : string
+    {
+        return $this->checkoutType ?: 'default';
+    }
+
+    /**
+     * @param string $checkoutType
+     */
+    public function setCheckoutType(string $checkoutType)
+    {
+        $this->checkoutType = $checkoutType;
     }
 }
