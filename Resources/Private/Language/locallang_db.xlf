@@ -249,6 +249,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_order.complete.yes">
                 <source>Yes</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.order_fields">
+                <source>Order fields</source>
+            </trans-unit>
             <!--Order TCA:END-->
 
             <!--Order Configuration TCA:START-->
