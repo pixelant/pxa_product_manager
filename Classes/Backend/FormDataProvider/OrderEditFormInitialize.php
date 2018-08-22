@@ -37,12 +37,11 @@ class OrderEditFormInitialize implements FormDataProviderInterface
             return $result;
         }
 
-        foreach ($orderFields as $fieldUid => $fieldConfiguration) {
-            $fieldName = $fieldConfiguration['name'];
+        foreach ($orderFields as $fieldName => $fieldConfiguration) {
             // Add TCA
             switch ($fieldConfiguration['type']) {
                 case OrderFormField::FIELD_TEXTAREA:
-                    $result['processedTca']['columns'][$fieldUid] = [
+                    $result['processedTca']['columns'][$fieldName] = [
                         'label' => MainUtility::snakeCasePhraseToWords($fieldName),
                         'config' => [
                             'type' => 'text',
@@ -51,7 +50,7 @@ class OrderEditFormInitialize implements FormDataProviderInterface
                     ];
                     break;
                 default:
-                    $result['processedTca']['columns'][$fieldUid] = [
+                    $result['processedTca']['columns'][$fieldName] = [
                         'label' => MainUtility::snakeCasePhraseToWords($fieldName),
                         'config' => [
                             'type' => 'none'
@@ -60,7 +59,7 @@ class OrderEditFormInitialize implements FormDataProviderInterface
             }
 
             // Add values
-            $result['databaseRow'][$fieldUid] = $fieldConfiguration['value'];
+            $result['databaseRow'][$fieldName] = $fieldConfiguration['value'];
         }
 
         // Add field to types
