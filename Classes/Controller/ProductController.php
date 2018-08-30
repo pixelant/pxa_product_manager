@@ -592,6 +592,13 @@ class ProductController extends AbstractController
         if (isset($pid)) {
             $order->setPid($pid);
         }
+
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'AfterOrderCreatedBeforeSaving',
+            [$order, $orderProducts, $orderConfiguration, $this]
+        );
+
         $this->orderRepository->add($order);
 
         return $order;
