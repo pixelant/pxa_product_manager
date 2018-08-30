@@ -13,3 +13,5 @@ composer.lock
 
 # NPM
 npm-debug.log
+
+/var

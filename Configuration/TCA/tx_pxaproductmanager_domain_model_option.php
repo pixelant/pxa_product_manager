@@ -30,10 +30,10 @@ return [
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, value',
     ],
     'types' => [
-        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, --palette--;;1, value,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'hidden, --palette--;;1'],
     ],
     'palettes' => [
-        '1' => ['showitem' => ''],
+        '1' => ['showitem' => 'value'],
     ],
     'columns' => [
         'sys_language_uid' => [

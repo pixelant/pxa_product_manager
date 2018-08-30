@@ -62,6 +62,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
     public function initializeArguments()
     {
         parent::initializeArguments();
+        // @codingStandardsIgnoreStart
         $this->registerUniversalTagAttributes();
         $this->registerTagAttribute('target', 'string', 'Target of link', false);
         $this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document', false);
@@ -76,6 +77,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('addQueryString', 'bool', 'If set, the current query parameters will be kept in the URI');
         $this->registerArgument('argumentsToBeExcludedFromQueryString', 'array', 'Arguments to be removed from the URI. Only active if $addQueryString = TRUE');
         $this->registerArgument('addQueryStringMethod', 'string', 'Set which parameters will be kept. Only active if $addQueryString = TRUE');
+        // @codingStandardsIgnoreEnd
 
         $this->registerArgument('category', 'mixed', 'Category to link', false, null);
         $this->registerArgument('product', 'mixed', 'Product to link', false, null);

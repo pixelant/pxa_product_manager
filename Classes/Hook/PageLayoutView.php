@@ -18,6 +18,7 @@ namespace Pixelant\PxaProductManager\Hook;
 
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -57,20 +58,9 @@ class PageLayoutView
         $additionalInfo = '';
 
         if ($params['row']['list_type'] == 'pxaproductmanager_pi1') {
-            $flexformData = GeneralUtility::xml2array($params['row']['pi_flexform']);
+            $flexFormService = $this->getFlexFormService();
+            $flexFormSettings = $flexFormService->convertFlexFormContentToArray($params['row']['pi_flexform']);
 
-            $flexFormSettings = [];
-
-            if (is_array($flexformData['data']['sDEF']['lDEF'])) {
-                foreach ($flexformData['data'] as $sheet) {
-                    $rawSettings = $sheet['lDEF'];
-                    foreach ($rawSettings as $field => $rawSetting) {
-                        $this->flexFormToArray($field, $rawSetting['vDEF'], $flexFormSettings);
-                    }
-                }
-            }
-
-            // if flexform data is found
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
             if (!empty($switchableControllerActions)) {
                 list($action) = GeneralUtility::trimExplode(';', $switchableControllerActions);
@@ -565,32 +555,24 @@ class PageLayoutView
         );
 
         if ($settings['enableOrderFunction']) {
+            if ($orderFormConfigurationUid = (int)$settings['orderFormConfiguration']) {
+                $orderConfiguration = BackendUtility::getRecord(
+                    'tx_pxaproductmanager_domain_model_orderconfiguration',
+                    $orderFormConfigurationUid,
+                    'name'
+                );
+                $info .= sprintf(
+                    '<b>%s</b>: %s<br>',
+                    $this->translate('flexform.order_form_configuration'),
+                    $orderConfiguration['name']
+                );
+            }
+
             $info .= sprintf(
                 '<b>%s</b>: %s<br>',
                 $this->translate('flexform.order_form_require_login'),
                 $this->translate('be.extension_info.checkbox_' .
                     ($settings['orderFormRequireLogin'] ? 'yes' : 'no'))
-            );
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.need_to_accept_order_terms'),
-                $this->translate('be.extension_info.checkbox_' .
-                    ($settings['needToAcceptOrderTerms'] ? 'yes' : 'no'))
-            );
-
-            if ($settings['needToAcceptOrderTerms']) {
-                $info .= sprintf(
-                    '<b>%s</b>: %s<br>',
-                    $this->translate('flexform.page_terms_link'),
-                    $this->getLinkInfo($settings['pageTermsLink'])
-                );
-            }
-
-            $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.order_recipients_emails'),
-                empty($recipients) ? $this->translate('flexform.no_recipients') : implode(', ', $recipients)
             );
         }
 
@@ -709,27 +691,12 @@ class PageLayoutView
     }
 
     /**
-     * go through all settings and generate array
+     * Get flexform service
      *
-     * @param $field
-     * @param $value
-     * @param $settings
-     * @return void
+     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
      */
-    protected function flexFormToArray($field, $value, &$settings)
+    protected function getFlexFormService()
     {
-        $fieldNameParts = GeneralUtility::trimExplode('.', $field);
-        if (count($fieldNameParts) > 1) {
-            $name = $fieldNameParts[0];
-            unset($fieldNameParts[0]);
-
-            if (!isset($settings[$name])) {
-                $settings[$name] = [];
-            }
-
-            $this->flexFormToArray(implode('.', $fieldNameParts), $value, $settings[$name]);
-        } else {
-            $settings[$fieldNameParts[0]] = $value;
-        }
+        return MainUtility::getFlexFormService();
     }
 }

@@ -120,16 +120,10 @@ plugin.tx_pxaproductmanager {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/030; type=int; label=Wish list page Pid
             pagePid =
 
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=boolean; label=Replace form fields with values of frontend user fields
-            replaceWithFeUserValues = 1
-
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=boolean; label=Send order email to user if "email" field is set
-            sendEmailToUser = 1
-
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/080; type=options[Enable=1,Disable=0]; label=Show tax info
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=options[Enable=1,Disable=0]; label=Show tax info
             showTaxInfo = 0
 
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/090; type=string; label=Checkout system
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=string; label=Checkout system
             checkoutSystem =
         }
     }

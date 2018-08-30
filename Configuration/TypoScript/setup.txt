@@ -48,30 +48,10 @@ plugin.tx_pxaproductmanager {
             showTaxInfo = {$plugin.tx_pxaproductmanager.settings.wishList.showTaxInfo}
             checkoutSystem = {$plugin.tx_pxaproductmanager.settings.wishList.checkoutSystem}
 
-            # Available validations: email,required,url
-            # Email validation allow empty values
-            # Available fields types: input,textarea
+            # Order emails
             orderForm {
-                replaceWithFeUserValues = {$plugin.tx_pxaproductmanager.settings.wishList.replaceWithFeUserValues}
-                sendEmailToUser = {$plugin.tx_pxaproductmanager.settings.wishList.sendEmailToUser}
-
                 adminEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailAdmin.html
                 userEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailUser.html
-
-                fields {
-                    name {
-                        type = input
-                        validation = required
-                    }
-                    # Email is reserved field name where email will be send to user
-                    email {
-                        type = input
-                        validation = required,email
-                    }
-                    notes {
-                        type = textarea
-                    }
-                }
             }
         }
 
@@ -171,12 +151,6 @@ plugin.tx_pxaproductmanager {
 
     _LOCAL_LANG {
         default {
-            fe.fields {
-                name = Name
-                email = E-mail
-                notes = Order notes
-            }
-
             # Default pricing format
             # |decimals|dec_point|thousands_sep|
             priceFormat = |2|.| |

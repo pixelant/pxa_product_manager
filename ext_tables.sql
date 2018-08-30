@@ -201,6 +201,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_option (
   pid int(11) DEFAULT '0' NOT NULL,
 
   attribute int(11) unsigned DEFAULT '0' NOT NULL,
+  order_field int(11) unsigned DEFAULT '0' NOT NULL,
   value varchar(255) DEFAULT '' NOT NULL,
 
   sorting int(11) unsigned DEFAULT '0' NOT NULL,
@@ -459,4 +460,71 @@ CREATE TABLE tx_pxaproductmanager_order_product_mm (
 
   KEY uid_local (uid_local),
   KEY uid_foreign (uid_foreign)
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_domain_model_orderconfiguration'
+#
+CREATE TABLE tx_pxaproductmanager_domain_model_orderconfiguration (
+
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+
+	name varchar(55) DEFAULT '' NOT NULL,
+	enabled_email_to_user tinyint(4) unsigned DEFAULT '0' NOT NULL,
+  enabled_replace_with_fe_user_fields tinyint(4) unsigned DEFAULT '0' NOT NULL,
+  form_fields  int(11) unsigned DEFAULT '0' NOT NULL,
+  admin_emails text,
+
+	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+	crdate int(11) unsigned DEFAULT '0' NOT NULL,
+	cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+	deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	hidden tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	starttime int(11) unsigned DEFAULT '0' NOT NULL,
+	endtime int(11) unsigned DEFAULT '0' NOT NULL,
+
+	sys_language_uid int(11) DEFAULT '0' NOT NULL,
+	l10n_parent int(11) DEFAULT '0' NOT NULL,
+	l10n_diffsource mediumblob,
+
+	PRIMARY KEY (uid),
+	KEY parent (pid),
+	KEY language (l10n_parent,sys_language_uid)
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_domain_model_orderformfield'
+#
+CREATE TABLE tx_pxaproductmanager_domain_model_orderformfield (
+
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+
+  type int(11) DEFAULT '0' NOT NULL,
+  order_configuration int(11) DEFAULT '0' NOT NULL,
+	name varchar(55) DEFAULT '' NOT NULL,
+  label varchar(255) DEFAULT '' NOT NULL,
+  placeholder varchar(255) DEFAULT '' NOT NULL,
+  options int(11) unsigned DEFAULT '0' NOT NULL,
+  validation_rules varchar(255) DEFAULT '' NOT NULL,
+  user_email_field tinyint(4) unsigned DEFAULT '0' NOT NULL,
+  additional_text text,
+
+	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+	crdate int(11) unsigned DEFAULT '0' NOT NULL,
+	cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+	deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	hidden tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	starttime int(11) unsigned DEFAULT '0' NOT NULL,
+	endtime int(11) unsigned DEFAULT '0' NOT NULL,
+	sorting int(11) DEFAULT '0' NOT NULL,
+
+	sys_language_uid int(11) DEFAULT '0' NOT NULL,
+	l10n_parent int(11) DEFAULT '0' NOT NULL,
+	l10n_diffsource mediumblob,
+
+	PRIMARY KEY (uid),
+	KEY parent (pid),
+	KEY language (l10n_parent,sys_language_uid)
 );

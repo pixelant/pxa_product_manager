@@ -81,6 +81,18 @@ class AbstractController extends ActionController
     protected $orderRepository = null;
 
     /**
+     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository
+     * @inject
+     */
+    protected $orderConfigurationRepository = null;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+     * @inject
+     */
+    protected $signalSlotDispatcher = null;
+
+    /**
      * Get category
      *
      * @param int $category

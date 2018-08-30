@@ -68,9 +68,9 @@
 
     <br />
     <h4><f:translate key="fe.adminEmail.orderForm.userFields" extensionName="PxaProductManager" /></h4>
-    <f:for each="{order.orderFields}" key="field" as="fieldConf">
+    <f:for each="{order.orderFields}" as="fieldConf">
         <p>
-            <strong><f:translate key="fe.fields.{field}" default="{field}" extensionName="PxaProductManager" /></strong>: {fieldConf.value}
+            <strong><f:if condition="{fieldConf.label}" then="{fieldConf.label}" else="{fieldConf.name}" /></strong>: {fieldConf.value}
         </p>
     </f:for>
 </f:section>

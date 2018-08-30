@@ -51,6 +51,7 @@ class MainUtility
      *
      * @var array
      */
+    // @codingStandardsIgnoreStart
     protected static $normalizeChars = [
         'Š' => 'S', 'š' => 's', 'Ð' => 'Dj', 'Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
         'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I',
@@ -60,7 +61,7 @@ class MainUtility
         'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ń' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u',
         'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
         'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
-    ];
+    ];// @codingStandardsIgnoreEnd
 
     /**
      * Check if prices enabled
@@ -321,5 +322,45 @@ class MainUtility
             'utf-8',
             strtr($string, self::$normalizeChars)
         );
+    }
+
+    /**
+     * Check if typo3 version is below 9
+     * @TODO remove it after support of TYPO3 8 is stopped
+     * @return bool
+     */
+    public static function isBelowTypo3v9(): bool
+    {
+        static $isBelowTypo39;
+
+        if ($isBelowTypo39 === null) {
+            $isBelowTypo39 = version_compare(TYPO3_version, '9.0', '<');
+        }
+
+        return $isBelowTypo39;
+    }
+
+    /**
+     * Get flexform service
+     *
+     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
+     */
+    public static function getFlexFormService()
+    {
+        if (self::isBelowTypo3v9()) {
+            return GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\FlexFormService');
+        } else {
+            return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Service\\FlexFormService');
+        }
+    }
+
+    /**
+     * Check if FE user is login
+     *
+     * @return bool
+     */
+    public static function isFrontendLogin(): bool
+    {
+        return self::getTSFE()->loginUser;
     }
 }

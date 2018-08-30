@@ -29,6 +29,43 @@ config.tx_extbase {
                     }
                 }
             }
+
+            Pixelant\PxaProductManager\Domain\Model\OrderFormField {
+                subclasses {
+                    1 = Pixelant\PxaProductManager\Domain\Model\OrderFormFields\InputFormField
+                    2 = Pixelant\PxaProductManager\Domain\Model\OrderFormFields\TextAreaFormField
+                    3 = Pixelant\PxaProductManager\Domain\Model\OrderFormFields\SelectBoxFormField
+                    4 = Pixelant\PxaProductManager\Domain\Model\OrderFormFields\CheckBoxFormField
+                }
+            }
+
+            Pixelant\PxaProductManager\Domain\Model\OrderFormFields\InputFormField {
+                mapping {
+                    recordType = 1
+                    tableName = tx_pxaproductmanager_domain_model_orderformfield
+                }
+            }
+
+            Pixelant\PxaProductManager\Domain\Model\OrderFormFields\TextAreaFormField {
+                mapping {
+                    recordType = 2
+                    tableName = tx_pxaproductmanager_domain_model_orderformfield
+                }
+            }
+
+            Pixelant\PxaProductManager\Domain\Model\OrderFormFields\SelectBoxFormField {
+                mapping {
+                    recordType = 3
+                    tableName = tx_pxaproductmanager_domain_model_orderformfield
+                }
+            }
+
+            Pixelant\PxaProductManager\Domain\Model\OrderFormFields\CheckBoxFormField {
+                mapping {
+                    recordType = 4
+                    tableName = tx_pxaproductmanager_domain_model_orderformfield
+                }
+            }
         }
     }
 }

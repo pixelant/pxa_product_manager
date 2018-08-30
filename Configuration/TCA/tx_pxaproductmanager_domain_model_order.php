@@ -30,7 +30,7 @@ return [
     'types' => [
         '1' => [
             'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, fe_user, checkout_type,
-            --div--;Order fields,|order_fields|,
+            --div--;' . $ll . '.order_fields,|order_fields|,
             --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'
         ],
     ],
@@ -153,6 +153,7 @@ return [
                 'foreign_table' => 'fe_users',
                 'size' => 1,
                 'maxitems' => 1,
+                'default' => 0,
                 'items' => [
                     [$ll . '.fe_user.none_is_selected', 0]
                 ],

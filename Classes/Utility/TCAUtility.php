@@ -279,15 +279,11 @@ class TCAUtility
      */
     public static function getCoreLLPath(): string
     {
-        static $llCore;
+        $ll = MainUtility::isBelowTypo3v9()
+            ? 'LLL:EXT:lang/'
+            : 'LLL:EXT:core/Resources/Private/Language/';
 
-        if ($llCore === null) {
-            $llCore = version_compare(TYPO3_version, '9.0', '>=')
-                ? 'LLL:EXT:core/Resources/Private/Language/'
-                : 'LLL:EXT:lang/';
-        }
-
-        return $llCore;
+        return $ll;
     }
 
     /**

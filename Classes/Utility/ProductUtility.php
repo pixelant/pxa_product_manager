@@ -393,11 +393,15 @@ class ProductUtility
         }
 
         $orderProductsQuantity = $order->getProductsQuantity();
-        $getter = 'get' . ucfirst($calculationProperty);
 
         /** @var Product $product */
         foreach ($order->getProducts() as $product) {
-            $total += ($product->$getter() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
+            $uid = $product->getUid();
+
+            $value = $orderProductsQuantity[$uid][$calculationProperty] ?? 0;
+            $quantity = $orderProductsQuantity[$uid]['quantity'] ?? 1;
+
+            $total += $value * $quantity;
         }
 
         return $total;

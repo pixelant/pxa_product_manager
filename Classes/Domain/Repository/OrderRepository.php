@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Exception\UnknownOrdersTabException;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -44,6 +45,20 @@ class OrderRepository extends Repository
     protected $defaultOrderings = array(
         'crdate' => QueryInterface::ORDER_DESCENDING
     );
+
+    /**
+     * Set default query settings
+     */
+    public function initializeObject()
+    {
+        /** @var $defaultQuerySettings Typo3QuerySettings */
+        $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        // don't add sys_language_uid constraint
+        // get orders for all languages
+        $defaultQuerySettings->setRespectSysLanguage(false);
+
+        $this->setDefaultQuerySettings($defaultQuerySettings);
+    }
 
     /**
      * Get order for tab

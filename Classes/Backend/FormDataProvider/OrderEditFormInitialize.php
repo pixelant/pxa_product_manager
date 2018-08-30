@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
-use Pixelant\PxaProductManager\Domain\Model\Order;
+use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -40,7 +40,7 @@ class OrderEditFormInitialize implements FormDataProviderInterface
         foreach ($orderFields as $fieldName => $fieldConfiguration) {
             // Add TCA
             switch ($fieldConfiguration['type']) {
-                case Order::ORDERFIELD_TEXTAREA:
+                case OrderFormField::FIELD_TEXTAREA:
                     $result['processedTca']['columns'][$fieldName] = [
                         'label' => MainUtility::snakeCasePhraseToWords($fieldName),
                         'config' => [
