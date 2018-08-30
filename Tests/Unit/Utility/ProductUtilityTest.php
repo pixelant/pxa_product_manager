@@ -227,16 +227,20 @@ class ProductUtilityTest extends UnitTestCase
         $order = new Order();
 
         $product1 = new Product();
-        $product1->setPrice($price1);
         $product1->_setProperty('uid', 1);
 
         $product2 = new Product();
-        $product2->setPrice($price2);
         $product2->_setProperty('uid', 2);
 
         $productsQuantity = [
-            1 => $quantity1,
-            2 => $quantity2
+            1 => [
+                'quantity' => $quantity1,
+                'price' => $price1
+            ],
+            2 => [
+                'quantity' => $quantity2,
+                'price' => $price2
+            ],
         ];
 
         $objectStorage = new ObjectStorage();
@@ -246,7 +250,7 @@ class ProductUtilityTest extends UnitTestCase
         $order->setProductsQuantity($productsQuantity);
         $order->setProducts($objectStorage);
 
-        $expect = $price1 * $quantity1 + $price2 * $quantity2;
+        $expect = ($price1 * $quantity1) + ($price2 * $quantity2);
 
         $this->assertEquals($expect, ProductUtility::calculateOrderTotalPrice($order));
     }
@@ -261,23 +265,27 @@ class ProductUtilityTest extends UnitTestCase
         $quantity1 = 2;
         $quantity2 = 4;
 
-        $tax = 18.00;
+        $taxRate = 18.00;
 
         $order = new Order();
 
         $product1 = new Product();
-        $product1->setPrice($price1);
-        $product1->setTaxRate($tax);
         $product1->_setProperty('uid', 1);
 
         $product2 = new Product();
-        $product2->setPrice($price2);
-        $product2->setTaxRate($tax);
         $product2->_setProperty('uid', 2);
 
         $productsQuantity = [
-            1 => $quantity1,
-            2 => $quantity2
+            1 => [
+                'quantity' => $quantity1,
+                'price' => $price1,
+                'tax' => $price1 * ($taxRate / 100)
+            ],
+            2 => [
+                'quantity' => $quantity2,
+                'price' => $price2,
+                'tax' => $price2 * ($taxRate / 100)
+            ]
         ];
 
         $objectStorage = new ObjectStorage();
@@ -287,7 +295,7 @@ class ProductUtilityTest extends UnitTestCase
         $order->setProductsQuantity($productsQuantity);
         $order->setProducts($objectStorage);
 
-        $expect = ($price1 * ($tax / 100)) * $quantity1 + ($price2 * ($tax / 100)) * $quantity2;
+        $expect = (($price1 * ($taxRate / 100)) * $quantity1) + (($price2 * ($taxRate / 100)) * $quantity2);
 
         $this->assertEquals($expect, ProductUtility::calculateOrderTotalTax($order));
     }

@@ -576,14 +576,23 @@ class ProductController extends AbstractController
         $order = $this->objectManager->get(Order::class);
 
         $order->setOrderFields($this->getOrderFormFieldsForSerialization($orderConfiguration));
-        $order->setProductsQuantity($orderProducts);
 
+        $productsQuantityData = [];
         $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
         /** @var Product $product */
         foreach ($products as $product) {
             $order->addProduct($product);
             $pid = $product->getPid();
+            $uid = $product->getUid();
+
+            // Save this, because it might change in future for product
+            $productsQuantityData[$uid] = [
+                'quantity' => (int)$orderProducts[$uid], // quantity
+                'price' => $product->getPrice(),
+                'tax' => $product->getTax() // Already calculated tax according to tax rate
+            ];
         }
+        $order->setProductsQuantity($productsQuantityData);
 
         if ($orderConfiguration->getFrontendUser() !== null) {
             $order->setFeUser($orderConfiguration->getFrontendUser());
@@ -596,7 +605,7 @@ class ProductController extends AbstractController
         $this->signalSlotDispatcher->dispatch(
             __CLASS__,
             'AfterOrderCreatedBeforeSaving',
-            [$order, $orderProducts, $orderConfiguration, $this]
+            [$order, $productsQuantityData, $orderProducts, $orderConfiguration, $this]
         );
 
         $this->orderRepository->add($order);
