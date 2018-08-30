@@ -340,4 +340,26 @@ class OrderTest extends UnitTestCase
 
         $this->assertEquals($orderFields, $this->subject->getOrderFields());
     }
+
+    /**
+     * @test
+     */
+    public function canGetAndSetCheckoutType()
+    {
+        $value = 'test';
+
+        $this->subject->setCheckoutType($value);
+
+        $this->assertEquals($value, $this->subject->getCheckoutType());
+    }
+
+    /**
+     * @test
+     */
+    public function defaultCheckoutTypeIsDefault()
+    {
+        $value = 'default';
+
+        $this->assertEquals($value, $this->subject->getCheckoutType());
+    }
 }
