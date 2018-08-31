@@ -4,14 +4,14 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Domain\Model;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class OrderFormField
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-class OrderFormField extends AbstractDomainObject
+class OrderFormField extends AbstractEntity
 {
     /**
      * Type simple input
