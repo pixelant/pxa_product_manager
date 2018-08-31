@@ -6,7 +6,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
-use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
@@ -14,7 +14,7 @@ use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
  * Class OrderConfiguration
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-class OrderConfiguration extends AbstractDomainObject
+class OrderConfiguration extends AbstractEntity
 {
     /**
      * @var string

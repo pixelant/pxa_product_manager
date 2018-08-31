@@ -27,14 +27,14 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
-use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class Order
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-class Order extends AbstractDomainObject
+class Order extends AbstractEntity
 {
     /**
      * @var bool
