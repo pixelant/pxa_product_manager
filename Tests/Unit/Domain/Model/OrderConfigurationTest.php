@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
-
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
