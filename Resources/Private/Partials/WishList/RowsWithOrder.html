@@ -49,10 +49,10 @@
                                 </f:if>
                             </div>
                         </f:if>
-                        <f:if condition="{orderConfiguration}">
-                            <div class="make-order-button-section">
-                                <f:if condition="{checkout.type} == 'default'">
-                                    <f:then>
+                        <div class="make-order-button-section">
+                            <f:if condition="{checkout.type} == 'default'">
+                                <f:then>
+                                    <f:if condition="{orderConfiguration}">
                                         <button aria-expanded="false"
                                                 class="btn btn-primary"
                                                 data-target="#pm-collapse-order-form"
@@ -60,13 +60,13 @@
                                                 type="button">
                                             <f:translate key="fe.continue_to_order"/>
                                         </button>
-                                    </f:then>
-                                    <f:else>
-                                        <f:render section="makeOrderButton" />
-                                    </f:else>
-                                </f:if>
-                            </div>
-                        </f:if>
+                                    </f:if>
+                                </f:then>
+                                <f:else>
+                                    <f:render section="makeOrderButton" />
+                                </f:else>
+                            </f:if>
+                        </div>
                     </div>
                 </div>
             </div>

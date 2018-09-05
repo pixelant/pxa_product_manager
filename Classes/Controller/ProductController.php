@@ -577,21 +577,15 @@ class ProductController extends AbstractController
 
         $order->setOrderFields($this->getOrderFormFieldsForSerialization($orderConfiguration));
 
-        $productsQuantityData = [];
         $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
         /** @var Product $product */
         foreach ($products as $product) {
             $order->addProduct($product);
             $pid = $product->getPid();
-            $uid = $product->getUid();
-
-            // Save this, because it might change in future for product
-            $productsQuantityData[$uid] = [
-                'quantity' => (int)$orderProducts[$uid], // quantity
-                'price' => $product->getPrice(),
-                'tax' => $product->getTax() // Already calculated tax according to tax rate
-            ];
         }
+
+        $productsQuantityData = ProductUtility::orderProductsToProductQuantityData($orderProducts, $products);
+
         $order->setProductsQuantity($productsQuantityData);
 
         if ($orderConfiguration->getFrontendUser() !== null) {
