@@ -584,7 +584,7 @@ class ProductController extends AbstractController
             $pid = $product->getPid();
         }
 
-        $productsQuantityData = ProductUtility::orderProductsToProductQuantityData($orderProducts);
+        $productsQuantityData = ProductUtility::orderProductsToProductQuantityData($orderProducts, $products);
 
         $order->setProductsQuantity($productsQuantityData);
 

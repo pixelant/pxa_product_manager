@@ -39,6 +39,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -416,13 +417,15 @@ class ProductUtility
      * from orderProducts (uid => quantity array)
      *
      * @param array $orderProducts
+     * @param QueryResult|null $products
      * @return array
      */
-    public static function orderProductsToProductQuantityData(array $orderProducts)
+    public static function orderProductsToProductQuantityData(array $orderProducts, QueryResult $products = null)
     {
         $productsQuantityData = [];
         $productRepository = MainUtility::getObjectManager()->get(ProductRepository::class);
-        $products = $productRepository->findProductsByUids(array_keys($orderProducts));
+
+        $products = $products ?: $productRepository->findProductsByUids(array_keys($orderProducts));
 
         /** @var Product $product */
         foreach ($products as $product) {
