@@ -11,8 +11,6 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
   price double(11,2) DEFAULT '0.00' NOT NULL,
   tax_rate decimal(5,2) DEFAULT '0.00' NOT NULL,
   description text,
-  import_id varchar(255) DEFAULT '' NOT NULL,
-  import_name varchar(255) DEFAULT '' NOT NULL,
   disable_single_view tinyint(1) unsigned DEFAULT '0' NOT NULL,
   attribute_values  varchar(255) DEFAULT '' NOT NULL,
   related_products int(11) unsigned DEFAULT '0' NOT NULL,

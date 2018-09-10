@@ -26,7 +26,6 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
@@ -87,20 +86,6 @@ class Product extends AbstractEntity
      * @var \string
      */
     protected $description = '';
-
-    /**
-     * importId
-     *
-     * @var \string
-     */
-    protected $importId;
-
-    /**
-     * importName
-     *
-     * @var \string
-     */
-    protected $importName;
 
     /**
      * disableSingleView
@@ -774,48 +759,6 @@ class Product extends AbstractEntity
             $this->thumbnailImage = $this->getImageFor('useInListing');
         }
         return $this->thumbnailImage;
-    }
-
-    /**
-     * Returns the importId
-     *
-     * @return \string $importId
-     */
-    public function getImportId(): string
-    {
-        return $this->importId;
-    }
-
-    /**
-     * Sets the importId
-     *
-     * @param \string $importId
-     * @return void
-     */
-    public function setImportId(string $importId)
-    {
-        $this->importId = $importId;
-    }
-
-    /**
-     * Returns the importName
-     *
-     * @return \string $importName
-     */
-    public function getImportName(): string
-    {
-        return $this->importName;
-    }
-
-    /**
-     * Sets the importName
-     *
-     * @param \string $importName
-     * @return void
-     */
-    public function setImportName(string $importName)
-    {
-        $this->importName = $importName;
     }
 
     /**

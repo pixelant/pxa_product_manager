@@ -251,34 +251,6 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function importIdCanBeSet()
-    {
-        $importId = '123321';
-        $this->fixture->setImportId($importId);
-
-        self::assertEquals(
-            $importId,
-            $this->fixture->getImportId()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function importNameCanBeSet()
-    {
-        $importName = 'importName';
-        $this->fixture->setImportName($importName);
-
-        self::assertEquals(
-            $importName,
-            $this->fixture->getImportName()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function disableSingleViewCanBeSet()
     {
         $disableSingleView = true;
