@@ -34,6 +34,7 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -361,6 +362,24 @@ class MainUtility
      */
     public static function isFrontendLogin(): bool
     {
-        return self::getTSFE()->loginUser;
+        if (self::isBelowTypo3v9()) {
+            return self::getTSFE()->loginUser;
+        } else {
+            return GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
+        }
+    }
+
+    /**
+     * Check if FE user is login
+     *
+     * @return bool
+     */
+    public static function isBackendLogin(): bool
+    {
+        if (self::isBelowTypo3v9()) {
+            return self::getTSFE()->beUserLogin;
+        } else {
+            return GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
+        }
     }
 }

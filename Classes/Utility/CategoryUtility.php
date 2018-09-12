@@ -84,7 +84,7 @@ class CategoryUtility
         if (is_object($parent)) {
             $parentMet = array_key_exists($parent->getUid(), $results);
 
-            if ($parentMet && (TYPO3_MODE === 'BE' || MainUtility::getTSFE()->beUserLogin)) {
+            if ($parentMet && (TYPO3_MODE === 'BE' || MainUtility::isBackendLogin())) {
                 throw new \RuntimeException(
                 // @codingStandardsIgnoreStart
                     'Same parent with UID "' . $parent->getUid() . '" was met second time, that should never happen. Check you categories relation.',
