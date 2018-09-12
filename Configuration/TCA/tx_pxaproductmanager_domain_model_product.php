@@ -29,7 +29,7 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, import_id, import_name, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
     ],
 
     'types' => [
@@ -184,24 +184,6 @@ return [
                 'eval' => 'trim',
                 'enableRichtext' => true
             ]
-        ],
-        'import_id' => [
-            'exclude' => 1,
-            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.import_id',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim'
-            ],
-        ],
-        'import_name' => [
-            'exclude' => 1,
-            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.import_name',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim'
-            ],
         ],
         'disable_single_view' => [
             'exclude' => 0,
