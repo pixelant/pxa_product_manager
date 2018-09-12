@@ -302,7 +302,7 @@ class CategoriesNavigationTreeBuilder
     protected function findSubCategories(Category $parentCategory)
     {
         if (in_array($parentCategory->getUid(), $this->parentCategoriesUids)) {
-            if (TYPO3_MODE === 'BE' || MainUtility::getTSFE()->beUserLogin) {
+            if (TYPO3_MODE === 'BE' || MainUtility::isBackendLogin()) {
                 throw new \RuntimeException(
                     // @codingStandardsIgnoreStart
                     'Same parent with UID "' . $parentCategory->getUid() . '" was met second time, that should never happen. Check you categories relation.',
