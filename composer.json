@@ -19,6 +19,9 @@
     "squizlabs/php_codesniffer": "^3.3",
     "nimut/testing-framework": "^4.0"
   },
+  "suggest": {
+    "pixelant/pxa-pm-importer": "Import products data from different sources"
+  },
   "replace": {
     "pxa_product_manager": "self.version"
   },
