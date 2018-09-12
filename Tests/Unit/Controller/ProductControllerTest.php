@@ -339,6 +339,17 @@ class ProductControllerTest extends UnitTestCase
         $productAttributesDiffOptions1 = $this->getAttributesStorage(['Option 1', 'Option 2'], 5, true);
         $productAttributesDiffOptions2 = $this->getAttributesStorage(['Option diff', 'Option diff'], 5, true);
 
+        $productAttributesCaseNoDiff1Array = $productAttributesCaseNoDiff1->toArray();
+        $productAttributesCaseNoDiff2Array = $productAttributesCaseNoDiff2->toArray();
+
+        $productAttributesCaseWithDiff1Array = $productAttributesCaseWithDiff1->toArray();
+        $productAttributesCaseWithDiff2Array = $productAttributesCaseWithDiff2->toArray();
+
+        $productAttributesNoDiffOptions1Array = $productAttributesNoDiffOptions1->toArray();
+        $productAttributesNoDiffOptions2Array = $productAttributesNoDiffOptions2->toArray();
+
+        $productAttributesDiffOptions1Array = $productAttributesDiffOptions1->toArray();
+        $productAttributesDiffOptions2Array = $productAttributesDiffOptions2->toArray();
         return [
             'attributes_with_same_values_has_no_diff' => [
                 $attributeCaseNoDiff,
@@ -347,8 +358,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseNoDiff->getName(),
                     'attributesList' => [
-                        end($productAttributesCaseNoDiff1->toArray()),
-                        end($productAttributesCaseNoDiff2->toArray())
+                        end($productAttributesCaseNoDiff1Array),
+                        end($productAttributesCaseNoDiff2Array)
                     ],
                     'isDifferent' => false
                 ]
@@ -360,8 +371,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseWithDiff->getName(),
                     'attributesList' => [
-                        end($productAttributesCaseWithDiff1->toArray()),
-                        end($productAttributesCaseWithDiff2->toArray())
+                        end($productAttributesCaseWithDiff1Array),
+                        end($productAttributesCaseWithDiff2Array)
                     ],
                     'isDifferent' => true
                 ]
@@ -373,8 +384,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseNoDiffOptions->getName(),
                     'attributesList' => [
-                        end($productAttributesNoDiffOptions1->toArray()),
-                        end($productAttributesNoDiffOptions2->toArray())
+                        end($productAttributesNoDiffOptions1Array),
+                        end($productAttributesNoDiffOptions2Array)
                     ],
                     'isDifferent' => false
                 ]
@@ -386,8 +397,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseDiffOptions->getName(),
                     'attributesList' => [
-                        end($productAttributesDiffOptions1->toArray()),
-                        end($productAttributesDiffOptions2->toArray())
+                        end($productAttributesDiffOptions1Array),
+                        end($productAttributesDiffOptions2Array)
                     ],
                     'isDifferent' => true
                 ]
@@ -534,7 +545,10 @@ class ProductControllerTest extends UnitTestCase
 
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy']
+            ['dummy'],
+            [],
+            '',
+            false
         );
 
         $mockedController->_set('settings', ['orderFormRequireLogin' => 1]);
