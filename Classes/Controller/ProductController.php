@@ -520,7 +520,16 @@ class ProductController extends AbstractController
     {
         $requireLogin = (int)$this->settings['orderFormRequireLogin'] === 1;
 
-        return !$requireLogin || MainUtility::isFrontendLogin();
+        return !$requireLogin || $this->isUserLoggedIn();
+    }
+
+    /**
+     * Check if user is logged in. Wrapper for tests
+     * @return bool
+     */
+    protected function isUserLoggedIn()
+    {
+        return MainUtility::isFrontendLogin();
     }
 
     /**

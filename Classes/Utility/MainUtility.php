@@ -356,7 +356,7 @@ class MainUtility
     }
 
     /**
-     * Check if FE user is login
+     * Check if FE user is logged in
      *
      * @return bool
      */
@@ -370,7 +370,7 @@ class MainUtility
     }
 
     /**
-     * Check if FE user is login
+     * Check if BE user is logged in
      *
      * @return bool
      */

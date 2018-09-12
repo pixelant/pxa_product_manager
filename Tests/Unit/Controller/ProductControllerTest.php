@@ -540,21 +540,21 @@ class ProductControllerTest extends UnitTestCase
      */
     public function loginRequiredAndNonLoggedInUserDoesNotAllowOrderForm()
     {
-        $tsfe = $this->createMock(TypoScriptFrontendController::class);
-        $GLOBALS['TSFE'] = $tsfe;
-
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy'],
+            ['isUserLoggedIn'],
             [],
             '',
             false
         );
+        $mockedController
+            ->expects($this->once())
+            ->method('isUserLoggedIn')
+            ->willReturn(false);
 
         $mockedController->_set('settings', ['orderFormRequireLogin' => 1]);
 
         $this->assertFalse($mockedController->_call('isOrderFormAllowed'));
-        unset($GLOBALS['TSFE']);
     }
 
     /**
@@ -562,19 +562,21 @@ class ProductControllerTest extends UnitTestCase
      */
     public function loginRequiredAndLoggedInUserAllowOrderForm()
     {
-        $tsfe = $this->createMock(TypoScriptFrontendController::class);
-        $tsfe->loginUser = true;
-        $GLOBALS['TSFE'] = $tsfe;
-
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy']
+            ['isUserLoggedIn'],
+            [],
+            '',
+            false
         );
+        $mockedController
+            ->expects($this->once())
+            ->method('isUserLoggedIn')
+            ->willReturn(true);
 
         $mockedController->_set('settings', ['orderFormRequireLogin' => 1]);
 
         $this->assertTrue($mockedController->_call('isOrderFormAllowed'));
-        unset($GLOBALS['TSFE']);
     }
 
     /**
