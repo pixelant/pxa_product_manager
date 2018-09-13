@@ -660,6 +660,7 @@
                     <settings.orderFormConfiguration>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_configuration</label>
+                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
                             <config>
                                 <type>select</type>
                                 <renderType>selectSingle</renderType>
