@@ -18,6 +18,10 @@
             float: none;
             margin: 0 -5px;
         }
+
+        .order-clear__icon.in-progress svg {
+            display: none;
+        }
     }
     .item-order-header > div {
         vertical-align: auto;
@@ -29,6 +33,20 @@
     .order-product-amount {
         width: 100%;
         padding: 5px 8px;
+    }
+
+    .make-order-button-section {
+        display: inline-block;
+    }
+
+    .total-price-section {
+        display: inline-block;
+        margin-right: 30px;
+        margin-top: 25px;
+    }
+
+    .tax-price {
+        color: #9e9e9e;
     }
 
     .item-order-img img {
@@ -347,43 +365,6 @@
         transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
     }
 
-    .compare-list-btn {
-        .lds-dual-ring {
-            margin-bottom: 7px;
-            margin-left: 5px;
-            display: none;
-        }
-        &.ongoing-initialization {
-            .toggle-compare-icon {
-                display: none;
-            }
-        }
-        .toggle-compare-icon path {
-            fill: #939393;
-        }
-        &:hover,
-        &.selected {
-            .toggle-compare-icon path {
-                fill: #545454;
-            }
-        }
-        &.in-progress {
-            .lds-dual-ring {
-                display: inline-block;
-            }
-        }
-        &.list-clear__icon {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            fill: #909090;
-            &:hover {
-                fill: #707070;
-                cursor: pointer;
-            }
-        }
-    }
-
     .pm-like-button {
         width: 24px;
         height: 24px;
@@ -391,54 +372,82 @@
         background-position: 0 24px;
     }
 
-    .wish-list-btn {
-        &:not(.list-clear__icon) {
-            width: 55px;
-            margin-top: 3px;
+    .pm-action-button {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        margin-right: 5px;
+
+        &:hover {
+            fill: #707070;
+            cursor: pointer;
         }
+
         .lds-dual-ring {
-            margin-bottom: 3px;
-            margin-left: 3px;
             display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
         }
-        &.in-progress .lds-dual-ring {
-            display: inline-block;
-        }
-        &.selected {
-            .pm-like-button {
-                background-position: 0 0;
-            }
-        }
-        @media (hover: hover) {
-            &:hover {
-                .pm-like-button {
-                    background-position: 0 0;
-                }
-            }
-        }
+
+        &.in-progress,
         &.ongoing-initialization {
-            .pm-like-button {
+            .lds-dual-ring {
+                display: inline-block;
+            }
+            .pm-action-icon {
                 display: none;
             }
         }
-        &.order-clear__icon {
-            position: relative;
-            top: 5px;
 
-            fill: #909090;
-            &:hover {
-                fill: #707070;
-                cursor: pointer;
-            }
-        }
         &.list-clear__icon {
             position: absolute;
             top: 5px;
             right: 5px;
             fill: #909090;
+            width: 20px;
+            height: 20px;
             &:hover {
                 fill: #707070;
-                cursor: pointer;
+            }
+        }
+    }
+
+    .list-clear__icon._order-clear__icon {
+        position: relative;
+    }
+
+    .wish-list-btn {
+        &.active-icon {
+            .pm-like-button {
+                background-position: 0 0;
+            }
+        }
+
+        .lds-dual-ring {
+            left: 5px;
+        }
+    }
+
+    .compare-list-btn {
+        bottom: 3px;
+
+        .lds-dual-ring {
+            top: 6px;
+            left: 6px;
+        }
+
+        .toggle-compare-icon path {
+            fill: #939393;
+        }
+
+        &:hover,
+        &.active-icon {
+            .toggle-compare-icon path {
+                fill: #545454;
             }
         }
     }
@@ -526,7 +535,7 @@
             color: #4a4a4a;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            -webkit-tap-highlight-color: rgba(120,120,120,0.3);
+            -webkit-tap-highlight-color: rgba(120, 120, 120, 0.3);
             letter-spacing: 0.2px;
             transition: all 0.1s linear;
             border: solid #dfe7ea;
@@ -572,24 +581,24 @@
                 left: 0;
                 width: 31px;
                 height: 31px;
-                background: rgba(200,80,80,.2);
+                background: rgba(200, 80, 80, .2);
                 content: ' ';
             }
         }
     }
     .table {
         .danger {
-            background: rgb(200,80,80);
+            background: rgb(200, 80, 80);
         }
         .product-compare-label {
-            background: rgba(192,192,192,.5);
+            background: rgba(192, 192, 192, .5);
             border-top: 1px solid #000;
             border-bottom: 1px solid #000;
         }
     }
     .loader-wrapper {
         text-align: center;
-        background-color: rgba(255,255,255,.5);
+        background-color: rgba(255, 255, 255, .5);
     }
 
     .products-list-view-wrapper {

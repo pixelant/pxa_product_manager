@@ -146,6 +146,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * options
      *
      * @lazy
+     * @cascade
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option>
      */
     protected $options;

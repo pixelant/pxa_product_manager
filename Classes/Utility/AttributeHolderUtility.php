@@ -30,9 +30,6 @@ namespace Pixelant\PxaProductManager\Utility;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
@@ -41,11 +38,6 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class AttributeHolderUtility
 {
-    /**
-     * @var CategoryRepository
-     */
-    protected $categoryRepository;
-
     /**
      * Keep all attributes
      *
@@ -65,7 +57,6 @@ class AttributeHolderUtility
      */
     public function __construct()
     {
-        $this->categoryRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(CategoryRepository::class);
 
         $this->initializeStorage();
     }
@@ -73,31 +64,29 @@ class AttributeHolderUtility
     /**
      * Initialize attributes and it sets
      *
-     * @param array $categories
+     * @param int $productUid
      * @param bool $onlyMarkedForShowInListing
      */
-    public function start(array $categories, bool $onlyMarkedForShowInListing = false)
+    public function start(int $productUid, bool $onlyMarkedForShowInListing = false)
     {
         $uniqueAttributesList = [];
+        $uniqueAttributeSetsList = [];
 
-        /**
-         * Get all unique categories
-         */
-        $categories = $this->categoryRepository->findByUidList($categories);
-
-        // Get parent categories
-        foreach ($categories as $category) {
-            $categories = array_merge($categories, CategoryUtility::getParentCategories($category));
-        }
-        $categories = array_unique($categories);
+        $categories = ProductUtility::getProductCategoriesParentsTree($productUid, true);
 
         /**
          * Find all attribute sets and it unique attributes
          */
         /** @var Category $category */
-        foreach (array_reverse($categories) as $category) {
+        foreach ($categories as $category) {
             /** @var AttributeSet $attributesSet */
             foreach ($category->getAttributeSets() as $attributesSet) {
+                if (in_array($attributesSet->getUid(), $uniqueAttributeSetsList, true)) {
+                    continue;
+                } else {
+                    $uniqueAttributeSetsList[] = $attributesSet->getUid();
+                }
+
                 $currentSetAttributes = new ObjectStorage();
 
                 /** @var Attribute $attribute */

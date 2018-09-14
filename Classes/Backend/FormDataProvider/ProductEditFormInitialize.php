@@ -56,7 +56,7 @@ class ProductEditFormInitialize implements FormDataProviderInterface
         if (!$isNew) {
             /** @var AttributeHolderUtility $attributeHolder */
             $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-            $attributeHolder->start(ProductUtility::getProductCategoriesUids($result['databaseRow']['uid']));
+            $attributeHolder->start((int)$result['databaseRow']['uid']);
 
             if ($attributeHolder->getAttributes()->count()) {
                 $this->populateTCA($attributeHolder->getAttributeSets()->toArray(), $result['processedTca']);

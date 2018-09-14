@@ -18,6 +18,7 @@ namespace Pixelant\PxaProductManager\Hook;
 
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -57,20 +58,9 @@ class PageLayoutView
         $additionalInfo = '';
 
         if ($params['row']['list_type'] == 'pxaproductmanager_pi1') {
-            $flexformData = GeneralUtility::xml2array($params['row']['pi_flexform']);
+            $flexFormService = $this->getFlexFormService();
+            $flexFormSettings = $flexFormService->convertFlexFormContentToArray($params['row']['pi_flexform']);
 
-            $flexFormSettings = [];
-
-            if (is_array($flexformData['data']['sDEF']['lDEF'])) {
-                foreach ($flexformData['data'] as $sheet) {
-                    $rawSettings = $sheet['lDEF'];
-                    foreach ($rawSettings as $field => $rawSetting) {
-                        $this->flexFormToArray($field, $rawSetting['vDEF'], $flexFormSettings);
-                    }
-                }
-            }
-
-            // if flexform data is found
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
             if (!empty($switchableControllerActions)) {
                 list($action) = GeneralUtility::trimExplode(';', $switchableControllerActions);
@@ -332,10 +322,6 @@ class PageLayoutView
             );
         }
 
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'compareList');
-        $info .= $this->getIconListOptionsInfo($settings, 'wishList');
-
         $info .= $this->getCategoriesOrderingsInfo($settings);
 
         return $info;
@@ -386,10 +372,6 @@ class PageLayoutView
             );
         }
 
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'compareList');
-        $info .= $this->getIconListOptionsInfo($settings, 'wishList');
-
         if ((int)$settings['showNavigationListView'] === 1) {
             $info .= $this->getCategoriesOrderingsInfo($settings);
         }
@@ -439,8 +421,11 @@ class PageLayoutView
         $info .= sprintf(
             '<b>%s</b>: %s<br>',
             $this->translate('flexform.product_sort_direction'),
-            $this->translate($settings['orderProductDirection'] === 'desc' ?
-                'flexform.sort_direction_desc' : 'flexform.sort_direction_asc')
+            $this->translate(
+                $settings['orderProductDirection'] === 'desc'
+                    ? 'flexform.sort_direction_desc'
+                    : 'flexform.sort_direction_asc'
+            )
         );
 
         return $info;
@@ -455,7 +440,7 @@ class PageLayoutView
     protected function getPagePidInfo(int $pageUid): string
     {
         // Set the pagePid using the flexform -> typoscript -> 0 priority
-        $pageUid = $pageUid ?: ConfigurationUtility::getSettings((int)GeneralUtility::_GP('id'))['pagePid'];
+        $pageUid = $pageUid ?: ConfigurationUtility::getSettingsByPath('pagePid', (int)GeneralUtility::_GP('id'));
         $pageUid = (int)$pageUid;
 
         if ($pageUid) {
@@ -548,9 +533,6 @@ class PageLayoutView
             }
         }
 
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'wishList');
-
         return $info;
     }
 
@@ -572,17 +554,53 @@ class PageLayoutView
                 ($settings['enableOrderFunction'] ? 'yes' : 'no'))
         );
 
-        $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.order_recipients_emails'),
-            empty($recipients) ? $this->translate('flexform.no_recipients'): implode(', ', $recipients)
-        );
+        if ($settings['enableOrderFunction']) {
+            if ($orderFormConfigurationUid = (int)$settings['orderFormConfiguration']) {
+                $orderConfiguration = BackendUtility::getRecord(
+                    'tx_pxaproductmanager_domain_model_orderconfiguration',
+                    $orderFormConfigurationUid,
+                    'name'
+                );
+                $info .= sprintf(
+                    '<b>%s</b>: %s<br>',
+                    $this->translate('flexform.order_form_configuration'),
+                    $orderConfiguration['name']
+                );
+            }
 
-        $info .= self::$hrMarkup;
-        $info .= $this->getIconListOptionsInfo($settings, 'compareList');
+            $info .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->translate('flexform.order_form_require_login'),
+                $this->translate('be.extension_info.checkbox_' .
+                    ($settings['orderFormRequireLogin'] ? 'yes' : 'no'))
+            );
+        }
 
         return $info;
+    }
+
+    /**
+     * Get short info about typolink
+     *
+     * @param string $typoLink
+     * @return string
+     */
+    protected function getLinkInfo(string $typoLink): string
+    {
+        if (empty($typoLink)) {
+            return $this->translate('be.extension_info.none');
+        }
+
+        if (GeneralUtility::isFirstPartOfStr($typoLink, 't3://page?uid=')) {
+            $pageUid = (int)substr($typoLink, 14);
+            $pageRecord = BackendUtility::readPageAccess($pageUid, '1=1');
+            // Is this a real page
+            if ($pageRecord['uid']) {
+                return $pageRecord['_thePathFull'] . '[' . $pageRecord['uid'] . ']';
+            }
+        }
+
+        return $typoLink;
     }
 
     /**
@@ -673,54 +691,12 @@ class PageLayoutView
     }
 
     /**
-     * go through all settings and generate array
+     * Get flexform service
      *
-     * @param $field
-     * @param $value
-     * @param $settings
-     * @return void
+     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
      */
-    protected function flexFormToArray($field, $value, &$settings)
+    protected function getFlexFormService()
     {
-        $fieldNameParts = GeneralUtility::trimExplode('.', $field);
-        if (count($fieldNameParts) > 1) {
-            $name = $fieldNameParts[0];
-            unset($fieldNameParts[0]);
-
-            if (!isset($settings[$name])) {
-                $settings[$name] = [];
-            }
-
-            $this->flexFormToArray(implode('.', $fieldNameParts), $value, $settings[$name]);
-        } else {
-            $settings[$fieldNameParts[0]] = $value;
-        }
-    }
-
-    /**
-     * Info for some of the list types
-     *
-     * @param array $settings
-     * @param string $listType
-     * @return string
-     */
-    protected function getIconListOptionsInfo(array $settings, string $listType): string
-    {
-        switch ($listType) {
-            case 'compareList':
-                $langKey = 'be.extension_info.hide_compare_icon';
-                break;
-            default:
-                $langKey = 'be.extension_info.hide_wish_icon';
-        }
-
-        $info = sprintf(
-            '<b>%s:</b> %s',
-            $this->translate($langKey),
-            $this->translate('be.extension_info.checkbox_' .
-                ((int)$settings[$listType]['enable'] ? 'no' : 'yes'))
-        );
-
-        return $info . '<br>';
+        return MainUtility::getFlexFormService();
     }
 }

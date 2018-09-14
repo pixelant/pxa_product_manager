@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\ViewHelpers;
 
 use Pixelant\PxaProductManager\Utility\MainUtility;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 

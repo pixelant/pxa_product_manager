@@ -1,4 +1,7 @@
 <?php
+
+use Pixelant\PxaProductManager\Backend\FormDataProvider\OrderEditFormInitialize;
+
 defined('TYPO3_MODE') || die;
 
 call_user_func(
@@ -49,6 +52,12 @@ call_user_func(
             ]
         ];
 
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][OrderEditFormInitialize::class] = [
+            'depends' => [
+                \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class
+            ]
+        ];
+
         // LinkHandler
         // t3://pxappm?product=[product_id]
         // t3://pxappm?category=[category_id]
@@ -82,6 +91,16 @@ call_user_func(
             'title' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.title',
             'description' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.description'
         ];
+
+        // Register field control for identifier
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
+            'nodeName' => 'attributeIdentifierControl',
+            'priority' => 30,
+            'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
+        ];
+
+        // Register the class to be available in 'eval' of TCA
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][\Pixelant\PxaProductManager\Backend\Evaluation\LcFirstEvaluation::class] = '';
     },
     $_EXTKEY
 );

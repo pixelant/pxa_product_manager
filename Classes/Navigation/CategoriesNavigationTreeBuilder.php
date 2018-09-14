@@ -68,6 +68,14 @@ class CategoriesNavigationTreeBuilder
     protected $excludeCategories = [];
 
     /**
+     * Save parent categories uids
+     * If same parent appear again, something wrong in categories relation
+     *
+     * @var array
+     */
+    protected $parentCategoriesUids = [];
+
+    /**
      * Expand all categories
      *
      * @var bool
@@ -251,9 +259,16 @@ class CategoriesNavigationTreeBuilder
         array &$treeData,
         int $level = 0
     ) {
+        if ($level > 50) {
+            throw new \RuntimeException('Rich maximum recursive level', 1527148148945);
+        }
+
         /** @var Category $category */
         foreach ($categories as $category) {
             $subItems = $this->findSubCategories($category);
+            if ($subItems === null) {
+                continue;
+            }
 
             if ($this->isCategoryVisible($category) || $subItems->count() > 0) {
                 $treeData[$category->getUid()] = [
@@ -282,10 +297,25 @@ class CategoriesNavigationTreeBuilder
      * Get subcategories with order
      *
      * @param Category $parentCategory
-     * @return QueryResultInterface
+     * @return QueryResultInterface|null
      */
     protected function findSubCategories(Category $parentCategory)
     {
+        if (in_array($parentCategory->getUid(), $this->parentCategoriesUids)) {
+            if (TYPO3_MODE === 'BE' || MainUtility::isBackendLogin()) {
+                throw new \RuntimeException(
+                    // @codingStandardsIgnoreStart
+                    'Same parent with UID "' . $parentCategory->getUid() . '" was met second time, that should never happen. Check you categories relation.',
+                    // @codingStandardsIgnoreEnd
+                    1527148858571
+                );
+            }
+
+            return null;
+        }
+
+        $this->parentCategoriesUids[] = $parentCategory->getUid();
+
         return $this->categoryRepository->findByParent(
             $parentCategory,
             $this->orderings

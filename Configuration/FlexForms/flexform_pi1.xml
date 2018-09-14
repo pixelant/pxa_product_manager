@@ -54,19 +54,19 @@
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_view</numIndex>
                                         <numIndex index="1">Product->compareView;Product->comparePreView</numIndex>
                                     </numIndex>
-                                    <numIndex index="9">
+                                    <numIndex index="10">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_promotion_list</numIndex>
                                         <numIndex index="1">Product->promotionList</numIndex>
                                     </numIndex>
-                                    <numIndex index="10">
+                                    <numIndex index="11">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
-                                    <numIndex index="11">
+                                    <numIndex index="12">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_show</numIndex>
                                         <numIndex index="1">Navigation->show</numIndex>
                                     </numIndex>
-                                    <numIndex index="12">
+                                    <numIndex index="13">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.filtering_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
@@ -512,6 +512,10 @@
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_customSorting</numIndex>
                                         <numIndex index="1">custom_sorting</numIndex>
                                     </numIndex>
+                                    <numIndex index="5" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_sorting</numIndex>
+                                        <numIndex index="1">sorting</numIndex>
+                                    </numIndex>
                                 </items>
                             </config>
                         </TCEforms>
@@ -611,52 +615,6 @@
                 </el>
             </ROOT>
         </categoriesOrderings>
-        <productLists>
-            <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lists_sheet__title</sheetTitle>
-                </TCEforms>
-                <type>array</type>
-                <el>
-                    <settings.wishList.enable>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.wish_list_enable</label>
-                            <displayCond>
-                                <OR>
-                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->comparePreView;Product->compareView</numIndex>
-                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->compareView;Product->comparePreView</numIndex>
-                                    <numIndex index="3">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
-                                    <numIndex index="4">FIELD:sDEF.switchableControllerActions:=:Product->promotionList</numIndex>
-                                </OR>
-                            </displayCond>
-                            <config>
-                                <type>check</type>
-                                <default>0</default>
-                            </config>
-                        </TCEforms>
-                    </settings.wishList.enable>
-
-                    <settings.compareList.enable>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.compare_list_enable</label>
-                            <displayCond>
-                                <OR>
-                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->finishOrder</numIndex>
-                                    <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
-                                    <numIndex index="3">FIELD:sDEF.switchableControllerActions:=:Product->promotionList</numIndex>
-                                </OR>
-                            </displayCond>
-                            <config>
-                                <type>check</type>
-                                <default>0</default>
-                            </config>
-                        </TCEforms>
-                    </settings.compareList.enable>
-                </el>
-            </ROOT>
-        </productLists>
         <filtering>
             <ROOT>
             <TCEforms>
@@ -692,26 +650,38 @@
                 </el>
             </ROOT>
         </filtering>
-        <orderFucntion>
+        <orderFunction>
             <ROOT>
                 <TCEforms>
                     <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_function_sheet__title</sheetTitle>
                 </TCEforms>
                 <type>array</type>
                 <el>
-                    <settings.orderRecipientsEmails>
+                    <settings.orderFormConfiguration>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_recipients_emails</label>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_configuration</label>
                             <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
                             <config>
-                                <type>text</type>
-                                <cols>32</cols>
-                                <rows>2</rows>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <foreign_table>tx_pxaproductmanager_domain_model_orderconfiguration</foreign_table>
+                                <foreign_table_where> AND tx_pxaproductmanager_domain_model_orderconfiguration.hidden=0 AND tx_pxaproductmanager_domain_model_orderconfiguration.deleted=0 AND tx_pxaproductmanager_domain_model_orderconfiguration.sys_language_uid=0</foreign_table_where>
                             </config>
                         </TCEforms>
-                    </settings.orderRecipientsEmails>
+                    </settings.orderFormConfiguration>
+
+                    <settings.orderFormRequireLogin>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_require_login</label>
+                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.orderFormRequireLogin>
                 </el>
             </ROOT>
-        </orderFucntion>
+        </orderFunction>
     </sheets>
 </T3DataStructure>

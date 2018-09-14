@@ -251,34 +251,6 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function importIdCanBeSet()
-    {
-        $importId = '123321';
-        $this->fixture->setImportId($importId);
-
-        self::assertEquals(
-            $importId,
-            $this->fixture->getImportId()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function importNameCanBeSet()
-    {
-        $importName = 'importName';
-        $this->fixture->setImportName($importName);
-
-        self::assertEquals(
-            $importName,
-            $this->fixture->getImportName()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function disableSingleViewCanBeSet()
     {
         $disableSingleView = true;
@@ -815,36 +787,42 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributeValueUsingMagicCallByNameFromObjectStorageHoldingAttributes()
+    public function getAttributeValueByUidOrIdentifierFromAttributesIdentifiersArrayReturnValue()
     {
         $attribute = new Attribute();
-        $value = 'magic-value';
-        $attribute->setName('TestName');
+        $value = 'value';
         $attribute->setValue($value);
 
-        $this->fixture->addAttribute($attribute);
+        $value2 = 'testValue2';
+        $attribute2 = clone $attribute;
+        $attribute2->setValue($value2);
+
+        $this->fixture->_setProperty(
+            'attributesIdentifiersArray',
+            [
+                123321 => $attribute,
+                'identifier' => $attribute2
+            ]
+        );
 
         self::assertSame(
             $value,
-            $this->fixture->getTestName()->getValue()
+            $this->fixture->getAttribute(123321)->getValue()
+        );
+
+        self::assertSame(
+            $value2,
+            $this->fixture->getAttribute('identifier')->getValue()
         );
     }
 
     /**
      * @test
      */
-    public function getAttributeValueUsingMagicCallByIdentifierFromObjectStorageHoldingAttributes()
+    public function getAttributeValueByIdentifierThatDoesNotExistReturnNull()
     {
-        $attribute = new Attribute();
-        $value = 'magic-value';
-        $attribute->setIdentifier('UniqueIdentifier');
-        $attribute->setValue($value);
-
-        $this->fixture->addAttribute($attribute);
-
-        self::assertSame(
-            $value,
-            $this->fixture->getUniqueIdentifier()->getValue()
+        self::assertNull(
+            $this->fixture->getAttribute('notExist')
         );
     }
 
@@ -1312,6 +1290,21 @@ class ProductTest extends UnitTestCase
         self::assertEquals(
             $customSorting,
             $this->fixture->getCustomSorting()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function taxRateCanBeSet()
+    {
+        $value = 21.99;
+
+        $this->fixture->setTaxRate($value);
+
+        self::assertEquals(
+            $value,
+            $this->fixture->getTaxRate()
         );
     }
 }

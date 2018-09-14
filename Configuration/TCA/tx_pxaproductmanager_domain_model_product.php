@@ -1,6 +1,7 @@
 <?php
 
 $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
+$llCore = \Pixelant\PxaProductManager\Utility\TCAUtility::getCoreLLPath();
 
 return [
     'ctrl' => [
@@ -10,7 +11,7 @@ return [
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
         'dividers2tabs' => true,
-
+        'sortby' => 'sorting',
         'versioningWS' => true,
         'origUid' => 't3_origuid',
         'languageField' => 'sys_language_uid',
@@ -28,13 +29,13 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, teaser, description, usp, additional_information, attributes_description, import_id, import_name, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
     ],
 
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, sku, price, teaser, description, usp, additional_information, attributes_description, launched, discontinued, custom_sorting,
---div--;LLL:EXT:lang/locallang_tca.xlf:sys_category.tabs.category, categories,
+            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, launched, discontinued, custom_sorting,
+--div--;' . $llCore . 'locallang_tca.xlf:sys_category.tabs.category, categories,
 --palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.assets, assets,
@@ -51,14 +52,14 @@ return [
     'columns' => [
         'sys_language_uid' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
+            'label' => $llCore . 'locallang_general.xlf:LGL.language',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'special' => 'languages',
                 'items' => [
                     [
-                        'LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages',
+                        $llCore . 'locallang_general.xlf:LGL.allLanguages',
                         -1,
                         'flags-multiple'
                     ],
@@ -69,7 +70,7 @@ return [
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.l18n_parent',
+            'label' => $llCore . 'locallang_general.xlf:LGL.l18n_parent',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
@@ -79,6 +80,7 @@ return [
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
                 'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.pid=###CURRENT_PID###' .
                     ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid IN (-1,0)',
+                'default' => 0
             ],
         ],
         'l10n_diffsource' => [
@@ -87,7 +89,7 @@ return [
             ],
         ],
         't3ver_label' => [
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.versionLabel',
+            'label' => $llCore . 'locallang_general.xlf:LGL.versionLabel',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -96,7 +98,7 @@ return [
         ],
         'hidden' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
+            'label' => $llCore . 'locallang_general.xlf:LGL.hidden',
             'config' => [
                 'type' => 'check',
             ],
@@ -104,7 +106,7 @@ return [
         'starttime' => [
             'exclude' => 1,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
+            'label' => $llCore . 'locallang_general.xlf:LGL.starttime',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
@@ -119,7 +121,7 @@ return [
         'endtime' => [
             'exclude' => 1,
             'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
+            'label' => $llCore . 'locallang_general.xlf:LGL.endtime',
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
@@ -158,6 +160,20 @@ return [
                 'eval' => 'double2'
             ],
         ],
+        'tax_rate' => [
+            'exclude' => 0,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.tax_rate',
+            'config' => [
+                'type' => 'input',
+                'size' => 5,
+                'range' => [
+                    'lower' => 0,
+                    'upper' => 100,
+                ],
+                'eval' => 'double2',
+                'default' => 0.00
+            ],
+        ],
         'description' => [
             'exclude' => 0,
             'label' => $ll . 'tx_pxaproductmanager_domain_model_product.description',
@@ -168,24 +184,6 @@ return [
                 'eval' => 'trim',
                 'enableRichtext' => true
             ]
-        ],
-        'import_id' => [
-            'exclude' => 1,
-            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.import_id',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim'
-            ],
-        ],
-        'import_name' => [
-            'exclude' => 1,
-            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.import_name',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'trim'
-            ],
         ],
         'disable_single_view' => [
             'exclude' => 0,
@@ -209,9 +207,6 @@ return [
                     'showSynchronizationLink' => 1,
                     'showPossibleLocalizationRecords' => 1,
                     'showAllLocalizationLink' => 1
-                ],
-                'behaviour' => [
-                    'localizeChildrenAtParentLocalization' => true,
                 ]
             ]
         ],
@@ -303,8 +298,7 @@ return [
                     ],
                     // @codingStandardsIgnoreEnd
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true,
-                        'localizeChildrenAtParentLocalization' => true,
+                        'allowLanguageSynchronization' => true
                     ],
                 ],
                 $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
@@ -381,7 +375,6 @@ return [
                 'fal_links',
                 [
                     'behaviour' => [
-                        'localizeChildrenAtParentLocalization' => true,
                         'allowLanguageSynchronization' => true
                     ],
                     'appearance' => [
@@ -447,10 +440,7 @@ return [
                     'showSynchronizationLink' => 1,
                     'showPossibleLocalizationRecords' => 1,
                     'showAllLocalizationLink' => 1
-                ],
-                'behaviour' => [
-                    'localizeChildrenAtParentLocalization' => true,
-                ],
+                ]
             ],
         ],
         'sub_products' => [
@@ -460,7 +450,7 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                'foreign_table_where' =>  \Pixelant\PxaProductManager\Utility\TCAUtility::getSubProductsForeignTableWherePid() .
+                'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getSubProductsForeignTableWherePid() .
                     ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                     ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid IN (-1,0)' .
                     ' ORDER BY tx_pxaproductmanager_domain_model_product.name',

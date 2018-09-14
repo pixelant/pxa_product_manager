@@ -58,30 +58,18 @@ call_user_func(function () {
                         'fileUploadAllowed' => false
                         // @codingStandardsIgnoreEnd
                     ],
-                    'foreign_types' => [
-                        '0' => [
-                            'showitem' => '
-                            --palette--;;filePalette'
-                        ],
-                        \TYPO3\CMS\Core\Resource\File::FILETYPE_TEXT => [
-                            'showitem' => '
-                            --palette--;;filePalette'
-                        ],
-                        \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
-                            'showitem' => '
-                            --palette--;;filePalette'
-                        ],
-                        \TYPO3\CMS\Core\Resource\File::FILETYPE_AUDIO => [
-                            'showitem' => '
-                            --palette--;;filePalette'
-                        ],
-                        \TYPO3\CMS\Core\Resource\File::FILETYPE_VIDEO => [
-                            'showitem' => '
-                            --palette--;;filePalette'
-                        ],
-                        \TYPO3\CMS\Core\Resource\File::FILETYPE_APPLICATION => [
-                            'showitem' => '
-                            --palette--;;filePalette'
+                    'overrideChildTca' => [
+                        'types' => [
+                            '0' => [
+                                'showitem' => '
+                                --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                --palette--;;filePalette'
+                            ],
+                            \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                                'showitem' => '
+                                --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                --palette--;;filePalette'
+                            ]
                         ]
                     ],
                     'maxitems' => 1,
@@ -200,12 +188,25 @@ call_user_func(function () {
                     ],
                     // @codingStandardsIgnoreEnd
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true,
-                        'localizeChildrenAtParentLocalization' => true,
+                        'allowLanguageSynchronization' => true
                     ],
                 ],
                 $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
             ),
+        ],
+        'pxapm_tax_rate' => [
+            'exclude' => 0,
+            'label' => $ll . 'sys_category.pxapm_tax_rate',
+            'config' => [
+                'type' => 'input',
+                'size' => 5,
+                'range' => [
+                    'lower' => 0,
+                    'upper' => 100,
+                ],
+                'eval' => 'double2',
+                'default' => 0.00
+            ],
         ],
         'pxapm_card_view_template' => [
             'exclude' => 0,
@@ -246,6 +247,7 @@ call_user_func(function () {
         '--div--;' . $ll . 'sys_category.additional_fields_tab,
         pxapm_image,
         pxapm_banner_image,
+        pxapm_tax_rate,
         pxapm_card_view_template,
         pxapm_single_view_template,
         pxapm_description',
@@ -287,5 +289,11 @@ call_user_func(function () {
         $categoriesCongifuration = &$GLOBALS['TCA']['sys_category']['columns']['parent']['config'];
         $categoriesCongifuration['foreign_table_where'] =
             $categoryWhere . ' ' . $categoriesCongifuration['foreign_table_where'];
+    }
+
+    if (!\Pixelant\PxaProductManager\Utility\MainUtility::isPricingEnabled()) {
+        $columns = &$GLOBALS['TCA']['sys_category']['columns'];
+        $columns['pxapm_tax_rate']['config']['readOnly'] = true;
+        $columns['pxapm_tax_rate']['label'] = $ll . 'sys_category.pxapm_tax_rate.disabled';
     }
 });

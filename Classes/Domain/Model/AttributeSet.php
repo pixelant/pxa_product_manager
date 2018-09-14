@@ -38,8 +38,7 @@ class AttributeSet extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * name
      *
-     * @var \string
-     * @validate NotEmpty
+     * @var string
      */
     protected $name;
 

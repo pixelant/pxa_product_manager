@@ -110,6 +110,7 @@
 		 */
 		flyToElement: function (flyer, flyingTo) {
 			const divider = 3,
+				originalWidth = flyer.width(),
 				flyerClone = flyer.clone();
 
 			flyerClone.css({
@@ -117,6 +118,8 @@
 				top: flyer.offset().top + 'px',
 				left: flyer.offset().left + 'px',
 				opacity: 1,
+				'max-width': originalWidth,
+				height: 'auto',
 				'z-index': 99999
 			});
 

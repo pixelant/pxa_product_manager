@@ -17,12 +17,17 @@ call_user_func(
             'tx_pxaproductmanager_domain_model_attributevalue',
             'tx_pxaproductmanager_domain_model_option',
             'tx_pxaproductmanager_domain_model_link',
-            'tx_pxaproductmanager_domain_model_filter'
+            'tx_pxaproductmanager_domain_model_filter',
+            'tx_pxaproductmanager_domain_model_order',
+            'tx_pxaproductmanager_domain_model_orderconfiguration',
+            'tx_pxaproductmanager_domain_model_orderformfield'
         ];
 
         // @codingStandardsIgnoreStart
         foreach ($tables as $table) {
-            if ($table !== 'tx_pxaproductmanager_domain_model_attributevalue') {
+            if ($table !== 'tx_pxaproductmanager_domain_model_attributevalue'
+                || $table !== 'tx_pxaproductmanager_domain_model_order'
+            ) {
                 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
                     $table,
                     'EXT:pxa_product_manager/Resources/Private/Language/locallang_csh_' . $table . '.xlf'
@@ -71,7 +76,7 @@ call_user_func(
                 'mod1',         // Name of the module
                 '',             // Position of the module
                 [
-                    'BackendManager' => 'index, listProducts'
+                    'BackendManager' => 'index, listCategories, listProducts, listOrders, showOrder, deleteOrder, toggleOrderState'
                 ],
                 [          // Additional configuration
                     'access' => 'user,group',

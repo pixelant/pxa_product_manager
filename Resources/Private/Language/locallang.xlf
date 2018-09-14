@@ -124,6 +124,9 @@
             <trans-unit id="fe.price">
                 <source>Price</source>
             </trans-unit>
+            <trans-unit id="fe.tax">
+                <source>VAT</source>
+            </trans-unit>
             <trans-unit id="fe.price_currency_format">
                 <source>%1$s $</source>
             </trans-unit>
@@ -166,11 +169,35 @@
             <trans-unit id="fe.validation_error.email">
                 <source>This is not a valid E-mail address</source>
             </trans-unit>
+            <trans-unit id="fe.validation_error.general">
+                <source>Error field</source>
+            </trans-unit>
+            <trans-unit id="fe.please_select">
+                <source>Please select...</source>
+            </trans-unit>
+            <trans-unit id="fe.checkbox.1">
+                <source>Yes</source>
+            </trans-unit>
+            <trans-unit id="fe.checkbox.no">
+                <source>No</source>
+            </trans-unit>
 
-            <trans-unit id="fe.email.orderForm.subject">
+            <trans-unit id="fe.userEmail.orderForm.subject">
+                <source>Thank you for your order</source>
+            </trans-unit>
+            <trans-unit id="fe.userEmail.orderForm.title">
+                <source>Below you can find your order details.</source>
+            </trans-unit>
+            <trans-unit id="fe.userEmail.orderForm.admin_contact">
+                <source>Administrator will contact you shortly.</source>
+            </trans-unit>
+            <trans-unit id="fe.adminEmail.orderForm.subject">
                 <source>New order</source>
             </trans-unit>
-            <trans-unit id="fe.email.orderForm.userFields">
+            <trans-unit id="fe.adminEmail.orderForm.title">
+                <source>New order on a site</source>
+            </trans-unit>
+            <trans-unit id="fe.adminEmail.orderForm.userFields">
                 <source>Order form information</source>
             </trans-unit>
 

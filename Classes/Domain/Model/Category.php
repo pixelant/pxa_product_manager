@@ -100,6 +100,13 @@ class Category extends CategoryExtbase
     protected $bannerImage;
 
     /**
+     * taxRate
+     *
+     * @var float $taxRate
+     */
+    protected $taxRate = 0.00;
+
+    /**
      * @var \string
      */
     protected $cardViewTemplate = '';
@@ -351,6 +358,27 @@ class Category extends CategoryExtbase
     public function setBannerImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $bannerImage)
     {
         $this->bannerImage = $bannerImage;
+    }
+
+    /**
+     * Returns the pxaPmTaxRate
+     *
+     * @return float $pxaPmTaxRate
+     */
+    public function getTaxRate() : float
+    {
+        return $this->taxRate;
+    }
+
+    /**
+     * Sets the taxRate
+     *
+     * @param float $taxRate
+     * @return void
+     */
+    public function setTaxRate(float $taxRate)
+    {
+        $this->taxRate = $taxRate;
     }
 
     /**

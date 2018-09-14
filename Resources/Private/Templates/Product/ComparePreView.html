@@ -39,8 +39,8 @@
 
 <f:section name="item">
     <div class="item">
-        <f:render partial="Product/ListImage" arguments="{image: product.thumbnail, title: '{product.name}'}"/>
-        <span class="compare-list-btn in-progress list-clear__icon"
+        <f:render partial="Product/ListImage" arguments="{image: product.thumbnail, title: product.name, product: product}"/>
+        <div class="pm-action-button in-progress list-clear__icon"
               data-compare-list-button="1"
               data-delete-parent-on-remove=".col-md-4"
               data-product-uid="{product.uid}"
@@ -48,8 +48,10 @@
               data-remove-from-list-text="{f:translate(key: 'fe.wish_list.remove_title')}"
               data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleCompareList', absolute: '1', arguments: '{compareProduct: product}', pageType: '{settings.wishList.pageType}')}">
             <ppm:svg
-                source="{f:uri.resource(path: 'Icons/circle-cross.svg', extensionName: 'pxa_product_manager')}"/>
-        </span>
+                    class="pm-action-icon"
+                    source="{f:uri.resource(path: 'Icons/Svg/circle-cross.svg', extensionName: 'pxa_product_manager')}"/>
+            <div class="lds-dual-ring"><div class="small"></div></div>
+        </div>
         <div class="item-body">
             <div class="item-title">
                 <h4>{product.name}</h4>

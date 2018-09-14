@@ -16,17 +16,6 @@ class MainUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function getExtMgrConfigurationReturnEmptyConfigrationIfExtConfNotSet()
-    {
-        $this->assertEquals(
-            [],
-            MainUtility::getExtMgrConfiguration()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function buildLinkArgumentsOnlyProductWithCategories()
     {
         list($category1, $category2, $category3) = $this->getCategoriesForTest();
@@ -129,6 +118,17 @@ class MainUtilityTest extends UnitTestCase
             $expected,
             MainUtility::buildLinksArguments(null, $activeCategory)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function snakeCasePhraseToWordsTransferUndeScoreToWords()
+    {
+        $value = 'string_with_underscore';
+        $expect = 'String with underscore';
+
+        self::assertEquals($expect, MainUtility::snakeCasePhraseToWords($value));
     }
 
     /**

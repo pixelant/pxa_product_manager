@@ -4,8 +4,10 @@ namespace Pixelant\PxaProductManager\Tests\Functional\Navigation;
 
 use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Navigation\CategoriesNavigationTreeBuilder;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * Class CategoriesNavigationTreeBuilderTest
@@ -28,6 +30,38 @@ class CategoriesNavigationTreeBuilderTest extends UnitTestCase
             false,
             false
         );
+
+        $tsfe = new \stdClass();
+        $GLOBALS['TSFE'] = $tsfe;
+    }
+
+    /**
+     * @test
+     */
+    public function buildingTreeWithHighLevelThrowException()
+    {
+        $queryResult = $this->createMock(QueryResultInterface::class);
+        $result = [];
+        $activeCategory = 0;
+        $level = 51;
+
+        $this->expectException(\RuntimeException::class);
+        $this->mockedNavigationBuilder->_callRef('buildDeepTree', $queryResult, $activeCategory, $result, $level);
+    }
+
+    /**
+     * @test
+     */
+    public function findSubCategoriesThrowExceptionIfParentMetTwoTimes()
+    {
+        $parentCategories = [1, 22, 33];
+        $this->mockedNavigationBuilder->_set('parentCategoriesUids', $parentCategories);
+
+        $parentCategory = new Category();
+        $parentCategory->_setProperty('uid', 22);
+
+        $this->expectException(\RuntimeException::class);
+        $this->assertNull($this->mockedNavigationBuilder->_call('findSubCategories', $parentCategory));
     }
 
     /**
@@ -96,6 +130,6 @@ class CategoriesNavigationTreeBuilderTest extends UnitTestCase
 
     protected function tearDown()
     {
-        unset($this->mockedNavigationBuilder);
+        unset($this->mockedNavigationBuilder, $GLOBALS['TSFE']);
     }
 }

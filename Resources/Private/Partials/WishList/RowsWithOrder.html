@@ -3,7 +3,8 @@
 
 <div class="pm-products-user-list row">
     <f:if condition="{products}">
-        <f:form arguments="{sendOrder: 1}" class="form-horizontal">
+        <f:form pageUid="{checkout.pid}" extensionName="{checkout.extension}" controller="{checkout.controller}"
+                action="{checkout.action}"  arguments="{sendOrder: 1}" class="form-horizontal">
             <div class="row item-order-header">
                 <div class="col-sm-2 col-md-1"></div>
                 <div class="col-sm-2 col-md-4"><f:translate key="fe.product_name"/></div>
@@ -22,45 +23,73 @@
             </f:for>
 
             <div class="row">
-                <div class="col-md-2 col-md-offset-8">
-                    <f:if condition="{ppm:isPricingEnabled()}">
-                        <f:translate key="fe.total_price"/> -
-                        <span class="pxa-pm-order-total-price"
-                              data-nubmer-format="{f:translate(key: 'priceFormat')}"
-                              data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
-                        <div class="lds-dual-ring"><div class="small"></div></div>
-                    </span>
+                <div class="col-sm-12 col-md-12">
+                    <div class="pull-right">
+                        <f:if condition="{ppm:isPricingEnabled()}">
+                            <div class="total-price-section">
+                                <f:translate key="fe.total_price"/> -
+                                <span class="pxa-pm-order-total-price"
+                                      data-nubmer-format="{f:translate(key: 'priceFormat')}"
+                                      data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                                    <div class="lds-dual-ring"><div class="small"></div></div>
+                                </span>
+                                <f:if condition="{settings.wishList.showTaxInfo}">
+                                    <small class="tax-price">
+                                        (
+                                        <f:translate key="fe.tax" />
+                                        <span class="pxa-pm-order-total-tax"
+                                              data-nubmer-format="{f:translate(key: 'priceFormat')}"
+                                              data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                                        <div class="lds-dual-ring">
+                                            <div class="small"></div>
+                                        </div>
+                                    </span>
+                                        )
+                                    </small>
+                                </f:if>
+                            </div>
+                        </f:if>
+                        <div class="make-order-button-section">
+                            <f:if condition="{checkout.type} == 'default'">
+                                <f:then>
+                                    <f:if condition="{orderConfiguration}">
+                                        <button aria-expanded="false"
+                                                class="btn btn-primary"
+                                                data-target="#pm-collapse-order-form"
+                                                data-toggle="collapse"
+                                                type="button">
+                                            <f:translate key="fe.continue_to_order"/>
+                                        </button>
+                                    </f:if>
+                                </f:then>
+                                <f:else>
+                                    <f:render section="makeOrderButton" />
+                                </f:else>
+                            </f:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <f:if condition="{orderConfiguration} && {checkout.type} == 'default'">
+                <div class="collapse{f:if(condition: sendOrder, then: ' in')}" id="pm-collapse-order-form" aria-expanded="true">
+                    <f:if condition="{orderConfiguration.formFields}">
+                        <f:then>
+                            <f:for each="{orderConfiguration.formFields}" as="field">
+                                <f:render partial="OrderFormFields/Field_type_{field.type}" arguments="{field: field}" />
+                            </f:for>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <f:render section="makeOrderButton" />
+                                </div>
+                            </div>
+                        </f:then>
+                        <f:else>
+                            <p class="bg-warning"><f:translate key="fe.no_order_fields" /></p>
+                        </f:else>
                     </f:if>
                 </div>
-                <div class="col-md-2">
-                    <button aria-expanded="false"
-                            class="btn btn-primary"
-                            data-target="#pm-collapse-order-form"
-                            data-toggle="collapse"
-                            type="button">
-                        <f:translate key="fe.continue_to_order"/>
-                    </button>
-                </div>
-            </div>
-
-
-            <div class="collapse{f:if(condition: sendOrder, then: ' in')}" id="pm-collapse-order-form" aria-expanded="true">
-                <f:if condition="{orderFormFields}">
-                    <f:then>
-                        <f:for each="{orderFormFields}" key="field" as="fieldConf">
-                            <f:render partial="OrderFormFields/{fieldConf.type}" arguments="{fieldConf: fieldConf, field: field}" />
-                        </f:for>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-default"><f:translate key="fe.make_order" /></button>
-                            </div>
-                        </div>
-                    </f:then>
-                    <f:else>
-                        <p class="bg-warning"><f:translate key="fe.no_order_fields" /></p>
-                    </f:else>
-                </f:if>
-            </div>
+            </f:if>
         </f:form>
     </f:if>
     <div class="list-no-products-found">
@@ -104,6 +133,14 @@
             <span class="item-order-price" id="item-order-price-{product.uid}" data-price="{product.price}" data-product-uid="{product.uid}">
                 <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
             </span>
+            <f:if condition="{settings.wishList.showTaxInfo}">
+                <div class="item-order-tax tax-price" id="item-order-tax-{product.uid}" data-tax="{product.tax}" data-product-uid="{product.uid}">
+                    <small>
+                        <f:translate key="fe.tax" />
+                        <f:translate key="fe.price_currency_format" arguments="{0: product.formatTax}" />
+                    </small>
+                </div>
+            </f:if>
         </f:if>
     </div>
     <div class="col-sm-2 col-md-2">
@@ -116,17 +153,23 @@
                 data="{product-uid: product.uid}" />
     </div>
     <div class="col-sm-2 col-md-1">
-            <span class="wish-list-btn in-progress order-clear__icon"
+            <div class="pm-action-button in-progress list-clear__icon _order-clear__icon"
                   data-wish-list-button="1"
                   data-delete-parent-on-remove=".row"
                   data-product-uid="{product.uid}"
-                  data-add-to-list-text="{f:translate(key: 'fe.compare_list.add_title')}"
-                  data-remove-from-list-text="{f:translate(key: 'fe.compare_list.remove_title')}"
+                  data-add-to-list-text="{f:translate(key: 'fe.wish_list.add_title')}"
+                  data-remove-from-list-text="{f:translate(key: 'fe.wish_list.remove_title')}"
                   data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleWishList', absolute: '1', arguments: '{wishProduct: product}', pageType: '{settings.wishList.pageType}')}">
             <ppm:svg
-                    source="{f:uri.resource(path: 'Icons/circle-cross.svg', extensionName: 'pxa_product_manager')}" />
-            </span>
+                    class="pm-action-icon"
+                    source="{f:uri.resource(path: 'Icons/Svg/circle-cross.svg', extensionName: 'pxa_product_manager')}" />
+                <div class="lds-dual-ring"><div class="small"></div></div>
+            </div>
     </div>
+</f:section>
+
+<f:section name="makeOrderButton">
+    <button type="submit" class="btn btn-default"><f:translate key="fe.make_order" /></button>
 </f:section>
 
 </html>

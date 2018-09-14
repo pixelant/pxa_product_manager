@@ -18,6 +18,12 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_product.price">
                 <source>Price</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.tax_rate">
+                <source>Tax rate (%)</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.tax_rate.disabled">
+                <source>Tax rate (product prices are disabled)</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_product.price_disabled">
                 <source>Prices are disabled</source>
             </trans-unit>
@@ -224,6 +230,108 @@
             </trans-unit>
             <!--Link TCA:END-->
 
+            <!--Order TCA:START-->
+            <trans-unit id="tx_pxaproductmanager_domain_model_order">
+                <source>Order</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.products">
+                <source>Ordered products</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.fe_user">
+                <source>Frontend user</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.fe_user.none_is_selected">
+                <source>No user connected</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.complete">
+                <source>Order is complete</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.complete.yes">
+                <source>Yes</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.order_fields">
+                <source>Order fields</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.checkout_type">
+                <source>Checkout type</source>
+            </trans-unit>
+            <!--Order TCA:END-->
+
+            <!--Order Configuration TCA:START-->
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration">
+                <source>Order form configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.form_fields">
+                <source>Form fields</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.enabled_email_to_user">
+                <source>Send email about order to user</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.enabled_replace_with_fe_user_fields">
+                <source>Replace form fields with frontend user fields</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.tabs.form_fields">
+                <source>Form fields</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderconfiguration.admin_emails">
+                <source>Admin emails (each in new line)</source>
+            </trans-unit>
+            <!--Order Configuration TCA:END-->
+
+            <!--Order form field TCA:START-->
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield">
+                <source>Order form field</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.type">
+                <source>Field type</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.type.1">
+                <source>Simple input</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.type.2">
+                <source>Textarea</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.type.3">
+                <source>Selexbox</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.type.4">
+                <source>Checkbox</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.validation_rules">
+                <source>Validation rules</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.label">
+                <source>Label</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.placeholder">
+                <source>Placeholder</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.options">
+                <source>Options</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.user_email_field">
+                <source>User email field</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.validation.required">
+                <source>Required</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.validation.url">
+                <source>Url</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.validation.email">
+                <source>Email</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_orderformfield.additional_text">
+                <source>Additional text</source>
+            </trans-unit>
+            <!--Order form field TCA:END-->
+
             <!--sys_file_reference TCA:START-->
             <trans-unit id="sys_file_reference.pxapm_use_in_listing">
                 <source>Use in product listing</source>
@@ -264,6 +372,12 @@
             </trans-unit>
             <trans-unit id="sys_category.pxapm_banner_image">
                 <source>Banner Image (grouped list view)</source>
+            </trans-unit>
+            <trans-unit id="sys_category.pxapm_tax_rate">
+                <source>Tax rate (%)</source>
+            </trans-unit>
+            <trans-unit id="sys_category.pxapm_tax_rate.disabled">
+                <source>Tax rate (product prices are disabled)</source>
             </trans-unit>
             <trans-unit id="sys_category.pxapm_card_view_template">
                 <source>Card View Template (grouped list view)</source>

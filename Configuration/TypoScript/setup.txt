@@ -45,29 +45,13 @@ plugin.tx_pxaproductmanager {
             cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/like.svg
             buttonIcon = EXT:pxa_product_manager/Resources/Public/Icons/like_combine.png
             pageType = 201702
+            showTaxInfo = {$plugin.tx_pxaproductmanager.settings.wishList.showTaxInfo}
+            checkoutSystem = {$plugin.tx_pxaproductmanager.settings.wishList.checkoutSystem}
 
-            # Available validations: email,required,url
-            # Available fields types: input,textarea
+            # Order emails
             orderForm {
-                replaceWithFeUserValues = {$plugin.tx_pxaproductmanager.settings.wishList.replaceWithFeUserValues}
-                sendEmailToUser = {$plugin.tx_pxaproductmanager.settings.wishList.sendEmailToUser}
-
-                emailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmail.html
-
-                fields {
-                    name {
-                        type = input
-                        validation = required
-                    }
-                    # Email is reserved field name where email will be send to user
-                    email {
-                        type = input
-                        validation = required,email
-                    }
-                    notes {
-                        type = textarea
-                    }
-                }
+                adminEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailAdmin.html
+                userEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailUser.html
             }
         }
 
@@ -119,7 +103,7 @@ plugin.tx_pxaproductmanager {
             allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy
         }
 
-        orderByAllowed = name,tstamp,crdate,categories,custom_sorting
+        orderByAllowed = name,tstamp,crdate,categories,custom_sorting,sorting
 
         attributes {
             includeSkuInAttributeListing = {$plugin.tx_pxaproductmanager.settings.attributes.includeSkuInAttributeListing}
@@ -167,12 +151,6 @@ plugin.tx_pxaproductmanager {
 
     _LOCAL_LANG {
         default {
-            fe.fields {
-                name = Name
-                email = E-mail
-                notes = Order notes
-            }
-
             # Default pricing format
             # |decimals|dec_point|thousands_sep|
             priceFormat = |2|.| |
@@ -181,6 +159,36 @@ plugin.tx_pxaproductmanager {
             priceFormat = |2|,| |
         }
     }
+}
+
+# BE module
+module.tx_pxaproductmanager {
+    settings {
+        listOrders {
+            itemsPerPage = 10
+            # Title of order in BE module view. Support fluid. Accessible variable {order}
+            title = {order.orderFields.name.value}, {order.orderFields.email.value}
+            dateFormat = %d/%m/%Y
+
+            tabs {
+                list {
+                    0 = active
+                    1 = complete
+                    2 = archive
+                }
+                defaultActive = active
+            }
+        }
+    }
+    view {
+        widget {
+            Pixelant\PxaProductManager\ViewHelpers\Widget\PaginateViewHelper {
+                templateRootPath = EXT:pxa_product_manager/Resources/Private/Backend/Templates/
+            }
+        }
+    }
+
+    _LOCAL_LANG < plugin.tx_pxaproductmanager._LOCAL_LANG
 }
 
 # include scripts

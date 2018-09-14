@@ -269,10 +269,22 @@ class TCAUtility
      */
     public static function getCategoriesTCAWhereClause(): string
     {
-        return (int)MainUtility::getExtMgrConfiguration()['dontCheckPidForSysCategory'] === 1
+        return (int)ConfigurationUtility::getExtManagerConfigurationByPath('dontCheckPidForSysCategory') === 1
             ? '' : 'AND sys_category.pid=###CURRENT_PID### ';
     }
 
+    /**
+     * Get core language file path, depends on TYPO3 version
+     * @return string
+     */
+    public static function getCoreLLPath(): string
+    {
+        $ll = MainUtility::isBelowTypo3v9()
+            ? 'LLL:EXT:lang/'
+            : 'LLL:EXT:core/Resources/Private/Language/';
+
+        return $ll;
+    }
 
     /**
      * Generate dynamic foreign table where
@@ -283,13 +295,11 @@ class TCAUtility
      */
     protected static function getDynamicForeignTableWhere(string $setting, string $table): string
     {
-        $configuration = MainUtility::getExtMgrConfiguration();
-
         // we will use current_pid as default to keep backward compatibility
         $foreignTableWhere = 'AND ' . $table . '.pid = ###CURRENT_PID###';
 
         // check and override by typoscript setting
-        $restrictionSetting = $configuration[$setting];
+        $restrictionSetting = ConfigurationUtility::getExtManagerConfigurationByPath($setting);
         if ($restrictionSetting) {
             switch ($restrictionSetting) {
                 case 'current_pid':
