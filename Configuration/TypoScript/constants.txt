@@ -125,6 +125,9 @@ plugin.tx_pxaproductmanager {
 
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=string; label=Checkout system
             checkoutSystem =
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/060; type=options[Enable=1,Disable=0]; label=Fly to cart animation
+            enableFlyToCartAnimation = 1
         }
     }
 
@@ -149,6 +152,9 @@ plugin.tx_pxaproductmanager {
 
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_list/020; type=int; label=Compare pre-view page Pid
             pagePid =
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_list/030; type=options[Enable=1,Disable=0]; label=Fly to cart animation
+            enableFlyToCartAnimation = 1
         }
     }
 
