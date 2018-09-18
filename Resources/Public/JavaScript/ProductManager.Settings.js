@@ -22,6 +22,15 @@
 		loadingClass: 'in-progress'
 	};
 
+	if (ProductManager.settings.wishlistTSSettings) {
+		ProductManager.settings.wishList = Object.assign(
+			{},
+			ProductManager.settings.wishList,
+			ProductManager.settings.wishlistTSSettings
+		);
+		delete ProductManager.settings.wishlistTSSettings;
+	}
+
 	// Wish list
 	ProductManager.settings.compareList = {
 		buttonIdentifier: '[data-compare-list-button="1"]',
@@ -36,6 +45,14 @@
 		listUrl: '/?type=201702&tx_pxaproductmanager_pi1%5Baction%5D=loadCompareList'
 	};
 
+	if (ProductManager.settings.compareListTSSettings) {
+		ProductManager.settings.compareList = Object.assign(
+			{},
+			ProductManager.settings.compareList,
+			ProductManager.settings.compareListTSSettings
+		);
+		delete ProductManager.settings.compareListTSSettings;
+	}
 	// Events
 	ProductManager.settings.events = {
 		FILTER_UPDATE: 'FILTER_UPDATE',

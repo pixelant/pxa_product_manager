@@ -47,6 +47,7 @@ plugin.tx_pxaproductmanager {
             pageType = 201702
             showTaxInfo = {$plugin.tx_pxaproductmanager.settings.wishList.showTaxInfo}
             checkoutSystem = {$plugin.tx_pxaproductmanager.settings.wishList.checkoutSystem}
+            enableFlyToCartAnimation = {$plugin.tx_pxaproductmanager.settings.wishList.enableFlyToCartAnimation}
 
             # Order emails
             orderForm {
@@ -66,6 +67,7 @@ plugin.tx_pxaproductmanager {
             cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/balance.svg
             buttonIcon < .cartIcon
             pageType = 201702
+            enableFlyToCartAnimation = {$plugin.tx_pxaproductmanager.settings.compareList.enableFlyToCartAnimation}
         }
 
         additionalClasses {
