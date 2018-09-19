@@ -133,10 +133,10 @@ class Product extends AbstractEntity
     /**
      * Images
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
      * @lazy
      */
-    protected $attributeImages;
+    protected $attributeFiles;
 
     /**
      * links
@@ -316,7 +316,7 @@ class Product extends AbstractEntity
 
         $this->images = new ObjectStorage();
 
-        $this->attributeImages = new ObjectStorage();
+        $this->attributeFiles = new ObjectStorage();
 
         $this->links = new ObjectStorage();
 
@@ -530,46 +530,24 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Adds a AttributeImage
+     * Returns the Attribute files
      *
-     * @param Image $image
-     * @return void
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
      */
-    public function addAttributeImage(Image $image)
+    public function getAttributeFiles(): ObjectStorage
     {
-        $this->attributeImages->attach($image);
+        return $this->attributeFiles;
     }
 
     /**
-     * Removes a AttributeImage
+     * Sets the Attribute files
      *
-     * @param Image $image The Image to be removed
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $files
      * @return void
      */
-    public function removeAttributeImage(Image $image)
+    public function setAttributeFiles(ObjectStorage $files)
     {
-        $this->attributeImages->detach($image);
-    }
-
-    /**
-     * Returns the AttributeImage
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image> $images
-     */
-    public function getAttributeImages(): ObjectStorage
-    {
-        return $this->attributeImages;
-    }
-
-    /**
-     * Sets the AttributeImage
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image> $images
-     * @return void
-     */
-    public function setAttributeImages(ObjectStorage $images)
-    {
-        $this->attributeImages = $images;
+        $this->attributeFiles = $files;
     }
 
     /**
@@ -1570,13 +1548,16 @@ class Product extends AbstractEntity
         foreach ($attributeHolder->getAttributes() as $attribute) {
             $id = $attribute->getUid();
 
-            if ($attribute->getType() === Attribute::ATTRIBUTE_TYPE_IMAGE) {
-                $attribute->setValue(array_filter(
-                    $this->attributeImages->toArray(),
-                    function ($item) use ($id) {
-                        return $item->getPxaAttribute() === $id;
+            if ($attribute->isFalType()) {
+                $falFiles = [];
+                /** @var FileReference $falReference */
+                foreach ($this->attributeFiles->toArray() as $falReference) {
+                    if ((int)$falReference->getOriginalResource()->getReferenceProperty('pxa_attribute') === $id) {
+                        $falFiles[] = $falReference;
                     }
-                ));
+                }
+
+                $attribute->setValue($falFiles);
             } elseif (array_key_exists($id, $attributesValues)) {
                 $value = $attributesValues[$id];
 

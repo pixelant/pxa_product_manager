@@ -204,6 +204,7 @@ $tx_pxaproductmanager_domain_model_attribute = [
                     'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX,
                     'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT,
                     'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE,
+                    'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE,
                     'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK,
                     'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME,
                 ]
@@ -337,6 +338,10 @@ $tx_pxaproductmanager_domain_model_attribute['columns']['type']['config']['items
     [
         $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE,
         \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE
+    ],
+    [
+        $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE,
+        \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE
     ],
     [
         $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL,

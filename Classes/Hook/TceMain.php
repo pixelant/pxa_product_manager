@@ -5,6 +5,7 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute as Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -60,21 +61,15 @@ class TceMain
             && MathUtility::canBeInterpretedAsInteger($id)
         ) {
             $productData = [];
-            $imageAttributes = [];
 
-            foreach ($fieldArray as $key => $value) {
-                if (StringUtility::beginsWith($key, ATTRIBUTE::TCA_ATTRIBUTE_PREFIX)) {
-                    $attributeId = (int)str_replace(ATTRIBUTE::TCA_ATTRIBUTE_PREFIX, '', $key);
+            foreach ($fieldArray as $fieldName => $value) {
+                if (TCAUtility::isAttributeField($fieldName)) {
+                    $attributeId = TCAUtility::determinateAttributeUidFromFieldName($fieldName);
                     $productData[$attributeId] = $value;
-                    unset($fieldArray[$key]);
-                } elseif (StringUtility::beginsWith($key, ATTRIBUTE::TCA_ATTRIBUTE_IMAGE_PREFIX)) {
-                    $fieldArray['attribute_images'] = $value;
-                    $imageAttributes[] = (int)str_replace(
-                        ATTRIBUTE::TCA_ATTRIBUTE_IMAGE_PREFIX . ATTRIBUTE::TCA_ATTRIBUTE_PREFIX,
-                        '',
-                        $key
-                    );
-                    unset($fieldArray[$key]);
+                    unset($fieldArray[$fieldName]);
+                } elseif (TCAUtility::isFalAttributeField($fieldName)) {
+                    $fieldArray[TCAUtility::ATTRIBUTE_FAL_FIELD_NAME] = $value;
+                    unset($fieldArray[$fieldName]);
                 }
             }
 

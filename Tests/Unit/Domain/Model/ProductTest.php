@@ -482,7 +482,7 @@ class ProductTest extends UnitTestCase
         $objectStorage = new ObjectStorage();
         self::assertEquals(
             $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 
@@ -494,11 +494,11 @@ class ProductTest extends UnitTestCase
         $image = new Image();
         $objectStorage = new ObjectStorage();
         $objectStorage->attach($image);
-        $this->fixture->setAttributeImages($objectStorage);
+        $this->fixture->setAttributeFiles($objectStorage);
 
         self::assertSame(
             $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 
@@ -514,7 +514,7 @@ class ProductTest extends UnitTestCase
 
         self::assertEquals(
             $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 
@@ -532,7 +532,7 @@ class ProductTest extends UnitTestCase
 
         self::assertEquals(
             $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 
