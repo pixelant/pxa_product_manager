@@ -352,7 +352,8 @@ class MainUtility
         if (self::isBelowTypo3v9()) {
             return self::getTSFE()->loginUser;
         } else {
-            return GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
+            $context = GeneralUtility::makeInstance(Context::class);
+            return $context->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
         }
     }
 
@@ -366,7 +367,8 @@ class MainUtility
         if (self::isBelowTypo3v9()) {
             return self::getTSFE()->beUserLogin;
         } else {
-            return GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
+            $context = GeneralUtility::makeInstance(Context::class);
+            return $context->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
         }
     }
 }
