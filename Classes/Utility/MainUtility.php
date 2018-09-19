@@ -276,13 +276,7 @@ class MainUtility
      */
     public static function getObjectManager(): ObjectManager
     {
-        static $objectManager;
-
-        if ($objectManager === null) {
-            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        }
-
-        return $objectManager;
+        return GeneralUtility::makeInstance(ObjectManager::class);
     }
 
     /**
@@ -290,14 +284,7 @@ class MainUtility
      */
     public static function getCacheManager(): CacheManager
     {
-        static $cacheManager;
-
-        if ($cacheManager === null) {
-            /** @var CacheManager $cacheManager */
-            $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
-        }
-
-        return $cacheManager;
+        return GeneralUtility::makeInstance(CacheManager::class);
     }
 
     /**
