@@ -153,8 +153,14 @@ class TCAUtility
      * @param string $disallowedFileExtensions
      * @return array
      */
-    public static function getFalFieldTCAConfiguration(string $field, int $uid, string $name, string $addNewLabel = '', string $allowedFileExtensions = '', string $disallowedFileExtensions = ''): array
-    {
+    public static function getFalFieldTCAConfiguration(
+        string $field,
+        int $uid,
+        string $name,
+        string $addNewLabel = '',
+        string $allowedFileExtensions = '',
+        string $disallowedFileExtensions = ''
+    ): array {
         if ($addNewLabel === '') {
             $addNewLabel = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference';
         }
@@ -312,7 +318,9 @@ class TCAUtility
     {
         $fieldName = Attribute::TCA_ATTRIBUTE_PREFIX . $attributeUid;
 
-        if ($attributeType !== null && ($attributeType === Attribute::ATTRIBUTE_TYPE_IMAGE || $attributeType === Attribute::ATTRIBUTE_TYPE_FILE)) {
+        if ($attributeType !== null
+            && ($attributeType === Attribute::ATTRIBUTE_TYPE_IMAGE || $attributeType === Attribute::ATTRIBUTE_TYPE_FILE)
+        ) {
             $fieldName = Attribute::TCA_ATTRIBUTE_FILE_PREFIX . $fieldName;
         }
 
