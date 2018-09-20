@@ -362,7 +362,7 @@
                 <source>Description</source>
             </trans-unit>
             <trans-unit id="sys_category.additional_fields_tab">
-                <source>Category information</source>
+                <source>Products category information</source>
             </trans-unit>
             <trans-unit id="sys_category.attributes_tab">
                 <source>Product attributes</source>
