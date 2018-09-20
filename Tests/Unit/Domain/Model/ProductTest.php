@@ -477,62 +477,28 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributeImagesReturnsInitialValueForAttributeImages()
+    public function getAttributeFilesReturnsInitialValueForAttributeImages()
     {
         $objectStorage = new ObjectStorage();
         self::assertEquals(
             $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 
     /**
      * @test
      */
-    public function setAttributeImagesForObjectStorageContainingAttributeImagesSetsAttributeImages()
+    public function setAttributeFilesForObjectStorageContainingAttributeImagesSetsAttributeImages()
     {
         $image = new Image();
         $objectStorage = new ObjectStorage();
         $objectStorage->attach($image);
-        $this->fixture->setAttributeImages($objectStorage);
+        $this->fixture->setAttributeFiles($objectStorage);
 
         self::assertSame(
             $objectStorage,
-            $this->fixture->getAttributeImages()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function addAttributeImageForObjectStorageHoldingAttributeImages()
-    {
-        $image = new Image();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($image);
-        $this->fixture->addAttributeImage($image);
-
-        self::assertEquals(
-            $objectStorage,
-            $this->fixture->getAttributeImages()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function removeAttributeImageForObjectStorageHoldingAttributeImages()
-    {
-        $image = new Image();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($image);
-        $objectStorage->detach($image);
-        $this->fixture->addAttributeImage($image);
-        $this->fixture->removeAttributeImage($image);
-
-        self::assertEquals(
-            $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 

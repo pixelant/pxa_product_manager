@@ -29,7 +29,7 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_images, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_values',
     ],
 
     'types' => [
@@ -304,11 +304,11 @@ return [
                 $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
             ),
         ],
-        'attribute_images' => [
+        \Pixelant\PxaProductManager\Utility\TCAUtility::ATTRIBUTE_FAL_FIELD_NAME => [
             'exclude' => 0,
             'label' => '',
             'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                'attribute_images',
+                \Pixelant\PxaProductManager\Utility\TCAUtility::ATTRIBUTE_FAL_FIELD_NAME,
                 [
                     'appearance' => [
                         'createNewRelationLinkTitle' =>
@@ -319,7 +319,7 @@ return [
                         'showSynchronizationLink' => false
                     ],
                     'foreign_match_fields' => [
-                        'fieldname' => 'attribute_images',
+                        'fieldname' => \Pixelant\PxaProductManager\Utility\TCAUtility::ATTRIBUTE_FAL_FIELD_NAME,
                         'tablenames' => 'tx_pxaproductmanager_domain_model_product',
                         'table_local' => 'sys_file',
                     ],
@@ -364,9 +364,8 @@ return [
                             ]
                         ]
                     ]
-                ],
+                ]
                 // @codingStandardsIgnoreEnd
-                $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
             ),
         ],
         'fal_links' => [

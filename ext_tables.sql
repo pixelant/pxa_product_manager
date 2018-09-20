@@ -15,7 +15,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
   attribute_values  varchar(255) DEFAULT '' NOT NULL,
   related_products int(11) unsigned DEFAULT '0' NOT NULL,
   images int(11) unsigned DEFAULT '0',
-  attribute_images int(11) unsigned DEFAULT '0',
+  attribute_files int(11) unsigned DEFAULT '0',
   links int(11) unsigned DEFAULT '0' NOT NULL,
   sub_products int(11) unsigned DEFAULT '0' NOT NULL,
   path_segment tinytext,

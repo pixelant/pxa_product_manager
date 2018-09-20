@@ -180,6 +180,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_attribute.type_9">
                 <source>Multiselect</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_attribute.type_10">
+                <source>Files</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_attribute.icon">
                 <source>Icon</source>
             </trans-unit>

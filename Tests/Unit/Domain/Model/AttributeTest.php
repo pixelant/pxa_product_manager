@@ -332,4 +332,34 @@ class AttributeTest extends UnitTestCase
             $this->fixture->getIcon()
         );
     }
+
+    /**
+     * @test
+     */
+    public function isFalTypeReturnTrueIfImageType()
+    {
+        $this->fixture->setType(Attribute::ATTRIBUTE_TYPE_IMAGE);
+
+        $this->assertTrue($this->fixture->isFalType());
+    }
+
+    /**
+     * @test
+     */
+    public function isFalTypeReturnTrueIfFileType()
+    {
+        $this->fixture->setType(Attribute::ATTRIBUTE_TYPE_FILE);
+
+        $this->assertTrue($this->fixture->isFalType());
+    }
+
+    /**
+     * @test
+     */
+    public function isFalTypeReturnFalseIfNonFalType()
+    {
+        $this->fixture->setType(0);
+
+        $this->assertFalse($this->fixture->isFalType());
+    }
 }

@@ -31,6 +31,7 @@ namespace Pixelant\PxaProductManager\Utility;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Class TCAUtility
@@ -38,6 +39,12 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  */
 class TCAUtility
 {
+    /**
+     * Field name of sys_file_reference and products TCA where
+     * attribute files are saved
+     */
+    const ATTRIBUTE_FAL_FIELD_NAME = 'attribute_files';
+
     /**
      * Return TCA configuration of different types of attributes
      *
@@ -136,15 +143,28 @@ class TCAUtility
     }
 
     /**
-     * Fal image dynamic configuration
+     * Fal dynamic configuration
      *
      * @param string $field
      * @param int $uid
      * @param string $name
+     * @param string $addNewLabel
+     * @param string $allowedFileExtensions
+     * @param string $disallowedFileExtensions
      * @return array
      */
-    public static function getImageFieldTCAConfiguration(string $field, int $uid, string $name): array
-    {
+    public static function getFalFieldTCAConfiguration(
+        string $field,
+        int $uid,
+        string $name,
+        string $addNewLabel = '',
+        string $allowedFileExtensions = '',
+        string $disallowedFileExtensions = ''
+    ): array {
+        if ($addNewLabel === '') {
+            $addNewLabel = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference';
+        }
+
         return [
             'exclude' => 0,
             'label' => '',
@@ -153,14 +173,14 @@ class TCAUtility
                 $field,
                 [
                     'appearance' => [
-                        'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
+                        'createNewRelationLinkTitle' => $addNewLabel,
                         'showPossibleLocalizationRecords' => false,
                         'showRemovedLocalizationRecords' => true,
                         'showAllLocalizationLink' => false,
                         'showSynchronizationLink' => false
                     ],
                     'foreign_match_fields' => [
-                        'fieldname' => 'attribute_images',
+                        'fieldname' => self::ATTRIBUTE_FAL_FIELD_NAME,
                         'tablenames' => 'tx_pxaproductmanager_domain_model_product',
                         'table_local' => 'sys_file',
                         'pxa_attribute' => $uid
@@ -218,7 +238,8 @@ class TCAUtility
                         ]
                     ]
                 ],
-                $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
+                $allowedFileExtensions,
+                $disallowedFileExtensions
             )
             // @codingStandardsIgnoreEnd
         ];
@@ -284,6 +305,70 @@ class TCAUtility
             : 'LLL:EXT:core/Resources/Private/Language/';
 
         return $ll;
+    }
+
+    /**
+     * Generate name for attribute TCA fields
+     *
+     * @param int $attributeUid
+     * @param int|null $attributeType
+     * @return string
+     */
+    public static function getAttributeTCAFieldName(int $attributeUid, int $attributeType = null): string
+    {
+        $fieldName = Attribute::TCA_ATTRIBUTE_PREFIX . $attributeUid;
+
+        if ($attributeType !== null
+            && ($attributeType === Attribute::ATTRIBUTE_TYPE_IMAGE || $attributeType === Attribute::ATTRIBUTE_TYPE_FILE)
+        ) {
+            $fieldName = Attribute::TCA_ATTRIBUTE_FILE_PREFIX . $fieldName;
+        }
+
+        return $fieldName;
+    }
+
+    /**
+     * Check if TCA field is attribute field
+     *
+     * @param string $fieldName
+     * @return bool
+     */
+    public static function isAttributeField(string $fieldName): bool
+    {
+        return StringUtility::beginsWith($fieldName, ATTRIBUTE::TCA_ATTRIBUTE_PREFIX);
+    }
+
+    /**
+     * Get attribute uid from TCA field name
+     *
+     * @param string $fieldName
+     * @return int
+     */
+    public static function determinateAttributeUidFromFieldName(string $fieldName): int
+    {
+        return (int)str_replace(ATTRIBUTE::TCA_ATTRIBUTE_PREFIX, '', $fieldName);
+    }
+
+    /**
+     * Check if TCA field is FAL attribute field
+     *
+     * @param string $fieldName
+     * @return bool
+     */
+    public static function isFalAttributeField(string $fieldName): bool
+    {
+        return StringUtility::beginsWith($fieldName, ATTRIBUTE::TCA_ATTRIBUTE_FILE_PREFIX);
+    }
+
+    /**
+     * Get attribute uid from TCA field name
+     *
+     * @param string $fieldName
+     * @return int
+     */
+    public static function determinateFalAttributeUidFromFieldName(string $fieldName): int
+    {
+        return (int)str_replace(Attribute::TCA_ATTRIBUTE_FILE_PREFIX . ATTRIBUTE::TCA_ATTRIBUTE_PREFIX, '', $fieldName);
     }
 
     /**

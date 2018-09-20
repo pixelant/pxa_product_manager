@@ -276,13 +276,7 @@ class MainUtility
      */
     public static function getObjectManager(): ObjectManager
     {
-        static $objectManager;
-
-        if ($objectManager === null) {
-            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        }
-
-        return $objectManager;
+        return GeneralUtility::makeInstance(ObjectManager::class);
     }
 
     /**
@@ -290,14 +284,7 @@ class MainUtility
      */
     public static function getCacheManager(): CacheManager
     {
-        static $cacheManager;
-
-        if ($cacheManager === null) {
-            /** @var CacheManager $cacheManager */
-            $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
-        }
-
-        return $cacheManager;
+        return GeneralUtility::makeInstance(CacheManager::class);
     }
 
     /**
@@ -365,7 +352,8 @@ class MainUtility
         if (self::isBelowTypo3v9()) {
             return self::getTSFE()->loginUser;
         } else {
-            return GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
+            $context = GeneralUtility::makeInstance(Context::class);
+            return $context->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
         }
     }
 
@@ -379,7 +367,8 @@ class MainUtility
         if (self::isBelowTypo3v9()) {
             return self::getTSFE()->beUserLogin;
         } else {
-            return GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
+            $context = GeneralUtility::makeInstance(Context::class);
+            return $context->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
         }
     }
 }

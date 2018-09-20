@@ -105,20 +105,32 @@ class ProductEditFormInitialize implements FormDataProviderInterface
                 $attributeUid = $attribute->getUid();
 
                 // @codingStandardsIgnoreStart
-                $field = ($attributeType === Attribute::ATTRIBUTE_TYPE_IMAGE ? Attribute::TCA_ATTRIBUTE_IMAGE_PREFIX : '')
-                    . Attribute::TCA_ATTRIBUTE_PREFIX . $attributeUid; // Unique for each field
+                $field = TCAUtility::getAttributeTCAFieldName($attributeUid, $attributeType); // Unique for each field
                 // @codingStandardsIgnoreEnd
-                // Get TCA from TCAConf array defined in TCADefinitions.php
-                if ($attributeType == Attribute::ATTRIBUTE_TYPE_IMAGE) {
-                    $tcaConfigurationField = TCAUtility::getImageFieldTCAConfiguration(
+                // Get TCA for attribute type
+                if ($attribute->isFalType()) {
+                    if ($attributeType === Attribute::ATTRIBUTE_TYPE_IMAGE) {
+                        $allowedFileTypes = $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'];
+                        // @codingStandardsIgnoreStart
+                        $label = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference';
+                        // @codingStandardsIgnoreEnd
+                    } else {
+                        $allowedFileTypes = '';
+                        $label = '';
+                    }
+
+                    $tcaConfigurationField = TCAUtility::getFalFieldTCAConfiguration(
                         $field,
                         $attributeUid,
-                        $attribute->getName()
+                        $attribute->getName(),
+                        $label,
+                        $allowedFileTypes
                     );
                 } else {
                     $tcaConfigurationField = $this->attributeTCAConfiguration[$attributeType];
                 }
                 $tca['columns'][$field] = $tcaConfigurationField;
+
                 // Add it also to global array
                 // @codingStandardsIgnoreStart
                 $GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns'][$field] = $tcaConfigurationField;
@@ -136,18 +148,19 @@ class ProductEditFormInitialize implements FormDataProviderInterface
                     switch ($attributeType) {
                         case Attribute::ATTRIBUTE_TYPE_LINK:
                         case Attribute::ATTRIBUTE_TYPE_IMAGE:
+                        case Attribute::ATTRIBUTE_TYPE_FILE:
                         case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
                             $tca['columns'][$field]['config']['minitems'] = 1;
                             break;
                         default:
-                            $tca['columns'][$field]['config']['eval'] =
-                                $tca['columns'][$field]['config']['eval'] ?
-                                    $tca['columns'][$field]['config']['eval'] . ', required' : 'required';
+                            $tca['columns'][$field]['config']['eval'] = $tca['columns'][$field]['config']['eval']
+                                ? $tca['columns'][$field]['config']['eval'] . ', required'
+                                : 'required';
                     }
                 }
 
                 // Additional TCA modifications depending on Attribute Type
-                switch ((int)$attributeType) {
+                switch ($attributeType) {
                     case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
                     case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
                         /** @var QueryBuilder $queryBuilder */
@@ -233,7 +246,7 @@ class ProductEditFormInitialize implements FormDataProviderInterface
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
-            $field = Attribute::TCA_ATTRIBUTE_PREFIX . $attribute->getUid();
+            $field = TCAUtility::getAttributeTCAFieldName($attribute->getUid());
 
             if (array_key_exists($attribute->getUid(), $attributeUidToValue)) {
                 switch ($attribute->getType()) {
@@ -249,7 +262,8 @@ class ProductEditFormInitialize implements FormDataProviderInterface
                         $dbRow[$field] = $attributeUidToValue[$attribute->getUid()];
                 }
             } elseif ($attribute->getDefaultValue()
-                && $attribute->getType() !== Attribute::ATTRIBUTE_TYPE_MULTISELECT) {
+                && $attribute->getType() !== Attribute::ATTRIBUTE_TYPE_MULTISELECT
+            ) {
                 $dbRow[$field] = $attribute->getDefaultValue();
             }
         }
@@ -270,7 +284,7 @@ class ProductEditFormInitialize implements FormDataProviderInterface
         }
 
         foreach ($attributeUidToValues as $attributeUid => $attributeValue) {
-            $field = Attribute::TCA_ATTRIBUTE_PREFIX . $attributeUid;
+            $field = TCAUtility::getAttributeTCAFieldName($attributeUid);
             $diffRow[$field] = $attributeValue;
             $defaultLanguageRow[$field] = $attributeValue;
         }
