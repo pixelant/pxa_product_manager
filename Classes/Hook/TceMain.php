@@ -59,6 +59,7 @@ class TceMain
             && MathUtility::canBeInterpretedAsInteger($id)
         ) {
             $productData = [];
+            $files = [];
 
             foreach ($fieldArray as $fieldName => $value) {
                 if (TCAUtility::isAttributeField($fieldName)) {
@@ -66,9 +67,13 @@ class TceMain
                     $productData[$attributeId] = $value;
                     unset($fieldArray[$fieldName]);
                 } elseif (TCAUtility::isFalAttributeField($fieldName)) {
-                    $fieldArray[TCAUtility::ATTRIBUTE_FAL_FIELD_NAME] = $value;
+                    $files[] = $value;
                     unset($fieldArray[$fieldName]);
                 }
+            }
+
+            if (!empty($files)) {
+                $fieldArray[TCAUtility::ATTRIBUTE_FAL_FIELD_NAME] = implode(',', $files);
             }
 
             if (!empty($productData)) {
