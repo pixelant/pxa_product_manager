@@ -107,11 +107,12 @@ class TceMain
             )
             ->execute();
 
-        $existForAttributes = [];
+        $processedAttributes = [];
 
         while ($attributeValue = $statement->fetch()) {
             // found attribute
-            if (array_key_exists($attributeValue['attribute'], $productData)) {
+            if (array_key_exists($attributeValue['attribute'], $productData)
+                && !in_array($attributeValue['attribute'], $processedAttributes)) {
                 $existForAttributes[] = (int)$attributeValue['attribute'];
 
                 if ($attributeValue['value'] != $productData[$attributeValue['attribute']]) {
@@ -136,6 +137,7 @@ class TceMain
                     )
                     ->execute();
             }
+            $processedAttributes[] = $attributeValue['attribute'];
         }
 
         $needToCreateValuesFor = array_diff(
