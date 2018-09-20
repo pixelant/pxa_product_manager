@@ -1494,6 +1494,11 @@ class Product extends AbstractEntity
      */
     public function getAttribute(string $identifier = '')
     {
+        // Init attributes if empty
+        if ($this->attributes === null) {
+            $this->initializeAttributes();
+        }
+
         if (empty($identifier)) {
             return $this->attributesIdentifiersArray;
         } elseif (isset($this->attributesIdentifiersArray[$identifier])) {
