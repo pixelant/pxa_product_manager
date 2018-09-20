@@ -107,6 +107,7 @@ class TceMain
             )
             ->execute();
 
+        $existForAttributes = [];
         $processedAttributes = [];
 
         while ($attributeValue = $statement->fetch()) {
