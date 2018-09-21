@@ -152,6 +152,9 @@ class ProductRepository extends AbstractDemandRepository
 
                 $query->setOrderings($orderings);
             }
+        } else {
+            $demand->setOrderBy('categories.sorting');
+            parent::setOrderings($query, $demand);
         }
     }
 
