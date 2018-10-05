@@ -202,6 +202,24 @@
                         </TCEforms>
                     </settings.customProductsList.productsCategories>
 
+                    <settings.customProductsList.productsToShowWithinCategories>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.products_to_show_within_categories</label>
+                            <displayCond>
+                                <AND>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->customProductsList;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.settings.customProductsList.mode:=:category</numIndex>
+                                </AND>
+                            </displayCond>
+                            <config>
+                                <type>select</type>
+                                <enableMultiSelectFilterTextfield>1</enableMultiSelectFilterTextfield>
+                                <renderType>selectMultipleSideBySide</renderType>
+                                <itemsProcFunc>Pixelant\PxaProductManager\UserFunction\ItemsProcessingFunction->getListOfProductsWithinCategories</itemsProcFunc>
+                            </config>
+                        </TCEforms>
+                    </settings.customProductsList.productsToShowWithinCategories>
+
                     <settings.category>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation_category</label>

@@ -629,6 +629,13 @@ class PageLayoutView
                 $settings['customProductsList']['productsCategories'] ?? ''
             );
 
+            // Selected products from categories selection
+            $info .= $this->getProductsInfo(
+                $this->translate('flexform.custom_products_list.products_to_show_within_categories'),
+                $settings['customProductsList']['productsToShowWithinCategories'] ?? '',
+                'be.extension_info.all'
+            );
+
             // Limit
             $info .= sprintf(
                 '<b>%s</b>: %s<br>',
@@ -653,14 +660,20 @@ class PageLayoutView
      *
      * @param string $title
      * @param string $products
+     * @param string $emptyLabel Label when no products provided
+     * @param int $limit Max products output
      * @return string
      */
-    protected function getProductsInfo(string $title, string $products): string
-    {
-        $categories = GeneralUtility::intExplode(',', $products, true);
+    protected function getProductsInfo(
+        string $title,
+        string $products,
+        string $emptyLabel = 'be.extension_info.none',
+        int $limit = 10
+    ): string {
         $info = '<b>' . $title . '</b>:';
 
         if (!empty($products)) {
+            $products = GeneralUtility::intExplode(',', $products, true);
             $productsInfo = '';
             /** @var QueryBuilder $queryBuilder */
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
@@ -672,19 +685,26 @@ class PageLayoutView
                 ->where(
                     $queryBuilder->expr()->in(
                         'uid',
-                        $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($products, Connection::PARAM_INT_ARRAY)
                     )
-                )
-                ->execute();
+                );
+
+            $appendInfo = '';
+            if (count($products) > $limit) {
+                $appendInfo .= $this->translate('be.extension_info.reach limit', [count($products) - $limit]);
+                $statement->setMaxResults($limit);
+            }
+            $statement = $statement->execute();
+
             while ($product = $statement->fetch()) {
                 $productsInfo .= ', ' . $product['name'];
             }
 
-            $productsInfo = ltrim($productsInfo, ',');
+            $productsInfo = ltrim($productsInfo, ',') . $appendInfo;
         }
 
         if (!isset($productsInfo)) {
-            $productsInfo = ' ' . $this->translate('be.extension_info.none');
+            $productsInfo = ' ' . $this->translate($emptyLabel);
         }
 
         return $info . $productsInfo . '<br>';
