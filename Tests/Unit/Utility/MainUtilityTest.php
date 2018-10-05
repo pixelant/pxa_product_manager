@@ -36,7 +36,7 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments($product)
+            MainUtility::buildLinksArguments($product, null, true)
         );
     }
 
@@ -56,7 +56,7 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments($product)
+            MainUtility::buildLinksArguments($product, null, true)
         );
     }
 
@@ -88,7 +88,7 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments($product, $activeCategory)
+            MainUtility::buildLinksArguments($product, $activeCategory, true)
         );
     }
 
@@ -116,7 +116,7 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments(null, $activeCategory)
+            MainUtility::buildLinksArguments(null, $activeCategory, true)
         );
     }
 

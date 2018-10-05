@@ -194,10 +194,14 @@ class MainUtility
      *
      * @param Product|int|null $product
      * @param Category|null $category
+     * @param bool $forceIncludeCategoriesInUrl
      * @return array
      */
-    public static function buildLinksArguments($product = null, Category $category = null): array
-    {
+    public static function buildLinksArguments(
+        $product = null,
+        Category $category = null,
+        bool $forceIncludeCategoriesInUrl = false
+    ): array {
         $arguments = [];
         if ($product !== null && !is_object($product)) {
             /** @var ProductRepository $productRepository */
@@ -205,10 +209,10 @@ class MainUtility
             $product = $productRepository->findByUid((int)$product);
         }
 
-        $includeCategoriesInUrl = intval(ConfigurationUtility::getSettingsByPath('excludeCategoriesFromUrl')) === 0;
-
         // If categories allowed in url
-        if ($includeCategoriesInUrl) {
+        if ($forceIncludeCategoriesInUrl
+            || intval(ConfigurationUtility::getSettingsByPath('excludeCategoriesFromUrl')) === 0
+        ) {
             // If no category, try to get it from product
             if ($category === null
                 && is_object($product)
