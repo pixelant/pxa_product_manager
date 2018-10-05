@@ -27,6 +27,7 @@ namespace Pixelant\PxaProductManager\ViewHelpers;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 /**
@@ -132,9 +133,12 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
             $additionalParams = array_merge_recursive($additionalParams, $arguments);
         }
 
-        // don't pass empty string or '0'
-        if ($pageUid === 0) {
-            $pageUid = null;
+        // If no page set, use current
+        if ($pageUid === 0 || $pageUid === null) {
+            $pageUid = (int)GeneralUtility::_GET('id');
+            if ($pageUid <= 0) {
+                $pageUid = null;
+            }
         }
 
         $uriBuilder = $this->renderingContext->getControllerContext()->getUriBuilder();

@@ -49,10 +49,13 @@ plugin.tx_pxaproductmanager {
         includeDefaultStyling = 1
     }
 
-    # customsubcategory=pxaproductmanager_pid=Pid settings
+    # customsubcategory=pxaproductmanager_pid=Link product settings
     settings {
-        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pid/010; type=int; label=Product main page
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pid/010; type=int; label=Product main single view page
         pagePid =
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pid/020; type=options[Yes=1,No=0]; label=Exclude categories tree from product URL generation
+        excludeCategoriesFromUrl = 0
     }
 
     # customsubcategory=pxaproductmanager_single_view=Single view settings

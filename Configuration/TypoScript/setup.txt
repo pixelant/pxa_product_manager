@@ -25,13 +25,14 @@ plugin.tx_pxaproductmanager {
     settings {
         # pid
         pagePid = {$plugin.tx_pxaproductmanager.settings.pagePid}
+        excludeCategoriesFromUrl = {$plugin.tx_pxaproductmanager.settings.excludeCategoriesFromUrl}
 
         # general settings
         latestVisitedProductsLimit = {$plugin.tx_pxaproductmanager.settings.latestVisitedProductsLimit}
         showCategoriesWithProducts = {$plugin.tx_pxaproductmanager.settings.showCategoriesWithProducts}
         doNotShowEmptyCategoriesInNavigation = {$plugin.tx_pxaproductmanager.settings.doNotShowEmptyCategoriesInNavigation}
         disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
-        
+
         lazyLoading {
             loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
 
@@ -75,9 +76,11 @@ plugin.tx_pxaproductmanager {
                 # can be used to add additional classes to products in templates
                 # uidOfClass = className(s)
             }
+
             launched {
                 isNewClass = product-new
             }
+
             discontinued {
                 isDiscontinuedClass = product-discontinued
             }
@@ -97,7 +100,7 @@ plugin.tx_pxaproductmanager {
 
         launched {
             # uses DateInterval interval_spec f.ex P14D or P1Y to calculate if product should be considered as a new product
-            # if not set, no calculation will occur 
+            # if not set, no calculation will occur
             dateIntervalAsNew =
         }
 
@@ -157,6 +160,7 @@ plugin.tx_pxaproductmanager {
             # |decimals|dec_point|thousands_sep|
             priceFormat = |2|.| |
         }
+
         sv {
             priceFormat = |2|,| |
         }
@@ -178,10 +182,12 @@ module.tx_pxaproductmanager {
                     1 = complete
                     2 = archive
                 }
+
                 defaultActive = active
             }
         }
     }
+
     view {
         widget {
             Pixelant\PxaProductManager\ViewHelpers\Widget\PaginateViewHelper {
