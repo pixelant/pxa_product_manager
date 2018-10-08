@@ -43,28 +43,38 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-12 product-name">
-                        <h1>{product.name}</h1>
-                        <f:if condition="{ppm:isPricingEnabled()} && {product.price}">
-                            <h5>
-                                <f:translate key="fe.price" />:
-                                <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
-                                <f:if condition="{settings.wishList.showTaxInfo}">
+                    <div class="col-md-12 product-name product-header">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h1>{product.name}</h1>
+                                <f:if condition="{ppm:isPricingEnabled()} && {product.price}">
+                                    <h5>
+                                        <f:translate key="fe.price" />:
+                                        <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
+                                        <f:if condition="{settings.wishList.showTaxInfo}">
                                     <span class="tax-price">
                                         (
                                             <f:translate key="fe.tax" />:
                                             <f:translate key="fe.price_currency_format" arguments="{0: product.formatTax}" />
                                         )
                                     </span>
+                                        </f:if>
+                                    </h5>
                                 </f:if>
-                            </h5>
-                        </f:if>
-
-                        <f:if condition="{settings.showGoBackButton}">
-                            <button type="button" class="btn btn-default back-button" onclick="window.history.back();">
-                                <f:translate key="fe.go_back" />
-                            </button>
-                        </f:if>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="header-buttons">
+                                    <f:if condition="{settings.showGoBackButton}">
+                                        <button type="button"
+                                                class="btn btn-default back-button product-header-btn"
+                                                onclick="window.history.back();">
+                                            <f:translate key="fe.go_back" />
+                                        </button>
+                                    </f:if>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
