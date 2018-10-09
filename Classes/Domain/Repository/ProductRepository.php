@@ -278,8 +278,9 @@ class ProductRepository extends AbstractDemandRepository
      *
      * @param QueryInterface $query
      * @param Demand $demand
+     * @return array
      */
-    protected function createConstraints(QueryInterface $query, Demand $demand)
+    protected function createConstraints(QueryInterface $query, Demand $demand): array
     {
         $constraints = [];
 
@@ -306,15 +307,7 @@ class ProductRepository extends AbstractDemandRepository
             }
         }
 
-        if (!empty($constraints)) {
-            $query->matching(
-                $this->createConstraintFromConstraintsArray(
-                    $query,
-                    $constraints,
-                    'and'
-                )
-            );
-        }
+        return $constraints;
     }
 
     /**
