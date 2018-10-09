@@ -21,7 +21,7 @@ class ItemsProcessingFunction
     public function getListOfProductsWithinCategories(array &$data, TcaSelectItems $pObj)
     {
         if (!empty($data['row']['settings.customProductsList.productsCategories'])) {
-            $items = &$data['items'];
+            $items = [];
             $products = [];
 
             $categories = GeneralUtility::intExplode(
@@ -43,11 +43,15 @@ class ItemsProcessingFunction
             }
 
             foreach ($products as $product) {
-                $items[] = [
-                    $product['name'] ?: 'No title',
-                    $product['uid']
-                ];
+                if (!array_key_exists($product['uid'], $items)) {
+                    $items[$product['uid']] = [
+                        $product['name'] ?: 'No title',
+                        $product['uid']
+                    ];
+                }
             }
+
+            $data['items'] = array_merge($data['items'], $items);
         }
     }
 }
