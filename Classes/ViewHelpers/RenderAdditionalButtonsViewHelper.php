@@ -24,9 +24,8 @@ namespace Pixelant\PxaProductManager\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Utility\TemplateUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -36,19 +35,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 class RenderAdditionalButtonsViewHelper extends AbstractViewHelper
 {
     /**
-     * @var Dispatcher $signalSlotDispatcher
-     */
-    protected $signalSlotDispatcher;
-
-    /**
-     * @param Dispatcher $signalSlotDispatcher
-     */
-    public function injectSignalSlotDispatcher(Dispatcher $signalSlotDispatcher)
-    {
-        $this->signalSlotDispatcher = $signalSlotDispatcher;
-    }
-
-    /**
      * Render additional buttons on a single (on a single view page)
      *
      * @return mixed
@@ -56,51 +42,11 @@ class RenderAdditionalButtonsViewHelper extends AbstractViewHelper
      */
     public function render()
     {
-        /**
-         * Generate additional buttons
-         * Should an array that follows this structure
-         * [
-         *     [
-         *         'name' => 'Do something',
-         *         'link' => 'https://www.example.com',
-         *         'classes' => [],
-         *         'order' => '100'
-         *     ],
-         *     [
-         *         'name' => 'Buy',
-         *         'link' => 'https://www.test.net',
-         *         'classes' => ['beauty', 'clarence'],
-         *         'order' => '20'
-         *     ],
-         * ]
-         *
-         * name - button text
-         * link - button link
-         * classes - array of additional button classes
-         * order - used to specify buttons order
-         */
-        $buttons = [
-        ];
-
-        // Add a signal slot so other extension could add additional buttons
-        $this->signalSlotDispatcher->dispatch(__CLASS__, 'BeforeProcessingAdditionalButtons', [&$buttons]);
-
-        // Process
-        foreach ($buttons as &$button) {
-            $button['classes'] = empty($button['classes']) ? '' : implode(' ', $button['classes']);
-        }
-        unset($button);
-
-        // Sort
-        usort($buttons, function ($a, $b) {
-            return $a['order'] - $b['order'];
-        });
-
         // Render
         return TemplateUtility::generateStandaloneTemplate(
             'singleViewAdditionalButtons',
             [
-                'buttons' => $buttons
+                'buttons' => ProductUtility::getAdditionalButtons()
             ]
         );
     }

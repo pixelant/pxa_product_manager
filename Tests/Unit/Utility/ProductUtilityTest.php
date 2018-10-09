@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class ProductUtilityTest
@@ -298,5 +299,167 @@ class ProductUtilityTest extends UnitTestCase
         $expect = (($price1 * ($taxRate / 100)) * $quantity1) + (($price2 * ($taxRate / 100)) * $quantity2);
 
         $this->assertEquals($expect, ProductUtility::calculateOrderTotalTax($order));
+    }
+
+    /**
+     * @test
+     */
+    public function getAdditionalButtonsIsAlteringButtonUsingSignalSlots()
+    {
+        $expected = [
+            [
+                'name' => 'Sell me',
+                'link' => 'http://example.sell.com',
+                'classes' => '',
+                'order' => 20
+            ],
+            [
+                'name' => 'Buy me',
+                'link' => 'http://example.com',
+                'classes' => '',
+                'order' => 120
+            ]
+        ];
+
+
+        $signalSlotDispatcherMock = $this->getAccessibleMock(
+            Dispatcher::class,
+            ['dispatch']
+        );
+
+        $buttons = [];
+
+        $signalSlotDispatcherMock->expects($this->once())
+            ->method('dispatch')
+            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$buttons])
+            ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
+                $params[0] = [
+                    [
+                        'name' => 'Sell me',
+                        'link' => 'http://example.sell.com',
+                        'classes' => [],
+                        'order' => 20
+                    ],
+                    [
+                        'name' => 'Buy me',
+                        'link' => 'http://example.com',
+                        'classes' => [],
+                        'order' => 120
+                    ]
+                ];
+            }));
+
+        ProductUtility::$signalSlotDispatcher = $signalSlotDispatcherMock;
+        $result = ProductUtility::getAdditionalButtons($buttons);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function getAdditionalButtonsSortsTheButtonsAccordingToOrderField()
+    {
+        $expected = [
+            [
+                'name' => 'Sell me',
+                'link' => 'http://example.sell.com',
+                'classes' => '',
+                'order' => 20
+            ],
+            [
+                'name' => 'Buy me',
+                'link' => 'http://example.com',
+                'classes' => '',
+                'order' => 120
+            ]
+        ];
+
+
+        $signalSlotDispatcherMock = $this->getAccessibleMock(
+            Dispatcher::class,
+            ['dispatch']
+        );
+
+        $buttons = [];
+
+        $signalSlotDispatcherMock->expects($this->once())
+            ->method('dispatch')
+            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$buttons])
+            ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
+                $params[0] = [
+                    [
+                        'name' => 'Buy me',
+                        'link' => 'http://example.com',
+                        'classes' => [],
+                        'order' => 120
+                    ],
+                    [
+                        'name' => 'Sell me',
+                        'link' => 'http://example.sell.com',
+                        'classes' => [],
+                        'order' => 20
+                    ]
+                ];
+            }));
+
+        ProductUtility::$signalSlotDispatcher = $signalSlotDispatcherMock;
+        $result = ProductUtility::getAdditionalButtons($buttons);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function getAdditionalButtonsConvertsClassesListToAClassString()
+    {
+        $expected = [
+            [
+                'name' => 'Sell me',
+                'link' => 'http://example.sell.com',
+                'classes' => 'testclass dummy2',
+                'order' => 20
+            ],
+            [
+                'name' => 'Buy me',
+                'link' => 'http://example.com',
+                'classes' => 'testclass',
+                'order' => 120
+            ]
+        ];
+
+
+        $signalSlotDispatcherMock = $this->getAccessibleMock(
+            Dispatcher::class,
+            ['dispatch']
+        );
+
+        $buttons = [];
+
+        $signalSlotDispatcherMock->expects($this->once())
+            ->method('dispatch')
+            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$buttons])
+            ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
+                $params[0] = [
+                    [
+                        'name' => 'Sell me',
+                        'link' => 'http://example.sell.com',
+                        'classes' => ['testclass', 'dummy2'],
+                        'order' => 20
+                    ],
+                    [
+                        'name' => 'Buy me',
+                        'link' => 'http://example.com',
+                        'classes' => ['testclass'],
+                        'order' => 120
+                    ]
+                ];
+            }));
+
+        ProductUtility::$signalSlotDispatcher = $signalSlotDispatcherMock;
+        $result = ProductUtility::getAdditionalButtons($buttons);
+
+        $this->assertEquals($expected, $result);
     }
 }
