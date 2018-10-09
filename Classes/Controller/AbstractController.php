@@ -375,7 +375,7 @@ class AbstractController extends ActionController
 
         if (!empty($result)) {
             $uidList = array_intersect($uidList, array_keys($result));
-            // sort to have same order as in cookie
+            // sort to have same order as in list
             $result = array_replace(array_flip($uidList), $result);
         }
 

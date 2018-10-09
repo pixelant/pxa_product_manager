@@ -497,15 +497,25 @@ class ProductController extends AbstractController
                 $this->settings['customProductsList']['productsCategories'],
                 true
             );
+            $this->view->assign('categories', $this->categoryRepository->findByUidList($categories));
 
             // Get products
-            $products = $this->productRepository->findProductsByCategories(
-                $categories,
-                false,
-                ['tstamp' => QueryInterface::ORDER_DESCENDING],
-                'or',
-                (int)$this->settings['limit']
-            );
+            if (!empty($this->settings['customProductsList']['productsToShowWithinCategories'])) {
+                $productsList = GeneralUtility::trimExplode(
+                    ',',
+                    $this->settings['customProductsList']['productsToShowWithinCategories'],
+                    true
+                );
+                $products = $this->getProductByUidsList($productsList);
+            } else {
+                $products = $this->productRepository->findProductsByCategories(
+                    $categories,
+                    false,
+                    ['tstamp' => QueryInterface::ORDER_DESCENDING],
+                    'or',
+                    (int)$this->settings['limit']
+                );
+            }
         }
 
         $this->view->assign('products', $products);
