@@ -79,7 +79,6 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
         $query = $this->createQuery();
 
         $this->setStorage($query, $demand);
-        $this->createConstraints($query, $demand);
         $this->setOrderings($query, $demand);
 
         if ($demand->getLimit()) {
@@ -88,6 +87,19 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
         if ($demand->getOffSet()) {
             $query->setOffset($demand->getOffSet());
         }
+
+        $constraints = $this->createConstraints($query, $demand);
+
+        if (!empty($constraints)) {
+            $query->matching(
+                $this->createConstraintFromConstraintsArray(
+                    $query,
+                    $constraints,
+                    'and'
+                )
+            );
+        }
+
         return $query;
     }
 
@@ -164,7 +176,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     /**
      * @param QueryInterface $query
      * @param Demand $demand
-     * @return void
+     * @return array
      */
-    abstract protected function createConstraints(QueryInterface $query, Demand $demand);
+    abstract protected function createConstraints(QueryInterface $query, Demand $demand): array;
 }

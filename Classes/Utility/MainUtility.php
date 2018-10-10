@@ -194,10 +194,14 @@ class MainUtility
      *
      * @param Product|int|null $product
      * @param Category|null $category
+     * @param bool $forceIncludeCategoriesInUrl
      * @return array
      */
-    public static function buildLinksArguments($product = null, Category $category = null): array
-    {
+    public static function buildLinksArguments(
+        $product = null,
+        Category $category = null,
+        bool $forceIncludeCategoriesInUrl = false
+    ): array {
         $arguments = [];
         if ($product !== null && !is_object($product)) {
             /** @var ProductRepository $productRepository */
@@ -205,35 +209,41 @@ class MainUtility
             $product = $productRepository->findByUid((int)$product);
         }
 
-        // If no category, try to get it from product
-        if ($category === null
-            && is_object($product)
-            && $product->getCategories()->count() > 0
+        // If categories allowed in url
+        if ($forceIncludeCategoriesInUrl
+            || intval(ConfigurationUtility::getSettingsByPath('excludeCategoriesFromUrl')) === 0
         ) {
-            $category = $product->getFirstCategory();
-        }
+            // If no category, try to get it from product
+            if ($category === null
+                && is_object($product)
+                && $product->getCategories()->count() > 0
+            ) {
+                $category = $product->getFirstCategory();
+            }
 
-        if ($category !== null) {
-            // Get tree, don't use root category in url
-            /**
-             * @TODO always remove first category ?
-             */
-            $categories = array_slice(
-                array_reverse(// use descending order
-                    CategoryUtility::getParentCategories($category)
-                ),
-                1
-            );
-            // add current category
-            $categories[] = $category;
+            if ($category !== null) {
+                // Get tree, don't use root category in url
+                /**
+                 * @TODO always remove first category ?
+                 */
+                $categories = array_slice(
+                    array_reverse(// use descending order
+                        CategoryUtility::getParentCategories($category)
+                    ),
+                    1
+                );
+                // add current category
+                $categories[] = $category;
 
-            $i = 0;
-            /** @var Category $category */
-            foreach ($categories as $category) {
-                $arguments[NavigationController::CATEGORY_ARG_START_WITH . $i++] = $category->getUid();
+                $i = 0;
+                /** @var Category $category */
+                foreach ($categories as $category) {
+                    $arguments[NavigationController::CATEGORY_ARG_START_WITH . $i++] = $category->getUid();
+                }
             }
         }
-        // add product
+
+        // Add product
         if ($product !== null) {
             $arguments['product'] = is_object($product) ? $product->getUid() : $product;
         }
