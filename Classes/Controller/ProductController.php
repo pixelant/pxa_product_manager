@@ -211,6 +211,7 @@ class ProductController extends AbstractController
 
             $this->view->assignMultiple([
                 'product' => $product,
+                'additionalButtons' => $this->getProductAdditionalButtons($product, []),
                 'category' => MainUtility::getActiveCategoryFromRequest()
             ]);
         } else {
@@ -963,5 +964,53 @@ class ProductController extends AbstractController
     protected function getValidatorResolver(): ValidatorResolver
     {
         return GeneralUtility::makeInstance(ValidatorResolver::class);
+    }
+
+    /**
+     * @param Product $product
+     * @param array $buttons
+     * @return array
+     */
+    protected function getProductAdditionalButtons(Product $product, array $buttons = []) : array
+    {
+        /**
+         * Generate additional buttons
+         * Should an array that follows this structure
+         * [
+         *     [
+         *         'name' => 'Do something',
+         *         'link' => 'https://www.example.com',
+         *         'classes' => [],
+         *         'order' => '100'
+         *     ],
+         *     [
+         *         'name' => 'Buy',
+         *         'link' => 'https://www.test.net',
+         *         'classes' => ['beauty', 'clarence'],
+         *         'order' => '20'
+         *     ],
+         * ]
+         *
+         * name - button text
+         * link - button link
+         * classes - array of additional button classes
+         * order - used to specify buttons order
+         */
+
+        // Add a signal slot so other extension could add additional buttons
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'BeforeProcessingAdditionalButtons', [$product, &$buttons]);
+
+        // Process
+        foreach ($buttons as &$button) {
+            $button['classes'] = empty($button['classes']) ? '' : implode(' ', $button['classes']);
+        }
+        unset($button);
+
+        // Sort
+        usort($buttons, function ($a, $b) {
+            return $a['order'] - $b['order'];
+        });
+
+        return $buttons;
     }
 }

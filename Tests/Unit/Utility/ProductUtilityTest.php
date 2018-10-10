@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class ProductUtilityTest
