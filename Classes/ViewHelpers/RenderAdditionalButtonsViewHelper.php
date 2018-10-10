@@ -34,6 +34,15 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class RenderAdditionalButtonsViewHelper extends AbstractViewHelper
 {
+
+    /**
+     * Register arguments
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('product', 'object', 'Product', true);
+    }
+
     /**
      * Render additional buttons on a single (on a single view page)
      *
@@ -42,11 +51,13 @@ class RenderAdditionalButtonsViewHelper extends AbstractViewHelper
      */
     public function render()
     {
+        $product = $this->arguments['product'];
+
         // Render
         return TemplateUtility::generateStandaloneTemplate(
             'singleViewAdditionalButtons',
             [
-                'buttons' => ProductUtility::getAdditionalButtons()
+                'buttons' => ProductUtility::getAdditionalButtons($product, [])
             ]
         );
     }

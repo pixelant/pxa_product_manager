@@ -464,10 +464,11 @@ class ProductUtility
     }
 
     /**
+     * @param Product $product
      * @param array $buttons
      * @return array
      */
-    public static function getAdditionalButtons(array $buttons = []) : array
+    public static function getAdditionalButtons(Product $product, array $buttons = []) : array
     {
         /**
          * Generate additional buttons
@@ -495,7 +496,7 @@ class ProductUtility
 
         // Add a signal slot so other extension could add additional buttons
         $dispatcher = self::getSignalSlotDispatcher();
-        $dispatcher->dispatch(__CLASS__, 'BeforeProcessingAdditionalButtons', [&$buttons]);
+        $dispatcher->dispatch(__CLASS__, 'BeforeProcessingAdditionalButtons', [$product, &$buttons]);
 
         // Process
         foreach ($buttons as &$button) {

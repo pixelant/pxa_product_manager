@@ -328,12 +328,13 @@ class ProductUtilityTest extends UnitTestCase
         );
 
         $buttons = [];
+        $product = $this->getAccessibleMock(Product::class, ['dummy']);
 
         $signalSlotDispatcherMock->expects($this->once())
             ->method('dispatch')
-            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$buttons])
+            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$product, $buttons])
             ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
-                $params[0] = [
+                $params[1] = [
                     [
                         'name' => 'Sell me',
                         'link' => 'http://example.sell.com',
@@ -350,7 +351,7 @@ class ProductUtilityTest extends UnitTestCase
             }));
 
         ProductUtility::$signalSlotDispatcher = $signalSlotDispatcherMock;
-        $result = ProductUtility::getAdditionalButtons($buttons);
+        $result = ProductUtility::getAdditionalButtons($product, $buttons);
 
         $this->assertEquals($expected, $result);
     }
@@ -382,12 +383,13 @@ class ProductUtilityTest extends UnitTestCase
         );
 
         $buttons = [];
+        $product = $this->getAccessibleMock(Product::class, ['dummy']);
 
         $signalSlotDispatcherMock->expects($this->once())
             ->method('dispatch')
-            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$buttons])
+            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$product, $buttons])
             ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
-                $params[0] = [
+                $params[1] = [
                     [
                         'name' => 'Buy me',
                         'link' => 'http://example.com',
@@ -404,7 +406,7 @@ class ProductUtilityTest extends UnitTestCase
             }));
 
         ProductUtility::$signalSlotDispatcher = $signalSlotDispatcherMock;
-        $result = ProductUtility::getAdditionalButtons($buttons);
+        $result = ProductUtility::getAdditionalButtons($product, $buttons);
 
         $this->assertEquals($expected, $result);
     }
@@ -437,11 +439,13 @@ class ProductUtilityTest extends UnitTestCase
 
         $buttons = [];
 
+        $product = $this->getAccessibleMock(Product::class, ['dummy']);
+
         $signalSlotDispatcherMock->expects($this->once())
             ->method('dispatch')
-            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$buttons])
+            ->with(ProductUtility::class, 'BeforeProcessingAdditionalButtons', [$product, $buttons])
             ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
-                $params[0] = [
+                $params[1] = [
                     [
                         'name' => 'Sell me',
                         'link' => 'http://example.sell.com',
@@ -458,7 +462,7 @@ class ProductUtilityTest extends UnitTestCase
             }));
 
         ProductUtility::$signalSlotDispatcher = $signalSlotDispatcherMock;
-        $result = ProductUtility::getAdditionalButtons($buttons);
+        $result = ProductUtility::getAdditionalButtons($product, $buttons);
 
         $this->assertEquals($expected, $result);
     }
