@@ -71,9 +71,11 @@
                                             <f:translate key="fe.go_back" />
                                         </button>
                                     </f:if>
-                                    <f:format.raw>
-                                            <ppm:renderAdditionalButtons product="{product}"/>
-                                    </f:format.raw>
+                                    <f:for each="{additionalButtons}" as="button">
+                                        <a href="{button.link}" class="btn btn-default product-header-btn {button.classes}">
+                                            {button.name}
+                                        </a>
+                                    </f:for>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
