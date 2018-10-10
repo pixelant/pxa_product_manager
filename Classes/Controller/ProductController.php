@@ -834,7 +834,7 @@ class ProductController extends AbstractController
         if (isset($settings['offSet'])) {
             $demand->setOffSet((int)$settings['offSet']);
         }
-        if (is_array($settings['filters'])) {
+        if (isset($settings['filters']) && is_array($settings['filters'])) {
             $demand->setFilters($settings['filters']);
         }
         if (!empty($settings['includeDiscontinued'])) {

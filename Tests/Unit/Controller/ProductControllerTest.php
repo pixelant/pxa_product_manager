@@ -414,13 +414,38 @@ class ProductControllerTest extends UnitTestCase
     {
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy']
+            ['dummy'],
+            [],
+            '',
+            false
         );
+        $mockedSignalSlotDispatcher = $this->createMock(Dispatcher::class);
+        $this->inject($mockedController, 'signalSlotDispatcher', $mockedSignalSlotDispatcher);
 
         $this->assertInstanceOf(
             Demand::class,
             $mockedController->_call('createDemandFromSettings', [])
         );
+    }
+
+    /**
+     * @test
+     */
+    public function createDemandWithClassThatIsNotInstanceOfDemandThrowException()
+    {
+        $class = 'stdClass';
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy'],
+            [],
+            '',
+            false
+        );
+        $mockedSignalSlotDispatcher = $this->createMock(Dispatcher::class);
+        $this->inject($mockedController, 'signalSlotDispatcher', $mockedSignalSlotDispatcher);
+
+        $this->expectException(\UnexpectedValueException::class);
+        $mockedController->_call('createDemandFromSettings', [], $class);
     }
 
     /**
