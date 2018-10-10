@@ -1,7 +1,7 @@
 <?php
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
-use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 
 /**
  * Interface DemandRepositoryInterface
@@ -9,5 +9,5 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
  */
 interface DemandRepositoryInterface
 {
-    public function findDemanded(Demand $demand);
+    public function findDemanded(DemandInterface $demand);
 }

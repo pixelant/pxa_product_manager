@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
@@ -795,12 +796,31 @@ class ProductController extends AbstractController
      * Create demand object
      *
      * @param array $settings
+     * @param string $class
      * @return Demand
      */
-    protected function createDemandFromSettings(array $settings)
-    {
+    protected function createDemandFromSettings(
+        array $settings,
+        string $class = null
+    ): DemandInterface {
+        $class = $class ??
+            (!empty($settings['demandClass'])
+                ? $settings['demandClass']
+                : 'Pixelant\\PxaProductManager\\Domain\\Model\\DTO\\Demand');
+
         /** @var Demand $demand */
-        $demand = GeneralUtility::makeInstance(Demand::class);
+        $demand = GeneralUtility::makeInstance($class);
+        if (!$demand instanceof Demand) {
+            throw new \UnexpectedValueException(
+                sprintf(
+                // @codingStandardsIgnoreStart
+                    'Demand object must instance of "Pixelant\\PxaProductManager\\Domain\\Model\\DTO\\Demand", but instance of "%s" given.',
+                    // @codingStandardsIgnoreEnd
+                    $class
+                ),
+                1539161115399
+            );
+        }
 
         if (!empty($settings['demandCategories'])) {
             $demand->setCategories($settings['demandCategories']);
@@ -808,13 +828,13 @@ class ProductController extends AbstractController
         if (!empty($settings['allowedCategoriesMode'])) {
             $demand->setCategoryConjunction($settings['allowedCategoriesMode']);
         }
-        if ($limit = (int)$settings['limit']) {
-            $demand->setLimit($limit);
+        if (isset($settings['limit'])) {
+            $demand->setLimit((int)$settings['limit']);
         }
-        if ($offSet = (int)$settings['offSet']) {
-            $demand->setOffSet($offSet);
+        if (isset($settings['offSet'])) {
+            $demand->setOffSet((int)$settings['offSet']);
         }
-        if (is_array($settings['filters'])) {
+        if (isset($settings['filters']) && is_array($settings['filters'])) {
             $demand->setFilters($settings['filters']);
         }
         if (!empty($settings['includeDiscontinued'])) {
@@ -822,15 +842,18 @@ class ProductController extends AbstractController
         }
 
         // set orderings
-        if ($settings['orderProductBy']) {
+        if (!empty($settings['orderProductBy'])) {
             $demand->setOrderBy($settings['orderProductBy']);
         }
-        if ($settings['orderProductDirection']) {
+        if (!empty($settings['orderProductDirection'])) {
             $demand->setOrderDirection($settings['orderProductDirection']);
         }
-        if ($settings['orderByAllowed']) {
+        if (!empty($settings['orderByAllowed'])) {
             $demand->setOrderByAllowed($settings['orderByAllowed']);
         }
+
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
+
         return $demand;
     }
 
@@ -971,7 +994,7 @@ class ProductController extends AbstractController
      * @param array $buttons
      * @return array
      */
-    protected function getProductAdditionalButtons(Product $product, array $buttons = []) : array
+    protected function getProductAdditionalButtons(Product $product, array $buttons = []): array
     {
         /**
          * Generate additional buttons

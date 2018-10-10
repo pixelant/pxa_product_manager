@@ -32,7 +32,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
  * Class Demand
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-class Demand
+class Demand implements DemandInterface
 {
     /**
      * Array of PIDs storage
@@ -108,13 +108,6 @@ class Demand
      * @var bool
      */
     protected $includeDiscontinued = false;
-
-    /**
-     * Demand constructor.
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * @return array
