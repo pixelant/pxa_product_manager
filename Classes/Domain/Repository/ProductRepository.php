@@ -26,6 +26,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  ***************************************************************/
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -53,10 +54,10 @@ class ProductRepository extends AbstractDemandRepository
     /**
      * Override basic method. Set special ordering for categories if it's not multiple
      *
-     * @param Demand $demand
+     * @param DemandInterface|Demand $demand
      * @return QueryResultInterface
      */
-    public function findDemanded(Demand $demand): QueryResultInterface
+    public function findDemanded(DemandInterface $demand): QueryResultInterface
     {
         if ($demand->getOrderBy() !== 'categories' || count($demand->getCategories()) > 1) {
             return parent::findDemanded($demand);
@@ -137,9 +138,9 @@ class ProductRepository extends AbstractDemandRepository
      * If order is by category need to override basic order function
      *
      * @param QueryInterface $query
-     * @param Demand $demand
+     * @param DemandInterface|Demand $demand
      */
-    public function setOrderings(QueryInterface $query, Demand $demand)
+    public function setOrderings(QueryInterface $query, DemandInterface $demand)
     {
         // If sorting is set by categories, we need to create a special query
         if ($demand->getOrderBy() !== 'categories') {
@@ -277,10 +278,10 @@ class ProductRepository extends AbstractDemandRepository
      * Create constraints for all demand options
      *
      * @param QueryInterface $query
-     * @param Demand $demand
+     * @param DemandInterface|Demand $demand
      * @return array
      */
-    protected function createConstraints(QueryInterface $query, Demand $demand): array
+    protected function createConstraints(QueryInterface $query, DemandInterface $demand): array
     {
         $constraints = [];
 
