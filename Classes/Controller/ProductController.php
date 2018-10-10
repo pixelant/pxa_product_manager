@@ -813,7 +813,7 @@ class ProductController extends AbstractController
         if (!$demand instanceof Demand) {
             throw new \UnexpectedValueException(
                 sprintf(
-                    // @codingStandardsIgnoreStart
+                // @codingStandardsIgnoreStart
                     'Demand object must instance of "Pixelant\\PxaProductManager\\Domain\\Model\\DTO\\Demand", but instance of "%s" given.',
                     // @codingStandardsIgnoreEnd
                     $class
@@ -851,6 +851,8 @@ class ProductController extends AbstractController
         if (!empty($settings['orderByAllowed'])) {
             $demand->setOrderByAllowed($settings['orderByAllowed']);
         }
+
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
 
         return $demand;
     }
