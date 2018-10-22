@@ -186,6 +186,17 @@ class TceMain
                     't3_origuid',
                     'l10n_parent',
                     'sys_language_uid'
+                ],
+                [
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_STR,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT
                 ]
             );
         }
