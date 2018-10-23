@@ -4,6 +4,8 @@ namespace Pixelant\PxaProductManager\Tests\Unit\ViewHelpers;
 
 use Nimut\TestingFramework\TestCase\ViewHelperBaseTestcase;
 use Pixelant\PxaProductManager\ViewHelpers\SetPageTitleViewHelper;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -13,11 +15,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class SetPageTitleViewHelperTest extends ViewHelperBaseTestcase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
-     */
-    protected $tsfe;
-
-    /**
      * @var \PHPUnit_Framework_MockObject_MockObject|SetPageTitleViewHelper
      */
     protected $viewHelper;
@@ -25,20 +22,23 @@ class SetPageTitleViewHelperTest extends ViewHelperBaseTestcase
     protected function setUp()
     {
         parent::setUp();
-        $this->tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
+        $tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
                         ->disableOriginalConstructor()
                         ->disableOriginalClone()
                         ->getMock();
-        $this->viewHelper = $this->getAccessibleMock(SetPageTitleViewHelper::class, ['dummy']);
+        $this->viewHelper = $this->getAccessibleMock(SetPageTitleViewHelper::class, ['buildRenderChildrenClosure']);
+        $this->inject($this->viewHelper, 'renderingContext', $this->createMock(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface::class));
         $this->viewHelper->initializeArguments();
 
-        $GLOBALS['TSFE'] = $this->tsfe;
+        $GLOBALS['TSFE'] = $tsfe;
+
+        defined('LF') ?: define('LF', chr(10));
     }
 
     protected function tearDown()
     {
         parent::tearDown();
-        unset($this->viewHelper, $this->tsfe, $GLOBALS['TSFE']);
+        unset($this->viewHelper, $GLOBALS['TSFE']);
     }
 
     /**
@@ -49,11 +49,15 @@ class SetPageTitleViewHelperTest extends ViewHelperBaseTestcase
         $title = 'Custom title of page';
 
         $this->viewHelper->_set('arguments', ['title' => $title]);
-
+        $this->viewHelper
+            ->expects($this->atLeastOnce())
+            ->method('buildRenderChildrenClosure')
+            ->willReturn(function () {return 'test';});
         $this->viewHelper->render();
 
-        self::assertEquals($title, $GLOBALS['TSFE']->altPageTitle);
-        self::assertEquals($title, $GLOBALS['TSFE']->indexedDocTitle);
+        $this->assertEquals($title, $GLOBALS['TSFE']->altPageTitle);
+        $this->assertEquals($title, $GLOBALS['TSFE']->indexedDocTitle);
+        $this->assertEquals($title, GeneralUtility::makeInstance(PageRenderer::class)->getTitle());
     }
 
     /**
@@ -64,10 +68,15 @@ class SetPageTitleViewHelperTest extends ViewHelperBaseTestcase
         $title = '  Custom title of page  ';
 
         $this->viewHelper->_set('arguments', ['title' => $title]);
-
+        $this->viewHelper
+            ->expects($this->atLeastOnce())
+            ->method('buildRenderChildrenClosure')
+            ->willReturn(function () {return 'test';});
         $this->viewHelper->render();
 
-        self::assertEquals(trim($title), $GLOBALS['TSFE']->altPageTitle);
-        self::assertEquals(trim($title), $GLOBALS['TSFE']->indexedDocTitle);
+        $expect = trim($title);
+        self::assertEquals($expect, $GLOBALS['TSFE']->altPageTitle);
+        self::assertEquals($expect, $GLOBALS['TSFE']->indexedDocTitle);
+        $this->assertEquals($expect, GeneralUtility::makeInstance(PageRenderer::class)->getTitle());
     }
 }
