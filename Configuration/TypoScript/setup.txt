@@ -235,6 +235,7 @@ page {
         tx_pxaproductmanager_pi1.action = show
     }
 
+[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}] && [globalVar = GP:tx_pxaproductmanager_pi1|product > 0]
     # add stuff for gallery
     page {
         includeCSS {
