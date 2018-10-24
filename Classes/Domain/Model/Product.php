@@ -1490,7 +1490,7 @@ class Product extends AbstractEntity
      * {product.attribute.identifier.value}
      *
      * @param string $identifier
-     * @return mixed Array of all attributes with identifier or attribute object or null
+     * @return array|Attribute Array of all attributes with identifier or attribute object or null
      */
     public function getAttribute(string $identifier = '')
     {
