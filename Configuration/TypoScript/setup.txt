@@ -300,6 +300,7 @@ PXA_PRODUCT_MANAGER_WISH_LIST {
                 2 = toggleCompareList
                 3 = loadCompareList
                 4 = emptyCompareList
+                5 = loadWishList
             }
         }
     }
