@@ -256,7 +256,7 @@ class ProductUtility
     {
         $list = $_COOKIE[self::WISH_LIST_COOKIE_NAME] ?: '';
 
-        return GeneralUtility::intExplode(',', $list);
+        return GeneralUtility::intExplode(',', $list, true);
     }
 
     /**

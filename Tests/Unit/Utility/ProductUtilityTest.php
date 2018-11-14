@@ -45,6 +45,21 @@ class ProductUtilityTest extends UnitTestCase
     /**
      * @test
      */
+    public function getWishListReturnEmptyArrayWhenNoProductsUids()
+    {
+        $_COOKIE[ProductUtility::WISH_LIST_COOKIE_NAME] = '';
+        $expected = [];
+        $result = ProductUtility::getWishList();
+
+        $this->assertEquals(
+            $expected,
+            $result
+        );
+    }
+
+    /**
+     * @test
+     */
     public function isProductInWishListReturnTrueIfProductInListAndProductIsObject()
     {
         $product = new Product();
