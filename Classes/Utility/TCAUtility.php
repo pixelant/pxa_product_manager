@@ -177,7 +177,8 @@ class TCAUtility
                         'showPossibleLocalizationRecords' => false,
                         'showRemovedLocalizationRecords' => true,
                         'showAllLocalizationLink' => false,
-                        'showSynchronizationLink' => false
+                        'showSynchronizationLink' => false,
+                        'collapseAll' => true
                     ],
                     'foreign_match_fields' => [
                         'fieldname' => self::ATTRIBUTE_FAL_FIELD_NAME,
