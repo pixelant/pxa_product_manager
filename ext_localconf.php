@@ -15,14 +15,14 @@ call_user_func(
                 // @codingStandardsIgnoreEnd
                 'Navigation' => 'show',
                 'AjaxProducts' => 'ajaxLazyList',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList',
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList',
                 'Filter' => 'showFilter'
             ],
             // non-cacheable actions
             [
                 'Product' => 'wishList, finishOrder, comparePreView, compareView',
                 'AjaxProducts' => 'ajaxLazyList',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList'
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList'
             ]
         );
 
