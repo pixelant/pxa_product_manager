@@ -16,22 +16,11 @@ plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product {
         url {
             userFunc = Pixelant\PxaProductManager\UserFunction\SolrProductLink->getLink
             pageUid = {$plugin.tx_pxaproductmanager.settings.pagePid}
-
-            productUid = TEXT
-            productUid {
-                field = uid
-            }
-
-            languageUid = TEXT
-            languageUid {
-                field = __solr_index_language
-            }
         }
 
         image_main_url_stringS = USER
         image_main_url_stringS {
             userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductMainImagePublicUrl
-            uid.data = field:uid
         }
 
         image_thumbnail_url_stringS < .image_main_url_stringS

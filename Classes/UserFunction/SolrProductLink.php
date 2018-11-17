@@ -21,8 +21,8 @@ class SolrProductLink
     public function getLink(/** @noinspection PhpUnusedParameterInspection */ $content, array $params): string
     {
         $pagePid = (int)$params['pageUid'];
-        $productUid = (int)$this->cObj->stdWrap($params['productUid'], $params['productUid.']);
-        $languageUid = (int)$this->cObj->stdWrap($params['languageUid'], $params['languageUid.']);
+        $productUid = (int)$this->cObj->data['uid'];
+        $languageUid = (int)$this->cObj->data['__solr_index_language'];
 
         if ($pagePid === 0 || $productUid === 0) {
             throw new \UnexpectedValueException(
