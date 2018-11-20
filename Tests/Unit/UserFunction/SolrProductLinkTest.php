@@ -36,10 +36,6 @@ class SolrProductLinkTest extends UnitTestCase
     {
         $params = [];
 
-        $this->cObj
-            ->expects($this->exactly(2))
-            ->method('stdWrap');
-
         $this->expectException(\UnexpectedValueException::class);
         $this->mockedSolrProductLinkTest->getLink('', $params);
     }
@@ -50,15 +46,16 @@ class SolrProductLinkTest extends UnitTestCase
     public function getLinkWithValidParamsWillBuildLink()
     {
         $pagePid = 111;
+        $data = [
+            'uid' => 1,
+            '__solr_index_language' => 1
+        ];
         $testParams = ['testparam' => 'test'];
         $params = [
             'pageUid' => $pagePid
         ];
 
-        $this->cObj
-            ->expects($this->exactly(2))
-            ->method('stdWrap')
-            ->willReturn(1);
+        $this->cObj->data = $data;
 
         $this->mockedSolrProductLinkTest
             ->expects($this->once())
