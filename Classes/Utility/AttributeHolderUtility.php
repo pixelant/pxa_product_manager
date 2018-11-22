@@ -108,7 +108,7 @@ class AttributeHolderUtility
                     }
                 }
 
-                // Save generated attribute
+                // Save generated attribute set
                 $attributesSetClone = clone $attributesSet;
                 $attributesSetClone->setAttributes($currentSetAttributes);
 
