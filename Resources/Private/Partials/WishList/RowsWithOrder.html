@@ -5,7 +5,7 @@
     <f:if condition="{products}">
         <f:form pageUid="{checkout.pid}" extensionName="{checkout.extension}" controller="{checkout.controller}"
                 action="{checkout.action}"  arguments="{sendOrder: 1}" class="form-horizontal">
-            <div class="row item-order-header">
+            <div class="row item-order-header hidden-xs">
                 <div class="col-sm-2 col-md-1"></div>
                 <div class="col-sm-2 col-md-4"><f:translate key="fe.product_name"/></div>
                 <div class="col-sm-2 col-md-2"><f:translate key="fe.sku"/></div>
@@ -121,72 +121,110 @@
 </div>
 
 <f:section name="item">
-    <div class="col-sm-2 col-md-1">
-        <f:if condition="{product.thumbnail}">
-            <f:then>
-                <div class="item-order-img">
-                    <f:image maxWidth="{settings.images.orderView.maxWidth}"
-                             maxHeight="{settings.images.orderView.maxHeight}"
-                             image="{product.thumbnail}"
-                             title="{product.name}"
-                             alt="{product.name}"/>
-                </div>
-            </f:then>
-            <f:else>
-                <f:if condition="{settings.images.pathNoImage}">
-                    <div class="item-order-img">
-                        <f:image src="{settings.images.pathNoImage}"
-                                 width="{settings.images.orderView.maxWidth}"
-                                 height="{settings.images.orderView.maxHeight}"
-                                 alt="{product.name}"/>
-                    </div>
+    <div class="col-sm-2 col-md-1 col-xs-12">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <f:if condition="{product.thumbnail}">
+                    <f:then>
+                        <div class="item-order-img">
+                            <f:image maxWidth="{settings.images.orderView.maxWidth}"
+                                    maxHeight="{settings.images.orderView.maxHeight}"
+                                    image="{product.thumbnail}"
+                                    title="{product.name}"
+                                    alt="{product.name}"/>
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <f:if condition="{settings.images.pathNoImage}">
+                            <div class="item-order-img">
+                                <f:image src="{settings.images.pathNoImage}"
+                                        width="{settings.images.orderView.maxWidth}"
+                                        height="{settings.images.orderView.maxHeight}"
+                                        alt="{product.name}"/>
+                            </div>
+                        </f:if>
+                    </f:else>
                 </f:if>
-            </f:else>
-        </f:if>
-    </div>
-    <div class="col-sm-2 col-md-4">
-        <ppm:link pageUid="{settings.pagePid}" product="{product}">
-            {product.name}
-        </ppm:link>
-    </div>
-    <div class="col-sm-2 col-md-2">{product.sku}</div>
-    <div class="col-sm-2 col-md-2">
-        <f:if condition="{ppm:isPricingEnabled()}">
-            <span class="item-order-price" id="item-order-price-{product.uid}" data-price="{product.price}" data-product-uid="{product.uid}">
-                <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
-            </span>
-            <f:if condition="{settings.wishList.showTaxInfo}">
-                <div class="item-order-tax tax-price" id="item-order-tax-{product.uid}" data-tax="{product.tax}" data-product-uid="{product.uid}">
-                    <small>
-                        <f:translate key="fe.tax" />
-                        <f:translate key="fe.price_currency_format" arguments="{0: product.formatTax}" />
-                    </small>
-                </div>
-            </f:if>
-        </f:if>
-    </div>
-    <div class="col-sm-2 col-md-2">
-        <f:form.textfield
-                name="orderProducts[{product.uid}]"
-                type="number"
-                value="{f:if(condition: '{orderProducts.{product.uid}}', then: '{orderProducts.{product.uid}}', else: 1)}"
-                class="order-product-amount"
-                id="order-product-amount-{product.uid}"
-                data="{product-uid: product.uid}" />
-    </div>
-    <div class="col-sm-2 col-md-1">
-            <div class="pm-action-button in-progress list-clear__icon _order-clear__icon"
-                  data-wish-list-button="1"
-                  data-delete-parent-on-remove=".row"
-                  data-product-uid="{product.uid}"
-                  data-add-to-list-text="{f:translate(key: 'fe.wish_list.add_title')}"
-                  data-remove-from-list-text="{f:translate(key: 'fe.wish_list.remove_title')}"
-                  data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleWishList', absolute: '1', arguments: '{wishProduct: product}', pageType: '{settings.wishList.pageType}')}">
-            <ppm:svg
-                    class="pm-action-icon"
-                    source="{f:uri.resource(path: 'Icons/Svg/circle-cross.svg', extensionName: 'pxa_product_manager')}" />
-                <div class="lds-dual-ring"><div class="small"></div></div>
             </div>
+        </div>
+    </div>
+    <div class="col-sm-2 col-md-4 col-xs-12">
+        <div class="row">
+            <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
+                <f:translate key="fe.product_name"/>
+            </div>
+            <div class="col-xs-7 col-sm-12 col-md-12">
+                <ppm:link pageUid="{settings.pagePid}" product="{product}">
+                    {product.name}
+                </ppm:link>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2 col-md-2 col-xs-12">
+        <div class="row">
+            <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
+                <f:translate key="fe.sku"/>
+            </div>
+            <div class="col-xs-7 col-sm-12 col-md-12">
+                {product.sku}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2 col-md-2 col-xs-12">
+        <f:if condition="{ppm:isPricingEnabled()}">
+            <div class="row">
+                <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
+                    <f:translate key="fe.price_per"/>
+                </div>
+                <div class="col-xs-7 col-sm-12 col-md-12">
+                    <span class="item-order-price" id="item-order-price-{product.uid}" data-price="{product.price}" data-product-uid="{product.uid}">
+                        <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
+                    </span>
+                    <f:if condition="{settings.wishList.showTaxInfo}">
+                        <div class="item-order-tax tax-price" id="item-order-tax-{product.uid}" data-tax="{product.tax}" data-product-uid="{product.uid}">
+                            <small>
+                                <f:translate key="fe.tax" />
+                                <f:translate key="fe.price_currency_format" arguments="{0: product.formatTax}" />
+                            </small>
+                        </div>
+                    </f:if>
+                </div>
+            </div>
+        </f:if>
+    </div>
+    <div class="col-sm-2 col-md-2 col-xs-12">
+        <div class="row">
+            <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
+                <f:translate key="fe.add"/>
+            </div>
+            <div class="col-xs-7 col-sm-12 col-md-12">
+                <f:form.textfield
+                    name="orderProducts[{product.uid}]"
+                    type="number"
+                    value="{f:if(condition: '{orderProducts.{product.uid}}', then: '{orderProducts.{product.uid}}', else: 1)}"
+                    class="order-product-amount"
+                    id="order-product-amount-{product.uid}"
+                    data="{product-uid: product.uid}" />
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2 col-md-1 col-xs-12 pm-mobile-action-button">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="pm-action-button in-progress list-clear__icon _order-clear__icon"
+                    data-wish-list-button="1"
+                    data-delete-parent-on-remove=".row"
+                    data-product-uid="{product.uid}"
+                    data-add-to-list-text="{f:translate(key: 'fe.wish_list.add_title')}"
+                    data-remove-from-list-text="{f:translate(key: 'fe.wish_list.remove_title')}"
+                    data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleWishList', absolute: '1', arguments: '{wishProduct: product}', pageType: '{settings.wishList.pageType}')}">
+                <ppm:svg
+                        class="pm-action-icon"
+                        source="{f:uri.resource(path: 'Icons/Svg/circle-cross.svg', extensionName: 'pxa_product_manager')}" />
+                    <div class="lds-dual-ring"><div class="small"></div></div>
+                </div>
+            </div>
+        </div>
     </div>
 </f:section>
 
