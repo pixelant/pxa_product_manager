@@ -1,7 +1,7 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
       xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
 
-<div class="pm-products-user-list row">
+<div class="pm-products-user-list row {f:if(condition: '{ppm:isPricingEnabled()}', then: 'pricing-enabled')}">
     <f:if condition="{products}">
         <f:form pageUid="{checkout.pid}" extensionName="{checkout.extension}" controller="{checkout.controller}"
                 action="{checkout.action}"  arguments="{sendOrder: 1}" class="form-horizontal">
@@ -9,7 +9,7 @@
                 <div class="col-sm-2 col-md-1"></div>
                 <div class="col-sm-2 col-md-4"><f:translate key="fe.product_name"/></div>
                 <div class="col-sm-2 col-md-2"><f:translate key="fe.sku"/></div>
-                <div class="col-sm-2 col-md-2"><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per')}" else=""/></div>
+                <f:if condition="{ppm:isPricingEnabled()}"><div class="col-sm-2 col-md-2"><f:translate key="fe.sku"/></div></f:if>
                 <div class="col-sm-2 col-md-2"><f:translate key="fe.add"/></div>
                 <div class="col-sm-2 col-md-1"></div>
             </div>
@@ -170,8 +170,8 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-2 col-md-2 col-xs-12">
-        <f:if condition="{ppm:isPricingEnabled()}">
+    <f:if condition="{ppm:isPricingEnabled()}">
+        <div class="col-sm-2 col-md-2 col-xs-12">
             <div class="row">
                 <div class="col-xs-5 hidden-sm hidden-md hidden-lg">
                     <f:translate key="fe.price_per"/>
@@ -190,8 +190,8 @@
                     </f:if>
                 </div>
             </div>
-        </f:if>
-    </div>
+        </div>
+    </f:if>
     <div class="col-sm-2 col-md-2 col-xs-12">
         <div class="row">
             <div class="col-xs-5 hidden-sm hidden-md hidden-lg">

@@ -340,7 +340,7 @@
 }
 .tx-pxa-product-manager .pm-action-button.list-clear__icon {
   position: absolute;
-  top: -10px;
+  top: 5px;
   right: 5px;
   fill: #909090;
   width: 20px;
@@ -572,6 +572,9 @@
 }
 #pxa-pm-popup-manager-container #pxa-pm-popup-manager p {
   margin: 0;
+}
+.tx-pxa-product-manager .pricing-enabled .pm-action-button.list-clear__icon {
+  top: -10px;
 }
 @media (max-width: 767px) {
   .pm-mobile-action-button {
