@@ -139,10 +139,10 @@ plugin.tx_pxaproductmanager {
         images {
             orderView {
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/060; type=int; label=Image max width
-                maxWidth = 100
+                maxWidth = 705
 
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/070; type=int; label=Image max height
-                maxHeight = 100
+                maxHeight = 705
             }
         }
     }
