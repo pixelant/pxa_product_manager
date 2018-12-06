@@ -1,7 +1,7 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
       xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
 
-<div class="pm-products-user-list row {f:if(condition: '{ppm:isPricingEnabled()}', then: 'pricing-enabled')}">
+<div class="container-fluid pm-products-user-list {f:if(condition: '{ppm:isPricingEnabled()}', then: 'pricing-enabled')}">
     <f:if condition="{products}">
         <f:form pageUid="{checkout.pid}" extensionName="{checkout.extension}" controller="{checkout.controller}"
                 action="{checkout.action}"  arguments="{sendOrder: 1}" class="form-horizontal">
@@ -16,9 +16,8 @@
 
             <f:for each="{products}" as="product">
                 <div class="row item-order-row">
-                    <f:render
-                            section="item"
-                            arguments="{product: product, orderProducts: orderProducts}" />
+                    <f:render section="item"
+                              arguments="{product: product, orderProducts: orderProducts}" />
                 </div>
             </f:for>
 
