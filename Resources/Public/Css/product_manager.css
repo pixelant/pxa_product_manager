@@ -20,7 +20,7 @@
   padding-top: 10px;
 }
 .tx-pxa-product-manager .item-order-row > div {
-  vertical-align: auto;
+  vertical-align: middle;
   display: inline-block;
   float: none;
   margin: 0 -5px;
@@ -29,7 +29,7 @@
   display: none;
 }
 .tx-pxa-product-manager .item-order-header > div {
-  vertical-align: auto;
+  vertical-align: middle;
   display: inline-block;
   float: none;
   margin: 0 -5px;
