@@ -11,7 +11,7 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Products Manager',
+    'title' => 'Product Manager',
     'description' => 'Allow to create and list products on a site.',
     'category' => 'plugin',
     'author' => 'Andriy Oprysko',
