@@ -14,3 +14,6 @@ composer.lock
 # NPM
 npm-debug.log
 package-lock.json
+
+# TYPO3 9
+/var

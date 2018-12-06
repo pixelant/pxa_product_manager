@@ -81,6 +81,18 @@ class AbstractController extends ActionController
     protected $orderRepository = null;
 
     /**
+     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository
+     * @inject
+     */
+    protected $orderConfigurationRepository = null;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+     * @inject
+     */
+    protected $signalSlotDispatcher = null;
+
+    /**
      * Get category
      *
      * @param int $category
@@ -363,7 +375,7 @@ class AbstractController extends ActionController
 
         if (!empty($result)) {
             $uidList = array_intersect($uidList, array_keys($result));
-            // sort to have same order as in cookie
+            // sort to have same order as in list
             $result = array_replace(array_flip($uidList), $result);
         }
 

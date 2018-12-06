@@ -244,16 +244,16 @@ class OrderTest extends UnitTestCase
         $orderFields = [
             'test' => [
                 'value' => 'test value',
-                'type' => Order::ORDERFIELD_TEXTAREA
+                'type' => 'type1'
             ]
         ];
         $this->subject->setOrderFields($orderFields);
 
         $newValue = 'new value 123';
 
-        $this->subject->setOrderField('test', $newValue, Order::ORDERFIELD_INPUT);
+        $this->subject->setOrderField('test', $newValue, 'type2');
         $orderFields['test']['value'] = $newValue;
-        $orderFields['test']['type'] = Order::ORDERFIELD_INPUT;
+        $orderFields['test']['type'] = 'type2';
 
         $this->assertEquals($orderFields, $this->subject->getOrderFields());
     }

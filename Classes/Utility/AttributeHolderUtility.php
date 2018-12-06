@@ -108,9 +108,11 @@ class AttributeHolderUtility
                     }
                 }
 
-                // set new attributes
-                $attributesSet->setAttributes($currentSetAttributes);
-                $this->attributeSets->attach($attributesSet);
+                // Save generated attribute set
+                $attributesSetClone = clone $attributesSet;
+                $attributesSetClone->setAttributes($currentSetAttributes);
+
+                $this->attributeSets->attach($attributesSetClone);
             }
         }
     }

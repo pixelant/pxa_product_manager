@@ -9,13 +9,18 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
+use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Validation\Validator\RequiredValidator;
+use Pixelant\PxaProductManager\Validation\ValidatorResolver;
 use TYPO3\CMS\Extbase\Mvc\Request;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Fluid\View\TemplateView;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -335,6 +340,17 @@ class ProductControllerTest extends UnitTestCase
         $productAttributesDiffOptions1 = $this->getAttributesStorage(['Option 1', 'Option 2'], 5, true);
         $productAttributesDiffOptions2 = $this->getAttributesStorage(['Option diff', 'Option diff'], 5, true);
 
+        $productAttributesCaseNoDiff1Array = $productAttributesCaseNoDiff1->toArray();
+        $productAttributesCaseNoDiff2Array = $productAttributesCaseNoDiff2->toArray();
+
+        $productAttributesCaseWithDiff1Array = $productAttributesCaseWithDiff1->toArray();
+        $productAttributesCaseWithDiff2Array = $productAttributesCaseWithDiff2->toArray();
+
+        $productAttributesNoDiffOptions1Array = $productAttributesNoDiffOptions1->toArray();
+        $productAttributesNoDiffOptions2Array = $productAttributesNoDiffOptions2->toArray();
+
+        $productAttributesDiffOptions1Array = $productAttributesDiffOptions1->toArray();
+        $productAttributesDiffOptions2Array = $productAttributesDiffOptions2->toArray();
         return [
             'attributes_with_same_values_has_no_diff' => [
                 $attributeCaseNoDiff,
@@ -343,8 +359,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseNoDiff->getName(),
                     'attributesList' => [
-                        end($productAttributesCaseNoDiff1->toArray()),
-                        end($productAttributesCaseNoDiff2->toArray())
+                        end($productAttributesCaseNoDiff1Array),
+                        end($productAttributesCaseNoDiff2Array)
                     ],
                     'isDifferent' => false
                 ]
@@ -356,8 +372,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseWithDiff->getName(),
                     'attributesList' => [
-                        end($productAttributesCaseWithDiff1->toArray()),
-                        end($productAttributesCaseWithDiff2->toArray())
+                        end($productAttributesCaseWithDiff1Array),
+                        end($productAttributesCaseWithDiff2Array)
                     ],
                     'isDifferent' => true
                 ]
@@ -369,8 +385,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseNoDiffOptions->getName(),
                     'attributesList' => [
-                        end($productAttributesNoDiffOptions1->toArray()),
-                        end($productAttributesNoDiffOptions2->toArray())
+                        end($productAttributesNoDiffOptions1Array),
+                        end($productAttributesNoDiffOptions2Array)
                     ],
                     'isDifferent' => false
                 ]
@@ -382,8 +398,8 @@ class ProductControllerTest extends UnitTestCase
                 [
                     'label' => $attributeCaseDiffOptions->getName(),
                     'attributesList' => [
-                        end($productAttributesDiffOptions1->toArray()),
-                        end($productAttributesDiffOptions2->toArray())
+                        end($productAttributesDiffOptions1Array),
+                        end($productAttributesDiffOptions2Array)
                     ],
                     'isDifferent' => true
                 ]
@@ -398,13 +414,38 @@ class ProductControllerTest extends UnitTestCase
     {
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy']
+            ['dummy'],
+            [],
+            '',
+            false
         );
+        $mockedSignalSlotDispatcher = $this->createMock(Dispatcher::class);
+        $this->inject($mockedController, 'signalSlotDispatcher', $mockedSignalSlotDispatcher);
 
         $this->assertInstanceOf(
             Demand::class,
             $mockedController->_call('createDemandFromSettings', [])
         );
+    }
+
+    /**
+     * @test
+     */
+    public function createDemandWithClassThatIsNotInstanceOfDemandThrowException()
+    {
+        $class = 'stdClass';
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy'],
+            [],
+            '',
+            false
+        );
+        $mockedSignalSlotDispatcher = $this->createMock(Dispatcher::class);
+        $this->inject($mockedController, 'signalSlotDispatcher', $mockedSignalSlotDispatcher);
+
+        $this->expectException(\UnexpectedValueException::class);
+        $mockedController->_call('createDemandFromSettings', [], $class);
     }
 
     /**
@@ -447,216 +488,77 @@ class ProductControllerTest extends UnitTestCase
         unset($GLOBALS['TSFE']);
     }
 
-
     /**
      * @test
      */
-    public function orderFormFieldsReplacedWithFeUserFieldsIfEnabled()
-    {
-        $tsfe = $this->createMock(TypoScriptFrontendController::class);
-        $tsfe->loginUser = true;
-        $tsfe->fe_user = new \StdClass();
-        $tsfe->fe_user->user = [
-            'name' => 'TEST',
-            'email' => 'email@site.com'
-        ];
-
-        $GLOBALS['TSFE'] = $tsfe;
-
-        $mockedController = $this->getAccessibleMock(
-            ProductController::class,
-            ['dummy']
-        );
-        $mockedController->_set('settings', [
-            'wishList' => [
-                'orderForm' => [
-                    'fields' => [
-                        'name' => [
-                            'type' => 'input'
-                        ],
-                        'email' => [
-                            'type' => 'input'
-                        ],
-                        'textarea' => [
-                            'type' => 'textarea'
-                        ],
-                    ],
-                    // Enable replacement
-                    'replaceWithFeUserValues' => '1'
-                ]
-            ]
-        ]);
-
-        $this->assertEquals(
-            [
-                'name' => [
-                    'type' => 'input',
-                    'feUserValue' => 'TEST'
-                ],
-                'email' => [
-                    'type' => 'input',
-                    'feUserValue' => 'email@site.com'
-                ],
-                'textarea' => [
-                    'type' => 'textarea'
-                ]
-            ],
-            $mockedController->_call('getProcessedOrderFormFields')
-        );
-
-        unset($GLOBALS['TSFE']);
-    }
-
-    /**
-     * @test
-     */
-    public function orderFormFieldsWillNotReplacedWithFeUserFieldsIfDisable()
-    {
-        $tsfe = $this->createMock(TypoScriptFrontendController::class);
-        $tsfe->loginUser = true;
-        $tsfe->fe_user = new \StdClass();
-        $tsfe->fe_user->user = [
-            'name' => 'TEST',
-            'email' => 'email@site.com'
-        ];
-
-        $GLOBALS['TSFE'] = $tsfe;
-
-        $mockedController = $this->getAccessibleMock(
-            ProductController::class,
-            ['dummy']
-        );
-        $mockedController->_set('settings', [
-            'wishList' => [
-                'orderForm' => [
-                    'fields' => [
-                        'name' => [
-                            'type' => 'input'
-                        ],
-                        'email' => [
-                            'type' => 'input'
-                        ],
-                        'textarea' => [
-                            'type' => 'textarea'
-                        ],
-                    ]
-                ]
-            ]
-        ]);
-
-        $this->assertEquals(
-            [
-                'name' => [
-                    'type' => 'input'
-                ],
-                'email' => [
-                    'type' => 'input'
-                ],
-                'textarea' => [
-                    'type' => 'textarea'
-                ]
-            ],
-            $mockedController->_call('getProcessedOrderFormFields')
-        );
-
-        unset($GLOBALS['TSFE']);
-    }
-
-    /**
-     * @test
-     * @dataProvider validationFieldsDataProvider
-     */
-    public function orderFormWillNotPassValidationIfNotValidData($fields, $values, $result, $return)
+    public function validateOrderFieldsReturnFalseIfNotValid()
     {
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['translate']
+            ['translate', 'getValidatorResolver']
         );
+        $mockedValidator = $this->createMock(RequiredValidator::class);
+        $mockedValidatorResolver = $this->createPartialMock(ValidatorResolver::class, ['createValidator']);
+        $mockedValidatorResolver
+            ->expects($this->atLeastOnce())
+            ->method('createValidator')
+            ->willReturn($mockedValidator);
 
-        // If there are errors translate will be called
-        if ($return === false) {
-            $mockedController
-                ->expects($this->atLeastOnce())
-                ->method('translate')
-                ->willReturn('error');
-        }
-
-
-
-        $returned = $mockedController->_callRef('validateOrderFields', $fields, $values);
-
-        $this->assertEquals($returned, $return);
-
-        $this->assertEquals(
-            $result,
-            $fields
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function ifTermsAreNotRequiredGetNotRequiredTermsStatus()
-    {
-        $settings = [
-            'needToAcceptOrderTerms' => 0
-        ];
-
-        $mockedController = $this->getAccessibleMock(
-            ProductController::class,
-            ['dummy']
-        );
-
-        $mockedController->_set('settings', $settings);
-
-        $this->assertEquals(ProductController::TERMS_NOT_REQUIRED, $mockedController->_call('getAcceptTermsStatus'));
-    }
-
-    /**
-     * @test
-     */
-    public function ifTermsRequiredAndNoArgumentDeclinedStatusReturned()
-    {
-        $settings = [
-            'needToAcceptOrderTerms' => 1
-        ];
-        $request = $this->createMock(Request::class);
-
-        $mockedController = $this->getAccessibleMock(
-            ProductController::class,
-            ['dummy']
-        );
-
-        $mockedController->_set('settings', $settings);
-        $mockedController->_set('request', $request);
-
-        $this->assertEquals(ProductController::DECLINE_TERMS, $mockedController->_call('getAcceptTermsStatus'));
-    }
-
-    /**
-     * @test
-     */
-    public function ifTermsRequiredAndArgumentExistCorrectStatusAcceptReturned()
-    {
-        $settings = [
-            'needToAcceptOrderTerms' => 1
-        ];
-        $request = $this->createPartialMock(Request::class, ['getArgument']);
-        $request
+        $mockedController
             ->expects($this->once())
-            ->method('getArgument')
-            ->with('acceptTerms')
-            ->willReturn(1);
+            ->method('getValidatorResolver')
+            ->willReturn($mockedValidatorResolver);
 
+        $orderConfiguration = new OrderConfiguration();
+
+        $field = new OrderFormField();
+        $field->_setProperty('uid', 1);
+        $field->setValidationRules('required');
+
+        $orderConfiguration->addFormField($field);
+
+        $values = [
+            1 => '  '
+        ];
+
+        $this->assertFalse($mockedController->_call('validateOrderFields', $orderConfiguration, $values));
+    }
+
+    /**
+     * @test
+     */
+    public function validateOrderFieldsReturnTrueIfValid()
+    {
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy']
+            ['translate', 'getValidatorResolver']
         );
+        $mockedValidator = $this->createPartialMock(RequiredValidator::class, ['getErrorMessage']);
 
-        $mockedController->_set('settings', $settings);
-        $mockedController->_set('request', $request);
+        $mockedValidatorResolver = $this->createPartialMock(ValidatorResolver::class, ['createValidator']);
+        $mockedValidatorResolver
+            ->expects($this->atLeastOnce())
+            ->method('createValidator')
+            ->willReturn($mockedValidator);
 
-        $this->assertEquals(ProductController::ACCEPT_TERMS_OK, $mockedController->_call('getAcceptTermsStatus'));
+        $mockedController
+            ->expects($this->once())
+            ->method('getValidatorResolver')
+            ->willReturn($mockedValidatorResolver);
+
+        $orderConfiguration = new OrderConfiguration();
+
+        $field = new OrderFormField();
+        $field->_setProperty('uid', 1);
+        $field->setValidationRules('required');
+
+        $orderConfiguration->addFormField($field);
+
+        $values = [
+            1 => 'Value'
+        ];
+
+        $this->assertTrue($mockedController->_call('validateOrderFields', $orderConfiguration, $values));
     }
 
     /**
@@ -664,18 +566,21 @@ class ProductControllerTest extends UnitTestCase
      */
     public function loginRequiredAndNonLoggedInUserDoesNotAllowOrderForm()
     {
-        $tsfe = $this->createMock(TypoScriptFrontendController::class);
-        $GLOBALS['TSFE'] = $tsfe;
-
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy']
+            ['isUserLoggedIn'],
+            [],
+            '',
+            false
         );
+        $mockedController
+            ->expects($this->once())
+            ->method('isUserLoggedIn')
+            ->willReturn(false);
 
         $mockedController->_set('settings', ['orderFormRequireLogin' => 1]);
 
         $this->assertFalse($mockedController->_call('isOrderFormAllowed'));
-        unset($GLOBALS['TSFE']);
     }
 
     /**
@@ -683,19 +588,21 @@ class ProductControllerTest extends UnitTestCase
      */
     public function loginRequiredAndLoggedInUserAllowOrderForm()
     {
-        $tsfe = $this->createMock(TypoScriptFrontendController::class);
-        $tsfe->loginUser = true;
-        $GLOBALS['TSFE'] = $tsfe;
-
         $mockedController = $this->getAccessibleMock(
             ProductController::class,
-            ['dummy']
+            ['isUserLoggedIn'],
+            [],
+            '',
+            false
         );
+        $mockedController
+            ->expects($this->once())
+            ->method('isUserLoggedIn')
+            ->willReturn(true);
 
         $mockedController->_set('settings', ['orderFormRequireLogin' => 1]);
 
         $this->assertTrue($mockedController->_call('isOrderFormAllowed'));
-        unset($GLOBALS['TSFE']);
     }
 
     /**
@@ -714,147 +621,71 @@ class ProductControllerTest extends UnitTestCase
     }
 
     /**
-     * @return array
+     * @test
      */
-    public function validationFieldsDataProvider()
+    public function getOrderFormFieldsForSerializationReturnArrayWithOrderFieldsData()
     {
-        return [
-            'no_valid' => [
-                'fields' => [
-                    'name' => [
-                        'type' => 'input',
-                        'validation' => 'required'
-                    ],
-                    'required' => [
-                        'type' => 'input',
-                        'validation' => 'required'
-                    ],
-                    'notrequired' => [
-                        'type' => 'input',
-                        'validation' => ''
-                    ],
-                    'email' => [
-                        'type' => 'input',
-                        'validation' => 'required,email'
-                    ],
-                    'textarea' => [
-                        'type' => 'textarea',
-                        'validation' => 'url'
-                    ]
-                ],
-                'values' => [
-                    'name' => '',
-                    'required' => 'required',
-                    'notrequired' => '',
-                    'email' => '',
-                    'textarea' => 'test'
-                ],
-                'result' => [
-                    'name' => [
-                        'type' => 'input',
-                        'validation' => 'required',
-                        'value' => '',
-                        'errors' => ['error']
-                    ],
-                    'required' => [
-                        'type' => 'input',
-                        'validation' => 'required',
-                        'value' => 'required',
-                        'errors' => []
-                    ],
-                    'notrequired' => [
-                        'type' => 'input',
-                        'validation' => '',
-                        'value' => ''
-                    ],
-                    'email' => [
-                        'type' => 'input',
-                        'validation' => 'required,email',
-                        'value' => '',
-                        'errors' => ['error']
-                    ],
-                    'textarea' => [
-                        'type' => 'textarea',
-                        'value' => 'test',
-                        'validation' => 'url',
-                        'errors' => ['error']
-                    ]
-                ],
-                'return' => false
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+        $orderConfiguration = new OrderConfiguration();
+
+        $formField = new OrderFormField();
+        $formField->setName('test');
+        $formField->setLabel('Label');
+        $formField->setValue('value');
+
+        $formFieldClone = clone  $formField;
+        $formFieldClone->setValue('value 2');
+        $formFieldClone->setName('test22');
+
+        $orderConfiguration->addFormField($formField);
+        $orderConfiguration->addFormField($formFieldClone);
+
+        $expect = [
+            'test' => [
+                'value' => $formField->getValueAsText(),
+                'type' => $formField->getType(),
+                'label' => $formField->getLabel()
             ],
-            'no_valid_invalid_email' => [
-                'fields' => [
-                    'name' => [
-                        'type' => 'input',
-                        'validation' => ''
-                    ],
-                    'email' => [
-                        'type' => 'input',
-                        'validation' => 'email'
-                    ]
-                ],
-                'values' => [
-                    'name' => '',
-                    'email' => 'invalid'
-                ],
-                'result' => [
-                    'name' => [
-                        'type' => 'input',
-                        'validation' => '',
-                        'value' => ''
-                    ],
-                    'email' => [
-                        'type' => 'input',
-                        'validation' => 'email',
-                        'value' => 'invalid',
-                        'errors' => ['error']
-                    ]
-                ],
-                'return' => false
+            'test22' => [
+                'value' => $formFieldClone->getValueAsText(),
+                'type' => $formFieldClone->getType(),
+                'label' => $formFieldClone->getLabel()
             ],
-            'valid' => [
-                'fields' => [
-                    'name' => [
-                        'type' => 'input',
-                        'validation' => 'required'
-                    ],
-                    'email' => [
-                        'type' => 'input',
-                        'validation' => 'email'
-                    ],
-                    'textarea' => [
-                        'type' => 'textarea',
-                        'validation' => 'url'
-                    ]
-                ],
-                'values' => [
-                    'name' => 'value',
-                    'email' => 'valid@gmail.com',
-                    'textarea' => 'http://test.com.ua/url'
-                ],
-                'result' => [
-                    'name' => [
-                        'type' => 'input',
-                        'validation' => 'required',
-                        'value' => 'value',
-                        'errors' => []
-                    ],
-                    'email' => [
-                        'type' => 'input',
-                        'validation' => 'email',
-                        'value' => 'valid@gmail.com',
-                        'errors' => []
-                    ],
-                    'textarea' => [
-                        'type' => 'textarea',
-                        'value' => 'http://test.com.ua/url',
-                        'validation' => 'url',
-                        'errors' => []
-                    ]
-                ],
-                'return' => true
-            ]
         ];
+
+        $this->assertEquals($expect, $mockedController->_call('getOrderFormFieldsForSerialization', $orderConfiguration));
+    }
+
+    /**
+     * @test
+     */
+    public function getOrderProductsQuantityForSerializationReturnArrayWithValidProductsQuantityData()
+    {
+        $mockedController = $this->getAccessibleMock(
+            ProductController::class,
+            ['dummy']
+        );
+
+
+        $orderProducts = [
+            12 => 5,
+            1 => 0,
+            '0' => 12,
+            33 => '0',
+            0 => 0,
+            1 => 1
+        ];
+
+        $expect = [
+            12 => 5,
+            1 => 1
+        ];
+
+        $this->assertEquals($expect, $mockedController->_call('getOrderProductsQuantityForSerialization', $orderProducts));
     }
 
     protected function getAttributesStorage($value, $amount, $isOption = false)
@@ -873,5 +704,177 @@ class ProductControllerTest extends UnitTestCase
         }
 
         return $objectStorage;
+    }
+
+    /**
+     * @test
+     */
+    public function getProductAdditionalButtonsIsAlteringButtonUsingSignalSlots()
+    {
+        $expected = [
+            [
+                'name' => 'Sell me',
+                'link' => 'http://example.sell.com',
+                'classes' => '',
+                'order' => 20
+            ],
+            [
+                'name' => 'Buy me',
+                'link' => 'http://example.com',
+                'classes' => '',
+                'order' => 120
+            ]
+        ];
+
+
+        $signalSlotDispatcherMock = $this->getAccessibleMock(
+            Dispatcher::class,
+            ['dispatch']
+        );
+
+        $buttons = [];
+        $product = $this->getAccessibleMock(Product::class, ['dummy']);
+
+        $signalSlotDispatcherMock->expects($this->once())
+            ->method('dispatch')
+            ->with(ProductController::class, 'BeforeProcessingAdditionalButtons', [$product, $buttons])
+            ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
+                $params[1] = [
+                    [
+                        'name' => 'Sell me',
+                        'link' => 'http://example.sell.com',
+                        'classes' => [],
+                        'order' => 20
+                    ],
+                    [
+                        'name' => 'Buy me',
+                        'link' => 'http://example.com',
+                        'classes' => [],
+                        'order' => 120
+                    ]
+                ];
+            }));
+
+        $subject = $this->getAccessibleMock(ProductController::class, null);
+        $subject->_set('signalSlotDispatcher', $signalSlotDispatcherMock);
+
+        $result = $subject->_call('getProductAdditionalButtons', $product, $buttons);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function getAdditionalButtonsSortsTheButtonsAccordingToOrderField()
+    {
+        $expected = [
+            [
+                'name' => 'Sell me',
+                'link' => 'http://example.sell.com',
+                'classes' => '',
+                'order' => 20
+            ],
+            [
+                'name' => 'Buy me',
+                'link' => 'http://example.com',
+                'classes' => '',
+                'order' => 120
+            ]
+        ];
+
+
+        $signalSlotDispatcherMock = $this->getAccessibleMock(
+            Dispatcher::class,
+            ['dispatch']
+        );
+
+        $buttons = [];
+        $product = $this->getAccessibleMock(Product::class, ['dummy']);
+
+        $signalSlotDispatcherMock->expects($this->once())
+            ->method('dispatch')
+            ->with(ProductController::class, 'BeforeProcessingAdditionalButtons', [$product, $buttons])
+            ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
+                $params[1] = [
+                    [
+                        'name' => 'Buy me',
+                        'link' => 'http://example.com',
+                        'classes' => [],
+                        'order' => 120
+                    ],
+                    [
+                        'name' => 'Sell me',
+                        'link' => 'http://example.sell.com',
+                        'classes' => [],
+                        'order' => 20
+                    ]
+                ];
+            }));
+
+        $subject = $this->getAccessibleMock(ProductController::class, null);
+        $subject->_set('signalSlotDispatcher', $signalSlotDispatcherMock);
+
+        $result = $subject->_call('getProductAdditionalButtons', $product, $buttons);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function getAdditionalButtonsConvertsClassesListToAClassString()
+    {
+        $expected = [
+            [
+                'name' => 'Sell me',
+                'link' => 'http://example.sell.com',
+                'classes' => 'testclass dummy2',
+                'order' => 20
+            ],
+            [
+                'name' => 'Buy me',
+                'link' => 'http://example.com',
+                'classes' => 'testclass',
+                'order' => 120
+            ]
+        ];
+
+
+        $signalSlotDispatcherMock = $this->getAccessibleMock(
+            Dispatcher::class,
+            ['dispatch']
+        );
+
+        $buttons = [];
+
+        $product = $this->getAccessibleMock(Product::class, ['dummy']);
+
+        $signalSlotDispatcherMock->expects($this->once())
+            ->method('dispatch')
+            ->with(ProductController::class, 'BeforeProcessingAdditionalButtons', [$product, $buttons])
+            ->will($this->returnCallback(function ($class, $name, $params) use ($expected) {
+                $params[1] = [
+                    [
+                        'name' => 'Sell me',
+                        'link' => 'http://example.sell.com',
+                        'classes' => ['testclass', 'dummy2'],
+                        'order' => 20
+                    ],
+                    [
+                        'name' => 'Buy me',
+                        'link' => 'http://example.com',
+                        'classes' => ['testclass'],
+                        'order' => 120
+                    ]
+                ];
+            }));
+
+        $subject = $this->getAccessibleMock(ProductController::class, null);
+        $subject->_set('signalSlotDispatcher', $signalSlotDispatcherMock);
+
+        $result = $subject->_call('getProductAdditionalButtons', $product, $buttons);
+
+        $this->assertEquals($expected, $result);
     }
 }

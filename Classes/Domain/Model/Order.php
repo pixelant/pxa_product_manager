@@ -27,19 +27,15 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
-use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class Order
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-class Order extends AbstractDomainObject
+class Order extends AbstractEntity
 {
-
-    const ORDERFIELD_INPUT = 'input';
-    const ORDERFIELD_TEXTAREA = 'textarea';
-
     /**
      * @var bool
      */
@@ -358,9 +354,18 @@ class Order extends AbstractDomainObject
     }
 
     /**
+     * Order language uid
+     * @return int
+     */
+    public function getLanguageUid(): int
+    {
+        return $this->_getProperty('_languageUid');
+    }
+
+    /**
      * @return string
      */
-    public function getCheckoutType() : string
+    public function getCheckoutType(): string
     {
         return $this->checkoutType ?: 'default';
     }

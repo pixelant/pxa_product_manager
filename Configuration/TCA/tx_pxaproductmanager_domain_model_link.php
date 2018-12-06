@@ -23,7 +23,7 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'searchFields' => 'name,link,',
+        'searchFields' => 'name,link',
         'hideTable' => 1,
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/link.svg'
     ],
@@ -31,10 +31,10 @@ return [
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, link, description',
     ],
     'types' => [
-        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, --palette--;;1, name, link, description,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'hidden, --palette--;;1'],
     ],
     'palettes' => [
-        '1' => ['showitem' => ''],
+        '1' => ['showitem' => 'name, --linebreak--, link, --linebreak--, description'],
     ],
     'columns' => [
         'sys_language_uid' => [

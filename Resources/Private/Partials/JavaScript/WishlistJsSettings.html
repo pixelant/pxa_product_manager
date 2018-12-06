@@ -1,0 +1,14 @@
+<script>
+    (function (w) {
+        const ProductManager = w.ProductManager || {};
+
+        ProductManager.settings = ProductManager.settings || {};
+
+        /* Wishlist settings */
+        ProductManager.settings.wishlistTSSettings = {
+            enableFlyToCartAnimation: '<f:format.raw>{settings.wishList.enableFlyToCartAnimation}</f:format.raw>' === '1',
+        };
+
+        w.ProductManager = ProductManager;
+    })(window);
+</script>

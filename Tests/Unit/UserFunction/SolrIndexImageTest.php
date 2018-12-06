@@ -33,10 +33,7 @@ class SolrIndexImageTest extends UnitTestCase
             false
         );
 
-        $this->solrIndexImage->cObj = $this->getMockBuilder(ContentObjectRenderer::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['stdWrap'])
-            ->getMock();
+        $this->solrIndexImage->cObj = $this->createMock(ContentObjectRenderer::class);
     }
 
     /**
@@ -44,7 +41,6 @@ class SolrIndexImageTest extends UnitTestCase
      */
     public function getProductImageWillReturnMainImage()
     {
-        $params = $this->getParams();
         $field = 'pxapm_main_image';
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|AccessibleMockObjectInterface $mainImage */
@@ -58,34 +54,17 @@ class SolrIndexImageTest extends UnitTestCase
             ->with($field)
             ->willReturn(1);
 
-        $this->solrIndexImage->expects($this->once())
+        $this->solrIndexImage
+            ->expects($this->once())
             ->method('getProductImages')
-            ->with($params['uid.'])
             ->willReturn([$image]);
 
-        $this->solrIndexImage->cObj->expects($this->once())
-            ->method('stdWrap')
-            ->with('', $params['uid.'])
-            ->willReturn(1);
-
-        $result = $this->solrIndexImage->_call('getProductImage', $params, $field);
+        $result = $this->solrIndexImage->_call('getProductImage', $field);
 
         $this->assertSame(
             $image,
             $result
         );
-    }
-
-    /**
-     * Test params with product uid
-     *
-     * @return array
-     */
-    protected function getParams()
-    {
-        return [
-            'uid.' => 1
-        ];
     }
 
     protected function tearDown()

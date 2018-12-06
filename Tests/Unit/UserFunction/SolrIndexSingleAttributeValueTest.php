@@ -136,7 +136,7 @@ class SolrIndexSingleAttributeValueTest extends UnitTestCase
         $this->fixture->expects($this->once())
             ->method('getAttribute')
             ->with('rsk')
-            ->willReturn(['uid' => 1, 'type' => Attribute::ATTRIBUTE_TYPE_IMAGE]);
+            ->willReturn(['uid' => 1, 'type' => Attribute::ATTRIBUTE_TYPE_MULTISELECT]);
 
         $result = $this->fixture->getSingleAttributeValue('', $parameters);
 

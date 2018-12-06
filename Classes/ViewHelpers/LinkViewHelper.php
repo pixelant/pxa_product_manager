@@ -27,6 +27,7 @@ namespace Pixelant\PxaProductManager\ViewHelpers;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 /**
@@ -62,6 +63,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
     public function initializeArguments()
     {
         parent::initializeArguments();
+        // @codingStandardsIgnoreStart
         $this->registerUniversalTagAttributes();
         $this->registerTagAttribute('target', 'string', 'Target of link', false);
         $this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document', false);
@@ -76,6 +78,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
         $this->registerArgument('addQueryString', 'bool', 'If set, the current query parameters will be kept in the URI');
         $this->registerArgument('argumentsToBeExcludedFromQueryString', 'array', 'Arguments to be removed from the URI. Only active if $addQueryString = TRUE');
         $this->registerArgument('addQueryStringMethod', 'string', 'Set which parameters will be kept. Only active if $addQueryString = TRUE');
+        // @codingStandardsIgnoreEnd
 
         $this->registerArgument('category', 'mixed', 'Category to link', false, null);
         $this->registerArgument('product', 'mixed', 'Product to link', false, null);
@@ -130,9 +133,12 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
             $additionalParams = array_merge_recursive($additionalParams, $arguments);
         }
 
-        // don't pass empty string or '0'
-        if ($pageUid === 0) {
-            $pageUid = null;
+        // If no page set, use current
+        if ($pageUid === 0 || $pageUid === null) {
+            $pageUid = (int)GeneralUtility::_GET('id');
+            if ($pageUid <= 0) {
+                $pageUid = null;
+            }
         }
 
         $uriBuilder = $this->renderingContext->getControllerContext()->getUriBuilder();

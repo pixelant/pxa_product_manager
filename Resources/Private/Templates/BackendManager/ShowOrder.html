@@ -63,9 +63,9 @@
             <dd>
                 <f:format.date format="{settings.listOrders.dateFormat}" date="{order.crdate}" />
             </dd>
-            <f:for each="{order.orderFields}" key="field" as="fieldConf">
+            <f:for each="{order.orderFields}" as="fieldConf">
                 <dt>
-                    <f:translate key="fe.fields.{field}" default="{field}" />
+                    <f:if condition="{fieldConf.label}" then="{fieldConf.label}" else="{fieldConf.name}" />
                 </dt>
                 <dd>
                     {fieldConf.value}

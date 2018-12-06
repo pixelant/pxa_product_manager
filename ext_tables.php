@@ -18,7 +18,9 @@ call_user_func(
             'tx_pxaproductmanager_domain_model_option',
             'tx_pxaproductmanager_domain_model_link',
             'tx_pxaproductmanager_domain_model_filter',
-            'tx_pxaproductmanager_domain_model_order'
+            'tx_pxaproductmanager_domain_model_order',
+            'tx_pxaproductmanager_domain_model_orderconfiguration',
+            'tx_pxaproductmanager_domain_model_orderformfield'
         ];
 
         // @codingStandardsIgnoreStart

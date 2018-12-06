@@ -1,17 +1,16 @@
 <?php
 namespace Pixelant\PxaProductManager\Hook;
 
-use Pixelant\PxaProductManager\Domain\Model\Attribute as Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
@@ -60,22 +59,21 @@ class TceMain
             && MathUtility::canBeInterpretedAsInteger($id)
         ) {
             $productData = [];
-            $imageAttributes = [];
+            $files = [];
 
-            foreach ($fieldArray as $key => $value) {
-                if (StringUtility::beginsWith($key, ATTRIBUTE::TCA_ATTRIBUTE_PREFIX)) {
-                    $attributeId = (int)str_replace(ATTRIBUTE::TCA_ATTRIBUTE_PREFIX, '', $key);
+            foreach ($fieldArray as $fieldName => $value) {
+                if (TCAUtility::isAttributeField($fieldName)) {
+                    $attributeId = TCAUtility::determinateAttributeUidFromFieldName($fieldName);
                     $productData[$attributeId] = $value;
-                    unset($fieldArray[$key]);
-                } elseif (StringUtility::beginsWith($key, ATTRIBUTE::TCA_ATTRIBUTE_IMAGE_PREFIX)) {
-                    $fieldArray['attribute_images'] = $value;
-                    $imageAttributes[] = (int)str_replace(
-                        ATTRIBUTE::TCA_ATTRIBUTE_IMAGE_PREFIX . ATTRIBUTE::TCA_ATTRIBUTE_PREFIX,
-                        '',
-                        $key
-                    );
-                    unset($fieldArray[$key]);
+                    unset($fieldArray[$fieldName]);
+                } elseif (TCAUtility::isFalAttributeField($fieldName)) {
+                    $files[] = $value;
+                    unset($fieldArray[$fieldName]);
                 }
+            }
+
+            if (!empty($files)) {
+                $fieldArray[TCAUtility::ATTRIBUTE_FAL_FIELD_NAME] = implode(',', $files);
             }
 
             if (!empty($productData)) {
@@ -115,10 +113,12 @@ class TceMain
             ->execute();
 
         $existForAttributes = [];
+        $processedAttributes = [];
 
         while ($attributeValue = $statement->fetch()) {
             // found attribute
-            if (array_key_exists($attributeValue['attribute'], $productData)) {
+            if (array_key_exists($attributeValue['attribute'], $productData)
+                && !in_array($attributeValue['attribute'], $processedAttributes)) {
                 $existForAttributes[] = (int)$attributeValue['attribute'];
 
                 if ($attributeValue['value'] != $productData[$attributeValue['attribute']]) {
@@ -143,6 +143,7 @@ class TceMain
                     )
                     ->execute();
             }
+            $processedAttributes[] = $attributeValue['attribute'];
         }
 
         $needToCreateValuesFor = array_diff(
@@ -185,6 +186,17 @@ class TceMain
                     't3_origuid',
                     'l10n_parent',
                     'sys_language_uid'
+                ],
+                [
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_STR,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT,
+                    \PDO::PARAM_INT
                 ]
             );
         }

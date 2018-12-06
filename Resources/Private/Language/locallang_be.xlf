@@ -23,6 +23,12 @@
             <!--Link handler:END-->
 
             <!--Extension info hook:START-->
+            <trans-unit id="be.extension_info.all">
+                <source>All</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.reach limit">
+                <source>...(and %d more)</source>
+            </trans-unit>
             <trans-unit id="be.extension_info.none">
                 <source>none</source>
             </trans-unit>
@@ -98,7 +104,7 @@
                 <source>Single view</source>
             </trans-unit>
             <trans-unit id="flexform.mode.product_wish_list">
-                <source>Wishlist</source>
+                <source>Wish List (possible order form)</source>
             </trans-unit>
             <trans-unit id="flexform.mode.product_compare_view">
                 <source>Compare view</source>
@@ -223,9 +229,6 @@
             <trans-unit id="flexform.order_function_sheet__title">
                 <source>Ordering settings</source>
             </trans-unit>
-            <trans-unit id="flexform.order_recipients_emails">
-                <source>Recipients emails (each in new line)</source>
-            </trans-unit>
             <trans-unit id="flexform.no_recipients">
                 <source>No recipients were set. No one will get notification about new order</source>
             </trans-unit>
@@ -248,6 +251,9 @@
             <trans-unit id="flexform.custom_products_list.products_categories">
                 <source>Products categories</source>
             </trans-unit>
+            <trans-unit id="flexform.custom_products_list.products_to_show_within_categories">
+                <source>Products to show within categories</source>
+            </trans-unit>
             <trans-unit id="flexform.need_to_accept_order_terms">
                 <source>User need to accept terms before making order</source>
             </trans-unit>
@@ -256,6 +262,9 @@
             </trans-unit>
             <trans-unit id="flexform.order_form_require_login">
                 <source>Login is required to make an order</source>
+            </trans-unit>
+            <trans-unit id="flexform.order_form_configuration">
+                <source>Order form configuration</source>
             </trans-unit>
             <!--FlexForm:END-->
 
@@ -418,6 +427,12 @@
             </trans-unit>
             <trans-unit id="be.restore_from_archive">
                 <source>Undo archive</source>
+            </trans-unit>
+            <trans-unit id="be.order_language">
+                <source>Language</source>
+            </trans-unit>
+            <trans-unit id="be.default">
+                <source>Default</source>
             </trans-unit>
             <!--Backend module:END-->
 

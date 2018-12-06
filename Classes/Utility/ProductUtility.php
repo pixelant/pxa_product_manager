@@ -32,12 +32,15 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -253,7 +256,7 @@ class ProductUtility
     {
         $list = $_COOKIE[self::WISH_LIST_COOKIE_NAME] ?: '';
 
-        return GeneralUtility::intExplode(',', $list);
+        return GeneralUtility::intExplode(',', $list, true);
     }
 
     /**
@@ -393,13 +396,56 @@ class ProductUtility
         }
 
         $orderProductsQuantity = $order->getProductsQuantity();
-        $getter = 'get' . ucfirst($calculationProperty);
 
         /** @var Product $product */
         foreach ($order->getProducts() as $product) {
-            $total += ($product->$getter() * (int)($orderProductsQuantity[$product->getUid()] ?? 1));
+            $uid = $product->getUid();
+
+            $value = $orderProductsQuantity[$uid][$calculationProperty] ?? 0;
+            $quantity = $orderProductsQuantity[$uid]['quantity'] ?? 1;
+
+            $total += $value * $quantity;
         }
 
         return $total;
+    }
+
+    /**
+     * orderProductsToProductQuantityData
+     *
+     * Generates productQuantityData (array with some main fields that should be saved in the order)
+     * from orderProducts (uid => quantity array)
+     *
+     * @param array $orderProducts
+     * @param QueryResult|null $products
+     * @return array
+     */
+    public static function orderProductsToProductQuantityData(array $orderProducts, QueryResult $products = null)
+    {
+        $productsQuantityData = [];
+        $productRepository = MainUtility::getObjectManager()->get(ProductRepository::class);
+
+        $products = $products ?: $productRepository->findProductsByUids(array_keys($orderProducts));
+
+        /** @var Product $product */
+        foreach ($products as $product) {
+            $uid = $product->getUid();
+
+            // Save this, because it might change in future for product
+            $productsQuantityData[$uid] = [
+                'quantity' => (int)$orderProducts[$uid], // quantity
+                'price' => $product->getPrice(),
+                'tax' => $product->getTax() // Already calculated tax according to tax rate
+            ];
+        }
+
+        $signalSlotDispatcher = MainUtility::getObjectManager()->get(Dispatcher::class);
+        $signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'BeforeReturningProductQuantityData',
+            [$orderProducts, &$productsQuantityData, $products]
+        );
+
+        return $productsQuantityData;
     }
 }
