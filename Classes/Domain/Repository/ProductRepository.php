@@ -282,7 +282,7 @@ class ProductRepository extends AbstractDemandRepository
      * @param bool $respectEnableFields
      * @return null|Product
      */
-    public function findByUid($uid, bool $respectEnableFields = true): ?Product
+    public function findByUid($uid, bool $respectEnableFields = true)
     {
         $query = $this->createQuery();
 
