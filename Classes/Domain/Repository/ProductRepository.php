@@ -28,6 +28,7 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
+use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -272,6 +273,31 @@ class ProductRepository extends AbstractDemandRepository
         );
 
         return $query->execute();
+    }
+
+    /**
+     * Add possibility do disable enable fields when find by uid
+     *
+     * @param int $uid
+     * @param bool $respectEnableFields
+     * @return null|Product
+     */
+    public function findByUid($uid, bool $respectEnableFields = true): ?Product
+    {
+        $query = $this->createQuery();
+
+        $query->getQuerySettings()->setRespectSysLanguage(false);
+        $query->getQuerySettings()->setRespectStoragePage(false);
+
+        if (false === $respectEnableFields) {
+            $query->getQuerySettings()->setIgnoreEnableFields(true);
+        }
+
+        $query->matching(
+            $query->equals('uid', (int)$uid)
+        );
+
+        return $query->execute()->getFirst();
     }
 
     /**
