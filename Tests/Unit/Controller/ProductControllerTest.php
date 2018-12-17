@@ -14,6 +14,7 @@ use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Validation\Validator\RequiredValidator;
 use Pixelant\PxaProductManager\Validation\ValidatorResolver;
 use TYPO3\CMS\Extbase\Mvc\Request;
@@ -876,5 +877,100 @@ class ProductControllerTest extends UnitTestCase
         $result = $subject->_call('getProductAdditionalButtons', $product, $buttons);
 
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function getPreviewProductWithoutArgumentReturnNull()
+    {
+        $request = $this->createMock(Request::class);
+
+        $subject = $this->getAccessibleMock(ProductController::class, null, [], '', false);
+        $subject->_set('request', $request);
+
+        $this->assertNull($subject->_call('getPreviewProduct'));
+    }
+
+    /**
+     * @test
+     */
+    public function getPreviewProductWithPreviewArgumentAndHiddenDisabledLookForEnabledProduct()
+    {
+        $productUid = 3;
+        $product = new Product();
+
+        $request = $this->createMock(Request::class);
+        $productRepository = $this->createMock(ProductRepository::class);
+        $productRepository
+            ->expects($this->once())
+            ->method('findByUid')
+            ->with($productUid, true)
+            ->willReturn($product);
+
+        $request
+            ->expects($this->once())
+            ->method('hasArgument')
+            ->with('product_preview')
+            ->willReturn(true);
+
+        $request
+            ->expects($this->once())
+            ->method('getArgument')
+            ->with('product_preview')
+            ->willReturn($productUid);
+
+        $subject = $this->getAccessibleMock(ProductController::class, ['allowHiddenRecords'], [], '', false);
+        $subject->_set('request', $request);
+        $subject->_set('productRepository', $productRepository);
+
+        $subject
+            ->expects($this->never())
+            ->method('allowHiddenRecords');
+
+        $this->assertSame($product, $subject->_call('getPreviewProduct'));
+    }
+
+    /**
+     * @test
+     */
+    public function getPreviewProductWithPreviewArgumentAndHiddenEnabledLookForHiddenProductAndAllowHiddenRecords()
+    {
+        $productUid = 4;
+        $product = new Product();
+
+        $request = $this->createMock(Request::class);
+        $productRepository = $this->createMock(ProductRepository::class);
+        $productRepository
+            ->expects($this->once())
+            ->method('findByUid')
+            ->with($productUid, false)
+            ->willReturn($product);
+
+        $request
+            ->expects($this->once())
+            ->method('hasArgument')
+            ->with('product_preview')
+            ->willReturn(true);
+
+        $request
+            ->expects($this->once())
+            ->method('getArgument')
+            ->with('product_preview')
+            ->willReturn($productUid);
+
+        $settings = [
+            'showHiddenRecords' => 1
+        ];
+        $subject = $this->getAccessibleMock(ProductController::class, ['allowHiddenRecords'], [], '', false);
+        $subject->_set('request', $request);
+        $subject->_set('productRepository', $productRepository);
+        $subject->_set('settings', $settings);
+
+        $subject
+            ->expects($this->once())
+            ->method('allowHiddenRecords');
+
+        $this->assertSame($product, $subject->_call('getPreviewProduct'));
     }
 }

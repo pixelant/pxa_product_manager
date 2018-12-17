@@ -16,6 +16,26 @@
         <categories>1</categories>
     </tx_pxaproductmanager_domain_model_product>
 
+    <tx_pxaproductmanager_domain_model_product>
+        <uid>202</uid>
+        <pid>1</pid>
+        <hidden>1</hidden>
+        <deleted>0</deleted>
+        <name>Hidden product</name>
+        <sku>123321</sku>
+        <categories>0</categories>
+    </tx_pxaproductmanager_domain_model_product>
+
+    <tx_pxaproductmanager_domain_model_product>
+        <uid>203</uid>
+        <pid>1</pid>
+        <hidden>1</hidden>
+        <deleted>1</deleted>
+        <name>Hidden and deleted product</name>
+        <sku>123321</sku>
+        <categories>0</categories>
+    </tx_pxaproductmanager_domain_model_product>
+
     <sys_category_record_mm>
         <uid_local>3</uid_local>
         <uid_foreign>1</uid_foreign>

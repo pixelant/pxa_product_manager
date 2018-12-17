@@ -15,6 +15,8 @@ use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Validation\ValidatorResolver;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
@@ -162,6 +164,11 @@ class ProductController extends AbstractController
      */
     public function showAction(Product $product = null)
     {
+        if ($product === null) {
+            // If preview product provided
+            $product = $this->getPreviewProduct();
+        }
+
         // No product found handling
         if ($product !== null) {
             // save as latest visited
@@ -1035,5 +1042,52 @@ class ProductController extends AbstractController
         });
 
         return $buttons;
+    }
+
+    /**
+     * Get preview product if argument exist
+     *
+     * @return null|Product
+     */
+    protected function getPreviewProduct()
+    {
+        if ($this->request->hasArgument('product_preview')) {
+            $productPreview = (int)$this->request->getArgument('product_preview');
+            if ($productPreview > 0) {
+                if (isset($this->settings['showHiddenRecords'])
+                    && (int)$this->settings['showHiddenRecords'] === 1
+                ) {
+                    $this->allowHiddenRecords();
+                    $product = $this->productRepository->findByUid($productPreview, false);
+                } else {
+                    $product = $this->productRepository->findByUid($productPreview);
+                }
+            }
+        }
+
+        return $product ?? null;
+    }
+
+    /**
+     * Allow hidden content
+     */
+    protected function allowHiddenRecords()
+    {
+        if (MainUtility::isBelowTypo3v9()) {
+            MainUtility::getTSFE()->showHiddenRecords = true;
+        } else {
+            $context = GeneralUtility::makeInstance(Context::class);
+            /** @var VisibilityAspect $visibilityAspect */
+            $visibilityAspect = $context->getAspect('visibility');
+
+            $newVisibilityAspect = GeneralUtility::makeInstance(
+                VisibilityAspect::class,
+                $visibilityAspect->includeHiddenPages(),
+                true,
+                $visibilityAspect->includeDeletedRecords()
+            );
+
+            $context->setAspect('visibility', $newVisibilityAspect);
+        }
     }
 }

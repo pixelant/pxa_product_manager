@@ -47,6 +47,9 @@ plugin.tx_pxaproductmanager {
 
         # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/100; type=options[Yes=1,No=0]; label=Include default styling
         includeDefaultStyling = 1
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/110; type=options[Yes=1,No=0]; label=Show hidden records (Useful for preview function)
+        showHiddenRecords = 0
     }
 
     # customsubcategory=pxaproductmanager_pid=Link product settings
