@@ -12,6 +12,9 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_product.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_product.slug">
+                <source>Speaking url path segment</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_product.sku">
                 <source>Sku</source>
             </trans-unit>

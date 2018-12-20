@@ -7,6 +7,9 @@
             <trans-unit id="name.description">
                 <source>Product name</source>
             </trans-unit>
+            <trans-unit id="slug.description">
+                <source>Use for url path segment</source>
+            </trans-unit>
             <trans-unit id="sku.description">
                 <source>Product identifier</source>
             </trans-unit>

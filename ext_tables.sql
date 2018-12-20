@@ -33,6 +33,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
   discontinued int(11) unsigned DEFAULT '0' NOT NULL,
   usp text,
   custom_sorting int(11) DEFAULT '0' NOT NULL,
+  slug varchar(2048),
 
   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
   crdate int(11) unsigned DEFAULT '0' NOT NULL,
