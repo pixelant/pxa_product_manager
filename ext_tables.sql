@@ -321,7 +321,8 @@ CREATE TABLE sys_category (
   pxapm_banner_image int(11) unsigned DEFAULT '0',
   pxapm_card_view_template varchar(255) DEFAULT '' NOT NULL,
   pxapm_single_view_template varchar(255) DEFAULT '' NOT NULL,
-  pxapm_tax_rate decimal(5,2) DEFAULT '0.00' NOT NULL
+  pxapm_tax_rate decimal(5,2) DEFAULT '0.00' NOT NULL,
+  pxapm_slug varchar(2048)
 );
 
 #
