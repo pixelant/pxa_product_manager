@@ -52,7 +52,7 @@ call_user_func(function () {
                 'lookUpTable' => [
                     'table' => 'tx_pxaproductmanager_domain_model_product',
                     'id_field' => 'uid',
-                    'alias_field' => 'IF(path_segment!="",path_segment,name)',
+                    'alias_field' => 'IF(slug!="",slug,name)',
                     'addWhereClause' => ' AND NOT deleted',
                     'useUniqueCache' => 1,
                     'useUniqueCache_conf' => [
@@ -71,7 +71,7 @@ call_user_func(function () {
         ]
     ];
 
-    $aliasField = 'IF(path_segment!="",path_segment,name)';
+    $aliasField = 'IF(slug!="",slug,name)';
     // @codingStandardsIgnoreStart
     $enableSkuInUrl = (int)\Pixelant\PxaProductManager\Utility\ConfigurationUtility::getExtManagerConfigurationByPath('includeSkuInRealurlConfiguration');
 
