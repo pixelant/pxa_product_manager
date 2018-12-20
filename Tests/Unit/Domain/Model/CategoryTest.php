@@ -312,7 +312,7 @@ class CategoryTest extends UnitTestCase
 
         $this->assertEquals(
             $value,
-             $this->fixture->getSlug()
+            $this->fixture->getSlug()
         );
     }
 }
