@@ -219,6 +219,13 @@ class Product extends AbstractEntity
     protected $serializedAttributesValues = '';
 
     /**
+     * Attributes values
+     *
+     * @var string
+     */
+    protected $attributesValues = '';
+
+    /**
      * Product main image
      *
      * @var Image
@@ -1025,6 +1032,37 @@ class Product extends AbstractEntity
         $this->serializedAttributesValues = $serializedAttributesValues;
     }
 
+    /**
+     * @return string
+     */
+    public function getAttributesValuesRaw(): string
+    {
+        return $this->attributesValues;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributesValues(): array
+    {
+        return json_decode($this->attributesValues, true);
+    }
+
+    /**
+     * @param string $attributesValues
+     */
+    public function setAttributesValuesRaw(string $attributesValues)
+    {
+        $this->attributesValues = $attributesValues;
+    }
+
+    /**
+     * @param array $attributesValues
+     */
+    public function setAttributesValues(array $attributesValues)
+    {
+        $this->attributesValues = json_encode($attributesValues);
+    }
 
     /**
      * Get creation date
