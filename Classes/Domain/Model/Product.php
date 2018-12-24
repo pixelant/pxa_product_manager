@@ -995,7 +995,7 @@ class Product extends AbstractEntity
      */
     public function getImagesSorted(): ObjectStorage
     {
-        $images = $this->getImages();
+        $images = clone $this->getImages();
 
         if ($images->count() > 1 && ($mainImage = $this->getMainImage())) {
             $sortedImages = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
