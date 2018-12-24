@@ -29,7 +29,7 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attributes_values, attribute_values',
     ],
 
     'types' => [
@@ -512,6 +512,13 @@ return [
         'serialized_attributes_values' => [
             'exclude' => 1,
             'label' => 'serialized_attributes_values',
+            'config' => [
+                'type' => 'text'
+            ]
+        ],
+        'attributes_values' => [
+            'exclude' => 1,
+            'label' => 'attributes_values',
             'config' => [
                 'type' => 'text'
             ]

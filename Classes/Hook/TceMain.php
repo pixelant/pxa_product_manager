@@ -77,8 +77,7 @@ class TceMain
             }
 
             if (!empty($productData)) {
-                $fieldArray['serialized_attributes_values'] = serialize($productData);
-                $this->updateAttributeValues($id, $productData, $fieldArray);
+                $fieldArray[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME] = json_encode($productData);
             }
         }
     }

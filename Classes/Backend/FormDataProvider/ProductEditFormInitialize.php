@@ -238,28 +238,25 @@ class ProductEditFormInitialize implements FormDataProviderInterface
      */
     protected function simulateDataValues(array $attributes, array &$dbRow)
     {
-        $attributeUidToValue = [];
-
-        if (!empty($dbRow['serialized_attributes_values'])) {
-            $attributeUidToValue = unserialize($dbRow['serialized_attributes_values']);
-        }
+        $attributesValues = $this->getAttributesValuesFromRow($dbRow);
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
             $field = TCAUtility::getAttributeTCAFieldName($attribute->getUid());
+            $jsonFieldKey = $attribute->getUid();
 
-            if (array_key_exists($attribute->getUid(), $attributeUidToValue)) {
+            if (array_key_exists($jsonFieldKey, $attributesValues)) {
                 switch ($attribute->getType()) {
                     case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
                     case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
                         $dbRow[$field] = GeneralUtility::trimExplode(
                             ',',
-                            $attributeUidToValue[$attribute->getUid()],
+                            $attributesValues[$jsonFieldKey],
                             true
                         );
                         break;
                     default:
-                        $dbRow[$field] = $attributeUidToValue[$attribute->getUid()];
+                        $dbRow[$field] = $attributesValues[$jsonFieldKey];
                 }
             } elseif ($attribute->getDefaultValue()
                 && $attribute->getType() !== Attribute::ATTRIBUTE_TYPE_MULTISELECT
@@ -277,17 +274,28 @@ class ProductEditFormInitialize implements FormDataProviderInterface
      */
     protected function setDiffData(array &$diffRow, array &$defaultLanguageRow)
     {
-        $attributeUidToValues = [];
+        $attributeValues = $this->getAttributesValuesFromRow($diffRow);
 
-        if (!empty($diffRow['serialized_attributes_values'])) {
-            $attributeUidToValues = unserialize($diffRow['serialized_attributes_values']);
-        }
-
-        foreach ($attributeUidToValues as $attributeUid => $attributeValue) {
+        foreach ($attributeValues as $attributeUid => $attributeValue) {
             $field = TCAUtility::getAttributeTCAFieldName($attributeUid);
             $diffRow[$field] = $attributeValue;
             $defaultLanguageRow[$field] = $attributeValue;
         }
+    }
+
+    /**
+     * Convert json data to array from product DB row
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function getAttributesValuesFromRow(array $row): array
+    {
+        if (!empty($row[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME])) {
+            return json_decode($row[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME], true);
+        }
+
+        return [];
     }
 
     /**

@@ -45,6 +45,8 @@ class TCAUtility
      */
     const ATTRIBUTE_FAL_FIELD_NAME = 'attribute_files';
 
+    const ATTRIBUTES_VALUES_FIELD_NAME = 'attributes_values';
+
     /**
      * Return TCA configuration of different types of attributes
      *
