@@ -29,7 +29,7 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, attributes_values, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, attributes_values',
     ],
 
     'types' => [
@@ -192,23 +192,6 @@ return [
                 'type' => 'check',
                 'default' => 0
             ],
-        ],
-        'attribute_values' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.attribute_values',
-            'config' => [
-                'type' => 'inline',
-                'foreign_table' => 'tx_pxaproductmanager_domain_model_attributevalue',
-                'foreign_field' => 'product',
-                'maxitems' => 9999,
-                'appearance' => [
-                    'collapseAll' => 0,
-                    'levelLinksPosition' => 'top',
-                    'showSynchronizationLink' => 1,
-                    'showPossibleLocalizationRecords' => 1,
-                    'showAllLocalizationLink' => 1
-                ]
-            ]
         ],
         'related_products' => [
             'exclude' => 0,

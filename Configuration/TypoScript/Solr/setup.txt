@@ -36,13 +36,6 @@ plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product {
         #image_thumbnail_reference_uid_stringS < .image_main_url_stringS
         #image_thumbnail_reference_uid_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductThumbnailImageReferenceUid
 
-
-        attribute_values_stringM = SOLR_RELATION
-        attribute_values_stringM {
-            localField = attribute_values
-            multiValue = 1
-        }
-
         # index single attribute value example
         #attribute_rsk_stringS = USER
         #attribute_rsk_stringS {

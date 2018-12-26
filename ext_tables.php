@@ -14,7 +14,6 @@ call_user_func(
             'tx_pxaproductmanager_domain_model_product',
             'tx_pxaproductmanager_domain_model_attribute',
             'tx_pxaproductmanager_domain_model_attributeset',
-            'tx_pxaproductmanager_domain_model_attributevalue',
             'tx_pxaproductmanager_domain_model_option',
             'tx_pxaproductmanager_domain_model_link',
             'tx_pxaproductmanager_domain_model_filter',
@@ -25,9 +24,7 @@ call_user_func(
 
         // @codingStandardsIgnoreStart
         foreach ($tables as $table) {
-            if ($table !== 'tx_pxaproductmanager_domain_model_attributevalue'
-                || $table !== 'tx_pxaproductmanager_domain_model_order'
-            ) {
+            if ($table !== 'tx_pxaproductmanager_domain_model_order') {
                 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
                     $table,
                     'EXT:pxa_product_manager/Resources/Private/Language/locallang_csh_' . $table . '.xlf'

@@ -184,14 +184,6 @@ class Product extends AbstractEntity
     protected $attributesGroupedBySets;
 
     /**
-     * attributeValues
-     *
-     * @lazy
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeValue>
-     */
-    protected $attributeValues;
-
-    /**
      * @var int
      */
     protected $crdate;
@@ -325,8 +317,6 @@ class Product extends AbstractEntity
         $this->falLinks = new ObjectStorage();
 
         $this->categories = new ObjectStorage();
-
-        $this->attributeValues = new ObjectStorage();
 
         $this->assets = new ObjectStorage();
 
@@ -667,50 +657,6 @@ class Product extends AbstractEntity
         if ($this->attributes !== null) {
             $this->attributes->detach($attribute);
         }
-    }
-
-
-    /**
-     * Adds a AttributeValue
-     *
-     * @param AttributeValue $attributeValue
-     * @return void
-     */
-    public function addAttributeValue(AttributeValue $attributeValue)
-    {
-        $this->attributeValues->attach($attributeValue);
-    }
-
-    /**
-     * Removes a AttributeValue
-     *
-     * @param AttributeValue $attributeValueToRemove The AttributeValue to be removed
-     * @return void
-     */
-    public function removeAttributeValue(AttributeValue $attributeValueToRemove)
-    {
-        $this->attributeValues->detach($attributeValueToRemove);
-    }
-
-    /**
-     * Returns the attributeValues
-     *
-     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeValue> $attributeValues
-     */
-    public function getAttributeValues(): ObjectStorage
-    {
-        return $this->attributeValues;
-    }
-
-    /**
-     * Sets the attributeValues
-     *
-     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\AttributeValue> $attributeValues
-     * @return void
-     */
-    public function setAttributeValues(ObjectStorage $attributeValues)
-    {
-        $this->attributeValues = $attributeValues;
     }
 
     /**
