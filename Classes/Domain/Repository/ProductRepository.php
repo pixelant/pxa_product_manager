@@ -325,6 +325,11 @@ class ProductRepository extends AbstractDemandRepository
                 $demand->getFiltersConjunction()
             );
             if ($filterConstraints !== false) {
+                // !!! Very important to filter out empty JSON fields
+                // Otherwise will cause and SQL error
+                $constraints['filter_not_empty'] = $query->logicalNot(
+                    $query->equals('attributesValues', '')
+                );
                 $constraints['filters'] = $filterConstraints;
             }
         }
@@ -367,7 +372,7 @@ class ProductRepository extends AbstractDemandRepository
                         $filterConstraints = [];
 
                         foreach ($filter['value'] as $value) {
-                            $filterConstraints[] = $query->equals(
+                            $filterConstraints[] = $query->contains(
                                 $propertyName . '->' . $filter['attributeUid'],
                                 $value
                             );

@@ -68,6 +68,7 @@ class Typo3DbQueryParser extends ExtabaseTypo3DbQueryParser
         $expr = parent::parseDynamicOperand($comparison, $source);
 
         if ($this->isProductManagerQuery
+            && $this->attributesValuesPropertyName !== $comparison->getOperand1()->getPropertyName()
             && StringUtility::beginsWith(
                 $comparison->getOperand1()->getPropertyName(),
                 $this->attributesValuesPropertyName
