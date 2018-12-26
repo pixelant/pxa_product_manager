@@ -1045,7 +1045,7 @@ class Product extends AbstractEntity
      */
     public function getAttributesValues(): array
     {
-        return json_decode($this->attributesValues, true);
+        return json_decode($this->attributesValues, true) ?? [];
     }
 
     /**
