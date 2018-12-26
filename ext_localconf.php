@@ -101,6 +101,11 @@ call_user_func(
 
         // Register the class to be available in 'eval' of TCA
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][\Pixelant\PxaProductManager\Backend\Evaluation\LcFirstEvaluation::class] = '';
+
+        // Extend Typo3DbQueryParser in order to support attributes values JSON field
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser::class] = [
+            'className' => \Pixelant\PxaProductManager\Backend\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser::class
+        ];
     },
     $_EXTKEY
 );
