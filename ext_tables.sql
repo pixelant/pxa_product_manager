@@ -23,7 +23,6 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product (
   keywords text,
   meta_description text,
   fal_links int(11) unsigned DEFAULT '0',
-  serialized_attributes_values blob,
   attributes_description text,
   assets int(11) unsigned DEFAULT '0' NOT NULL,
   accessories int(11) unsigned DEFAULT '0' NOT NULL,

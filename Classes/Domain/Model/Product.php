@@ -212,13 +212,6 @@ class Product extends AbstractEntity
     protected $deleted;
 
     /**
-     * Attribute values
-     *
-     * @var string
-     */
-    protected $serializedAttributesValues = '';
-
-    /**
      * Attributes values
      *
      * @var string
@@ -1014,22 +1007,6 @@ class Product extends AbstractEntity
     public function setFalLinks(ObjectStorage $falLinks)
     {
         $this->falLinks = $falLinks;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSerializedAttributesValues(): string
-    {
-        return $this->serializedAttributesValues;
-    }
-
-    /**
-     * @param string $serializedAttributesValues
-     */
-    public function setSerializedAttributesValues(string $serializedAttributesValues)
-    {
-        $this->serializedAttributesValues = $serializedAttributesValues;
     }
 
     /**
