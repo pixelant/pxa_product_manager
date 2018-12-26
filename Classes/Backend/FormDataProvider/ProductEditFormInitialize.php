@@ -5,9 +5,9 @@ namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
+use Pixelant\PxaProductManager\Traits\ProductRecordTrait;
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
-use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class ProductEditFormInitialize implements FormDataProviderInterface
 {
-    use TranslateBeTrait;
+    use TranslateBeTrait, ProductRecordTrait;
 
     /**
      * Hold static configuration for attributes fields
@@ -281,21 +281,6 @@ class ProductEditFormInitialize implements FormDataProviderInterface
             $diffRow[$field] = $attributeValue;
             $defaultLanguageRow[$field] = $attributeValue;
         }
-    }
-
-    /**
-     * Convert json data to array from product DB row
-     *
-     * @param array $row
-     * @return array
-     */
-    protected function getAttributesValuesFromRow(array $row): array
-    {
-        if (!empty($row[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME])) {
-            return json_decode($row[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME], true);
-        }
-
-        return [];
     }
 
     /**

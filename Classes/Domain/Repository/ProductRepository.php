@@ -29,6 +29,7 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -46,12 +47,6 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class ProductRepository extends AbstractDemandRepository
 {
-    /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository
-     * @inject
-     */
-    protected $attributeValueRepository;
-
     /**
      * Override basic method. Set special ordering for categories if it's not multiple
      *
@@ -359,6 +354,10 @@ class ProductRepository extends AbstractDemandRepository
     protected function createFilteringConstraints(QueryInterface $query, array $filters, string $conjunction = 'or')
     {
         $constraints = [];
+        $propertyName = GeneralUtility::underscoredToLowerCamelCase(
+            TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME
+        );
+
         $ranges = [];
 
         foreach ($filters as $filter) {
@@ -368,19 +367,10 @@ class ProductRepository extends AbstractDemandRepository
                         $filterConstraints = [];
 
                         foreach ($filter['value'] as $value) {
-                            $attributeValues = $this->attributeValueRepository->findAttributeValuesByAttributeAndValue(
-                                (int)$filter['attributeUid'],
-                                $value,
-                                true
+                            $filterConstraints[] = $query->equals(
+                                $propertyName . '->' . $filter['attributeUid'],
+                                $value
                             );
-                            if (empty($attributeValues)) {
-                                // force no result for filter constraint if no value was found but filter was set on FE
-                                $filterConstraints[] = $query->contains('attributeValues', 0);
-                            } else {
-                                foreach ($attributeValues as $attributeValue) {
-                                    $filterConstraints[] = $query->contains('attributeValues', $attributeValue['uid']);
-                                }
-                            }
                         }
                         if (!empty($filterConstraints)) {
                             $constraints[] = $this->createConstraintFromConstraintsArray(

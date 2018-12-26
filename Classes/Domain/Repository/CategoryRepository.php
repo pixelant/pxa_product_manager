@@ -83,6 +83,7 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
      * Use in BE module to list categories
      *
      * @param int $pid
+     * @param Category|null $category
      * @return QueryResultInterface
      */
     public function findCategoriesByPidAndParentIgnoreHidden(int $pid, Category $category = null)

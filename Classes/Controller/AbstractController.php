@@ -28,7 +28,13 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
+use Pixelant\PxaProductManager\Domain\Repository\FilterRepository;
+use Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository;
+use Pixelant\PxaProductManager\Domain\Repository\OrderRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Navigation\CategoriesNavigationTreeBuilder;
+use Pixelant\PxaProductManager\Traits\ProductRecordTrait;
 use Pixelant\PxaProductManager\Utility\CategoryUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Database\Connection;
@@ -42,6 +48,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -50,47 +57,91 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class AbstractController extends ActionController
 {
+    use ProductRecordTrait;
+
     /**
-     * productRepository
+     * Product repository
      *
-     * @var \Pixelant\PxaProductManager\Domain\Repository\ProductRepository
-     * @inject
+     * @var ProductRepository
      */
     protected $productRepository = null;
 
     /**
-     * productRepository
+     * Filter repository
      *
-     * @var \Pixelant\PxaProductManager\Domain\Repository\FilterRepository
-     * @inject
+     * @var FilterRepository
      */
     protected $filterRepository = null;
 
     /**
-     * categoryRepository
+     * Category repository
      *
-     * @var \Pixelant\PxaProductManager\Domain\Repository\CategoryRepository
-     * @inject
+     * @var CategoryRepository
      */
     protected $categoryRepository = null;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderRepository
-     * @inject
+     * @var OrderRepository
      */
     protected $orderRepository = null;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository
-     * @inject
+     * @var OrderConfigurationRepository
      */
     protected $orderConfigurationRepository = null;
 
     /**
-     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
-     * @inject
+     * @var Dispatcher
      */
     protected $signalSlotDispatcher = null;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function injectProductRepository(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
+     * @param FilterRepository $filterRepository
+     */
+    public function injectFilterRepository(FilterRepository $filterRepository)
+    {
+        $this->filterRepository = $filterRepository;
+    }
+
+    /**
+     * @param CategoryRepository $categoryRepository
+     */
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    /**
+     * @param OrderRepository $orderRepository
+     */
+    public function injectOrderRepository(OrderRepository $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
+
+    /**
+     * @param OrderConfigurationRepository $orderConfigurationRepository
+     */
+    public function injectOrderConfigurationRepository(OrderConfigurationRepository $orderConfigurationRepository)
+    {
+        $this->orderConfigurationRepository = $orderConfigurationRepository;
+    }
+
+    /**
+     * @param Dispatcher $signalSlotDispatcher
+     */
+    public function injectDispatcher(Dispatcher $signalSlotDispatcher)
+    {
+        $this->signalSlotDispatcher = $signalSlotDispatcher;
+    }
 
     /**
      * Get category
@@ -241,9 +292,9 @@ class AbstractController extends ActionController
 
         foreach ($products as &$product) {
             $productUids[] = $product['uid'];
+            $attributeValues = $this->getAttributesValuesFromRow($product);
 
-            if ($product['serialized_attributes_values']) {
-                $attributeValues = unserialize($product['serialized_attributes_values']);
+            if (!empty($attributeValues)) {
                 $attributeUids = array_merge(
                     $attributeUids,
                     array_keys($attributeValues)
