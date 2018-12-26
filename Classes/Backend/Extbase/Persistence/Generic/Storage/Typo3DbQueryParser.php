@@ -91,7 +91,7 @@ class Typo3DbQueryParser extends ExtabaseTypo3DbQueryParser
             // `tx_pxaproductmanager_domain_model_product`.`attributes_values`
             $exprPartsStarts = str_replace($delimiter . $attributeUid, '', $exprPartsStarts);
 
-            // @TODO this work in mysql, what about others?
+            // TODO this work in mysql, what about others?
             // Add attribute UID json part
             $exprJsonPart = sprintf(
                 '-> \'$."%s"\'',
