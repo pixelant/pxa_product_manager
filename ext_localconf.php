@@ -110,8 +110,10 @@ call_user_func(
         ];
 
         // upgrade wizard
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][\Pixelant\PxaProductManager\Updates\AttributesValuesUpdate::$identifier]
-            = \Pixelant\PxaProductManager\Updates\AttributesValuesUpdate::class;
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][\Pixelant\PxaProductManager\Updates\AttributesValuesUpdateTrait::$_identifier]
+            = \Pixelant\PxaProductManager\Utility\MainUtility::isBelowTypo3v9()
+            ? \Pixelant\PxaProductManager\Updates\AttributesValuesUpdateCompatibility::class
+            : \Pixelant\PxaProductManager\Updates\AttributesValuesUpdate::class;
     },
     $_EXTKEY
 );
