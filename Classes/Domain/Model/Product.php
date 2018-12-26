@@ -1562,7 +1562,7 @@ class Product extends AbstractEntity
 
         $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
 
-        $attributesValues = (array)unserialize($this->getSerializedAttributesValues());
+        $attributesValues = $this->getAttributesValues();
 
         /** @var Attribute $attribute */
         foreach ($attributeHolder->getAttributes() as $attribute) {
