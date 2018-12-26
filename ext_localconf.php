@@ -108,6 +108,10 @@ call_user_func(
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser::class] = [
             'className' => \Pixelant\PxaProductManager\Backend\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser::class
         ];
+
+        // upgrade wizard
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][\Pixelant\PxaProductManager\Updates\AttributesValuesUpdate::$identifier]
+            = \Pixelant\PxaProductManager\Updates\AttributesValuesUpdate::class;
     },
     $_EXTKEY
 );
