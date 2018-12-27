@@ -102,13 +102,6 @@ call_user_func(
         // Register the class to be available in 'eval' of TCA
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][\Pixelant\PxaProductManager\Backend\Evaluation\LcFirstEvaluation::class] = '';
 
-        // Extend Typo3DbQueryParser in order to support attributes values JSON field
-        // TODO is there any way to implement it with hooks instead of XClass?
-        // In Typo3DbBackend::getObjectDataByQuery in just get instance on Typo3DbQueryParser
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser::class] = [
-            'className' => \Pixelant\PxaProductManager\Backend\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser::class
-        ];
-
         // upgrade wizard
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][\Pixelant\PxaProductManager\Updates\AttributesValuesUpdateTrait::$_identifier]
             = \Pixelant\PxaProductManager\Utility\MainUtility::isBelowTypo3v9()

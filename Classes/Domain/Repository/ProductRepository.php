@@ -24,6 +24,8 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use Pixelant\PxaProductManager\Backend\Extbase\Persistence\Generic\Query;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
@@ -34,7 +36,8 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
+use Pixelant\PxaProductManager\Backend\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
+use TYPO3\CMS\Extbase\Object\Container\Container;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -48,6 +51,19 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 class ProductRepository extends AbstractDemandRepository
 {
     /**
+     * @var Container
+     */
+    protected $container = null;
+
+    /**
+     * @param Container $container
+     */
+    public function injectContainer(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * Override basic method. Set special ordering for categories if it's not multiple
      *
      * @param DemandInterface|Demand $demand
@@ -55,7 +71,12 @@ class ProductRepository extends AbstractDemandRepository
      */
     public function findDemanded(DemandInterface $demand): QueryResultInterface
     {
-        if ($demand->getOrderBy() !== 'categories' || count($demand->getCategories()) > 1) {
+        $query = $this->createDemandQuery($demand);
+        $sql = $this->convertQueryBuilderToSql($query);
+
+        return $query->statement($sql)->execute();
+
+        if (false || ($demand->getOrderBy() !== 'categories' || count($demand->getCategories()) > 1)) {
             return parent::findDemanded($demand);
         } else {
             /** @var QueryBuilder $queryBuilder */
@@ -128,6 +149,29 @@ class ProductRepository extends AbstractDemandRepository
                 return $query->statement($statement)->execute();
             }
         }
+    }
+
+    /**
+     * @param DemandInterface $demand
+     * @return array
+     */
+    public function findDemandedRaw(DemandInterface $demand): array
+    {
+        $query = $this->createDemandQuery($demand);
+        $sql = $this->convertQueryBuilderToSql($query);
+
+        return $query->statement($sql)->execute(true);
+    }
+
+    /**
+     * Count results for demand
+     *
+     * @param DemandInterface $demand
+     * @return int
+     */
+    public function countByDemand(DemandInterface $demand): int
+    {
+        return $this->findDemanded($demand)->count();
     }
 
     /**
@@ -325,11 +369,6 @@ class ProductRepository extends AbstractDemandRepository
                 $demand->getFiltersConjunction()
             );
             if ($filterConstraints !== false) {
-                // !!! Very important to filter out empty JSON fields
-                // Otherwise will cause and SQL error
-                $constraints['filter_not_empty'] = $query->logicalNot(
-                    $query->equals('attributesValues', '')
-                );
                 $constraints['filters'] = $filterConstraints;
             }
         }
@@ -351,7 +390,7 @@ class ProductRepository extends AbstractDemandRepository
      *      [0] => 3
      *  )
      * )
-     * @param QueryInterface $query
+     * @param Query|QueryInterface $query
      * @param array $filters
      * @param string $conjunction
      * @return mixed
@@ -359,9 +398,10 @@ class ProductRepository extends AbstractDemandRepository
     protected function createFilteringConstraints(QueryInterface $query, array $filters, string $conjunction = 'or')
     {
         $constraints = [];
-        $propertyName = GeneralUtility::underscoredToLowerCamelCase(
+        $attributeValuesPropertyName = GeneralUtility::underscoredToLowerCamelCase(
             TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME
         );
+        $attributeValuesRangePropertyName = $attributeValuesPropertyName . 'Range';
 
         $ranges = [];
 
@@ -373,7 +413,7 @@ class ProductRepository extends AbstractDemandRepository
 
                         foreach ($filter['value'] as $value) {
                             $filterConstraints[] = $query->contains(
-                                $propertyName . '->' . $filter['attributeUid'],
+                                $attributeValuesPropertyName . '->' . $filter['attributeUid'],
                                 $value
                             );
                         }
@@ -415,7 +455,12 @@ class ProductRepository extends AbstractDemandRepository
         // since they can have value from two filter inputs
         if (!empty($ranges)) {
             foreach ($ranges as $attributeId => $range) {
-                $rangeConstraints = [];
+                $constraints[] = $query->attributesRange(
+                    $attributeValuesPropertyName . '->' . $filter['attributeUid'],
+                    isset($range['min']) ? (int)$range['min'] : null,
+                    isset($range['max']) ? (int)$range['max'] : null
+                );
+                /*$rangeConstraints = [];
 
                 $attributeValues = $this->attributeValueRepository->findAttributeValuesByAttributeAndMinMaxOptionValues(
                     (int)$attributeId,
@@ -438,7 +483,7 @@ class ProductRepository extends AbstractDemandRepository
                         $rangeConstraints,
                         'or'
                     );
-                }
+                }*/
             }
         }
 
@@ -496,5 +541,59 @@ class ProductRepository extends AbstractDemandRepository
             $constraints,
             'or'
         );
+    }
+
+    /**
+     * @param $query
+     * @return string
+     */
+    protected function convertQueryBuilderToSql(QueryInterface $query): string
+    {
+        $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
+        $queryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
+
+        $selectParts = $queryBuilder->getQueryPart('select');
+
+        if ($queryParser->isDistinctQuerySuggested() && !empty($selectParts)) {
+            $selectParts[0] = 'DISTINCT ' . $selectParts[0];
+            $queryBuilder->selectLiteral(...$selectParts);
+        }
+        if ($query->getOffset()) {
+            $queryBuilder->setFirstResult($query->getOffset());
+        }
+        if ($query->getLimit()) {
+            $queryBuilder->setMaxResults($query->getLimit());
+        }
+
+        $queryParameters = [];
+
+        foreach ($queryBuilder->getParameters() as $key => $value) {
+            // prefix array keys with ':'
+            //all non numeric values have to be quoted
+            $queryParameters[':' . $key] = is_numeric($value)
+                ? $value
+                : $queryBuilder->quote($value, \PDO::PARAM_STR);
+        }
+
+        return strtr($queryBuilder->getSQL(), $queryParameters);
+    }
+
+    /**
+     * Create own query object
+     *
+     * @return Query|QueryInterface
+     */
+    public function createQuery()
+    {
+        // Backup class name
+        $queryClassName = $this->container->getImplementationClassName(QueryInterface::class);
+        // Set out own query class name
+        $this->container->registerImplementation(QueryInterface::class, Query::class);
+        // Create query
+        $query = parent::createQuery();
+        // Reset changes
+        $this->container->registerImplementation(QueryInterface::class, $queryClassName);
+
+        return $query;
     }
 }
