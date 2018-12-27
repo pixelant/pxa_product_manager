@@ -401,7 +401,6 @@ class ProductRepository extends AbstractDemandRepository
         $attributeValuesPropertyName = GeneralUtility::underscoredToLowerCamelCase(
             TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME
         );
-        $attributeValuesRangePropertyName = $attributeValuesPropertyName . 'Range';
 
         $ranges = [];
 
@@ -410,7 +409,6 @@ class ProductRepository extends AbstractDemandRepository
                 switch ((int)$filter['type']) {
                     case Filter::TYPE_ATTRIBUTES:
                         $filterConstraints = [];
-
                         foreach ($filter['value'] as $value) {
                             $filterConstraints[] = $query->contains(
                                 $attributeValuesPropertyName . '->' . $filter['attributeUid'],
@@ -443,10 +441,11 @@ class ProductRepository extends AbstractDemandRepository
                         $rangeKey = (int)$filter['attributeUid'];
 
                         $ranges[$rangeKey][$rangeType] = $value;
-
                         break;
                     default:
-                        // only two are supported for now
+                        // @codingStandardsIgnoreStart
+                        throw new \UnexpectedValueException('Filter type "' . $filter['type'] . '" is not supported.', 1545920531427);
+                        // @codingStandardsIgnoreEnd
                 }
             }
         }
@@ -460,30 +459,6 @@ class ProductRepository extends AbstractDemandRepository
                     isset($range['min']) ? (int)$range['min'] : null,
                     isset($range['max']) ? (int)$range['max'] : null
                 );
-                /*$rangeConstraints = [];
-
-                $attributeValues = $this->attributeValueRepository->findAttributeValuesByAttributeAndMinMaxOptionValues(
-                    (int)$attributeId,
-                    isset($range['min']) ? (int)$range['min'] : null,
-                    isset($range['max']) ? (int)$range['max'] : null
-                );
-
-                if (empty($attributeValues)) {
-                    // force no result for filter constraint if no value was found but filter was set on FE
-                    $rangeConstraints[] = $query->contains('attributeValues', 0);
-                } else {
-                    foreach ($attributeValues as $attributeValue) {
-                        $rangeConstraints[] = $query->contains('attributeValues', $attributeValue['uid']);
-                    }
-                }
-
-                if (!empty($rangeConstraints)) {
-                    $constraints[] = $this->createConstraintFromConstraintsArray(
-                        $query,
-                        $rangeConstraints,
-                        'or'
-                    );
-                }*/
             }
         }
 
@@ -544,6 +519,9 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
+     * Convert query to SQL
+     * Own method with usage of own query parser
+     *
      * @param $query
      * @return string
      */
@@ -587,7 +565,7 @@ class ProductRepository extends AbstractDemandRepository
     {
         // Backup class name
         $queryClassName = $this->container->getImplementationClassName(QueryInterface::class);
-        // Set out own query class name
+        // Set our own query class name
         $this->container->registerImplementation(QueryInterface::class, Query::class);
         // Create query
         $query = parent::createQuery();
