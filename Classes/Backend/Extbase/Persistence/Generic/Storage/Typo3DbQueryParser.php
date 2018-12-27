@@ -95,6 +95,7 @@ class Typo3DbQueryParser extends ExtabaseTypo3DbQueryParser
             }
 
             $this->queryBuilder->andWhere(...$minMaxConstraints);
+            $this->suggestDistinctQuery = true;
 
             return '';
         } else {
