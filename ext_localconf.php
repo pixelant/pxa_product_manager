@@ -103,7 +103,7 @@ call_user_func(
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][\Pixelant\PxaProductManager\Backend\Evaluation\LcFirstEvaluation::class] = '';
 
         // upgrade wizard
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][\Pixelant\PxaProductManager\Updates\AttributesValuesUpdateTrait::$_identifier]
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][\Pixelant\PxaProductManager\Updates\AttributesValuesUpdateTrait::$identifier]
             = \Pixelant\PxaProductManager\Utility\MainUtility::isBelowTypo3v9()
             ? \Pixelant\PxaProductManager\Updates\AttributesValuesUpdateCompatibility::class
             : \Pixelant\PxaProductManager\Updates\AttributesValuesUpdate::class;

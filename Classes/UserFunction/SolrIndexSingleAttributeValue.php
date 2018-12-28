@@ -35,7 +35,6 @@ class SolrIndexSingleAttributeValue
      * @return int|string
      */
     public function getSingleAttributeValue(
-        /** @noinspection PhpUnusedParameterInspection */
         string $content,
         array $parameters
     ) {

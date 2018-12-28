@@ -17,7 +17,7 @@ trait AttributesValuesUpdateTrait
      *
      * @var string
      */
-    public static $_identifier = 'tx_pxaproductmanager_attributes_values';
+    public static $identifier = 'tx_pxaproductmanager_attributes_values';
 
     /**
      * @var string

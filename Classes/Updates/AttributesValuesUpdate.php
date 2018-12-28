@@ -22,7 +22,7 @@ class AttributesValuesUpdate implements UpgradeWizardInterface
      */
     public function getIdentifier(): string
     {
-        return self::$_identifier;
+        return self::$identifier;
     }
 
     /**
