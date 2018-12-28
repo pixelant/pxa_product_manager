@@ -6,6 +6,7 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Pixelant\PxaProductManager\Controller\AbstractController;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -41,19 +42,19 @@ class AbsctactControllerTest extends FunctionalTestCase
      */
     public function getAvailableFilteringOptionsForProductsGenerateValidDataForFilter()
     {
-        $serialized = serialize($this->getAttributesToValues());
+        $json = json_encode($this->getAttributesToValues());
         $products = [
             [
                 'uid' => 1,
-                'serialized_attributes_values' => $serialized
+                TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME => $json
             ],
             [
                 'uid' => 2,
-                'serialized_attributes_values' => $serialized
+                TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME => $json
             ],
             [
                 'uid' => 3,
-                'serialized_attributes_values' => $serialized
+                TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME => $json
             ],
         ];
 

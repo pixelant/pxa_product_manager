@@ -6,10 +6,7 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Pixelant\PxaProductManager\Backend\Extbase\Persistence\Generic\Query;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\Container\Container;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryFactory;
 
 /**
  * Class ProductRepositoryTest.php
@@ -86,24 +83,7 @@ class ProductRepositoryTest extends FunctionalTestCase
      */
     public function createQueryReturnInstanceOfOwnQuery()
     {
-        $repository = $this->getMockBuilder(ProductRepository::class)
-            ->setMethods(['dummy'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-/*        if (!defined('LF')) {
-            define('LF', "\n");
-        }*/
-
-        $container = new Container();
-        $persistanceManager = GeneralUtility::makeInstance(ObjectManager::class)->get(PersistenceManager::class);
-        $queryFactory = GeneralUtility::makeInstance(ObjectManager::class)->get(QueryFactory::class);
-
-        $this->inject($repository, 'container', $container);
-        $this->inject($repository, 'persistanceManager', $persistanceManager);
-        $this->inject($persistanceManager, 'queryFactory', $queryFactory);
-
-        $query = $repository->createQuery();
+        $query = $this->productRepository->createQuery();
 
         $this->assertInstanceOf(
             Query::class,
