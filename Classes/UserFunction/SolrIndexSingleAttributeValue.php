@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\UserFunction;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Traits\ProductRecordTrait;
 use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -19,6 +20,8 @@ use TYPO3\CMS\Frontend\Resource\FileCollector;
  */
 class SolrIndexSingleAttributeValue
 {
+    use ProductRecordTrait;
+    
     /**
      * @var ContentObjectRenderer
      */
@@ -40,7 +43,7 @@ class SolrIndexSingleAttributeValue
             throw new \UnexpectedValueException('Identifier could not be empty', 1503304897705);
         }
 
-        $attributeValues = unserialize($this->cObj->data['serialized_attributes_values']);
+        $attributeValues = $this->getAttributesValuesFromRow($this->cObj->data);
         $attribute = $this->getAttribute($parameters['identifier']);
         $value = '';
 
