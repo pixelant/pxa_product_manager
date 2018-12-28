@@ -32,9 +32,9 @@ class ProductRepositoryTest extends UnitTestCase
         );
 
         $mockedRepository
-        ->expects($this->never())
-        ->method('createDiscontinuedConstraints')
-        ->with($mockedQuery);
+            ->expects($this->never())
+            ->method('createDiscontinuedConstraints')
+            ->with($mockedQuery);
 
         $demand = new Demand();
         $demand->setIncludeDiscontinued(true);
@@ -189,10 +189,6 @@ class ProductRepositoryTest extends UnitTestCase
         ];
 
         $mockedQuery = $this->createMock(QueryInterface::class);
-        $mockedAttributeValueRepository = $this->createPartialMock(
-            AttributeValueRepository::class,
-            ['findAttributeValuesByAttributeAndValue']
-        );
 
         $mockedRepository = $this->getAccessibleMock(
             ProductRepository::class,
@@ -201,17 +197,6 @@ class ProductRepositoryTest extends UnitTestCase
             '',
             false
         );
-        $mockedRepository->_set('attributeValueRepository', $mockedAttributeValueRepository);
-
-        $mockedAttributeValueRepository
-            ->expects($this->once())
-            ->method('findAttributeValuesByAttributeAndValue')
-            ->with(
-                5, // uid of attribute filter
-                2, // value of filter
-                true // raw result
-            )
-            ->willReturn([['uid' => 123]]);
 
         $mockedRepository
             ->expects($this->exactly(3))

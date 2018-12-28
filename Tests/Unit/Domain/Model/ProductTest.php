@@ -839,68 +839,6 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributeValuesReturnsInitialValueForAttributeValues()
-    {
-        $objectStorage = new ObjectStorage();
-        self::assertEquals(
-            $objectStorage,
-            $this->fixture->getAttributeValues()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function setAttributeValuesForObjectStorageContainingAttributeValuesSetsAttributeValues()
-    {
-        $attributeValue = new AttributeValue();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($attributeValue);
-        $this->fixture->setAttributeValues($objectStorage);
-
-        self::assertSame(
-            $objectStorage,
-            $this->fixture->getAttributeValues()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function addAttributeValueForObjectStorageHoldingAttributeValues()
-    {
-        $attributeValue = new AttributeValue();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($attributeValue);
-        $this->fixture->addAttributeValue($attributeValue);
-
-        self::assertEquals(
-            $objectStorage,
-            $this->fixture->getAttributeValues()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function removeAttributeValueForObjectStorageHoldingAttributeValues()
-    {
-        $attributeValue = new AttributeValue();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($attributeValue);
-        $objectStorage->detach($attributeValue);
-        $this->fixture->addAttributeValue($attributeValue);
-        $this->fixture->removeAttributeValue($attributeValue);
-
-        self::assertEquals(
-            $objectStorage,
-            $this->fixture->getAttributeValues()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function crdateCanBeSet()
     {
         $crdate = 1500454777453;
@@ -957,14 +895,37 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function serializedAttributesValuesCanBeSet()
+    public function getInitalAttributesValueReturnEmptyArray()
     {
-        $serializedAttributesValues = serialize(['test']);
-        $this->fixture->setSerializedAttributesValues($serializedAttributesValues);
+        $this->assertTrue(is_array($this->fixture->getAttributesValues()));
+        $this->assertCount(0, $this->fixture->getAttributesValues());
+    }
 
-        self::assertEquals(
-            $serializedAttributesValues,
-            $this->fixture->getSerializedAttributesValues()
+    /**
+     * @test
+     */
+    public function attributesValuesRawCanBeSet()
+    {
+        $json = json_encode(['12' => 'test']);
+        $this->fixture->setAttributesValuesRaw($json);
+
+        $this->assertEquals(
+            $json,
+            $this->fixture->getAttributesValuesRaw()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function attributesValuesCanBeSet()
+    {
+        $data = ['12' => 'test123'];
+        $this->fixture->setAttributesValues($data);
+
+        $this->assertEquals(
+            $data,
+            $this->fixture->getAttributesValues()
         );
     }
 

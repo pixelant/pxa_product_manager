@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\UserFunction;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\UserFunction\SolrIndexSingleAttributeValue;
+use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 /**
@@ -51,7 +52,7 @@ class SolrIndexSingleAttributeValueTest extends UnitTestCase
 
         // Simulate data
         $cOj = $this->createMock(ContentObjectRenderer::class);
-        $cOj->data['serialized_attributes_values'] = serialize([1 => $value]);
+        $cOj->data[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME] = json_encode([1 => $value]);
 
         $this->fixture->cObj = $cOj;
 
@@ -78,7 +79,7 @@ class SolrIndexSingleAttributeValueTest extends UnitTestCase
 
         // Simulate data
         $cOj = $this->createMock(ContentObjectRenderer::class);
-        $cOj->data['serialized_attributes_values'] = serialize([1 => $value]);
+        $cOj->data[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME] = json_encode([1 => $value]);
 
         $this->fixture->cObj = $cOj;
 
@@ -102,7 +103,7 @@ class SolrIndexSingleAttributeValueTest extends UnitTestCase
 
         // Simulate data
         $cOj = $this->createMock(ContentObjectRenderer::class);
-        $cOj->data['serialized_attributes_values'] = serialize([2 => $value]);
+        $cOj->data[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME] = json_encode([2 => $value]);
 
         $this->fixture->cObj = $cOj;
 
@@ -129,7 +130,7 @@ class SolrIndexSingleAttributeValueTest extends UnitTestCase
 
         // Simulate data
         $cOj = $this->createMock(ContentObjectRenderer::class);
-        $cOj->data['serialized_attributes_values'] = serialize([1 => $value]);
+        $cOj->data[TCAUtility::ATTRIBUTES_VALUES_FIELD_NAME] = json_encode([1 => $value]);
 
         $this->fixture->cObj = $cOj;
 
