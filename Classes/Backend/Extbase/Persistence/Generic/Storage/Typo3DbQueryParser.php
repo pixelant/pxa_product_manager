@@ -181,7 +181,7 @@ class Typo3DbQueryParser extends ExtabaseTypo3DbQueryParser
             // TODO this work in mysql, what about others?
             // Add attribute UID json part
             $exprJsonPart = sprintf(
-                '-> \'$."%d"\'',
+                '->> \'$."%d"\'',
                 $attributeUid
             );
 
