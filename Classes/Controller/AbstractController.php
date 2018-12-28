@@ -35,6 +35,7 @@ use Pixelant\PxaProductManager\Domain\Repository\OrderRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Navigation\CategoriesNavigationTreeBuilder;
 use Pixelant\PxaProductManager\Traits\ProductRecordTrait;
+use Pixelant\PxaProductManager\Traits\ProcessQueryResultEntitiesTrait;
 use Pixelant\PxaProductManager\Utility\CategoryUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Database\Connection;
@@ -44,11 +45,8 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -59,6 +57,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 abstract class AbstractController extends ActionController
 {
     use ProductRecordTrait;
+    use ProcessQueryResultEntitiesTrait;
 
     /**
      * Product repository
@@ -407,30 +406,6 @@ abstract class AbstractController extends ActionController
 
             $jsLabelsAdded = true;
         }
-    }
-
-    /**
-     * Sort entities according to uid list order
-     *
-     * @param $entities
-     * @param array $customSorting
-     * @param string $property
-     * @return array
-     */
-    protected function sortEntitiesAccordingToList($entities, array $customSorting, string $property = 'uid'): array
-    {
-        $sorted = [];
-        /** @var AbstractEntity $entity */
-        foreach ($entities as $entity) {
-            $propertyValue = ObjectAccess::getProperty($entity, $property);
-            $ak = array_keys($customSorting, $propertyValue);
-            foreach ($ak as $idx) {
-                $sorted[$idx] = $entity;
-            }
-        }
-        ksort($sorted, SORT_NUMERIC);
-
-        return $sorted;
     }
 
     /**

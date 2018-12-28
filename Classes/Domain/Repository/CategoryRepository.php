@@ -29,6 +29,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -200,6 +201,51 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
         }
 
         return array_unique($categories);
+    }
+
+    /**
+     * Get products order from MM table by category UID
+     *
+     * @param int $categoryUid
+     * @return array
+     */
+    public function getProductsOrderingByCategory(int $categoryUid): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('sys_category_record_mm');
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $result = $queryBuilder
+            ->select('uid_foreign')
+            ->from('sys_category_record_mm')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid_local',
+                    $queryBuilder->createNamedParameter(
+                        $categoryUid,
+                        Connection::PARAM_INT
+                    )
+                ),
+                $queryBuilder->expr()->eq(
+                    'tablenames',
+                    $queryBuilder->createNamedParameter(
+                        'tx_pxaproductmanager_domain_model_product',
+                        Connection::PARAM_STR
+                    )
+                ),
+                $queryBuilder->expr()->eq(
+                    'fieldname',
+                    $queryBuilder->createNamedParameter(
+                        'categories',
+                        Connection::PARAM_STR
+                    )
+                )
+            )
+            ->orderBy('sorting')
+            ->execute()
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        return is_array($result) ? $result : [];
     }
 
     /**

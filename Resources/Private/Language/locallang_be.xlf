@@ -196,7 +196,7 @@
             <trans-unit id="flexform.sortby_crdate">
                 <source>Creation date</source>
             </trans-unit>
-            <trans-unit id="flexform.sortby_categories">
+            <trans-unit id="flexform.sortby_categories.sorting">
                 <source>Category</source>
             </trans-unit>
             <trans-unit id="flexform.enable_message_instead_of_page404">

@@ -65,7 +65,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      */
     public function countByDemand(DemandInterface $demand): int
     {
-        return $this->createDemandQuery($demand)->count();
+        return $this->findDemanded($demand)->count();
     }
 
     /**

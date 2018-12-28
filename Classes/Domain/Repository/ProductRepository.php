@@ -31,10 +31,8 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Traits\ProcessQueryResultEntitiesTrait;
 use Pixelant\PxaProductManager\Utility\TCAUtility;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Pixelant\PxaProductManager\Backend\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 use TYPO3\CMS\Extbase\Object\Container\Container;
@@ -50,10 +48,25 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class ProductRepository extends AbstractDemandRepository
 {
+    use ProcessQueryResultEntitiesTrait;
+
     /**
      * @var Container
      */
     protected $container = null;
+
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository = null;
+
+
+    /**
+     * Special ordering field that require additinal fixes
+     *
+     * @var string
+     */
+    protected $categoriesSortingField = 'categories.sorting';
 
     /**
      * @param Container $container
@@ -64,6 +77,14 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
+     * @param CategoryRepository $categoryRepository
+     */
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    /**
      * Override basic method. Set special ordering for categories if it's not multiple
      *
      * @param DemandInterface|Demand $demand
@@ -71,96 +92,16 @@ class ProductRepository extends AbstractDemandRepository
      */
     public function findDemanded(DemandInterface $demand): QueryResultInterface
     {
-        $query = $this->createDemandQuery($demand);
-        $sql = $this->convertQueryBuilderToSql($query);
-
-        return $query->statement($sql)->execute();
-
-        if (false || ($demand->getOrderBy() !== 'categories' || count($demand->getCategories()) > 1)) {
-            return parent::findDemanded($demand);
-        } else {
-            /** @var QueryBuilder $queryBuilder */
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getQueryBuilderForTable('sys_category_record_mm');
-            $queryBuilder->getRestrictions()->removeAll();
-
-            $statement = $queryBuilder
-                ->select('uid_foreign')
-                ->from('sys_category_record_mm')
-                ->where(
-                    $queryBuilder->expr()->eq(
-                        'uid_local',
-                        $queryBuilder->createNamedParameter(
-                            $demand->getCategories()[0],
-                            Connection::PARAM_INT
-                        )
-                    ),
-                    $queryBuilder->expr()->eq(
-                        'tablenames',
-                        $queryBuilder->createNamedParameter(
-                            'tx_pxaproductmanager_domain_model_product',
-                            Connection::PARAM_STR
-                        )
-                    ),
-                    $queryBuilder->expr()->eq(
-                        'fieldname',
-                        $queryBuilder->createNamedParameter(
-                            'categories',
-                            Connection::PARAM_STR
-                        )
-                    )
-                )
-                ->orderBy('sorting')
-                ->execute();
-
-            $uidsOrder = '';
-            while ($uid = $statement->fetchColumn(0)) {
-                $uidsOrder .= ',' . $uid;
-            }
-            unset($statement);
-
-            if (empty($uidsOrder)) {
-                return parent::findDemanded($demand);
-            } else {
-                // If sorting is set to categories and we have one category
-                $query = $this->createDemandQuery($demand);
-                /** @var Typo3DbQueryParser $queryParser */
-                $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
-
-                $productsQueryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
-
-                // add orderings
-                $productsQueryBuilder->add(
-                    'orderBy',
-                    'FIELD(`tx_pxaproductmanager_domain_model_product`.`uid`' . $uidsOrder . ') '
-                    . $demand->getOrderDirection()
-                );
-
-                $queryParameters = [];
-
-                foreach ($productsQueryBuilder->getParameters() as $key => $value) {
-                    // prefix array keys with ':'
-                    //all non numeric values have to be quoted
-                    $queryParameters[':' . $key] = (is_numeric($value)) ? $value : "'" . $value . "'";
-                }
-
-                $statement = strtr($productsQueryBuilder->getSQL(), $queryParameters);
-
-                return $query->statement($statement)->execute();
-            }
-        }
+        return $this->findDemandedCommon($demand);
     }
 
     /**
-     * @param DemandInterface $demand
+     * @param DemandInterface|Demand $demand
      * @return array
      */
     public function findDemandedRaw(DemandInterface $demand): array
     {
-        $query = $this->createDemandQuery($demand);
-        $sql = $this->convertQueryBuilderToSql($query);
-
-        return $query->statement($sql)->execute(true);
+        return $this->findDemandedCommon($demand, true);
     }
 
     /**
@@ -182,20 +123,14 @@ class ProductRepository extends AbstractDemandRepository
      */
     public function setOrderings(QueryInterface $query, DemandInterface $demand)
     {
-        // If sorting is set by categories, we need to create a special query
-        if ($demand->getOrderBy() !== 'categories') {
-            parent::setOrderings($query, $demand);
+        parent::setOrderings($query, $demand);
 
-            $orderings = $query->getOrderings();
-            // Include name as second sorting if not already chosen
-            if (!array_key_exists('name', $orderings)) {
-                $orderings['name'] = QueryInterface::ORDER_ASCENDING;
+        $orderings = $query->getOrderings();
+        // Include name as second sorting if not already chosen
+        if (!array_key_exists('name', $orderings)) {
+            $orderings['name'] = QueryInterface::ORDER_ASCENDING;
 
-                $query->setOrderings($orderings);
-            }
-        } else {
-            $demand->setOrderBy('categories.sorting');
-            parent::setOrderings($query, $demand);
+            $query->setOrderings($orderings);
         }
     }
 
@@ -343,6 +278,7 @@ class ProductRepository extends AbstractDemandRepository
      * Convert query to SQL
      * Own method with usage of own query parser
      *
+     * @see removeDuplicatedEntries
      * @param $query
      * @return string
      */
@@ -355,6 +291,11 @@ class ProductRepository extends AbstractDemandRepository
 
         if ($queryParser->isDistinctQuerySuggested() && !empty($selectParts)) {
             $selectParts[0] = 'DISTINCT ' . $selectParts[0];
+            // Need to add 'sys_category.sorting' with DISTINCT in order to don't get SQL error in strict mode
+            // Fix duplicate records in @see removeDuplicatedEntries
+            if ($this->isQueryWithCategoriesSorting($query)) {
+                $selectParts[] = $queryBuilder->quoteIdentifier('sys_category.sorting');
+            }
             $queryBuilder->selectLiteral(...$selectParts);
         }
         if ($query->getOffset()) {
@@ -502,7 +443,7 @@ class ProductRepository extends AbstractDemandRepository
                     default:
                         // @codingStandardsIgnoreStart
                         throw new \UnexpectedValueException('Filter type "' . $filter['type'] . '" is not supported.', 1545920531427);
-                        // @codingStandardsIgnoreEnd
+                    // @codingStandardsIgnoreEnd
                 }
             }
         }
@@ -573,5 +514,55 @@ class ProductRepository extends AbstractDemandRepository
             $constraints,
             'or'
         );
+    }
+
+    /**
+     * Wrap same actions for find demanded raw and not raw.
+     * This include required fixes for categories sorting and JSON attributes_values support
+     *
+     * @param Demand $demand
+     * @param bool $returnRawResult
+     * @return array|QueryResultInterface
+     */
+    protected function findDemandedCommon(Demand $demand, bool $returnRawResult = false)
+    {
+        $query = $this->createDemandQuery($demand);
+        $sql = $this->convertQueryBuilderToSql($query);
+
+        $queryResults = $query->statement($sql)->execute($returnRawResult);
+
+        if ($this->isQueryWithCategoriesSorting($query)) {
+            // If sorting by 'categories.sorting' DISTINCT won't work
+            // @TODO how to fix DISTINCT
+            $queryResults = $this->removeDuplicatedEntries($queryResults);
+
+            // If only one category in demand sort by MM order
+            if (count($demand->getCategories()) === 1) {
+                $productsOrdering = $this->categoryRepository->getProductsOrderingByCategory(
+                    reset($demand->getCategories())
+                );
+
+                $orderings = $query->getOrderings();
+                $queryResults = $this->sortEntitiesAccordingToList(
+                    $queryResults,
+                    $productsOrdering,
+                    'uid',
+                    $orderings[$this->categoriesSortingField] === QueryInterface::ORDER_DESCENDING
+                );
+            }
+        }
+
+        return $queryResults;
+    }
+
+    /**
+     * Check if query has categories sorting
+     *
+     * @param QueryInterface $query
+     * @return bool
+     */
+    protected function isQueryWithCategoriesSorting(QueryInterface $query): bool
+    {
+        return array_key_exists($this->categoriesSortingField, $query->getOrderings());
     }
 }
