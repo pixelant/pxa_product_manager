@@ -9,6 +9,13 @@
 		let _settings;
 
 		/**
+		 * Default select settings
+		 */
+		let _select2Settings = {
+			allowClear: true
+		};
+
+		/**
 		 * if script should do something on select change
 		 * @type {boolean}
 		 */
@@ -54,7 +61,7 @@
 
 			$selectBoxes.each(function () {
 				let select = $(this);
-				_selectInstances[select.data('identifier')] = select.select2();
+				_selectInstances[select.data('identifier')] = select.select2(_select2Settings);
 
 				// Disable search on mobile
 				if ($(window).width() <= 739) {
@@ -126,7 +133,9 @@
 			// remove last filter box
 			_lastFilterBoxIdentifier = null;
 
-			$selectBoxes.select2().val(null).trigger('change');
+			$selectBoxes.select2(_select2Settings)
+				.val(null)
+				.trigger('change');
 
 			_triggerUpdate();
 
@@ -280,7 +289,7 @@
 					});
 
 					// re-init to respect changes
-					$selectFilter.select2();
+					$selectFilter.select2(_select2Settings);
 				} else if (filterType === _filterTypeAttributeMinMax) {
 					minMaxFilter = $(this);
 				}
