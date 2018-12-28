@@ -121,7 +121,7 @@ class ProductController extends AbstractController
 
         if (!empty($this->settings['filters'])) {
             $filtersUids = GeneralUtility::intExplode(',', $this->settings['filters'], true);
-            $filters = $this->sortQueryResultsByUidList(
+            $filters = $this->sortEntitiesAccordingToList(
                 $this->filterRepository->findByUidList(
                     $filtersUids
                 ),
@@ -967,7 +967,7 @@ class ProductController extends AbstractController
 
         $products = $this->productRepository->findProductsByUids($productsUids);
         if (is_object($products)) {
-            $products = $this->sortQueryResultsByUidList($products, $productsUids);
+            $products = $this->sortEntitiesAccordingToList($products, $productsUids);
         }
 
         return $products;

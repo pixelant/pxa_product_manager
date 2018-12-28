@@ -44,6 +44,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -55,7 +56,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  * Class AbstractController
  * @package Pixelant\PxaProductManager\Controller
  */
-class AbstractController extends ActionController
+abstract class AbstractController extends ActionController
 {
     use ProductRecordTrait;
 
@@ -409,28 +410,27 @@ class AbstractController extends ActionController
     }
 
     /**
-     * Sort query result according to uid list order
+     * Sort entities according to uid list order
      *
-     * @param QueryResultInterface $queryResults
-     * @param array $uidList
+     * @param $entities
+     * @param array $customSorting
+     * @param string $property
      * @return array
      */
-    protected function sortQueryResultsByUidList(QueryResultInterface $queryResults, array $uidList): array
+    protected function sortEntitiesAccordingToList($entities, array $customSorting, string $property = 'uid'): array
     {
-        $result = [];
-
-        foreach ($queryResults as $queryResult) {
-            $uid = ObjectAccess::getProperty($queryResult, 'uid');
-            $result[$uid] = $queryResult;
+        $sorted = [];
+        /** @var AbstractEntity $entity */
+        foreach ($entities as $entity) {
+            $propertyValue = ObjectAccess::getProperty($entity, $property);
+            $ak = array_keys($customSorting, $propertyValue);
+            foreach ($ak as $idx) {
+                $sorted[$idx] = $entity;
+            }
         }
+        ksort($sorted, SORT_NUMERIC);
 
-        if (!empty($result)) {
-            $uidList = array_intersect($uidList, array_keys($result));
-            // sort to have same order as in list
-            $result = array_replace(array_flip($uidList), $result);
-        }
-
-        return $result;
+        return $sorted;
     }
 
     /**
