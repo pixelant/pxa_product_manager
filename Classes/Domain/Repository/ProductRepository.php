@@ -340,6 +340,63 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
+     * Convert query to SQL
+     * Own method with usage of own query parser
+     *
+     * @param $query
+     * @return string
+     */
+    public function convertQueryBuilderToSql(QueryInterface $query): string
+    {
+        $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
+        $queryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
+
+        $selectParts = $queryBuilder->getQueryPart('select');
+
+        if ($queryParser->isDistinctQuerySuggested() && !empty($selectParts)) {
+            $selectParts[0] = 'DISTINCT ' . $selectParts[0];
+            $queryBuilder->selectLiteral(...$selectParts);
+        }
+        if ($query->getOffset()) {
+            $queryBuilder->setFirstResult($query->getOffset());
+        }
+        if ($query->getLimit()) {
+            $queryBuilder->setMaxResults($query->getLimit());
+        }
+
+        $queryParameters = [];
+
+        foreach ($queryBuilder->getParameters() as $key => $value) {
+            // prefix array keys with ':'
+            //all non numeric values have to be quoted
+            $queryParameters[':' . $key] = is_numeric($value)
+                ? $value
+                : $queryBuilder->quote($value, \PDO::PARAM_STR);
+        }
+
+        return strtr($queryBuilder->getSQL(), $queryParameters);
+    }
+
+    /**
+     * Create own query object
+     *
+     * @return Query|QueryInterface
+     */
+    public function createQuery()
+    {
+        // Backup class name
+        $queryClassName = $this->container->getImplementationClassName(QueryInterface::class);
+        // Set our own query class name
+        $this->container->registerImplementation(QueryInterface::class, Query::class);
+        // Create query
+        $query = parent::createQuery();
+        // Reset changes
+        $this->container->registerImplementation(QueryInterface::class, $queryClassName);
+
+        return $query;
+    }
+
+    /**
      * Create constraints for all demand options
      *
      * @param QueryInterface $query
@@ -516,62 +573,5 @@ class ProductRepository extends AbstractDemandRepository
             $constraints,
             'or'
         );
-    }
-
-    /**
-     * Convert query to SQL
-     * Own method with usage of own query parser
-     *
-     * @param $query
-     * @return string
-     */
-    protected function convertQueryBuilderToSql(QueryInterface $query): string
-    {
-        $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
-        $queryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
-
-        $selectParts = $queryBuilder->getQueryPart('select');
-
-        if ($queryParser->isDistinctQuerySuggested() && !empty($selectParts)) {
-            $selectParts[0] = 'DISTINCT ' . $selectParts[0];
-            $queryBuilder->selectLiteral(...$selectParts);
-        }
-        if ($query->getOffset()) {
-            $queryBuilder->setFirstResult($query->getOffset());
-        }
-        if ($query->getLimit()) {
-            $queryBuilder->setMaxResults($query->getLimit());
-        }
-
-        $queryParameters = [];
-
-        foreach ($queryBuilder->getParameters() as $key => $value) {
-            // prefix array keys with ':'
-            //all non numeric values have to be quoted
-            $queryParameters[':' . $key] = is_numeric($value)
-                ? $value
-                : $queryBuilder->quote($value, \PDO::PARAM_STR);
-        }
-
-        return strtr($queryBuilder->getSQL(), $queryParameters);
-    }
-
-    /**
-     * Create own query object
-     *
-     * @return Query|QueryInterface
-     */
-    public function createQuery()
-    {
-        // Backup class name
-        $queryClassName = $this->container->getImplementationClassName(QueryInterface::class);
-        // Set our own query class name
-        $this->container->registerImplementation(QueryInterface::class, Query::class);
-        // Create query
-        $query = parent::createQuery();
-        // Reset changes
-        $this->container->registerImplementation(QueryInterface::class, $queryClassName);
-
-        return $query;
     }
 }
