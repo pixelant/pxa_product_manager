@@ -19,6 +19,7 @@ trait AttributesValuesUpdateTrait
      */
     public static $identifier = 'tx_pxaproductmanager_attributes_values';
 
+    // @codingStandardsIgnoreStart
     /**
      * @var string
      */
@@ -28,6 +29,7 @@ trait AttributesValuesUpdateTrait
      * @var string
      */
     protected $updateDescription = 'Before Product Manager was saving attribute values as serialized values, now as JSON.';
+    // @codingStandardsIgnoreEnd
 
     /**
      * Execute the update
