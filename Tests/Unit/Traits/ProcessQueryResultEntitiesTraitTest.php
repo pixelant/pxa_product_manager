@@ -53,7 +53,7 @@ class ProcessQueryResultEntitiesTraitTest extends UnitTestCase
      * @test
      * @dataProvider dataForSortArrayByUids
      */
-    public function sortArrayByUidListWillSortResultsAccordingToUidList($array, $expectResult, $uidList, $order)
+    public function sortRawResultByUidListWillSortResultsAccordingToUidList($array, $expectResult, $uidList, $order)
     {
         $result = $this->sortEntitiesAccordingToList($array, $uidList, 'uid', $order);
 
@@ -65,6 +65,66 @@ class ProcessQueryResultEntitiesTraitTest extends UnitTestCase
         $this->assertEquals(
             $expectResult,
             $resultOrder
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function removeDuplicationFromQueryResultWillRemoveDuplicatedEntries()
+    {
+        $mockedQueryResult = $this->getAccessibleMock(
+            QueryResult::class,
+            ['initialize'],
+            [],
+            '',
+            false
+        );
+        $product1 = (new Product());
+        $product1->_setProperty('uid', 1);
+
+        $product2 = (new Product());
+        $product2->_setProperty('uid', 2);
+
+        $product3 = (new Product());
+        $product3->_setProperty('uid', 1);
+
+        $product4 = (new Product());
+        $product4->_setProperty('uid', 4);
+
+        $queryResult = [
+            $product1, $product2, $product3, $product4
+        ];
+        $expect = [$product1, $product2, $product4];
+
+        $mockedQueryResult->_set('queryResult', $queryResult);
+
+        $this->assertEquals(
+            $expect,
+            array_values($this->removeDuplicatedEntries($mockedQueryResult)->toArray()) // Reset keys
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function removeDuplicationFromRawResultWillRemoveDuplicatedEntries()
+    {
+        $product1 = ['uid' => 1];
+        $product2 = ['uid' => 5];
+        $product3 = ['uid' => 2];
+        $product4 = ['uid' => 2];
+        $product5 = ['uid' => 5];
+        $product6 = ['uid' => 6];
+
+        $rawResult = [
+            $product1, $product2, $product3, $product4, $product5, $product6
+        ];
+        $expect = [$product1, $product2, $product3, $product6];
+
+        $this->assertEquals(
+            $expect,
+            array_values($this->removeDuplicatedEntries($rawResult)) // Reset keys
         );
     }
 
