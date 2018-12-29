@@ -371,39 +371,4 @@ class ProductRepositoryTest extends UnitTestCase
             $mockedQuery->getOrderings()
         );
     }
-
-    /**
-     * @test
-     */
-    public function setOrderChangesTheCategoryOrderingsNameInCaseOfCategoryOrdering()
-    {
-        $mockedQuery = $this->getMockBuilder(Query::class)
-            ->setMethods(['dummy'])
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockedRepository = $this->getAccessibleMock(
-            ProductRepository::class,
-            ['dummy'],
-            [],
-            '',
-            false
-        );
-
-        $orderDirection = QueryInterface::ORDER_DESCENDING;
-
-        $demand = new Demand();
-        $demand->setOrderByAllowed('categories.sorting');
-        $demand->setOrderBy('categories');
-        $demand->setOrderDirection($orderDirection);
-
-        $mockedRepository->_call('setOrderings', $mockedQuery, $demand);
-
-        $this->assertEquals(
-            [
-                'categories.sorting' => QueryInterface::ORDER_DESCENDING
-            ],
-            $mockedQuery->getOrderings()
-        );
-    }
 }
