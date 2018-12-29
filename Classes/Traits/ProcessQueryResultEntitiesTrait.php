@@ -108,7 +108,7 @@ trait ProcessQueryResultEntitiesTrait
         // For raw results
         if (is_array($queryResults)) {
             foreach ($queryResults as $key => $queryResult) {
-                $uid = $queryResults['uid'];
+                $uid = $queryResult['uid'];
                 if (!in_array($uid, $recordsFound)) {
                     $recordsFound[] = $uid;
                 } else {
