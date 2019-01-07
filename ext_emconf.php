@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Product Manager',
-    'description' => 'Allow to create and list products on a site.',
+    'description' => 'Create and list products on a site.',
     'category' => 'plugin',
     'author' => 'Pixelant',
     'author_email' => 'info@pixelant.net',
