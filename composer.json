@@ -6,8 +6,9 @@
   "keywords": ["TYPO3 CMS"],
   "authors": [
     {
-      "name": "Pixelant AB",
-      "email": "info@pixelant.se",
+      "name": "Pixelant",
+      "email": "info@pixelant.net",
+      "homepage": "https://www.pixelant.net",
       "role": "Developer"
     }
   ],
