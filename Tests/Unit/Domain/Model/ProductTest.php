@@ -201,6 +201,28 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
+    public function slugInitialValueEmptyString()
+    {
+        $this->assertEmpty($this->fixture->getSlug());
+    }
+
+    /**
+     * @test
+     */
+    public function slugCanBeSet()
+    {
+        $value = 'slug';
+        $this->fixture->setSlug($value);
+
+        $this->assertEquals(
+            $value,
+            $this->fixture->getSlug()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function skuCanBeSet()
     {
         $sku = 'sku';

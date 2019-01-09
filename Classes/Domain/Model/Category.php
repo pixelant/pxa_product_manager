@@ -123,6 +123,11 @@ class Category extends CategoryExtbase
     protected $subCategories;
 
     /**
+     * @var string
+     */
+    protected $slug = '';
+
+    /**
      * __construct
      */
     public function __construct()
@@ -437,5 +442,21 @@ class Category extends CategoryExtbase
     public function setSubCategories(ObjectStorage $subCategories)
     {
         $this->subCategories = $subCategories;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug(string $slug)
+    {
+        $this->slug = $slug;
     }
 }

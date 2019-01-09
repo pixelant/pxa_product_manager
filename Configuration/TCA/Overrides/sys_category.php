@@ -296,4 +296,36 @@ call_user_func(function () {
         $columns['pxapm_tax_rate']['config']['readOnly'] = true;
         $columns['pxapm_tax_rate']['label'] = $ll . 'sys_category.pxapm_tax_rate.disabled';
     }
+
+    // Product manager slug
+    if (version_compare(TYPO3_branch, '9.5', '>=')) {
+        $newCategoryColumns['pxapm_slug'] = [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:pages.slug',
+            'displayCond' => 'USER:' . \TYPO3\CMS\Core\Compatibility\PseudoSiteTcaDisplayCondition::class . '->isInPseudoSite:pages:false',
+            'config' => [
+                'type' => 'slug',
+                'size' => 50,
+                'generatorOptions' => [
+                    'fields' => ['title'],
+                    'replacements' => [
+                        '/' => ''
+                    ],
+                    'prefixParentPageSlug' => true
+                ],
+                'fallbackCharacter' => '-',
+                'eval' => 'uniqueInPid',
+                'default' => '',
+                'prependSlash' => true
+            ]
+        ];
+
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $newCategoryColumns);
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+            'sys_category',
+            'pxapm_slug',
+            '',
+            'after:title'
+        );
+    }
 });

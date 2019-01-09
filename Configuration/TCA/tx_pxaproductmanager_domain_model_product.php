@@ -29,12 +29,12 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_values',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, slug, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, disable_single_view, related_products, images, links, fal_links, sub_products,meta_description, keywords, alternative_title, path_segment, serialized_attributes_values, attribute_values',
     ],
 
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, launched, discontinued, custom_sorting,
+            'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,--palette--;;1,name, slug, sku, price, tax_rate, teaser, description, usp, additional_information, attributes_description, launched, discontinued, custom_sorting,
 --div--;' . $llCore . 'locallang_tca.xlf:sys_category.tabs.category, categories,
 --palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images,
@@ -141,6 +141,15 @@ return [
                 'size' => 30,
                 'eval' => 'trim,required'
             ],
+        ],
+        'slug' => [
+            'exclude' => true,
+            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.slug',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'nospace,alphanum_x,lower,unique',
+            ]
         ],
         'sku' => [
             'exclude' => 0,
