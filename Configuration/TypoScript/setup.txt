@@ -33,6 +33,7 @@ plugin.tx_pxaproductmanager {
         doNotShowEmptyCategoriesInNavigation = {$plugin.tx_pxaproductmanager.settings.doNotShowEmptyCategoriesInNavigation}
         disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
         showHiddenRecords = {$plugin.tx_pxaproductmanager.settings.showHiddenRecords}
+        showInSingleView = {$plugin.tx_pxaproductmanager.settings.showInSingleView}
 
         lazyLoading {
             loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
