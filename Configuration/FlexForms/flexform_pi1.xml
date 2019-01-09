@@ -54,19 +54,19 @@
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_view</numIndex>
                                         <numIndex index="1">Product->compareView;Product->comparePreView</numIndex>
                                     </numIndex>
-                                    <numIndex index="9">
+                                    <numIndex index="10">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_promotion_list</numIndex>
                                         <numIndex index="1">Product->promotionList</numIndex>
                                     </numIndex>
-                                    <numIndex index="10">
+                                    <numIndex index="11">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
-                                    <numIndex index="11">
+                                    <numIndex index="12">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.navigation_show</numIndex>
                                         <numIndex index="1">Navigation->show</numIndex>
                                     </numIndex>
-                                    <numIndex index="12">
+                                    <numIndex index="13">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.filtering_controller</numIndex>
                                         <numIndex index="1">--div--</numIndex>
                                     </numIndex>
@@ -201,6 +201,24 @@
                             </config>
                         </TCEforms>
                     </settings.customProductsList.productsCategories>
+
+                    <settings.customProductsList.productsToShowWithinCategories>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.products_to_show_within_categories</label>
+                            <displayCond>
+                                <AND>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->customProductsList;Product->show</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.settings.customProductsList.mode:=:category</numIndex>
+                                </AND>
+                            </displayCond>
+                            <config>
+                                <type>select</type>
+                                <enableMultiSelectFilterTextfield>1</enableMultiSelectFilterTextfield>
+                                <renderType>selectMultipleSideBySide</renderType>
+                                <itemsProcFunc>Pixelant\PxaProductManager\UserFunction\ItemsProcessingFunction->getListOfProductsWithinCategories</itemsProcFunc>
+                            </config>
+                        </TCEforms>
+                    </settings.customProductsList.productsToShowWithinCategories>
 
                     <settings.category>
                         <TCEforms>
@@ -650,26 +668,38 @@
                 </el>
             </ROOT>
         </filtering>
-        <orderFucntion>
+        <orderFunction>
             <ROOT>
                 <TCEforms>
                     <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_function_sheet__title</sheetTitle>
                 </TCEforms>
                 <type>array</type>
                 <el>
-                    <settings.orderRecipientsEmails>
+                    <settings.orderFormConfiguration>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_recipients_emails</label>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_configuration</label>
                             <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
                             <config>
-                                <type>text</type>
-                                <cols>32</cols>
-                                <rows>2</rows>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <foreign_table>tx_pxaproductmanager_domain_model_orderconfiguration</foreign_table>
+                                <foreign_table_where> AND tx_pxaproductmanager_domain_model_orderconfiguration.hidden=0 AND tx_pxaproductmanager_domain_model_orderconfiguration.deleted=0 AND tx_pxaproductmanager_domain_model_orderconfiguration.sys_language_uid=0</foreign_table_where>
                             </config>
                         </TCEforms>
-                    </settings.orderRecipientsEmails>
+                    </settings.orderFormConfiguration>
+
+                    <settings.orderFormRequireLogin>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.order_form_require_login</label>
+                            <displayCond>FIELD:sDEF.settings.enableOrderFunction:REQ:true</displayCond>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                            </config>
+                        </TCEforms>
+                    </settings.orderFormRequireLogin>
                 </el>
             </ROOT>
-        </orderFucntion>
+        </orderFunction>
     </sheets>
 </T3DataStructure>

@@ -86,7 +86,7 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
         }
 
         if (isset($parameters)) {
-            $singleViewPageUid = ConfigurationUtility::getSettings()['pagePid'];
+            $singleViewPageUid = ConfigurationUtility::getSettingsByPath('pagePid');
 
             $confLink = [
                 'parameter' => $singleViewPageUid ?: MainUtility::getTSFE()->id,

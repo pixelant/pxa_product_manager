@@ -25,6 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
@@ -54,8 +55,7 @@ class Product extends AbstractEntity
     /**
      * name
      *
-     * @var \string
-     * @validate NotEmpty
+     * @var string
      */
     protected $name;
 
@@ -74,25 +74,18 @@ class Product extends AbstractEntity
     protected $price = 0.0;
 
     /**
+     * taxRate
+     *
+     * @var float $taxRate
+     */
+    protected $taxRate = 0.00;
+
+    /**
      * description
      *
      * @var \string
      */
     protected $description = '';
-
-    /**
-     * importId
-     *
-     * @var \string
-     */
-    protected $importId;
-
-    /**
-     * importName
-     *
-     * @var \string
-     */
-    protected $importName;
 
     /**
      * disableSingleView
@@ -140,10 +133,10 @@ class Product extends AbstractEntity
     /**
      * Images
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
      * @lazy
      */
-    protected $attributeImages;
+    protected $attributeFiles;
 
     /**
      * links
@@ -175,6 +168,13 @@ class Product extends AbstractEntity
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Attribute>
      */
     protected $attributes;
+
+    /**
+     * Attributes as array with identifier as index
+     *
+     * @var array
+     */
+    protected $attributesIdentifiersArray = [];
 
     /**
      * Attributes grouped by sets
@@ -230,13 +230,6 @@ class Product extends AbstractEntity
      * @var Image
      */
     protected $thumbnailImage;
-
-    /**
-     * Save result for __call method
-     *
-     * @var array
-     */
-    protected $magicCallMethodCache = [];
 
     /**
      * attributesDescription
@@ -323,7 +316,7 @@ class Product extends AbstractEntity
 
         $this->images = new ObjectStorage();
 
-        $this->attributeImages = new ObjectStorage();
+        $this->attributeFiles = new ObjectStorage();
 
         $this->links = new ObjectStorage();
 
@@ -406,6 +399,27 @@ class Product extends AbstractEntity
     public function setPrice(float $price)
     {
         $this->price = $price;
+    }
+
+    /**
+     * Returns the taxRate
+     *
+     * @return float $taxRate
+     */
+    public function getTaxRate(): float
+    {
+        return $this->taxRate;
+    }
+
+    /**
+     * Sets the taxRate
+     *
+     * @param float $taxRate
+     * @return void
+     */
+    public function setTaxRate(float $taxRate)
+    {
+        $this->taxRate = $taxRate;
     }
 
     /**
@@ -516,46 +530,24 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Adds a AttributeImage
+     * Returns the Attribute files
      *
-     * @param Image $image
-     * @return void
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
      */
-    public function addAttributeImage(Image $image)
+    public function getAttributeFiles(): ObjectStorage
     {
-        $this->attributeImages->attach($image);
+        return $this->attributeFiles;
     }
 
     /**
-     * Removes a AttributeImage
+     * Sets the Attribute files
      *
-     * @param Image $image The Image to be removed
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $files
      * @return void
      */
-    public function removeAttributeImage(Image $image)
+    public function setAttributeFiles(ObjectStorage $files)
     {
-        $this->attributeImages->detach($image);
-    }
-
-    /**
-     * Returns the AttributeImage
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image> $images
-     */
-    public function getAttributeImages(): ObjectStorage
-    {
-        return $this->attributeImages;
-    }
-
-    /**
-     * Sets the AttributeImage
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image> $images
-     * @return void
-     */
-    public function setAttributeImages(ObjectStorage $images)
-    {
-        $this->attributeImages = $images;
+        $this->attributeFiles = $files;
     }
 
     /**
@@ -745,48 +737,6 @@ class Product extends AbstractEntity
             $this->thumbnailImage = $this->getImageFor('useInListing');
         }
         return $this->thumbnailImage;
-    }
-
-    /**
-     * Returns the importId
-     *
-     * @return \string $importId
-     */
-    public function getImportId(): string
-    {
-        return $this->importId;
-    }
-
-    /**
-     * Sets the importId
-     *
-     * @param \string $importId
-     * @return void
-     */
-    public function setImportId(string $importId)
-    {
-        $this->importId = $importId;
-    }
-
-    /**
-     * Returns the importName
-     *
-     * @return \string $importName
-     */
-    public function getImportName(): string
-    {
-        return $this->importName;
-    }
-
-    /**
-     * Sets the importName
-     *
-     * @param \string $importName
-     * @return void
-     */
-    public function setImportName(string $importName)
-    {
-        $this->importName = $importName;
     }
 
     /**
@@ -1182,138 +1132,6 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Get image for different views
-     *
-     * @param string $propertyName
-     * @return null|object|Image
-     */
-    protected function getImageFor($propertyName)
-    {
-        if ($this->images->count()) {
-            /** @var Image $image */
-            foreach ($this->images as $image) {
-                if (ObjectAccess::isPropertyGettable($image, $propertyName)
-                    && ObjectAccess::getProperty($image, $propertyName) === true
-                ) {
-                    return $image;
-                }
-            }
-
-            // use any if no result
-            $this->images->rewind();
-            return $this->images->current();
-        }
-
-        return null;
-    }
-
-    /**
-     * __call
-     *
-     * @param $methodName
-     * @param $arguments
-     * @return object
-     */
-    public function __call($methodName, $arguments)
-    {
-        if (array_key_exists($methodName, $this->magicCallMethodCache)) {
-            return $this->magicCallMethodCache[$methodName];
-        }
-        // Getting custom attributes
-        if (strpos($methodName, 'get') === 0) {
-            $identifier = lcfirst(substr($methodName, 3));
-
-            // Check identifier
-            /** @var Attribute $attribute */
-            foreach ($this->getAttributes() as $attribute) {
-                if (lcfirst($attribute->getIdentifier()) === $identifier) {
-                    $this->magicCallMethodCache[$methodName] = $attribute;
-                    return $attribute;
-                }
-            }
-
-            // If no identifier found, then check name
-            /** @var Attribute $attribute */
-            foreach ($this->getAttributes() as $attribute) {
-                if (lcfirst($attribute->getName()) === $identifier) {
-                    $this->magicCallMethodCache[$methodName] = $attribute;
-                    return $attribute;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Initialize attributes
-     */
-    protected function initializeAttributes()
-    {
-        $this->attributes = new ObjectStorage();
-
-        $categories = [];
-        /** @var Category $category */
-        foreach ($this->getCategories() as $category) {
-            $categories[] = $category->getUid();
-        }
-
-        /** @var AttributeHolderUtility $attributeHolder */
-        $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-        $attributeHolder->start($categories);
-
-        $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
-
-        $attributesValues = (array)unserialize($this->getSerializedAttributesValues());
-
-        /** @var Attribute $attribute */
-        foreach ($attributeHolder->getAttributes() as $attribute) {
-            $id = $attribute->getUid();
-
-            if ($attribute->getType() === Attribute::ATTRIBUTE_TYPE_IMAGE) {
-                $attribute->setValue(array_filter(
-                    $this->attributeImages->toArray(),
-                    function ($item) use ($id) {
-                        return $item->getPxaAttribute() === $id;
-                    }
-                ));
-            } elseif (array_key_exists($id, $attributesValues)) {
-                $value = $attributesValues[$id];
-
-                switch ($attribute->getType()) {
-                    case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
-                    case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
-                        $options = [];
-
-                        /** @var Option $option */
-                        foreach ($attribute->getOptions() as $option) {
-                            if (GeneralUtility::inList($value, $option->getUid())) {
-                                $options[] = $option;
-                            }
-                        }
-
-                        $attribute->setValue($options);
-                        break;
-                    case Attribute::ATTRIBUTE_TYPE_DATETIME:
-                        if ($value) {
-                            try {
-                                $value = new \DateTime($value);
-                            } catch (\Exception $exception) {
-                                $value = '';
-                            }
-                        }
-                        $attribute->setValue($value);
-                        break;
-                    default:
-                        $attribute->setValue($value);
-                }
-            }
-
-            $this->attributes->attach($attribute);
-        }
-    }
-
-    /**
      * Adds an asset
      *
      * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $asset
@@ -1474,7 +1292,7 @@ class Product extends AbstractEntity
      *
      * @return bool
      */
-    public function getIsDiscontinued():  bool
+    public function getIsDiscontinued(): bool
     {
         $isDiscontinued = false;
         if (!empty($this->getDiscontinued())) {
@@ -1528,17 +1346,53 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Get custom sorting
+     *
+     * @return int
+     */
+    public function getCustomSorting(): int
+    {
+        return $this->customSorting;
+    }
+
+    /**
+     * Set custom sorting
+     *
+     * @param int $customSorting Custom sorting
+     * @return void
+     */
+    public function setCustomSorting(int $customSorting)
+    {
+        $this->customSorting = $customSorting;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTax(): float
+    {
+        return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormatTax(): string
+    {
+        return ProductUtility::formatPrice($this->getTax());
+    }
+
+    /**
      * Returns true if product is considered as new
      * based on product launched date and setup ts launched.daysAsNew
      *
      * @return bool
      */
-    public function getIsNew():  bool
+    public function getIsNew(): bool
     {
         $isNew = false;
         if (!empty($this->getLaunched())) {
-            $pluginSettings = ConfigurationUtility::getSettings($this->getPid());
-            $dateInterval = $pluginSettings['launched']['dateIntervalAsNew'];
+            $dateInterval = ConfigurationUtility::getSettingsByPath('launched/dateIntervalAsNew', $this->getPid());
             if (!empty($dateInterval)) {
                 try {
                     $newUntil = clone $this->getLaunched();
@@ -1561,12 +1415,11 @@ class Product extends AbstractEntity
     public function getAdditionalClasses(string $prefix = ''): string
     {
         $additionalClasses = [];
-
-        $pluginSettings = ConfigurationUtility::getSettings($this->getPid());
+        $pid = $this->getPid();
 
         // check if additional category classes are set in plugin ts setup
         // this way we can add custom classes for products based on its categories in templates
-        $categoriesAdditionalClasses = $pluginSettings['additionalClasses']['categories'];
+        $categoriesAdditionalClasses = ConfigurationUtility::getSettingsByPath('additionalClasses/categories', $pid);
         if (is_array($categoriesAdditionalClasses) && count($categoriesAdditionalClasses) > 0) {
             foreach ($this->getCategories() as $category) {
                 $className = $categoriesAdditionalClasses[$category->getUid()];
@@ -1579,7 +1432,7 @@ class Product extends AbstractEntity
         // check if product is considered new, then add class
         // based on ts setup additionalClasses.launched.isNew
         if ($this->getIsNew()) {
-            $isNewClass = $pluginSettings['additionalClasses']['launched']['isNewClass'];
+            $isNewClass = ConfigurationUtility::getSettingsByPath('additionalClasses/launched/isNewClass', $pid);
             if (!empty($isNewClass)) {
                 $additionalClasses[] = $isNewClass;
             }
@@ -1588,7 +1441,10 @@ class Product extends AbstractEntity
         // check if product is considered discontinued, then add class
         // based on ts setup additionalClasses.discontinued.isDiscontinuedClass
         if ($this->getIsDiscontinued()) {
-            $isDiscontinuedClass = $pluginSettings['additionalClasses']['discontinued']['isDiscontinuedClass'];
+            $isDiscontinuedClass = ConfigurationUtility::getSettingsByPath(
+                'additionalClasses/discontinued/isDiscontinuedClass',
+                $pid
+            );
             if (!empty($isDiscontinuedClass)) {
                 $additionalClasses[] = $isDiscontinuedClass;
             }
@@ -1602,23 +1458,145 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Get custom sorting
-     *
-     * @return int
+     * @return float
      */
-    public function getCustomSorting(): int
+    public function getTaxRateRecursively(): float
     {
-        return $this->customSorting;
+        // If tax rate is set on product level - return it
+        // or it was set from category tax
+        if (!empty($this->taxRate)) {
+            return $this->taxRate;
+        }
+
+        // Else get the tax rate from categories
+        $taxRate = 0;
+
+        $categoriesTree = ProductUtility::getProductCategoriesParentsTree($this->getUid());
+        /** @var Category $category */
+        foreach ($categoriesTree as $category) {
+            $taxRate = $category->getTaxRate();
+            if ($taxRate > 0) {
+                $this->taxRate = $taxRate; // Save value for future calls
+                break;
+            }
+        }
+
+        return $taxRate;
     }
 
     /**
-     * Set custom sorting
+     * This method will return attribute by identifier
+     * Fluid usage
+     * {product.attribute.identifier.value}
      *
-     * @param int $customSorting Custom sorting
-     * @return void
+     * @param string $identifier
+     * @return array|Attribute Array of all attributes with identifier or attribute object or null
      */
-    public function setCustomSorting(int $customSorting)
+    public function getAttribute(string $identifier = '')
     {
-        $this->customSorting = $customSorting;
+        // Init attributes if empty
+        if ($this->attributes === null) {
+            $this->initializeAttributes();
+        }
+
+        if (empty($identifier)) {
+            return $this->attributesIdentifiersArray;
+        } elseif (isset($this->attributesIdentifiersArray[$identifier])) {
+            return $this->attributesIdentifiersArray[$identifier];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get image for different views
+     *
+     * @param string $propertyName
+     * @return null|object|Image
+     */
+    protected function getImageFor($propertyName)
+    {
+        if ($this->images->count()) {
+            /** @var Image $image */
+            foreach ($this->images as $image) {
+                if (ObjectAccess::isPropertyGettable($image, $propertyName)
+                    && ObjectAccess::getProperty($image, $propertyName) === true
+                ) {
+                    return $image;
+                }
+            }
+
+            // use any if no result
+            $this->images->rewind();
+            return $this->images->current();
+        }
+
+        return null;
+    }
+
+    /**
+     * Initialize attributes
+     */
+    protected function initializeAttributes()
+    {
+        $this->attributes = new ObjectStorage();
+
+        /** @var AttributeHolderUtility $attributeHolder */
+        $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
+        $attributeHolder->start($this->getUid());
+
+        $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
+
+        $attributesValues = (array)unserialize($this->getSerializedAttributesValues());
+
+        /** @var Attribute $attribute */
+        foreach ($attributeHolder->getAttributes() as $attribute) {
+            $id = $attribute->getUid();
+
+            if ($attribute->isFalType()) {
+                $falFiles = [];
+                /** @var FileReference $falReference */
+                foreach ($this->attributeFiles->toArray() as $falReference) {
+                    if ((int)$falReference->getOriginalResource()->getReferenceProperty('pxa_attribute') === $id) {
+                        $falFiles[] = $falReference;
+                    }
+                }
+
+                $attribute->setValue($falFiles);
+            } elseif (array_key_exists($id, $attributesValues)) {
+                $value = $attributesValues[$id];
+
+                switch ($attribute->getType()) {
+                    case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
+                    case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
+                        $options = [];
+
+                        /** @var Option $option */
+                        foreach ($attribute->getOptions() as $option) {
+                            if (GeneralUtility::inList($value, $option->getUid())) {
+                                $options[] = $option;
+                            }
+                        }
+
+                        $attribute->setValue($options);
+                        break;
+                    case Attribute::ATTRIBUTE_TYPE_DATETIME:
+                        if ($value) {
+                            try {
+                                $value = new \DateTime($value);
+                            } catch (\Exception $exception) {
+                                $value = '';
+                            }
+                        }
+                        $attribute->setValue($value);
+                        break;
+                    default:
+                        $attribute->setValue($value);
+                }
+            }
+
+            $this->attributes->attach($attribute);
+            $this->attributesIdentifiersArray[$attribute->getIdentifier() ?: $attribute->getUid()] = $attribute;
+        }
     }
 }

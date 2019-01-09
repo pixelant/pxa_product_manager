@@ -1,11 +1,15 @@
 <?php
+
 namespace Pixelant\PxaProductManager\Tests\Utility;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Domain\Model\Category;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class ProductUtilityTest
@@ -30,6 +34,21 @@ class ProductUtilityTest extends UnitTestCase
     public function getWishListReturnArrayOfProductsUids()
     {
         $expected = $this->getProductsUids();
+        $result = ProductUtility::getWishList();
+
+        $this->assertEquals(
+            $expected,
+            $result
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getWishListReturnEmptyArrayWhenNoProductsUids()
+    {
+        $_COOKIE[ProductUtility::WISH_LIST_COOKIE_NAME] = '';
+        $expected = [];
         $result = ProductUtility::getWishList();
 
         $this->assertEquals(
@@ -209,5 +228,91 @@ class ProductUtilityTest extends UnitTestCase
             99,
             ProductUtility::getCalculatedCustomSorting($product)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function calculateTotalPriceOfOrderProductsWithoutFormatCalculateTotalPrice()
+    {
+        $price1 = 12.50;
+        $price2 = 1.75;
+        $quantity1 = 3;
+        $quantity2 = 1;
+
+        $order = new Order();
+
+        $product1 = new Product();
+        $product1->_setProperty('uid', 1);
+
+        $product2 = new Product();
+        $product2->_setProperty('uid', 2);
+
+        $productsQuantity = [
+            1 => [
+                'quantity' => $quantity1,
+                'price' => $price1
+            ],
+            2 => [
+                'quantity' => $quantity2,
+                'price' => $price2
+            ],
+        ];
+
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($product1);
+        $objectStorage->attach($product2);
+
+        $order->setProductsQuantity($productsQuantity);
+        $order->setProducts($objectStorage);
+
+        $expect = ($price1 * $quantity1) + ($price2 * $quantity2);
+
+        $this->assertEquals($expect, ProductUtility::calculateOrderTotalPrice($order));
+    }
+
+    /**
+     * @test
+     */
+    public function calculateTotalTaxOfOrderProductsWithoutFormatCalculateTotalTax()
+    {
+        $price1 = 121.50;
+        $price2 = 14.35;
+        $quantity1 = 2;
+        $quantity2 = 4;
+
+        $taxRate = 18.00;
+
+        $order = new Order();
+
+        $product1 = new Product();
+        $product1->_setProperty('uid', 1);
+
+        $product2 = new Product();
+        $product2->_setProperty('uid', 2);
+
+        $productsQuantity = [
+            1 => [
+                'quantity' => $quantity1,
+                'price' => $price1,
+                'tax' => $price1 * ($taxRate / 100)
+            ],
+            2 => [
+                'quantity' => $quantity2,
+                'price' => $price2,
+                'tax' => $price2 * ($taxRate / 100)
+            ]
+        ];
+
+        $objectStorage = new ObjectStorage();
+        $objectStorage->attach($product1);
+        $objectStorage->attach($product2);
+
+        $order->setProductsQuantity($productsQuantity);
+        $order->setProducts($objectStorage);
+
+        $expect = (($price1 * ($taxRate / 100)) * $quantity1) + (($price2 * ($taxRate / 100)) * $quantity2);
+
+        $this->assertEquals($expect, ProductUtility::calculateOrderTotalTax($order));
     }
 }

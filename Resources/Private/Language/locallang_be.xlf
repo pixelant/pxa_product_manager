@@ -23,6 +23,12 @@
             <!--Link handler:END-->
 
             <!--Extension info hook:START-->
+            <trans-unit id="be.extension_info.all">
+                <source>All</source>
+            </trans-unit>
+            <trans-unit id="be.extension_info.reach limit">
+                <source>...(and %d more)</source>
+            </trans-unit>
             <trans-unit id="be.extension_info.none">
                 <source>none</source>
             </trans-unit>
@@ -46,6 +52,12 @@
             </trans-unit>
             <trans-unit id="be.extension_info.no_title">
                 <source>[NO TITLE]</source>
+            </trans-unit>
+            <trans-unit id="be.error">
+                <source>Error</source>
+            </trans-unit>
+            <trans-unit id="be.no_tabs">
+                <source>No orders tabs configuration found. Check your module "tx_pxaproductmanager" settings.</source>
             </trans-unit>
             <!--Extension info hook:END-->
 
@@ -92,7 +104,7 @@
                 <source>Single view</source>
             </trans-unit>
             <trans-unit id="flexform.mode.product_wish_list">
-                <source>Wishlist</source>
+                <source>Wish List (possible order form)</source>
             </trans-unit>
             <trans-unit id="flexform.mode.product_compare_view">
                 <source>Compare view</source>
@@ -175,9 +187,6 @@
             <trans-unit id="flexform.categoriesOrderings">
                 <source>Categories ordering</source>
             </trans-unit>
-            <trans-unit id="flexform.lists_sheet__title">
-                <source>Comapre &amp; Wish lists</source>
-            </trans-unit>
             <trans-unit id="flexform.sortby_name">
                 <source>Name</source>
             </trans-unit>
@@ -220,9 +229,6 @@
             <trans-unit id="flexform.order_function_sheet__title">
                 <source>Ordering settings</source>
             </trans-unit>
-            <trans-unit id="flexform.order_recipients_emails">
-                <source>Recipients emails (each in new line)</source>
-            </trans-unit>
             <trans-unit id="flexform.no_recipients">
                 <source>No recipients were set. No one will get notification about new order</source>
             </trans-unit>
@@ -244,6 +250,21 @@
             </trans-unit>
             <trans-unit id="flexform.custom_products_list.products_categories">
                 <source>Products categories</source>
+            </trans-unit>
+            <trans-unit id="flexform.custom_products_list.products_to_show_within_categories">
+                <source>Products to show within categories</source>
+            </trans-unit>
+            <trans-unit id="flexform.need_to_accept_order_terms">
+                <source>User need to accept terms before making order</source>
+            </trans-unit>
+            <trans-unit id="flexform.page_terms_link">
+                <source>Accept terms link</source>
+            </trans-unit>
+            <trans-unit id="flexform.order_form_require_login">
+                <source>Login is required to make an order</source>
+            </trans-unit>
+            <trans-unit id="flexform.order_form_configuration">
+                <source>Order form configuration</source>
             </trans-unit>
             <!--FlexForm:END-->
 
@@ -284,6 +305,9 @@
             <trans-unit id="extconf.enablePrices">
                 <source>Enable products pricing</source>
             </trans-unit>
+            <trans-unit id="extconf.checkoutSystem">
+                <source>Checkout system</source>
+            </trans-unit>
             <!--Extension manager configuration:END-->
 
             <!-- Scheduler tasks:START-->
@@ -304,6 +328,12 @@
             </trans-unit>
             <trans-unit id="be.no_categories_text">
                 <source>No categories were found, try to choose different folder.</source>
+            </trans-unit>
+            <trans-unit id="be.no_orders">
+                <source>No orders</source>
+            </trans-unit>
+            <trans-unit id="be.no_orders_text">
+                <source>No orders were found, try to choose different folder.</source>
             </trans-unit>
             <trans-unit id="be.edit_category">
                 <source>Edit category - "%s"</source>
@@ -344,6 +374,66 @@
             <trans-unit id="be.move_down">
                 <source>Move down</source>
             </trans-unit>
+            <trans-unit id="be.preview_title">
+                <source>Product manager modules</source>
+            </trans-unit>
+            <trans-unit id="be.action.index">
+                <source>Preview</source>
+            </trans-unit>
+            <trans-unit id="be.action.listCategories">
+                <source>Categories and products manager</source>
+            </trans-unit>
+            <trans-unit id="be.action.listOrders">
+                <source>Orders manager</source>
+            </trans-unit>
+            <trans-unit id="be.active_order_nav_tab">
+                <source>Active orders</source>
+            </trans-unit>
+            <trans-unit id="be.complete_order_nav_tab">
+                <source>Complete orders</source>
+            </trans-unit>
+            <trans-unit id="be.archive_order_nav_tab">
+                <source>Archived orders</source>
+            </trans-unit>
+            <trans-unit id="be.crdate">
+                <source>Creation date</source>
+            </trans-unit>
+            <trans-unit id="be.empty_list">
+                <source>Empty list</source>
+            </trans-unit>
+            <trans-unit id="be.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="be.go_back">
+                <source>Go back</source>
+            </trans-unit>
+            <trans-unit id="be.details">
+                <source>Detail info</source>
+            </trans-unit>
+            <trans-unit id="be.complete_order">
+                <source>Mark order as done</source>
+            </trans-unit>
+            <trans-unit id="be.move_to_archive">
+                <source>Remove (Move to archive)</source>
+            </trans-unit>
+            <trans-unit id="be.delete_order">
+                <source>Delete order</source>
+            </trans-unit>
+            <trans-unit id="be.delete_confirm">
+                <source>Are you sure you want to delete?</source>
+            </trans-unit>
+            <trans-unit id="be.undo_complete_order">
+                <source>Move to active</source>
+            </trans-unit>
+            <trans-unit id="be.restore_from_archive">
+                <source>Undo archive</source>
+            </trans-unit>
+            <trans-unit id="be.order_language">
+                <source>Language</source>
+            </trans-unit>
+            <trans-unit id="be.default">
+                <source>Default</source>
+            </trans-unit>
             <!--Backend module:END-->
 
             <!--TCA notifications:START-->
@@ -355,6 +445,9 @@
             </trans-unit>
             <trans-unit id="tca.notification_no_attributes_available">
                 <source>No attributes were found. Attribute set need to be assigned to product category.</source>
+            </trans-unit>
+            <trans-unit id="tca.sync_attribute_identifier">
+                <source>Sync with "Name" field</source>
             </trans-unit>
             <!--TCA notifications:END-->
         </body>

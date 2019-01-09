@@ -11,19 +11,19 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Products Manager',
-    'description' => 'Allow to create and list products on a site.',
+    'title' => 'Product Manager',
+    'description' => 'Create and list products on a site.',
     'category' => 'plugin',
-    'author' => 'Andriy Oprysko',
-    'author_email' => '',
-    'author_company' => '',
+    'author' => 'Pixelant',
+    'author_email' => 'info@pixelant.net',
+    'author_company' => 'Pixelant',
     'state' => 'stable',
     'createDirs' => '',
     'clearCacheOnLoad' => true,
-    'version' => '8.10.1',
+    'version' => '9.4.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '8.7'
+            'typo3' => '8.7.0-9.5.99'
         ],
         'conflicts' => [],
         'suggests' => []

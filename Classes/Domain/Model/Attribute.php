@@ -37,66 +37,28 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
 
     /**
-     *
-     *
+     * Prefix for TCA fields
      */
     const TCA_ATTRIBUTE_PREFIX = 'tx_pxaproductmanager_attribute_';
 
     /**
-     * Additional prefix for images
+     * Additional prefix for files and images
      */
-    const TCA_ATTRIBUTE_IMAGE_PREFIX = 'ATTRIBUTE_IMG_';
+    const TCA_ATTRIBUTE_FILE_PREFIX = 'attribute_file_';
 
     /**
-     *
-     *
+     * Attributes types
      */
     const ATTRIBUTE_TYPE_INPUT = 1;
-
-    /**
-     *
-     *
-     */
     const ATTRIBUTE_TYPE_TEXT = 2;
-
-    /**
-     *
-     *
-     */
     const ATTRIBUTE_TYPE_DATETIME = 3;
-
-    /**
-     *
-     *
-     */
     const ATTRIBUTE_TYPE_DROPDOWN = 4;
-
-    /**
-     *
-     *
-     */
     const ATTRIBUTE_TYPE_CHECKBOX = 5;
-
-    /**
-     *
-     *
-     */
     const ATTRIBUTE_TYPE_LINK = 6;
-
-    /**
-     *
-     *
-     */
     const ATTRIBUTE_TYPE_IMAGE = 7;
-
-    /**
-     *
-     *
-     */
     const ATTRIBUTE_TYPE_LABEL = 8;
-
     const ATTRIBUTE_TYPE_MULTISELECT = 9;
-
+    const ATTRIBUTE_TYPE_FILE = 10;
 
     /**
      * name
@@ -146,6 +108,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * options
      *
      * @lazy
+     * @cascade
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option>
      */
     protected $options;
@@ -192,6 +155,31 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @lazy
      */
     protected $icon;
+
+    /**
+     * __construct
+     *
+     */
+    public function __construct()
+    {
+        //Do not remove the next line: It would break the functionality
+        $this->initStorageObjects();
+    }
+
+    /**
+     * Initializes all ObjectStorage properties.
+     *
+     * @return void
+     */
+    protected function initStorageObjects()
+    {
+        /**
+         * Do not modify this method!
+         * It will be rewritten on each save in the extension builder
+         * You may modify the constructor of this class instead
+         */
+        $this->options = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+    }
 
     /**
      * Returns the name
@@ -317,31 +305,6 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setIdentifier(string $identifier)
     {
         $this->identifier = $identifier;
-    }
-
-    /**
-     * __construct
-     *
-     */
-    public function __construct()
-    {
-        //Do not remove the next line: It would break the functionality
-        $this->initStorageObjects();
-    }
-
-    /**
-     * Initializes all ObjectStorage properties.
-     *
-     * @return void
-     */
-    protected function initStorageObjects()
-    {
-        /**
-         * Do not modify this method!
-         * It will be rewritten on each save in the extension builder
-         * You may modify the constructor of this class instead
-         */
-        $this->options = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -529,5 +492,14 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function getIcon()
     {
         return $this->icon;
+    }
+
+    /**
+     * Check if attribute type is FAL file
+     * @return bool
+     */
+    public function isFalType(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_IMAGE || $this->type === self::ATTRIBUTE_TYPE_FILE;
     }
 }

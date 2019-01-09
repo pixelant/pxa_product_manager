@@ -26,6 +26,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
@@ -245,34 +246,6 @@ class ProductTest extends UnitTestCase
         self::assertEquals(
             $description,
             $this->fixture->getDescription()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function importIdCanBeSet()
-    {
-        $importId = '123321';
-        $this->fixture->setImportId($importId);
-
-        self::assertEquals(
-            $importId,
-            $this->fixture->getImportId()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function importNameCanBeSet()
-    {
-        $importName = 'importName';
-        $this->fixture->setImportName($importName);
-
-        self::assertEquals(
-            $importName,
-            $this->fixture->getImportName()
         );
     }
 
@@ -505,62 +478,28 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributeImagesReturnsInitialValueForAttributeImages()
+    public function getAttributeFilesReturnsInitialValueForAttributeImages()
     {
         $objectStorage = new ObjectStorage();
         self::assertEquals(
             $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 
     /**
      * @test
      */
-    public function setAttributeImagesForObjectStorageContainingAttributeImagesSetsAttributeImages()
+    public function setAttributeFilesForObjectStorageContainingAttributeImagesSetsAttributeImages()
     {
         $image = new Image();
         $objectStorage = new ObjectStorage();
         $objectStorage->attach($image);
-        $this->fixture->setAttributeImages($objectStorage);
+        $this->fixture->setAttributeFiles($objectStorage);
 
         self::assertSame(
             $objectStorage,
-            $this->fixture->getAttributeImages()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function addAttributeImageForObjectStorageHoldingAttributeImages()
-    {
-        $image = new Image();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($image);
-        $this->fixture->addAttributeImage($image);
-
-        self::assertEquals(
-            $objectStorage,
-            $this->fixture->getAttributeImages()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function removeAttributeImageForObjectStorageHoldingAttributeImages()
-    {
-        $image = new Image();
-        $objectStorage = new ObjectStorage();
-        $objectStorage->attach($image);
-        $objectStorage->detach($image);
-        $this->fixture->addAttributeImage($image);
-        $this->fixture->removeAttributeImage($image);
-
-        self::assertEquals(
-            $objectStorage,
-            $this->fixture->getAttributeImages()
+            $this->fixture->getAttributeFiles()
         );
     }
 
@@ -815,37 +754,86 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributeValueUsingMagicCallByNameFromObjectStorageHoldingAttributes()
+    public function getAttributeValueByUidOrIdentifierFromAttributesIdentifiersArrayReturnValue()
     {
         $attribute = new Attribute();
-        $value = 'magic-value';
-        $attribute->setName('TestName');
+        $value = 'value';
         $attribute->setValue($value);
 
-        $this->fixture->addAttribute($attribute);
+        $value2 = 'testValue2';
+        $attribute2 = clone $attribute;
+        $attribute2->setValue($value2);
 
-        self::assertSame(
+        /** @var Product|MockObject $mockedProduct */
+        $mockedProduct = $this->createPartialMock(Product::class, ['initializeAttributes']);
+        $mockedProduct->_setProperty(
+            'attributesIdentifiersArray',
+            [
+                123321 => $attribute,
+                'identifier' => $attribute2
+            ]
+        );
+        $mockedProduct
+            ->expects($this->atLeastOnce())
+            ->method('initializeAttributes');
+
+        $this->assertEquals(
             $value,
-            $this->fixture->getTestName()->getValue()
+            $mockedProduct->getAttribute(123321)->getValue()
+        );
+
+        $this->assertEquals(
+            $value2,
+            $mockedProduct->getAttribute('identifier')->getValue()
         );
     }
 
     /**
      * @test
      */
-    public function getAttributeValueUsingMagicCallByIdentifierFromObjectStorageHoldingAttributes()
+    public function getAttributeValueByIdentifierThatDoesNotExistReturnNull()
     {
-        $attribute = new Attribute();
-        $value = 'magic-value';
-        $attribute->setIdentifier('UniqueIdentifier');
-        $attribute->setValue($value);
+        /** @var Product|MockObject $mockedProduct */
+        $mockedProduct = $this->createPartialMock(Product::class, ['initializeAttributes']);
+        $mockedProduct
+            ->expects($this->atLeastOnce())
+            ->method('initializeAttributes');
 
-        $this->fixture->addAttribute($attribute);
-
-        self::assertSame(
-            $value,
-            $this->fixture->getUniqueIdentifier()->getValue()
+        $this->assertNull(
+            $mockedProduct->getAttribute('notExist')
         );
+    }
+
+    /**
+     * @test
+     */
+    public function getAttributeWillInitializeAttributesIfNotSet()
+    {
+        /** @var Product|MockObject $mockedProduct */
+        $mockedProduct = $this->createPartialMock(Product::class, ['initializeAttributes']);
+        $mockedProduct
+            ->expects($this->atLeastOnce())
+            ->method('initializeAttributes');
+
+        $mockedProduct->_setProperty('attributes', null);
+
+        $mockedProduct->getAttribute('dummy');
+    }
+
+    /**
+     * @test
+     */
+    public function getAttributeWillNotInitializeAttributesIfAlreadySet()
+    {
+        /** @var Product|MockObject $mockedProduct */
+        $mockedProduct = $this->createPartialMock(Product::class, ['initializeAttributes']);
+        $mockedProduct
+            ->expects($this->never())
+            ->method('initializeAttributes');
+
+        $mockedProduct->_setProperty('attributes', (new \stdClass()));
+
+        $mockedProduct->getAttribute('dummy');
     }
 
     /**
@@ -1312,6 +1300,21 @@ class ProductTest extends UnitTestCase
         self::assertEquals(
             $customSorting,
             $this->fixture->getCustomSorting()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function taxRateCanBeSet()
+    {
+        $value = 21.99;
+
+        $this->fixture->setTaxRate($value);
+
+        self::assertEquals(
+            $value,
+            $this->fixture->getTaxRate()
         );
     }
 }

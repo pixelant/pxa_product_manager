@@ -18,6 +18,7 @@ namespace Pixelant\PxaProductManager\Hook;
 
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
+use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -57,20 +58,9 @@ class PageLayoutView
         $additionalInfo = '';
 
         if ($params['row']['list_type'] == 'pxaproductmanager_pi1') {
-            $flexformData = GeneralUtility::xml2array($params['row']['pi_flexform']);
+            $flexFormService = $this->getFlexFormService();
+            $flexFormSettings = $flexFormService->convertFlexFormContentToArray($params['row']['pi_flexform']);
 
-            $flexFormSettings = [];
-
-            if (is_array($flexformData['data']['sDEF']['lDEF'])) {
-                foreach ($flexformData['data'] as $sheet) {
-                    $rawSettings = $sheet['lDEF'];
-                    foreach ($rawSettings as $field => $rawSetting) {
-                        $this->flexFormToArray($field, $rawSetting['vDEF'], $flexFormSettings);
-                    }
-                }
-            }
-
-            // if flexform data is found
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
             if (!empty($switchableControllerActions)) {
                 list($action) = GeneralUtility::trimExplode(';', $switchableControllerActions);
@@ -450,7 +440,7 @@ class PageLayoutView
     protected function getPagePidInfo(int $pageUid): string
     {
         // Set the pagePid using the flexform -> typoscript -> 0 priority
-        $pageUid = $pageUid ?: ConfigurationUtility::getSettings((int)GeneralUtility::_GP('id'))['pagePid'];
+        $pageUid = $pageUid ?: ConfigurationUtility::getSettingsByPath('pagePid', (int)GeneralUtility::_GP('id'));
         $pageUid = (int)$pageUid;
 
         if ($pageUid) {
@@ -564,14 +554,53 @@ class PageLayoutView
                 ($settings['enableOrderFunction'] ? 'yes' : 'no'))
         );
 
-        $recipients = GeneralUtility::trimExplode("\n", $settings['orderRecipientsEmails'], true);
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.order_recipients_emails'),
-            empty($recipients) ? $this->translate('flexform.no_recipients') : implode(', ', $recipients)
-        );
+        if ($settings['enableOrderFunction']) {
+            if ($orderFormConfigurationUid = (int)$settings['orderFormConfiguration']) {
+                $orderConfiguration = BackendUtility::getRecord(
+                    'tx_pxaproductmanager_domain_model_orderconfiguration',
+                    $orderFormConfigurationUid,
+                    'name'
+                );
+                $info .= sprintf(
+                    '<b>%s</b>: %s<br>',
+                    $this->translate('flexform.order_form_configuration'),
+                    $orderConfiguration['name']
+                );
+            }
+
+            $info .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->translate('flexform.order_form_require_login'),
+                $this->translate('be.extension_info.checkbox_' .
+                    ($settings['orderFormRequireLogin'] ? 'yes' : 'no'))
+            );
+        }
 
         return $info;
+    }
+
+    /**
+     * Get short info about typolink
+     *
+     * @param string $typoLink
+     * @return string
+     */
+    protected function getLinkInfo(string $typoLink): string
+    {
+        if (empty($typoLink)) {
+            return $this->translate('be.extension_info.none');
+        }
+
+        if (GeneralUtility::isFirstPartOfStr($typoLink, 't3://page?uid=')) {
+            $pageUid = (int)substr($typoLink, 14);
+            $pageRecord = BackendUtility::readPageAccess($pageUid, '1=1');
+            // Is this a real page
+            if ($pageRecord['uid']) {
+                return $pageRecord['_thePathFull'] . '[' . $pageRecord['uid'] . ']';
+            }
+        }
+
+        return $typoLink;
     }
 
     /**
@@ -600,6 +629,13 @@ class PageLayoutView
                 $settings['customProductsList']['productsCategories'] ?? ''
             );
 
+            // Selected products from categories selection
+            $info .= $this->getProductsInfo(
+                $this->translate('flexform.custom_products_list.products_to_show_within_categories'),
+                $settings['customProductsList']['productsToShowWithinCategories'] ?? '',
+                'be.extension_info.all'
+            );
+
             // Limit
             $info .= sprintf(
                 '<b>%s</b>: %s<br>',
@@ -624,14 +660,20 @@ class PageLayoutView
      *
      * @param string $title
      * @param string $products
+     * @param string $emptyLabel Label when no products provided
+     * @param int $limit Max products output
      * @return string
      */
-    protected function getProductsInfo(string $title, string $products): string
-    {
-        $categories = GeneralUtility::intExplode(',', $products, true);
+    protected function getProductsInfo(
+        string $title,
+        string $products,
+        string $emptyLabel = 'be.extension_info.none',
+        int $limit = 10
+    ): string {
         $info = '<b>' . $title . '</b>:';
 
         if (!empty($products)) {
+            $products = GeneralUtility::intExplode(',', $products, true);
             $productsInfo = '';
             /** @var QueryBuilder $queryBuilder */
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
@@ -643,46 +685,38 @@ class PageLayoutView
                 ->where(
                     $queryBuilder->expr()->in(
                         'uid',
-                        $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($products, Connection::PARAM_INT_ARRAY)
                     )
-                )
-                ->execute();
+                );
+
+            $appendInfo = '';
+            if (count($products) > $limit) {
+                $appendInfo .= $this->translate('be.extension_info.reach limit', [count($products) - $limit]);
+                $statement->setMaxResults($limit);
+            }
+            $statement = $statement->execute();
+
             while ($product = $statement->fetch()) {
                 $productsInfo .= ', ' . $product['name'];
             }
 
-            $productsInfo = ltrim($productsInfo, ',');
+            $productsInfo = ltrim($productsInfo, ',') . $appendInfo;
         }
 
         if (!isset($productsInfo)) {
-            $productsInfo = ' ' . $this->translate('be.extension_info.none');
+            $productsInfo = ' ' . $this->translate($emptyLabel);
         }
 
         return $info . $productsInfo . '<br>';
     }
 
     /**
-     * go through all settings and generate array
+     * Get flexform service
      *
-     * @param $field
-     * @param $value
-     * @param $settings
-     * @return void
+     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
      */
-    protected function flexFormToArray($field, $value, &$settings)
+    protected function getFlexFormService()
     {
-        $fieldNameParts = GeneralUtility::trimExplode('.', $field);
-        if (count($fieldNameParts) > 1) {
-            $name = $fieldNameParts[0];
-            unset($fieldNameParts[0]);
-
-            if (!isset($settings[$name])) {
-                $settings[$name] = [];
-            }
-
-            $this->flexFormToArray(implode('.', $fieldNameParts), $value, $settings[$name]);
-        } else {
-            $settings[$fieldNameParts[0]] = $value;
-        }
+        return MainUtility::getFlexFormService();
     }
 }

@@ -1,0 +1,77 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="Email" />
+
+<f:section name="main">
+    <h4><f:translate key="fe.adminEmail.orderForm.title" extensionName="PxaProductManager" /></h4>
+
+    <table border="1" cellpadding="2" cellspacing="2">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>UID</th>
+            <th><f:translate key="fe.product_name" extensionName="PxaProductManager" /></th>
+            <th><f:translate key="fe.sku"  extensionName="PxaProductManager" /></th>
+            <th><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per',  extensionName: 'PxaProductManager')}" else=""/></th>
+            <f:if condition="{ppm:isPricingEnabled()} && {settings.wishList.showTaxInfo}">
+                <th>
+                    <f:translate key="fe.tax" extensionName="PxaProductManager" />
+                </th>
+            </f:if>
+            <th><f:translate key="fe.amount" extensionName="PxaProductManager" /></th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{order.products}" as="product" iteration="i">
+            <tr>
+                <th scope="row">{i.cycle}</th>
+                <td>{product.uid}</td>
+                <td>{product.name}</td>
+                <td><f:if condition="{product.sku}" then="{product.sku}" else=" -- "/></td>
+                <td>
+                    <f:if condition="{ppm:isPricingEnabled()}">
+                        <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatPrice}" />
+                    </f:if>
+                </td>
+                <f:if condition="{ppm:isPricingEnabled()} && {settings.wishList.showTaxInfo}">
+                    <td>
+                        <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatTax}" />
+                    </td>
+                </f:if>
+                <td>{order.productsQuantity.{product.uid}}</td>
+            </tr>
+        </f:for>
+        <f:if condition="{ppm:isPricingEnabled()}">
+            <tr>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none;"></th>
+                <th style="border: none; text-align: right;"><f:translate key="fe.total_price" extensionName="PxaProductManager" />:</th>
+                <th style="border: none; text-align: right;"><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalPrice}" /></th>
+            </tr>
+            <f:if condition="{settings.wishList.showTaxInfo}">
+                <tr>
+                    <th style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th style="border: none;"></th>
+                    <th style="border: none; text-align: right;"><f:translate key="fe.tax" extensionName="PxaProductManager" />:</th>
+                    <th style="border: none; text-align: right;"><f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: totalTax}" /></th>
+                </tr>
+            </f:if>
+        </f:if>
+        </tbody>
+    </table>
+
+    <br />
+    <h4><f:translate key="fe.adminEmail.orderForm.userFields" extensionName="PxaProductManager" /></h4>
+    <f:for each="{order.orderFields}" as="fieldConf">
+        <p>
+            <strong><f:if condition="{fieldConf.label}" then="{fieldConf.label}" else="{fieldConf.name}" /></strong>: {fieldConf.value}
+        </p>
+    </f:for>
+</f:section>
+</html>

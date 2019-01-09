@@ -47,12 +47,18 @@ plugin.tx_pxaproductmanager {
 
         # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/100; type=options[Yes=1,No=0]; label=Include default styling
         includeDefaultStyling = 1
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/110; type=options[Yes=1,No=0]; label=Show hidden records (Useful for preview function)
+        showHiddenRecords = 0
     }
 
-    # customsubcategory=pxaproductmanager_pid=Pid settings
+    # customsubcategory=pxaproductmanager_pid=Link product settings
     settings {
-        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pid/010; type=int; label=Product main page
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pid/010; type=int; label=Product main single view page
         pagePid =
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pid/020; type=options[Yes=1,No=0]; label=Exclude categories tree from product URL generation
+        excludeCategoriesFromUrl = 0
     }
 
     # customsubcategory=pxaproductmanager_single_view=Single view settings
@@ -120,11 +126,14 @@ plugin.tx_pxaproductmanager {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/030; type=int; label=Wish list page Pid
             pagePid =
 
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=boolean; label=Replace form fields with values of frontend user fields
-            replaceWithFeUserValues = 1
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/040; type=options[Enable=1,Disable=0]; label=Show tax info
+            showTaxInfo = 0
 
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=boolean; label=Send order email to user if "email" field is set
-            sendEmailToUser = 1
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/050; type=string; label=Checkout system
+            checkoutSystem =
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/060; type=options[Enable=1,Disable=0]; label=Fly to cart animation
+            enableFlyToCartAnimation = 1
         }
     }
 
@@ -133,10 +142,10 @@ plugin.tx_pxaproductmanager {
         images {
             orderView {
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/060; type=int; label=Image max width
-                maxWidth = 100
+                maxWidth = 705
 
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wish_list/070; type=int; label=Image max height
-                maxHeight = 100
+                maxHeight = 705
             }
         }
     }
@@ -149,6 +158,9 @@ plugin.tx_pxaproductmanager {
 
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_list/020; type=int; label=Compare pre-view page Pid
             pagePid =
+
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_compare_list/030; type=options[Enable=1,Disable=0]; label=Fly to cart animation
+            enableFlyToCartAnimation = 1
         }
     }
 

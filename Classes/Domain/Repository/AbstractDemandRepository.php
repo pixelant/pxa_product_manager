@@ -26,7 +26,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -40,19 +40,19 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 abstract class AbstractDemandRepository extends Repository implements DemandRepositoryInterface
 {
     /**
-     * @param Demand $demand
+     * @param DemandInterface $demand
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    public function findDemanded(Demand $demand): QueryResultInterface
+    public function findDemanded(DemandInterface $demand): QueryResultInterface
     {
         return $this->createDemandQuery($demand)->execute();
     }
 
     /**
-     * @param Demand $demand
+     * @param DemandInterface $demand
      * @return array
      */
-    public function findDemandedRaw(Demand $demand): array
+    public function findDemandedRaw(DemandInterface $demand): array
     {
         return $this->createDemandQuery($demand)->execute(true);
     }
@@ -60,10 +60,10 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     /**
      * Count results for demand
      *
-     * @param Demand $demand
+     * @param DemandInterface $demand
      * @return int
      */
-    public function countByDemand(Demand $demand): int
+    public function countByDemand(DemandInterface $demand): int
     {
         return $this->createDemandQuery($demand)->count();
     }
@@ -71,15 +71,14 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     /**
      * Prepare query
      *
-     * @param Demand $demand
+     * @param DemandInterface $demand
      * @return QueryInterface
      */
-    protected function createDemandQuery(Demand $demand): QueryInterface
+    protected function createDemandQuery(DemandInterface $demand): QueryInterface
     {
         $query = $this->createQuery();
 
         $this->setStorage($query, $demand);
-        $this->createConstraints($query, $demand);
         $this->setOrderings($query, $demand);
 
         if ($demand->getLimit()) {
@@ -88,15 +87,28 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
         if ($demand->getOffSet()) {
             $query->setOffset($demand->getOffSet());
         }
+
+        $constraints = $this->createConstraints($query, $demand);
+
+        if (!empty($constraints)) {
+            $query->matching(
+                $this->createConstraintFromConstraintsArray(
+                    $query,
+                    $constraints,
+                    'and'
+                )
+            );
+        }
+
         return $query;
     }
 
     /**
      * @param QueryInterface $query
-     * @param Demand $demand
+     * @param DemandInterface $demand
      * @return void
      */
-    protected function setOrderings(QueryInterface $query, Demand $demand)
+    protected function setOrderings(QueryInterface $query, DemandInterface $demand)
     {
         if ($demand->getOrderBy()
             && GeneralUtility::inList($demand->getOrderByAllowed(), $demand->getOrderBy())
@@ -150,9 +162,9 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      * Set storage if set
      *
      * @param QueryInterface $query
-     * @param Demand $demand
+     * @param DemandInterface $demand
      */
-    protected function setStorage(QueryInterface $query, Demand $demand)
+    protected function setStorage(QueryInterface $query, DemandInterface $demand)
     {
         if ($storage = $demand->getStoragePid()) {
             $storage = array_map('intval', $storage);
@@ -163,8 +175,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
 
     /**
      * @param QueryInterface $query
-     * @param Demand $demand
-     * @return void
+     * @param DemandInterface $demand
+     * @return array
      */
-    abstract protected function createConstraints(QueryInterface $query, Demand $demand);
+    abstract protected function createConstraints(QueryInterface $query, DemandInterface $demand): array;
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaProductManager\ViewHelpers;
 
 /***************************************************************
@@ -25,7 +26,11 @@ namespace Pixelant\PxaProductManager\ViewHelpers;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Utility\MainUtility;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class SetPageTitleViewHelper
@@ -33,29 +38,33 @@ use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class SetPageTitleViewHelper extends AbstractViewHelper
 {
+    use CompileWithRenderStatic;
 
     /**
      * Initialize arguments
      */
     public function initializeArguments()
     {
-        $this->registerArgument('title', 'string', 'Optional title', false);
+        $this->registerArgument('title', 'string', 'Optional title', false, '');
     }
 
     /**
      * Replace page title
+     *
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed|void
      */
-    public function render()
-    {
-        if (empty($title = $this->arguments['title'])) {
-            $title = $this->renderChildren();
-        }
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    ) {
+        $title = empty($arguments['title']) ? $renderChildrenClosure() : $arguments['title'];
+        $title = strip_tags(trim($title));
 
-        $title = trim($title);
-
-        // NOTICE: This function doesn't work there are non-cachable objects on the page. Title is wrongly cached.
-        // Same with tx_news but maybe will be fixed later in TYPO3 or News?
-        $title = strip_tags($title);
+        GeneralUtility::makeInstance(PageRenderer::class)->setTitle($title);
         MainUtility::getTSFE()->altPageTitle = $title;
         MainUtility::getTSFE()->indexedDocTitle = $title;
     }

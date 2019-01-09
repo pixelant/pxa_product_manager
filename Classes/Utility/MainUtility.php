@@ -33,9 +33,12 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Charset\CharsetConverter;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -45,36 +48,21 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class MainUtility
 {
     /**
-     * Extension manager settings
+     * Array of normalize characters
      *
      * @var array
      */
-    protected static $extMgrConfiguration;
-
-    /**
-     * Plugin settings
-     *
-     * @var array
-     */
-    protected static $settings;
-
-    /**
-     * Get extension manager settings
-     *
-     * @return array
-     */
-    public static function getExtMgrConfiguration(): array
-    {
-        if (self::$extMgrConfiguration === null) {
-            $configuration = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['pxa_product_manager'] ?? '';
-
-            if ((self::$extMgrConfiguration = unserialize($configuration)) === false) {
-                self::$extMgrConfiguration = [];
-            }
-        }
-
-        return self::$extMgrConfiguration;
-    }
+    // @codingStandardsIgnoreStart
+    protected static $normalizeChars = [
+        'Š' => 'S', 'š' => 's', 'Ð' => 'Dj', 'Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
+        'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I',
+        'Ï' => 'I', 'Ñ' => 'N', 'Ń' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U',
+        'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
+        'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i',
+        'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ń' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u',
+        'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
+        'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
+    ];// @codingStandardsIgnoreEnd
 
     /**
      * Check if prices enabled
@@ -86,8 +74,7 @@ class MainUtility
         static $pricingEnabled;
 
         if ($pricingEnabled === null) {
-            $configuration = self::getExtMgrConfiguration();
-            $pricingEnabled = isset($configuration['enablePrices']) && (int)$configuration['enablePrices'] === 1;
+            $pricingEnabled = (int)ConfigurationUtility::getExtManagerConfigurationByPath('enablePrices') === 1;
         }
 
         return $pricingEnabled;
@@ -207,10 +194,14 @@ class MainUtility
      *
      * @param Product|int|null $product
      * @param Category|null $category
+     * @param bool $forceIncludeCategoriesInUrl
      * @return array
      */
-    public static function buildLinksArguments($product = null, Category $category = null): array
-    {
+    public static function buildLinksArguments(
+        $product = null,
+        Category $category = null,
+        bool $forceIncludeCategoriesInUrl = false
+    ): array {
         $arguments = [];
         if ($product !== null && !is_object($product)) {
             /** @var ProductRepository $productRepository */
@@ -218,41 +209,68 @@ class MainUtility
             $product = $productRepository->findByUid((int)$product);
         }
 
-        // If no category, try to get it from product
-        if ($category === null
-            && is_object($product)
-            && $product->getCategories()->count() > 0
+        // If categories allowed in url
+        if ($forceIncludeCategoriesInUrl
+            || intval(ConfigurationUtility::getSettingsByPath('excludeCategoriesFromUrl')) === 0
         ) {
-            $category = $product->getFirstCategory();
-        }
+            // If no category, try to get it from product
+            if ($category === null
+                && is_object($product)
+                && $product->getCategories()->count() > 0
+            ) {
+                $category = $product->getFirstCategory();
+            }
 
-        if ($category !== null) {
-            // Get tree, don't use root category in url
-            /**
-             * @TODO always remove first category ?
-             */
-            $categories = array_slice(
-                // use descending order
-                array_reverse(
-                    CategoryUtility::getParentCategories($category)
-                ),
-                1
-            );
-            // add current category
-            $categories[] = $category;
+            if ($category !== null) {
+                // Get tree, don't use root category in url
+                /**
+                 * @TODO always remove first category ?
+                 */
+                $categories = array_slice(
+                    array_reverse(// use descending order
+                        CategoryUtility::getParentCategories($category)
+                    ),
+                    1
+                );
+                // add current category
+                $categories[] = $category;
 
-            $i = 0;
-            /** @var Category $category */
-            foreach ($categories as $category) {
-                $arguments[NavigationController::CATEGORY_ARG_START_WITH . $i++] = $category->getUid();
+                $i = 0;
+                /** @var Category $category */
+                foreach ($categories as $category) {
+                    $arguments[NavigationController::CATEGORY_ARG_START_WITH . $i++] = $category->getUid();
+                }
             }
         }
-        // add product
+
+        // Add product
         if ($product !== null) {
             $arguments['product'] = is_object($product) ? $product->getUid() : $product;
         }
 
         return !empty($arguments) ? ['tx_pxaproductmanager_pi1' => $arguments] : [];
+    }
+
+    /**
+     * Parse fluid string
+     *
+     * @param string $string
+     * @param array $variables
+     * @return string
+     */
+    public static function parseFluidString(string $string, array $variables): string
+    {
+        if (empty($string)) {
+            return '';
+        }
+
+        /** @var StandaloneView $standAloneView */
+        $standAloneView = GeneralUtility::makeInstance(StandaloneView::class);
+
+        $standAloneView->setTemplateSource($string);
+        $standAloneView->assignMultiple($variables);
+
+        return $standAloneView->render();
     }
 
     /**
@@ -268,13 +286,7 @@ class MainUtility
      */
     public static function getObjectManager(): ObjectManager
     {
-        static $objectManager;
-
-        if ($objectManager === null) {
-            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        }
-
-        return $objectManager;
+        return GeneralUtility::makeInstance(ObjectManager::class);
     }
 
     /**
@@ -282,13 +294,91 @@ class MainUtility
      */
     public static function getCacheManager(): CacheManager
     {
-        static $cacheManager;
+        return GeneralUtility::makeInstance(CacheManager::class);
+    }
 
-        if ($cacheManager === null) {
-            /** @var CacheManager $cacheManager */
-            $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
+    /**
+     * @param string $value
+     * @return string
+     */
+    public static function snakeCasePhraseToWords(string $value): string
+    {
+        return ucfirst(str_replace('_', ' ', $value));
+    }
+
+    /**
+     * Normalize string removing special characters
+     *
+     * @param string $string
+     * @return  string Processed string
+     */
+    public static function normalizeString(string $string): string
+    {
+        $chConverter = GeneralUtility::makeInstance(CharsetConverter::class);
+
+        return $chConverter->specCharsToASCII(
+            'utf-8',
+            strtr($string, self::$normalizeChars)
+        );
+    }
+
+    /**
+     * Check if typo3 version is below 9
+     * @TODO remove it after support of TYPO3 8 is stopped
+     * @return bool
+     */
+    public static function isBelowTypo3v9(): bool
+    {
+        static $isBelowTypo39;
+
+        if ($isBelowTypo39 === null) {
+            $isBelowTypo39 = version_compare(TYPO3_version, '9.0', '<');
         }
 
-        return $cacheManager;
+        return $isBelowTypo39;
+    }
+
+    /**
+     * Get flexform service
+     *
+     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
+     */
+    public static function getFlexFormService()
+    {
+        if (self::isBelowTypo3v9()) {
+            return GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\FlexFormService');
+        } else {
+            return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Service\\FlexFormService');
+        }
+    }
+
+    /**
+     * Check if FE user is logged in
+     *
+     * @return bool
+     */
+    public static function isFrontendLogin(): bool
+    {
+        if (self::isBelowTypo3v9()) {
+            return self::getTSFE()->loginUser;
+        } else {
+            $context = GeneralUtility::makeInstance(Context::class);
+            return $context->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
+        }
+    }
+
+    /**
+     * Check if BE user is logged in
+     *
+     * @return bool
+     */
+    public static function isBackendLogin(): bool
+    {
+        if (self::isBelowTypo3v9()) {
+            return self::getTSFE()->beUserLogin;
+        } else {
+            $context = GeneralUtility::makeInstance(Context::class);
+            return $context->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
+        }
     }
 }

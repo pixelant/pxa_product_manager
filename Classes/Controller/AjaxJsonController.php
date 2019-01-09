@@ -152,4 +152,14 @@ class AjaxJsonController extends AbstractController
 
         $this->view->assign('value', ['success' => true]);
     }
+
+    /**
+     * Load whishlist action
+     */
+    public function loadWishListAction()
+    {
+        $wishList = ProductUtility::getWishList();
+
+        $this->view->assign('value', ['wishList' => $wishList ?? []]);
+    }
 }

@@ -103,6 +103,7 @@
 				if (data.success) {
 					button
 						.toggleClass(settings.inListClass)
+						.toggleClass(settings.notInListClass)
 						.removeClass(settings.loadingClass)
 						.prop('disabled', false)
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
@@ -110,7 +111,7 @@
 					if ($mainCart.length === 1 && data.inList) {
 						let itemImg = $('[data-fly-image="' + productUid + '"]');
 
-						if (itemImg.length === 1) {
+						if (itemImg.length === 1 && settings.enableFlyToCartAnimation) {
 							ProductManager.Main.flyToElement(itemImg, $mainCart);
 						}
 					}

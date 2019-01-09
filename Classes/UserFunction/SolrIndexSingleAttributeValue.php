@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\UserFunction;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Resource\FileCollector;
 
 /**
  * Class SolrIndexSingleAttributeValue
@@ -29,7 +32,8 @@ class SolrIndexSingleAttributeValue
      * @return int|string
      */
     public function getSingleAttributeValue(
-        /** @noinspection PhpUnusedParameterInspection */ string $content,
+        /** @noinspection PhpUnusedParameterInspection */
+        string $content,
         array $parameters
     ) {
         if (empty($parameters['identifier'])) {
@@ -40,8 +44,9 @@ class SolrIndexSingleAttributeValue
         $attribute = $this->getAttribute($parameters['identifier']);
         $value = '';
 
-        if ($attribute
-            && isset($attributeValues[$attribute['uid']])) {
+        if (is_array($attribute)
+            && (isset($attributeValues[$attribute['uid']]) || $this->isFalType($attribute['type']))
+        ) {
             switch ($attribute['type']) {
                 case Attribute::ATTRIBUTE_TYPE_INPUT:
                 case Attribute::ATTRIBUTE_TYPE_TEXT:
@@ -49,6 +54,25 @@ class SolrIndexSingleAttributeValue
                     break;
                 case Attribute::ATTRIBUTE_TYPE_CHECKBOX:
                     $value = $attributeValues[$attribute['uid']] ? 1 : 0;
+                    break;
+                case Attribute::ATTRIBUTE_TYPE_IMAGE:
+                case Attribute::ATTRIBUTE_TYPE_FILE:
+                    $fileCollector = GeneralUtility::makeInstance(FileCollector::class);
+                    $fileCollector->addFilesFromRelation(
+                        'tx_pxaproductmanager_domain_model_product',
+                        TCAUtility::ATTRIBUTE_FAL_FIELD_NAME,
+                        $this->cObj->data
+                    );
+                    /** @var FileReference[] $allAttributeFiles */
+                    $allAttributeFiles = $fileCollector->getFiles();
+                    $attributeFiles = [];
+                    foreach ($allAttributeFiles as $file) {
+                        if ($file->getReferenceProperty('pxa_attribute') === $attribute['uid']) {
+                            $attributeFiles[] = $file->getPublicUrl();
+                        }
+                    }
+
+                    return implode(',', $attributeFiles);
                     break;
                 default:
                     // @TODO support other types
@@ -60,8 +84,19 @@ class SolrIndexSingleAttributeValue
     }
 
     /**
+     * Check if attribute is fal type
+     *
+     * @param int $type
+     * @return bool
+     */
+    protected function isFalType(int $type): bool
+    {
+        return $type === Attribute::ATTRIBUTE_TYPE_FILE || $type === Attribute::ATTRIBUTE_TYPE_IMAGE;
+    }
+
+    /**
      * @param string $identifier
-     * @return \Doctrine\DBAL\Driver\Statement|int
+     * @return array
      */
     protected function getAttribute(string $identifier)
     {

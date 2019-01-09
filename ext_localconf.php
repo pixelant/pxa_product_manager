@@ -1,4 +1,7 @@
 <?php
+
+use Pixelant\PxaProductManager\Backend\FormDataProvider\OrderEditFormInitialize;
+
 defined('TYPO3_MODE') || die;
 
 call_user_func(
@@ -12,14 +15,14 @@ call_user_func(
                 // @codingStandardsIgnoreEnd
                 'Navigation' => 'show',
                 'AjaxProducts' => 'ajaxLazyList',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList',
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList',
                 'Filter' => 'showFilter'
             ],
             // non-cacheable actions
             [
                 'Product' => 'wishList, finishOrder, comparePreView, compareView',
                 'AjaxProducts' => 'ajaxLazyList',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList'
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList'
             ]
         );
 
@@ -46,6 +49,12 @@ call_user_func(
             'depends' => [
                 \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class,
                 \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class
+            ]
+        ];
+
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][OrderEditFormInitialize::class] = [
+            'depends' => [
+                \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class
             ]
         ];
 
@@ -82,6 +91,16 @@ call_user_func(
             'title' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.title',
             'description' => $ppmLocalLangBe . ':task.productCustomSortingUpdate.description'
         ];
+
+        // Register field control for identifier
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
+            'nodeName' => 'attributeIdentifierControl',
+            'priority' => 30,
+            'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
+        ];
+
+        // Register the class to be available in 'eval' of TCA
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][\Pixelant\PxaProductManager\Backend\Evaluation\LcFirstEvaluation::class] = '';
     },
     $_EXTKEY
 );

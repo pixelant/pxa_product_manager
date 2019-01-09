@@ -16,17 +16,6 @@ class MainUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function getExtMgrConfigurationReturnEmptyConfigrationIfExtConfNotSet()
-    {
-        $this->assertEquals(
-            [],
-            MainUtility::getExtMgrConfiguration()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function buildLinkArgumentsOnlyProductWithCategories()
     {
         list($category1, $category2, $category3) = $this->getCategoriesForTest();
@@ -47,7 +36,7 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments($product)
+            MainUtility::buildLinksArguments($product, null, true)
         );
     }
 
@@ -67,7 +56,7 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments($product)
+            MainUtility::buildLinksArguments($product, null, true)
         );
     }
 
@@ -99,7 +88,7 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments($product, $activeCategory)
+            MainUtility::buildLinksArguments($product, $activeCategory, true)
         );
     }
 
@@ -127,8 +116,19 @@ class MainUtilityTest extends UnitTestCase
 
         self::assertEquals(
             $expected,
-            MainUtility::buildLinksArguments(null, $activeCategory)
+            MainUtility::buildLinksArguments(null, $activeCategory, true)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function snakeCasePhraseToWordsTransferUndeScoreToWords()
+    {
+        $value = 'string_with_underscore';
+        $expect = 'String with underscore';
+
+        self::assertEquals($expect, MainUtility::snakeCasePhraseToWords($value));
     }
 
     /**

@@ -5,11 +5,18 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
+use Pixelant\PxaProductManager\Domain\Model\Order;
+use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
+use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use Pixelant\PxaProductManager\Validation\ValidatorResolver;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
@@ -56,7 +63,7 @@ class ProductController extends AbstractController
         $this->getFrontendLabels();
 
         // Set the pagePid using the flexform -> typoscript -> 0 priority
-        $this->settings['pagePid'] = $this->settings['pagePid'] ?: ConfigurationUtility::getSettings()['pagePid'];
+        $this->settings['pagePid'] = $this->settings['pagePid'] ?: ConfigurationUtility::getSettingsByPath('pagePid');
     }
 
     /**
@@ -157,6 +164,11 @@ class ProductController extends AbstractController
      */
     public function showAction(Product $product = null)
     {
+        if ($product === null) {
+            // If preview product provided
+            $product = $this->getPreviewProduct();
+        }
+
         // No product found handling
         if ($product !== null) {
             // save as latest visited
@@ -207,6 +219,7 @@ class ProductController extends AbstractController
 
             $this->view->assignMultiple([
                 'product' => $product,
+                'additionalButtons' => $this->getProductAdditionalButtons($product, []),
                 'category' => MainUtility::getActiveCategoryFromRequest()
             ]);
         } else {
@@ -226,43 +239,58 @@ class ProductController extends AbstractController
      * Wish list of products
      *
      * @param bool $sendOrder
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function wishListAction(bool $sendOrder = false)
     {
-        $orderFormFields = $this->getProcessedOrderFormFields();
+        // Select the checkout system to use
+        $checkoutToUse = $this->settings['wishList']['checkoutSystem']
+            ?: ConfigurationUtility::getExtManagerConfigurationByPath('checkoutSystem') ?: 'default';
 
-        if ($sendOrder) {
-            try {
-                $orderProducts = $this->request->getArgument('orderProducts');
-                $values = $this->request->getArgument('orderFields');
+        $checkOutSystems = ConfigurationUtility::getCheckoutSystems();
+        $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
 
-                if ($this->validateOrderFields($orderFormFields, $values)) {
-                    $this->sendOrderEmail($orderFormFields, $orderProducts);
-                    $this->redirect('finishOrder');
+        // Add after checkout system selected slot
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
+
+        // If order form enabled
+        if ($this->isOrderFormAllowed()) {
+            /** @var OrderConfiguration $orderConfiguration */
+            $orderConfiguration = $this->orderConfigurationRepository->findByUid(
+                (int)$this->settings['orderFormConfiguration']
+            );
+
+            $this->view->assign('orderConfiguration', $orderConfiguration);
+
+            if ($sendOrder && $orderConfiguration !== null) {
+                try {
+                    $orderProducts = $this->request->getArgument('orderProducts');
+                    $values = $this->request->getArgument('orderFields');
+
+                    if ($this->validateOrderFields($orderConfiguration, $values)) {
+                        $order = $this->createAndSaveOrder(
+                            $orderConfiguration,
+                            $this->getOrderProductsQuantityForSerialization($orderProducts)
+                        );
+                        $this->sendOrderEmail($order, $orderConfiguration);
+                        $this->redirect('finishOrder');
+                    }
+                } catch (NoSuchArgumentException $exception) {
+                    // orderProducts and orderFields are required to send email
                 }
-            } catch (NoSuchArgumentException $exception) {
-                // orderProducts and orderFields are required to send email
             }
         }
 
         if ($this->request->hasArgument('orderProducts')) {
             $orderState = $this->request->getArgument('orderProducts');
-        } elseif (!empty($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])) {
-            $orderState = json_decode(
-                urldecode(
-                    base64_decode($_COOKIE[ProductUtility::ORDER_STATE_COOKIE_NAME])
-                ),
-                true
-            );
-
-            if (!is_array($orderState)) {
-                $orderState = [];
-            }
+        } else {
+            $orderState = ProductUtility::getOrderState();
         }
 
         $this->view->assignMultiple([
+            'checkout' => $checkout,
             'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
-            'orderFormFields' => $orderFormFields,
             'orderProducts' => $orderState ?? [],
             'sendOrder' => $sendOrder
         ]);
@@ -274,9 +302,7 @@ class ProductController extends AbstractController
      */
     public function finishOrderAction()
     {
-        // Clean list
-        MainUtility::cleanCookieValue(ProductUtility::WISH_LIST_COOKIE_NAME);
-        MainUtility::cleanCookieValue(ProductUtility::ORDER_STATE_COOKIE_NAME);
+        ProductUtility::cleanOngoingOrderInfo();
     }
 
     /**
@@ -480,118 +506,204 @@ class ProductController extends AbstractController
                 $this->settings['customProductsList']['productsCategories'],
                 true
             );
+            $this->view->assign('categories', $this->categoryRepository->findByUidList($categories));
 
             // Get products
-            $products = $this->productRepository->findProductsByCategories(
-                $categories,
-                false,
-                ['tstamp' => QueryInterface::ORDER_DESCENDING],
-                'or',
-                (int)$this->settings['limit']
-            );
+            if (!empty($this->settings['customProductsList']['productsToShowWithinCategories'])) {
+                $productsList = GeneralUtility::trimExplode(
+                    ',',
+                    $this->settings['customProductsList']['productsToShowWithinCategories'],
+                    true
+                );
+                $products = $this->getProductByUidsList($productsList);
+            } else {
+                $products = $this->productRepository->findProductsByCategories(
+                    $categories,
+                    false,
+                    ['tstamp' => QueryInterface::ORDER_DESCENDING],
+                    'or',
+                    (int)$this->settings['limit']
+                );
+            }
         }
 
         $this->view->assign('products', $products);
     }
 
+    /**
+     * Check if order form is allowed
+     *
+     * @return bool
+     */
+    protected function isOrderFormAllowed(): bool
+    {
+        $requireLogin = (int)$this->settings['orderFormRequireLogin'] === 1;
+
+        return !$requireLogin || $this->isUserLoggedIn();
+    }
+
+    /**
+     * Check if user is logged in. Wrapper for tests
+     * @return bool
+     */
+    protected function isUserLoggedIn()
+    {
+        return MainUtility::isFrontendLogin();
+    }
 
     /**
      * Send emails with order
      *
-     * @param array $orderFields
-     * @param array $orderProducts
+     * @param Order $order
+     * @param OrderConfiguration $orderConfiguration
      * @return void
      */
-    protected function sendOrderEmail(array $orderFields, array $orderProducts)
+    protected function sendOrderEmail(Order $order, OrderConfiguration $orderConfiguration)
     {
-        $template = $this->settings['wishList']['orderForm']['emailTemplatePath'];
-
-        $products = $this->getProductByUidsList(array_keys($orderProducts));
-
-        $recipients = GeneralUtility::trimExplode("\n", $this->settings['orderRecipientsEmails'], true);
-        // @TODO make field name configurable
-        if (!empty($orderFields['email']['value'])
-            && (int)$this->settings['wishList']['orderForm']['sendEmailToUser'] === 1) {
-            $recipients[] = $orderFields['email']['value'];
-        }
+        $adminTemplate = $this->settings['wishList']['orderForm']['adminEmailTemplatePath'] ?? '';
+        $userTemplate = $this->settings['wishList']['orderForm']['userEmailTemplatePath'] ?? '';
 
         /** @var OrderMailService $orderMailService */
         $orderMailService = GeneralUtility::makeInstance(OrderMailService::class);
         $orderMailService
-            ->generateMailBody($template, $orderFields, $orderProducts, $products)
-            ->setSubject($this->translate('fe.email.orderForm.subject'))
-            ->setReceivers($recipients)
             ->setSenderName($this->settings['email']['senderName'])
             ->setSenderEmail($this->settings['email']['senderEmail']);
 
-        $orderMailService->send();
+        // Send email to admins
+        if (!empty($orderConfiguration->getAdminEmails())) {
+            $orderMailService
+                ->generateMailBody($adminTemplate, $order)
+                ->setSubject($this->translate('fe.adminEmail.orderForm.subject'))
+                ->setReceivers($orderConfiguration->getAdminEmailsArray())
+                ->send();
+        }
+
+
+        // Send email to user if enabled
+        if ($orderConfiguration->isEnabledEmailToUser()) {
+            $email = $orderConfiguration->getUserEmailFromFormFields();
+            if (!empty($email)) {
+                $orderMailService
+                    ->generateMailBody($userTemplate, $order)
+                    ->setSubject($this->translate('fe.userEmail.orderForm.subject'))
+                    ->setReceivers([$email])
+                    ->send();
+            }
+        }
     }
 
     /**
-     * Get order form fields, where value are replaced with fe user fields
+     * Save order
      *
+     * @param OrderConfiguration $orderConfiguration
+     * @param array $orderProducts
+     * @return Order
+     */
+    protected function createAndSaveOrder(OrderConfiguration $orderConfiguration, array $orderProducts): Order
+    {
+        $order = $this->objectManager->get(Order::class);
+
+        $order->setOrderFields($this->getOrderFormFieldsForSerialization($orderConfiguration));
+
+        $products = $this->productRepository->findProductsByUids(array_keys($orderProducts));
+        /** @var Product $product */
+        foreach ($products as $product) {
+            $order->addProduct($product);
+            $pid = $product->getPid();
+        }
+
+        $productsQuantityData = ProductUtility::orderProductsToProductQuantityData($orderProducts, $products);
+
+        $order->setProductsQuantity($productsQuantityData);
+
+        if ($orderConfiguration->getFrontendUser() !== null) {
+            $order->setFeUser($orderConfiguration->getFrontendUser());
+        }
+
+        if (isset($pid)) {
+            $order->setPid($pid);
+        }
+
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'AfterOrderCreatedBeforeSaving',
+            [$order, $productsQuantityData, $orderProducts, $orderConfiguration, $this]
+        );
+
+        $this->orderRepository->add($order);
+
+        return $order;
+    }
+
+    /**
+     * Prepare order fields for serialization
+     *
+     * @param OrderConfiguration $orderConfiguration
      * @return array
      */
-    protected function getProcessedOrderFormFields(): array
+    protected function getOrderFormFieldsForSerialization(OrderConfiguration $orderConfiguration): array
     {
-        $fields = $this->settings['wishList']['orderForm']['fields'] ?? [];
+        $orderFields = [];
+        /** @var OrderFormField $formField */
+        foreach ($orderConfiguration->getFormFields() as $formField) {
+            $orderFields[$formField->getName()] = [
+                'value' => $formField->getValueAsText(),
+                'type' => $formField->getType(),
+                'label' => $formField->getLabel()
+            ];
+        }
 
-        if (!empty($fields)
-            && MainUtility::getTSFE()->loginUser
-            && (int)$this->settings['wishList']['orderForm']['replaceWithFeUserValues'] === 1
-        ) {
-            $feUser = MainUtility::getTSFE()->fe_user->user;
+        return $orderFields;
+    }
 
-            foreach ($fields as $field => &$fieldConf) {
-                if (array_key_exists($field, $feUser)) {
-                    $fieldConf['feUserValue'] = $feUser[$field];
-                }
+    /**
+     * Prepare order products for serialization
+     *
+     * @param array $orderProducts
+     * @return array
+     */
+    protected function getOrderProductsQuantityForSerialization(array $orderProducts): array
+    {
+        $processedOrderProducts = [];
+
+        foreach ($orderProducts as $productUid => $productQuantity) {
+            $productUid = (int)$productUid;
+            $productQuantity = (int)$productQuantity;
+
+            if ($productUid && $productQuantity) {
+                $processedOrderProducts[$productUid] = $productQuantity;
             }
         }
 
-        return $fields;
+        return $processedOrderProducts;
     }
 
     /**
      * Return false if fields fail validation. Also will add error messages to fields configuration
      *
-     * @param array $fields
+     * @param OrderConfiguration $orderConfiguration
      * @param array $values
      * @return bool
      */
-    protected function validateOrderFields(array &$fields, array $values): bool
+    protected function validateOrderFields(OrderConfiguration $orderConfiguration, array $values): bool
     {
         $isValid = true;
+        $validationResolver = $this->getValidatorResolver();
 
-        foreach ($fields as $field => &$fieldConf) {
-            $value = $values[$field] ?? $fieldConf['feUserValue'] ?? '';
-            $fieldConf['value'] = $value;
+        /** @var OrderFormField $field */
+        foreach ($orderConfiguration->getFormFields() as $field) {
+            if ($field->isStatic()) {
+                continue;
+            }
 
-            if (!empty($fieldConf['validation'])) {
-                $validations = GeneralUtility::trimExplode(',', $fieldConf['validation'], true);
-                $fieldConf['errors'] = [];
+            $value = trim($values[$field->getUid()] ?? '');
+            $field->setValue($value);
 
-                foreach ($validations as $validation) {
-                    switch ($validation) {
-                        case 'required':
-                            if (empty($value)) {
-                                $fieldConf['errors'][] = $this->translate('fe.validation_error.required');
-                                $isValid = false;
-                            }
-                            break;
-                        case 'email':
-                            if (!GeneralUtility::validEmail($value)) {
-                                $fieldConf['errors'][] = $this->translate('fe.validation_error.email');
-                                $isValid = false;
-                            }
-                            break;
-                        case 'url':
-                            if (!GeneralUtility::isValidUrl($value)) {
-                                $fieldConf['errors'][] = $this->translate('fe.validation_error.ulr');
-                                $isValid = false;
-                            }
-                            break;
-                    }
+            foreach ($field->getValidationRulesArray() as $validationRule) {
+                $validator = $validationResolver->createValidator($validationRule);
+                if (!$validator->validate($value)) {
+                    $isValid = false;
+                    $field->addError($validator->getErrorMessage());
                 }
             }
         }
@@ -691,12 +803,31 @@ class ProductController extends AbstractController
      * Create demand object
      *
      * @param array $settings
+     * @param string $class
      * @return Demand
      */
-    protected function createDemandFromSettings(array $settings)
-    {
+    protected function createDemandFromSettings(
+        array $settings,
+        string $class = null
+    ): DemandInterface {
+        $class = $class ??
+            (!empty($settings['demandClass'])
+                ? $settings['demandClass']
+                : 'Pixelant\\PxaProductManager\\Domain\\Model\\DTO\\Demand');
+
         /** @var Demand $demand */
-        $demand = GeneralUtility::makeInstance(Demand::class);
+        $demand = GeneralUtility::makeInstance($class);
+        if (!$demand instanceof Demand) {
+            throw new \UnexpectedValueException(
+                sprintf(
+                // @codingStandardsIgnoreStart
+                    'Demand object must instance of "Pixelant\\PxaProductManager\\Domain\\Model\\DTO\\Demand", but instance of "%s" given.',
+                    // @codingStandardsIgnoreEnd
+                    $class
+                ),
+                1539161115399
+            );
+        }
 
         if (!empty($settings['demandCategories'])) {
             $demand->setCategories($settings['demandCategories']);
@@ -704,13 +835,13 @@ class ProductController extends AbstractController
         if (!empty($settings['allowedCategoriesMode'])) {
             $demand->setCategoryConjunction($settings['allowedCategoriesMode']);
         }
-        if ($limit = (int)$settings['limit']) {
-            $demand->setLimit($limit);
+        if (isset($settings['limit'])) {
+            $demand->setLimit((int)$settings['limit']);
         }
-        if ($offSet = (int)$settings['offSet']) {
-            $demand->setOffSet($offSet);
+        if (isset($settings['offSet'])) {
+            $demand->setOffSet((int)$settings['offSet']);
         }
-        if (is_array($settings['filters'])) {
+        if (isset($settings['filters']) && is_array($settings['filters'])) {
             $demand->setFilters($settings['filters']);
         }
         if (!empty($settings['includeDiscontinued'])) {
@@ -718,15 +849,18 @@ class ProductController extends AbstractController
         }
 
         // set orderings
-        if ($settings['orderProductBy']) {
+        if (!empty($settings['orderProductBy'])) {
             $demand->setOrderBy($settings['orderProductBy']);
         }
-        if ($settings['orderProductDirection']) {
+        if (!empty($settings['orderProductDirection'])) {
             $demand->setOrderDirection($settings['orderProductDirection']);
         }
-        if ($settings['orderByAllowed']) {
+        if (!empty($settings['orderByAllowed'])) {
             $demand->setOrderByAllowed($settings['orderByAllowed']);
         }
+
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
+
         return $demand;
     }
 
@@ -851,6 +985,109 @@ class ProductController extends AbstractController
             $this->forward('notFound');
         } else {
             MainUtility::getTSFE()->pageNotFoundAndExit('No product entry found.');
+        }
+    }
+
+    /**
+     * @return ValidatorResolver
+     */
+    protected function getValidatorResolver(): ValidatorResolver
+    {
+        return GeneralUtility::makeInstance(ValidatorResolver::class);
+    }
+
+    /**
+     * @param Product $product
+     * @param array $buttons
+     * @return array
+     */
+    protected function getProductAdditionalButtons(Product $product, array $buttons = []): array
+    {
+        /**
+         * Generate additional buttons
+         * Should an array that follows this structure
+         * [
+         *     [
+         *         'name' => 'Do something',
+         *         'link' => 'https://www.example.com',
+         *         'classes' => [],
+         *         'order' => '100'
+         *     ],
+         *     [
+         *         'name' => 'Buy',
+         *         'link' => 'https://www.test.net',
+         *         'classes' => ['beauty', 'clarence'],
+         *         'order' => '20'
+         *     ],
+         * ]
+         *
+         * name - button text
+         * link - button link
+         * classes - array of additional button classes
+         * order - used to specify buttons order
+         */
+
+        // Add a signal slot so other extension could add additional buttons
+        $this->signalSlotDispatcher->dispatch(__CLASS__, 'BeforeProcessingAdditionalButtons', [$product, &$buttons]);
+
+        // Process
+        foreach ($buttons as &$button) {
+            $button['classes'] = empty($button['classes']) ? '' : implode(' ', $button['classes']);
+        }
+        unset($button);
+
+        // Sort
+        usort($buttons, function ($a, $b) {
+            return $a['order'] - $b['order'];
+        });
+
+        return $buttons;
+    }
+
+    /**
+     * Get preview product if argument exist
+     *
+     * @return null|Product
+     */
+    protected function getPreviewProduct()
+    {
+        if ($this->request->hasArgument('product_preview')) {
+            $productPreview = (int)$this->request->getArgument('product_preview');
+            if ($productPreview > 0) {
+                if (isset($this->settings['showHiddenRecords'])
+                    && (int)$this->settings['showHiddenRecords'] === 1
+                ) {
+                    $this->allowHiddenRecords();
+                    $product = $this->productRepository->findByUid($productPreview, false);
+                } else {
+                    $product = $this->productRepository->findByUid($productPreview);
+                }
+            }
+        }
+
+        return $product ?? null;
+    }
+
+    /**
+     * Allow hidden content
+     */
+    protected function allowHiddenRecords()
+    {
+        if (MainUtility::isBelowTypo3v9()) {
+            MainUtility::getTSFE()->showHiddenRecords = true;
+        } else {
+            $context = GeneralUtility::makeInstance(Context::class);
+            /** @var VisibilityAspect $visibilityAspect */
+            $visibilityAspect = $context->getAspect('visibility');
+
+            $newVisibilityAspect = GeneralUtility::makeInstance(
+                VisibilityAspect::class,
+                $visibilityAspect->includeHiddenPages(),
+                true,
+                $visibilityAspect->includeDeletedRecords()
+            );
+
+            $context->setAspect('visibility', $newVisibilityAspect);
         }
     }
 }

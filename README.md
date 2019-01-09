@@ -72,3 +72,23 @@ When using t3kit and themes with the less compiler, three variables needs to be 
   @main-text-color
   @border-color
 
+### Products preview
+
+Example of Page TS that allow to enable preview function of product.
+ 
+```typo3_typoscript
+TCEMAIN.preview {
+    tx_pxaproductmanager_domain_model_product {
+        useCacheHash = 1
+        previewPageId = 1
+        useDefaultLanguageRecord = 0
+        fieldToParameterMap {
+            uid = tx_pxaproductmanager_pi1[product_preview]
+        }
+        additionalGetParameters {
+            tx_pxaproductmanager_pi1.controller = Product
+            tx_pxaproductmanager_pi1.action = show
+        }
+    }
+}
+```

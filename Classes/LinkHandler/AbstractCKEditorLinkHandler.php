@@ -154,8 +154,9 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
             10 => 'EXT:pxa_product_manager/Resources/Private/Backend/Templates/LinkBrowser/'
         ]);
 
-        $this->expandPage = isset($request->getQueryParams()['expandPage']) ?
-            (int)$request->getQueryParams()['expandPage'] : 0;
+        $this->expandPage = isset($request->getQueryParams()['expandPage'])
+            ? (int)$request->getQueryParams()['expandPage']
+            : 0;
 
         /** @var BackendUserAuthentication $backendUser */
         $backendUser = $GLOBALS['BE_USER'];
@@ -163,9 +164,10 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
         /** @var BrowserTreeView $pageTree */
         $pageTree = GeneralUtility::makeInstance(BrowserTreeView::class);
         $pageTree->setLinkParameterProvider($this);
-        $pageTree->ext_showNavTitle = (bool)$backendUser->getTSConfigVal('options.pageTree.showNavTitle');
-        $pageTree->ext_showPageId = (bool)$backendUser->getTSConfigVal('options.pageTree.showPageIdWithTitle');
-        $pageTree->ext_showPathAboveMounts = (bool)$backendUser->getTSConfigVal('options.pageTree.showPathAboveMounts');
+        $TSConfig = $backendUser->getTSConfig();
+        $pageTree->ext_showNavTitle = (bool)($TSConfig['options.']['pageTree.']['showNavTitle'] ?? false);
+        $pageTree->ext_showPageId = (bool)($TSConfig['options.']['pageTree.']['showPageIdWithTitle'] ?? false);
+        $pageTree->ext_showPathAboveMounts = (bool)($TSConfig['options.']['pageTree.']['showPathAboveMounts'] ?? false);
         $pageTree->addField('nav_title');
 
         $this->view->assignMultiple([

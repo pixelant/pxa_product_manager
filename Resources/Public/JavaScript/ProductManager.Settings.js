@@ -10,15 +10,26 @@
 		itemClass: '.item',
 		orderItemAmountClass: '.order-product-amount',
 		orderItemPriceClass: '.item-order-price',
+		orderItemTaxClass: '.item-order-tax',
 		totalPriceClass: '.pxa-pm-order-total-price',
+		totalTaxClass: '.pxa-pm-order-total-tax',
 		cartsIdentifier: '.pxa-pm-wish-list-cart',
 		mainCartIdentifier: '.pxa-pm-wish-list-cart.main-cart:first',
 		cartCounterIdentifier: '.pxa-pm-wish-list-cart__counter',
-		inListClass: 'selected',
+		inListClass: 'active-icon',
 		notInListClass: 'inactive-icon',
 		initializationClass: 'ongoing-initialization',
 		loadingClass: 'in-progress'
 	};
+
+	if (ProductManager.settings.wishlistTSSettings) {
+		ProductManager.settings.wishList = Object.assign(
+			{},
+			ProductManager.settings.wishList,
+			ProductManager.settings.wishlistTSSettings
+		);
+		delete ProductManager.settings.wishlistTSSettings;
+	}
 
 	// Wish list
 	ProductManager.settings.compareList = {
@@ -27,13 +38,21 @@
 		cartsIdentifier: '.pxa-pm-compare-list-cart',
 		mainCartIdentifier: '.pxa-pm-compare-list-cart.main-cart:first',
 		cartCounterIdentifier: '.pxa-pm-compare-list-cart__counter',
-		inListClass: 'selected',
+		inListClass: 'active-icon',
 		notInListClass: 'inactive-icon',
 		loadingClass: 'in-progress',
 		initializationClass: 'ongoing-initialization',
 		listUrl: '/?type=201702&tx_pxaproductmanager_pi1%5Baction%5D=loadCompareList'
 	};
 
+	if (ProductManager.settings.compareListTSSettings) {
+		ProductManager.settings.compareList = Object.assign(
+			{},
+			ProductManager.settings.compareList,
+			ProductManager.settings.compareListTSSettings
+		);
+		delete ProductManager.settings.compareListTSSettings;
+	}
 	// Events
 	ProductManager.settings.events = {
 		FILTER_UPDATE: 'FILTER_UPDATE',

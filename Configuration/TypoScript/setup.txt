@@ -25,13 +25,15 @@ plugin.tx_pxaproductmanager {
     settings {
         # pid
         pagePid = {$plugin.tx_pxaproductmanager.settings.pagePid}
+        excludeCategoriesFromUrl = {$plugin.tx_pxaproductmanager.settings.excludeCategoriesFromUrl}
 
         # general settings
         latestVisitedProductsLimit = {$plugin.tx_pxaproductmanager.settings.latestVisitedProductsLimit}
         showCategoriesWithProducts = {$plugin.tx_pxaproductmanager.settings.showCategoriesWithProducts}
         doNotShowEmptyCategoriesInNavigation = {$plugin.tx_pxaproductmanager.settings.doNotShowEmptyCategoriesInNavigation}
         disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
-        
+        showHiddenRecords = {$plugin.tx_pxaproductmanager.settings.showHiddenRecords}
+
         lazyLoading {
             loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
 
@@ -45,29 +47,14 @@ plugin.tx_pxaproductmanager {
             cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/like.svg
             buttonIcon = EXT:pxa_product_manager/Resources/Public/Icons/like_combine.png
             pageType = 201702
+            showTaxInfo = {$plugin.tx_pxaproductmanager.settings.wishList.showTaxInfo}
+            checkoutSystem = {$plugin.tx_pxaproductmanager.settings.wishList.checkoutSystem}
+            enableFlyToCartAnimation = {$plugin.tx_pxaproductmanager.settings.wishList.enableFlyToCartAnimation}
 
-            # Available validations: email,required,url
-            # Available fields types: input,textarea
+            # Order emails
             orderForm {
-                replaceWithFeUserValues = {$plugin.tx_pxaproductmanager.settings.wishList.replaceWithFeUserValues}
-                sendEmailToUser = {$plugin.tx_pxaproductmanager.settings.wishList.sendEmailToUser}
-
-                emailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmail.html
-
-                fields {
-                    name {
-                        type = input
-                        validation = required
-                    }
-                    # Email is reserved field name where email will be send to user
-                    email {
-                        type = input
-                        validation = required,email
-                    }
-                    notes {
-                        type = textarea
-                    }
-                }
+                adminEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailAdmin.html
+                userEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailUser.html
             }
         }
 
@@ -82,6 +69,7 @@ plugin.tx_pxaproductmanager {
             cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/balance.svg
             buttonIcon < .cartIcon
             pageType = 201702
+            enableFlyToCartAnimation = {$plugin.tx_pxaproductmanager.settings.compareList.enableFlyToCartAnimation}
         }
 
         additionalClasses {
@@ -89,9 +77,11 @@ plugin.tx_pxaproductmanager {
                 # can be used to add additional classes to products in templates
                 # uidOfClass = className(s)
             }
+
             launched {
                 isNewClass = product-new
             }
+
             discontinued {
                 isDiscontinuedClass = product-discontinued
             }
@@ -111,7 +101,7 @@ plugin.tx_pxaproductmanager {
 
         launched {
             # uses DateInterval interval_spec f.ex P14D or P1Y to calculate if product should be considered as a new product
-            # if not set, no calculation will occur 
+            # if not set, no calculation will occur
             dateIntervalAsNew =
         }
 
@@ -119,7 +109,7 @@ plugin.tx_pxaproductmanager {
             allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy
         }
 
-        orderByAllowed = name,tstamp,crdate,categories,custom_sorting,sorting
+        orderByAllowed = name,tstamp,crdate,categories,categories.sorting,custom_sorting,sorting
 
         attributes {
             includeSkuInAttributeListing = {$plugin.tx_pxaproductmanager.settings.attributes.includeSkuInAttributeListing}
@@ -167,20 +157,47 @@ plugin.tx_pxaproductmanager {
 
     _LOCAL_LANG {
         default {
-            fe.fields {
-                name = Name
-                email = E-mail
-                notes = Order notes
-            }
-
             # Default pricing format
             # |decimals|dec_point|thousands_sep|
             priceFormat = |2|.| |
         }
+
         sv {
             priceFormat = |2|,| |
         }
     }
+}
+
+# BE module
+module.tx_pxaproductmanager {
+    settings {
+        listOrders {
+            itemsPerPage = 10
+            # Title of order in BE module view. Support fluid. Accessible variable {order}
+            title = {order.orderFields.name.value}, {order.orderFields.email.value}
+            dateFormat = %d/%m/%Y
+
+            tabs {
+                list {
+                    0 = active
+                    1 = complete
+                    2 = archive
+                }
+
+                defaultActive = active
+            }
+        }
+    }
+
+    view {
+        widget {
+            Pixelant\PxaProductManager\ViewHelpers\Widget\PaginateViewHelper {
+                templateRootPath = EXT:pxa_product_manager/Resources/Private/Backend/Templates/
+            }
+        }
+    }
+
+    _LOCAL_LANG < plugin.tx_pxaproductmanager._LOCAL_LANG
 }
 
 # include scripts
@@ -219,6 +236,7 @@ page {
         tx_pxaproductmanager_pi1.action = show
     }
 
+[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}] && [globalVar = GP:tx_pxaproductmanager_pi1|product > 0]
     # add stuff for gallery
     page {
         includeCSS {
@@ -283,6 +301,7 @@ PXA_PRODUCT_MANAGER_WISH_LIST {
                 2 = toggleCompareList
                 3 = loadCompareList
                 4 = emptyCompareList
+                5 = loadWishList
             }
         }
     }

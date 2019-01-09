@@ -73,7 +73,8 @@ call_user_func(function () {
 
     $aliasField = 'IF(path_segment!="",path_segment,name)';
     // @codingStandardsIgnoreStart
-    $enableSkuInUrl = (int)\Pixelant\PxaProductManager\Utility\MainUtility::getExtMgrConfiguration()['includeSkuInRealurlConfiguration'];
+    $enableSkuInUrl = (int)\Pixelant\PxaProductManager\Utility\ConfigurationUtility::getExtManagerConfigurationByPath('includeSkuInRealurlConfiguration');
+
     // @codingStandardsIgnoreEnd
     if ($enableSkuInUrl === 1) {
         $aliasField = sprintf(

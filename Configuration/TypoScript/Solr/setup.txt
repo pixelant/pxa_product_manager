@@ -6,9 +6,7 @@ plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product {
         title = name
         subTitle = sku
         content = SOLR_CONTENT
-        content.value = {field:description}
-        content.trim = 1
-        content.insertData = 1
+        content.field = description
         description < .content
         abstract = teaser
 
@@ -16,32 +14,27 @@ plugin.tx_solr.index.queue.tx_pxaproductmanager_domain_model_product {
         url {
             userFunc = Pixelant\PxaProductManager\UserFunction\SolrProductLink->getLink
             pageUid = {$plugin.tx_pxaproductmanager.settings.pagePid}
-
-            productUid = TEXT
-            productUid {
-                field = uid
-            }
-
-            languageUid = TEXT
-            languageUid {
-                field = __solr_index_language
-            }
         }
+
+        product_name_textS = TEXT
+        product_name_textS.field = name
+
+        product_sku_textS < .product_name_textS
+        product_sku_textS.field = sku
 
         image_main_url_stringS = USER
         image_main_url_stringS {
             userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductMainImagePublicUrl
-            uid.data = field:uid
         }
 
         image_thumbnail_url_stringS < .image_main_url_stringS
         image_thumbnail_url_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductThumbnailImagePublicUrl
 
-        image_main_reference_uid_stringS < .image_main_url_stringS
-        image_main_reference_uid_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductMainImageReferenceUid
+        #image_main_reference_uid_stringS < .image_main_url_stringS
+        #image_main_reference_uid_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductMainImageReferenceUid
 
-        image_thumbnail_reference_uid_stringS < .image_main_url_stringS
-        image_thumbnail_reference_uid_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductThumbnailImageReferenceUid
+        #image_thumbnail_reference_uid_stringS < .image_main_url_stringS
+        #image_thumbnail_reference_uid_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductThumbnailImageReferenceUid
 
 
         attribute_values_stringM = SOLR_RELATION
@@ -77,5 +70,13 @@ plugin.tx_solr.search.faceting.facets.type {
         tx_pxaproductmanager_domain_model_product = TEXT
         tx_pxaproductmanager_domain_model_product.value = {LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf:fe.solr.type_facet_name}
         tx_pxaproductmanager_domain_model_product.insertData = 1
+    }
+}
+
+plugin.tx_solr {
+    search {
+        query {
+            queryFields := addToList(product_name_textS^60.0, product_sku_textS^60.0)
+        }
     }
 }
