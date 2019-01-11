@@ -13,6 +13,16 @@ config.tx_extbase {
                 }
             }
 
+            Pixelant\PxaProductManager\Domain\Model\AttributeFalFile {
+                mapping {
+                    tableName = sys_file_reference
+
+                    columns {
+                        pxa_attribute.mapOnProperty = attribute
+                    }
+                }
+            }
+
             Pixelant\PxaProductManager\Domain\Model\Category {
                 mapping {
                     tableName = sys_category
