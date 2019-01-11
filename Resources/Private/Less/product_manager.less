@@ -434,6 +434,10 @@
         position: relative;
     }
 
+    .btn-wish-list-single-view-wrapper {
+        display: block;
+    }
+
     .wish-list-btn {
         &.active-icon {
             .pm-like-button {
@@ -444,6 +448,21 @@
         .lds-dual-ring {
             left: 5px;
         }
+    }
+
+    .btn-wish-list-single-view-wrapper {
+        margin: 10px 10px 10px 0;
+        height: auto;
+        .lds-dual-ring {
+            top: 50%;
+            left: 50%;
+            right: auto;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    .btn-compare-list-single-view-wrapper {
+        display: block;
     }
 
     .compare-list-btn {
@@ -463,6 +482,17 @@
             .toggle-compare-icon path {
                 fill: #545454;
             }
+        }
+    }
+
+    .btn-compare-list-single-view-wrapper {
+        margin: 10px 10px 10px 0;
+        height: auto;
+        .lds-dual-ring {
+            top: 50%;
+            left: 50%;
+            right: auto;
+            transform: translate(-50%, -50%);
         }
     }
 

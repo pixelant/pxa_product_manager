@@ -80,9 +80,7 @@
                                         <f:if condition="{settings.wishList.enable} || {settings.compareList.enable}">
                                             <div class="item-options-bar">
                                                 <f:if condition="{settings.wishList.enable}">
-                                                    <div class="pull-left">
-                                                        <f:render partial="Product/OptionsBar/WishListButtonSingleView" arguments="{uid: product.uid}"/>
-                                                    </div>
+                                                    <f:render partial="Product/OptionsBar/WishListButtonSingleView" arguments="{uid: product.uid}"/>
                                                 </f:if>
                                                 <f:if condition="{settings.compareList.enable}">
                                                     <f:render partial="Product/OptionsBar/CompareListButtonSingleView" arguments="{uid: product.uid}"/>
