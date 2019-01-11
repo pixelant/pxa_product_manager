@@ -106,6 +106,7 @@
 						.toggleClass(settings.notInListClass)
 						.removeClass(settings.loadingClass)
 						.prop('disabled', false)
+						.find(settings.compareListButtonSingleView).text(data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'))
 						.attr('title', data.inList ? button.data('remove-from-list-text') : button.data('add-to-list-text'));
 
 					if ($mainCart.length === 1 && data.inList) {
@@ -177,6 +178,7 @@
 					.attr('title', text)
 					.removeClass(settings.loadingClass)
 					.removeClass(settings.initializationClass)
+					.find(settings.compareListButtonSingleView).text(text)
 					.addClass(className);
 			});
 		};

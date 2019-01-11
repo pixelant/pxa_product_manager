@@ -1,0 +1,12 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="compare-list-btn pm-action-button in-progress ongoing-initialization btn btn-default btn-compare-list-single-view-wrapper"
+         data-compare-list-button="1"
+         data-delete-parent-on-remove="{deleteParent}"
+         data-product-uid="{uid}"
+         data-add-to-list-text="{f:translate(key: 'fe.compare_list.add_title')}"
+         data-remove-from-list-text="{f:translate(key: 'fe.compare_list.remove_title')}"
+         data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleCompareList', absolute: '1', arguments: '{compareProduct: uid}', pageType: '{settings.wishList.pageType}')}">
+         <span class="btn-compare-list-single-view"></span>
+        <f:render partial="Product/Loader"/>
+    </div>
+</html>

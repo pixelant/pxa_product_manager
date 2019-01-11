@@ -1,0 +1,12 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="wish-list-btn pm-action-button in-progress ongoing-initialization btn btn-default btn-wish-list-single-view-wrapper"
+         data-wish-list-button="1"
+         data-delete-parent-on-remove="{deleteParent}"
+         data-product-uid="{uid}"
+         data-add-to-list-text="{f:translate(key: 'fe.wish_list.add_title')}"
+         data-remove-from-list-text="{f:translate(key: 'fe.wish_list.remove_title')}"
+         data-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'toggleWishList', absolute: '1', arguments: '{wishProduct: uid}', pageType: '{settings.wishList.pageType}')}">
+        <span class="btn-wish-list-single-view"></span>
+        <f:render partial="Product/Loader"/>
+    </div>
+</html>

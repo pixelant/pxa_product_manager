@@ -19,7 +19,8 @@
 		inListClass: 'active-icon',
 		notInListClass: 'inactive-icon',
 		initializationClass: 'ongoing-initialization',
-		loadingClass: 'in-progress'
+		loadingClass: 'in-progress',
+		wishListButtonSingleView: '.btn-wish-list-single-view'	
 	};
 
 	if (ProductManager.settings.wishlistTSSettings) {
@@ -42,7 +43,8 @@
 		notInListClass: 'inactive-icon',
 		loadingClass: 'in-progress',
 		initializationClass: 'ongoing-initialization',
-		listUrl: '/?type=201702&tx_pxaproductmanager_pi1%5Baction%5D=loadCompareList'
+		listUrl: '/?type=201702&tx_pxaproductmanager_pi1%5Baction%5D=loadCompareList',
+		compareListButtonSingleView: '.btn-compare-list-single-view'
 	};
 
 	if (ProductManager.settings.compareListTSSettings) {
