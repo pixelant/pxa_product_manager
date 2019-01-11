@@ -226,6 +226,10 @@
         margin: 0 0 30px 0;
         padding-bottom: 15px;
         border-bottom: 1px solid tint(@main-color, 50%);
+
+        .item-options-bar {
+            display: inline-block;
+        }
     }
 
     .single-product-wrapper {
@@ -434,10 +438,6 @@
         position: relative;
     }
 
-    .btn-wish-list-single-view-wrapper {
-        display: block;
-    }
-
     .wish-list-btn {
         &.active-icon {
             .pm-like-button {
@@ -453,16 +453,14 @@
     .btn-wish-list-single-view-wrapper {
         margin: 10px 10px 10px 0;
         height: auto;
+        width: auto;
+
         .lds-dual-ring {
             top: 50%;
             left: 50%;
             right: auto;
             transform: translate(-50%, -50%);
         }
-    }
-
-    .btn-compare-list-single-view-wrapper {
-        display: block;
     }
 
     .compare-list-btn {
@@ -488,6 +486,9 @@
     .btn-compare-list-single-view-wrapper {
         margin: 10px 10px 10px 0;
         height: auto;
+        width: auto;
+        bottom: 0;
+
         .lds-dual-ring {
             top: 50%;
             left: 50%;
