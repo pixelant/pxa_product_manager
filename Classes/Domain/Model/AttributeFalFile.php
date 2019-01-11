@@ -29,8 +29,8 @@ class AttributeFalFile extends FileReference
     /**
      * @param int $attribute
      */
-    public function setAttribute(int $pxaAttribute)
+    public function setAttribute(int $attribute)
     {
-        $this->attribute = $pxaAttribute;
+        $this->attribute = $attribute;
     }
 }
