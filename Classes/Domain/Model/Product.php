@@ -136,9 +136,9 @@ class Product extends AbstractEntity
     protected $images;
 
     /**
-     * Images
+     * Attributes files
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFalFile>
      * @lazy
      */
     protected $attributeFiles;
@@ -553,7 +553,7 @@ class Product extends AbstractEntity
     /**
      * Returns the Attribute files
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFalFile>
      */
     public function getAttributeFiles(): ObjectStorage
     {
@@ -563,7 +563,7 @@ class Product extends AbstractEntity
     /**
      * Sets the Attribute files
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $files
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFalFile> $files
      * @return void
      */
     public function setAttributeFiles(ObjectStorage $files)
@@ -1576,9 +1576,9 @@ class Product extends AbstractEntity
 
             if ($attribute->isFalType()) {
                 $falFiles = [];
-                /** @var FileReference $falReference */
+                /** @var AttributeFalFile $falReference */
                 foreach ($this->attributeFiles->toArray() as $falReference) {
-                    if ((int)$falReference->getOriginalResource()->getReferenceProperty('pxa_attribute') === $id) {
+                    if ($falReference->getAttribute() === $id) {
                         $falFiles[] = $falReference;
                     }
                 }
