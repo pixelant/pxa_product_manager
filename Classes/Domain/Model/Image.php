@@ -63,13 +63,6 @@ class Image extends \TYPO3\CMS\Extbase\Domain\Model\FileReference
     protected $description;
 
     /**
-     * Attribute uid if belongs to attribute
-     *
-     * @var int
-     */
-    protected $pxaAttribute = 0;
-
-    /**
      * Set File uid
      *
      * @param integer $fileUid
@@ -162,21 +155,5 @@ class Image extends \TYPO3\CMS\Extbase\Domain\Model\FileReference
     public function getDescription()
     {
         return $this->description ?: $this->getOriginalResource()->getDescription();
-    }
-
-    /**
-     * @return int
-     */
-    public function getPxaAttribute(): int
-    {
-        return $this->pxaAttribute;
-    }
-
-    /**
-     * @param int $pxaAttribute
-     */
-    public function setPxaAttribute(int $pxaAttribute)
-    {
-        $this->pxaAttribute = $pxaAttribute;
     }
 }

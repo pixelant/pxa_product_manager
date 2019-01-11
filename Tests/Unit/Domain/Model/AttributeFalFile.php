@@ -25,7 +25,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Domain\Model\Image;
+use Pixelant\PxaProductManager\Domain\Model\AttributeFalFile;
 
 /**
  * Test case for class \Pixelant\PxaProductManager\Domain\Model\Image.
@@ -38,16 +38,16 @@ use Pixelant\PxaProductManager\Domain\Model\Image;
  * @subpackage Products Manager
  *
  */
-class ImageTest extends UnitTestCase
+class AttributeFalFileTest extends UnitTestCase
 {
     /**
-     * @var Image
+     * @var AttributeFalFile
      */
     protected $fixture;
 
     public function setUp()
     {
-        $this->fixture = new Image();
+        $this->fixture = new AttributeFalFile();
     }
 
     public function tearDown()
@@ -58,70 +58,22 @@ class ImageTest extends UnitTestCase
     /**
      * @test
      */
-    public function uidLocalCanBeSet()
+    public function defaultAttributeValueIsZero()
     {
-        $uidLocal = 123;
-        $this->fixture->setFileUid($uidLocal);
-
-        self::assertEquals(
-            $uidLocal,
-            $this->fixture->getFileUid()
-        );
+        $this->assertEquals(0, $this->fixture->getAttribute());
     }
 
     /**
      * @test
      */
-    public function useInListingCanBeSet()
+    public function attributeCanBeSet()
     {
-        $useInListing = true;
-        $this->fixture->setUseInListing($useInListing);
+        $pxaAttribute = 111;
+        $this->fixture->setAttribute($pxaAttribute);
 
-        self::assertEquals(
-            $useInListing,
-            $this->fixture->isUseInListing()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function mainImageCanBeSet()
-    {
-        $mainImage = true;
-        $this->fixture->setMainImage($mainImage);
-
-        self::assertEquals(
-            $mainImage,
-            $this->fixture->isMainImage()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function titleCanBeSet()
-    {
-        $title = 'title';
-        $this->fixture->setTitle($title);
-
-        self::assertEquals(
-            $title,
-            $this->fixture->getTitle()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function descriptionCanBeSet()
-    {
-        $description = 'description';
-        $this->fixture->setDescription($description);
-
-        self::assertEquals(
-            $description,
-            $this->fixture->getDescription()
+        $this->assertEquals(
+            $pxaAttribute,
+            $this->fixture->getAttribute()
         );
     }
 }
