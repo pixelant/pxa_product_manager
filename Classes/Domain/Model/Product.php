@@ -60,6 +60,11 @@ class Product extends AbstractEntity
     protected $name;
 
     /**
+     * @var string
+     */
+    protected $slug = '';
+
+    /**
      * sku
      *
      * @var \string
@@ -352,6 +357,22 @@ class Product extends AbstractEntity
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug(string $slug)
+    {
+        $this->slug = $slug;
     }
 
     /**
@@ -945,7 +966,7 @@ class Product extends AbstractEntity
      */
     public function getImagesSorted(): ObjectStorage
     {
-        $images = $this->getImages();
+        $images = clone $this->getImages();
 
         if ($images->count() > 1 && ($mainImage = $this->getMainImage())) {
             $sortedImages = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();

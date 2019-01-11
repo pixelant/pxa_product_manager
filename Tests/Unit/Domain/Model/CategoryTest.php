@@ -292,4 +292,27 @@ class CategoryTest extends UnitTestCase
             $this->fixture->getBannerImage()
         );
     }
+
+    /**
+     * @test
+     */
+    public function initialSlugValueEmptyString()
+    {
+        $this->assertEmpty($this->fixture->getSlug());
+    }
+
+    /**
+     * @test
+     */
+    public function slugCanBeSet()
+    {
+        $value = 'slug';
+
+        $this->fixture->setSlug($value);
+
+        $this->assertEquals(
+            $value,
+            $this->fixture->getSlug()
+        );
+    }
 }
