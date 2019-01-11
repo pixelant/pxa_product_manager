@@ -563,9 +563,7 @@ class Product extends AbstractEntity
     /**
      * Sets the Attribute files
      *
-     * @codingStandardsIgnoreStart
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFalFile> $files
-     * @codingStandardsIgnoreEnd
+     * @param ObjectStorage $files
      * @return void
      */
     public function setAttributeFiles(ObjectStorage $files)
