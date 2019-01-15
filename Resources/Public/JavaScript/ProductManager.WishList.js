@@ -348,8 +348,8 @@
 					.attr('title', text)
 					.removeClass(settings.loadingClass)
 					.removeClass(settings.initializationClass)
-					.find(settings.wishListButtonSingleView).text(text)
-					.addClass(className);
+					.addClass(className)
+					.find(settings.wishListButtonSingleView).text(text);
 			});
 		};
 
