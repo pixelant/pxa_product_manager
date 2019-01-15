@@ -136,7 +136,8 @@ class MainUtility
             $name,
             implode(',', $cookie),
             0,
-            '/'
+            '/',
+            GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY')
         );
     }
 
@@ -172,11 +173,13 @@ class MainUtility
             $cookie = array_splice($cookie, 0, $maxValues);
         }
 
+
         setcookie(
             $name,
             implode(',', $cookie),
             0,
-            '/'
+            '/',
+            GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY')
         );
     }
 
@@ -186,7 +189,7 @@ class MainUtility
      */
     public static function cleanCookieValue(string $name)
     {
-        setcookie($name, '', time() - 3600, '/');
+        setcookie($name, '', time() - 3600, '/', GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'));
     }
 
     /**
