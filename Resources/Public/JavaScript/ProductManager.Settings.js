@@ -4,6 +4,8 @@
 	// Init settings
 	ProductManager.settings = ProductManager.settings || {};
 
+	ProductManager.settings.latestVisitedProductsWrapper = '.pm-latest-visited';
+
 	// Wish list
 	ProductManager.settings.wishList = {
 		buttonIdentifier: '[data-wish-list-button="1"]',

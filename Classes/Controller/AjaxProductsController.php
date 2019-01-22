@@ -26,6 +26,7 @@ namespace Pixelant\PxaProductManager\Controller;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfiguration;
@@ -105,5 +106,22 @@ class AjaxProductsController extends ProductController
         ];
 
         return json_encode($response);
+    }
+
+    /**
+     * Load latest visited
+     *
+     * @param int $excludeProduct
+     */
+    public function latestVisitedAction(int $excludeProduct = 0)
+    {
+        $this->view->assign(
+            'latestVisitedProducts',
+            $this->getProductsFromCookieList(
+                ProductUtility::LATEST_VISITED_COOKIE_NAME,
+                $excludeProduct,
+                (int)$this->settings['latestVisitedProductsLimit']
+            )
+        );
     }
 }

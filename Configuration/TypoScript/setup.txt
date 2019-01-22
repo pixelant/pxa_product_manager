@@ -308,5 +308,20 @@ PXA_PRODUCT_MANAGER_WISH_LIST {
     }
 }
 
+PXA_PRODUCT_MANAGER_LATEST_VISITED < PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING
+PXA_PRODUCT_MANAGER_LATEST_VISITED {
+    typeNum = 201703
+
+    10.switchableControllerActions >
+
+    10 {
+        switchableControllerActions {
+            AjaxProducts {
+                1 = latestVisited
+            }
+        }
+    }
+}
+
 # Includes
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Library/" extensions="ts">
