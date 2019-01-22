@@ -34,6 +34,11 @@
 			if (ProductManager.CompareList) {
 				ProductManager.CompareList.init(ProductManager.settings.compareList || {});
 			}
+
+			if (ProductManager.settings.latestVisitedProductsWrapper) {
+				let $wrapper = $(ProductManager.settings.latestVisitedProductsWrapper);
+				this.loadLatestVisitedProductsTo($wrapper);
+			}
 		},
 
 		/**
@@ -304,6 +309,22 @@
 		 */
 		translate: function (key) {
 			return TYPO3.lang[key] || '';
+		},
+
+		/**
+		 * Load latest visited products
+		 *
+		 * @param $wrapper
+		 */
+		loadLatestVisitedProductsTo: function ($wrapper) {
+			if ($wrapper.length === 0) {
+				return false;
+			}
+
+			let currentProductUid = (typeof pxaproductmanager_current_product_uid !== 'undefined') ? pxaproductmanager_current_product_uid : 0;
+			$.get('/?type=201703&tx_pxaproductmanager_pi1%5BexcludeProduct%5D=' + currentProductUid, function (data) {
+				$($wrapper).html(data);
+			});
 		}
 	};
 

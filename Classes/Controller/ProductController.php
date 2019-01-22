@@ -17,6 +17,7 @@ use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\VisibilityAspect;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
@@ -164,18 +165,27 @@ class ProductController extends AbstractController
      */
     public function showAction(Product $product = null)
     {
+        $isPreviewMode = false;
         if ($product === null) {
             // If preview product provided
             $product = $this->getPreviewProduct();
+            $isPreviewMode = true;
         }
 
         // No product found handling
         if ($product !== null) {
-            // save as latest visited
-            MainUtility::addValueToListCookie(
-                ProductUtility::LATEST_VISITED_COOKIE_NAME,
-                $product->getUid(),
-                ((int)$this->settings['latestVisitedProductsLimit'] + 1)
+            // save as latest visited only when not in preview mode
+            if (false === $isPreviewMode) {
+                MainUtility::addValueToListCookie(
+                    ProductUtility::LATEST_VISITED_COOKIE_NAME,
+                    $product->getUid(),
+                    ((int)$this->settings['latestVisitedProductsLimit'] + 1)
+                );
+            }
+            // Add constant with current product UID to header
+            GeneralUtility::makeInstance(PageRenderer::class)->addJsInlineCode(
+                'pxaproductmanager_current_product_uid',
+                'const pxaproductmanager_current_product_uid=' . $product->getUid()
             );
 
             // check if categories have a custom single view template set
@@ -196,18 +206,6 @@ class ProductController extends AbstractController
                 && !$this->settings['hideNavigationListViewOnDetailMode']
             ) {
                 $this->view->assign('treeData', $this->getNavigationTree());
-            }
-
-            // add latest visited
-            if ($this->settings['showLatestVisitedProducts']) {
-                $this->view->assign(
-                    'latestVisitedProducts',
-                    $this->getProductsFromCookieList(
-                        ProductUtility::LATEST_VISITED_COOKIE_NAME,
-                        $product->getUid(),
-                        (int)$this->settings['latestVisitedProductsLimit']
-                    )
-                );
             }
 
             // if product have more than one category - build canonical url to main (first) category

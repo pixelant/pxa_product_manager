@@ -271,9 +271,22 @@
         </f:if>
 
         <f:comment><!-- Lates products --></f:comment>
-        <f:if condition="{latestVisitedProducts}">
-            <f:render partial="Product/Related"
-                      arguments="{relatedProducts: latestVisitedProducts, headerTranslationIndex: 'fe.latest_visited_products'}"/>
+        <f:if condition="{settings.showLatestVisitedProducts}">
+            <div class="row">
+                <div class="single-product-related">
+                    <div class="col-md-12">
+                        <h3>
+                            <f:translate key="fe.latest_visited_products"/>
+                        </h3>
+                    </div>
+                    <div class="pm-latest-visited">
+                        <div class="text-center">
+                            <f:render partial="Product/Loader" arguments="{class: 'big'}"/>
+                        </div>
+                        <!--Place holder for latest visit product-->
+                    </div>
+                </div>
+            </div>
         </f:if>
 
         <f:if condition="{settings.showGoBackButton}">
