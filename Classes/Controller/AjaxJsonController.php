@@ -162,4 +162,20 @@ class AjaxJsonController extends AbstractController
 
         $this->view->assign('value', ['wishList' => $wishList ?? []]);
     }
+
+    /**
+     * Add product to latest visited
+     *
+     * @param Product $product
+     */
+    public function addLatestVisitedProductAction(Product $product)
+    {
+        MainUtility::addValueToListCookie(
+            ProductUtility::LATEST_VISITED_COOKIE_NAME,
+            $product->getUid(),
+            ((int)$this->settings['latestVisitedProductsLimit'] + 1)
+        );
+
+        $this->view->assign('value', ['success' => true]);
+    }
 }

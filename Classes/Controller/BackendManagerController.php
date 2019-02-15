@@ -193,7 +193,7 @@ class BackendManagerController extends ActionController
         }
     }
 
-    /**
+    /*
      * delete
      *
      * @param int $order

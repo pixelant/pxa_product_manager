@@ -325,6 +325,14 @@
 			$.get('/?type=201703&tx_pxaproductmanager_pi1%5BexcludeProduct%5D=' + currentProductUid, function (data) {
 				$($wrapper).html(data);
 			});
+
+			// Save current visited
+			if (currentProductUid > 0) {
+				// Add to list
+				$.get(
+					'/?type=201703&tx_pxaproductmanager_pi1%5Baction%5D=addLatestVisitedProduct&tx_pxaproductmanager_pi1%5Bcontroller%5D=AjaxJson&tx_pxaproductmanager_pi1%5Bproduct%5D=' + currentProductUid
+				);
+			}
 		}
 	};
 

@@ -319,6 +319,9 @@ PXA_PRODUCT_MANAGER_LATEST_VISITED {
             AjaxProducts {
                 1 = latestVisited
             }
+            AjaxJson {
+                1 = addLatestVisitedProduct
+            }
         }
     }
 }

@@ -174,14 +174,6 @@ class ProductController extends AbstractController
 
         // No product found handling
         if ($product !== null) {
-            // save as latest visited only when not in preview mode
-            if (false === $isPreviewMode) {
-                MainUtility::addValueToListCookie(
-                    ProductUtility::LATEST_VISITED_COOKIE_NAME,
-                    $product->getUid(),
-                    ((int)$this->settings['latestVisitedProductsLimit'] + 1)
-                );
-            }
             // Add constant with current product UID to header
             GeneralUtility::makeInstance(PageRenderer::class)->addJsInlineCode(
                 'pxaproductmanager_current_product_uid',
