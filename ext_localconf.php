@@ -6,25 +6,25 @@ defined('TYPO3_MODE') || die;
 
 call_user_func(
     function ($_EXTKEY) {
+        // @codingStandardsIgnoreStart
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
             'Pixelant.' . $_EXTKEY,
             'Pi1',
             [
-                // @codingStandardsIgnoreStart
                 'Product' => 'list, show, wishList, finishOrder, lazyList, comparePreView, compareView, groupedList, promotionList',
-                // @codingStandardsIgnoreEnd
                 'Navigation' => 'show',
                 'AjaxProducts' => 'ajaxLazyList, latestVisited',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList',
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList, addLatestVisitedProduct',
                 'Filter' => 'showFilter'
             ],
             // non-cacheable actions
             [
                 'Product' => 'wishList, finishOrder, comparePreView, compareView',
                 'AjaxProducts' => 'ajaxLazyList, latestVisited',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList'
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList, addLatestVisitedProduct'
             ]
         );
+        // @codingStandardsIgnoreEnd
 
         // Register cart as another plugin. Otherwise it has conflict
         // with product single view
