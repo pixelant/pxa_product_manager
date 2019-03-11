@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 namespace Pixelant\PxaProductManager\LinkHandler;
 
 /***************************************************************
@@ -30,10 +29,12 @@ use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use TYPO3\CMS\Core\Http\ImmediateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Typolink\AbstractTypolinkBuilder;
+use TYPO3\CMS\Frontend\Controller\ErrorController;
 
 class ProductLinkBuilder extends AbstractTypolinkBuilder
 {
@@ -87,6 +88,20 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
 
         if (isset($parameters)) {
             $singleViewPageUid = ConfigurationUtility::getSettingsByPath('pagePid');
+
+            if (empty($singleViewPageUid)) {
+                $site = $GLOBALS['TYPO3_REQUEST']->getAttribute('site');
+                $singleViewPageUid = $site->getConfiguration()['productSingleViewFallbackPid'];
+            }
+
+            if (empty($singleViewPageUid) || (int)$singleViewPageUid === 0) {
+                $response = GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
+                    $GLOBALS['TYPO3_REQUEST'],
+                    'The requested product single view page was not found',
+                    ['The fallback pid is not set']
+                );
+                throw new ImmediateResponseException($response, 1533931329);
+            }
 
             $confLink = [
                 'parameter' => $singleViewPageUid ?: MainUtility::getTSFE()->id,
