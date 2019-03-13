@@ -52,7 +52,9 @@ class SetPageTitleViewHelperTest extends ViewHelperBaseTestcase
         $this->viewHelper
             ->expects($this->atLeastOnce())
             ->method('buildRenderChildrenClosure')
-            ->willReturn(function () {return 'test';});
+            ->willReturn(function () {
+                return 'test';
+            });
         $this->viewHelper->render();
 
         $this->assertEquals($title, $GLOBALS['TSFE']->altPageTitle);
@@ -71,7 +73,9 @@ class SetPageTitleViewHelperTest extends ViewHelperBaseTestcase
         $this->viewHelper
             ->expects($this->atLeastOnce())
             ->method('buildRenderChildrenClosure')
-            ->willReturn(function () {return 'test';});
+            ->willReturn(function () {
+                return 'test';
+            });
         $this->viewHelper->render();
 
         $expect = trim($title);
