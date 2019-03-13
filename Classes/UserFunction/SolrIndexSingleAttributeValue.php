@@ -33,8 +33,10 @@ class SolrIndexSingleAttributeValue
      */
     public function getSingleAttributeValue(
         /** @noinspection PhpUnusedParameterInspection */
+        // @codingStandardsIgnoreStart
         string $content,
         array $parameters
+        // @codingStandardsIgnoreEnd
     ) {
         if (empty($parameters['identifier'])) {
             throw new \UnexpectedValueException('Identifier could not be empty', 1503304897705);

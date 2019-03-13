@@ -164,10 +164,12 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
         /** @var BrowserTreeView $pageTree */
         $pageTree = GeneralUtility::makeInstance(BrowserTreeView::class);
         $pageTree->setLinkParameterProvider($this);
-        $TSConfig = $backendUser->getTSConfig();
-        $pageTree->ext_showNavTitle = (bool)($TSConfig['options.']['pageTree.']['showNavTitle'] ?? false);
-        $pageTree->ext_showPageId = (bool)($TSConfig['options.']['pageTree.']['showPageIdWithTitle'] ?? false);
-        $pageTree->ext_showPathAboveMounts = (bool)($TSConfig['options.']['pageTree.']['showPathAboveMounts'] ?? false);
+        $pageTree->ext_showNavTitle =
+            (bool)($backendUser->getTSConfigVal('options.pageTree.showNavTitle') ?? false);
+        $pageTree->ext_showPageId =
+            (bool)($backendUser->getTSConfigVal('options.pageTree.showPageIdWithTitle') ?? false);
+        $pageTree->ext_showPathAboveMounts =
+            (bool)($backendUser->getTSConfigVal('options.pageTree.showPathAboveMounts') ?? false);
         $pageTree->addField('nav_title');
 
         $this->view->assignMultiple([
