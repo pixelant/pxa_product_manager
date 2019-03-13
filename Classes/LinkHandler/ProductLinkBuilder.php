@@ -89,18 +89,18 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
         if (isset($parameters)) {
             $singleViewPageUid = ConfigurationUtility::getSettingsByPath('pagePid');
 
-            if (empty($singleViewPageUid)) {
+            if (empty($singleViewPageUid) && !empty($GLOBALS['TYPO3_REQUEST'])) {
                 $site = $GLOBALS['TYPO3_REQUEST']->getAttribute('site');
                 $singleViewPageUid = $site->getConfiguration()['productSingleViewFallbackPid'];
-            }
 
-            if (empty($singleViewPageUid) || (int)$singleViewPageUid === 0) {
-                $response = GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
-                    $GLOBALS['TYPO3_REQUEST'],
-                    'The requested product single view page was not found',
-                    ['The fallback pid is not set']
-                );
-                throw new ImmediateResponseException($response, 1533931329);
+                if (empty($singleViewPageUid) || (int)$singleViewPageUid === 0) {
+                    $response = GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
+                        $GLOBALS['TYPO3_REQUEST'],
+                        'The requested product single view page was not found',
+                        ['The fallback pid is not set']
+                    );
+                    throw new ImmediateResponseException($response, 1533931329);
+                }
             }
 
             $confLink = [
