@@ -31,7 +31,6 @@ use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Http\ImmediateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Configuration\AbstractConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\FrontendConfigurationManager;
@@ -161,8 +160,7 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
      */
     protected function checkExtbaseMapping()
     {
-        $version = VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getNumericTypo3Version());
-        if ($version['version_main'] == 9) {
+        if (!MainUtility::isBelowTypo3v9()) {
             $className = 'Pixelant\PxaProductManager\Domain\Model\Category';
             $configuration = $this->configurationManager->getConfiguration(null, null);
             if (empty($configuration['persistence']['classes'][$className]['mapping']['tableName'])) {
