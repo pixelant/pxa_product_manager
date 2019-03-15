@@ -28,7 +28,7 @@ interface DemandInterface
      *
      * @return string
      */
-    public function getOrderBy(): string ;
+    public function getOrderBy(): string;
 
     /**
      * Query order direction

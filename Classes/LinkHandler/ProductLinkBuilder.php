@@ -31,7 +31,11 @@ use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Http\ImmediateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\AbstractConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\FrontendConfigurationManager;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Service\EnvironmentService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Typolink\AbstractTypolinkBuilder;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
@@ -49,6 +53,11 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
     protected $categoryRepository;
 
     /**
+     * @var AbstractConfigurationManager
+     */
+    protected $configurationManager;
+
+    /**
      * AbstractTypolinkBuilder constructor.
      *
      * @param $contentObjectRenderer ContentObjectRenderer
@@ -61,6 +70,13 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
 
         $this->productRepository = $objectManager->get(ProductRepository::class);
         $this->categoryRepository = $objectManager->get(CategoryRepository::class);
+
+        $environmentService = $objectManager->get(EnvironmentService::class);
+        if ($environmentService->isEnvironmentInFrontendMode()) {
+            $this->configurationManager = $objectManager->get(FrontendConfigurationManager::class);
+        } else {
+            $this->configurationManager = $objectManager->get(BackendConfigurationManager::class);
+        }
     }
 
     /**
@@ -75,6 +91,8 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
     public function build(array &$linkDetails, string $linkText, string $target, array $conf): array
     {
         $finalUrl = '';
+
+        $this->checkExtbaseMapping();
 
         if (isset($linkDetails['product'])
             && $product = $this->productRepository->findByUid((int)$linkDetails['product'])
@@ -113,5 +131,42 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
         }
 
         return [$finalUrl, $linkText, $target];
+    }
+
+    /**
+     * Checks if extbase mapping is set for PM Category to sys_category
+     *
+     * Workaround to prevent the wrong tablename getting written
+     * in cf_extbase_datamapfactory_datamap for identifier
+     * 'Pixelant%PxaProductManager%Domain%Model%Category'
+     * when LinkBuilder is called from middleware in TYPO3 v9,
+     * e.g. the first request after cache is cleared is a redirec to a Category (PM).
+     *
+     * Since extbase ts configuration isn't loaded when ProductLinkBuilder
+     * is called from middleware, mapping for
+     * 'Pixelant\PxaProductManager\Domain\Model\Category' to 'sys_category'
+     * isn't set and TYPO3 will then assume that the table name
+     * for object is 'tx_pxaproductmanager_domain_model_category'.
+     *
+     * Once set in cache TYPO3 will try to load categories from
+     * 'tx_pxaproductmanager_domain_model_category' instead from 'sys_category'
+     * and exception will be thrown.
+     *
+     * This will make sure the mapping for
+     * 'Pixelant\PxaProductManager\Domain\Model\Category' to 'sys_category'
+     * exists when buildDataMapInternal in DataMapFactory is executed.
+     *
+     * @return void
+     */
+    protected function checkExtbaseMapping()
+    {
+        if (!MainUtility::isBelowTypo3v9()) {
+            $className = 'Pixelant\PxaProductManager\Domain\Model\Category';
+            $configuration = $this->configurationManager->getConfiguration(null, null);
+            if (empty($configuration['persistence']['classes'][$className]['mapping']['tableName'])) {
+                $pmCategoryMapping['persistence']['classes'][$className]['mapping']['tableName'] = 'sys_category';
+                $this->configurationManager->setConfiguration($pmCategoryMapping);
+            }
+        }
     }
 }
