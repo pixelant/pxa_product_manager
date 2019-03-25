@@ -50,4 +50,11 @@ interface DemandInterface
      * @return array
      */
     public function getStoragePid(): array;
+
+    /**
+     * Include discontinued products
+     *
+     * @return bool
+     */
+    public function getIncludeDiscontinued(): bool;
 }
