@@ -204,7 +204,8 @@
 						filters: filteringData,
 						storagePid: storage,
 						orderBy: settings.orderBy,
-						orderDirection: settings.orderDirection
+						orderDirection: settings.orderDirection,
+						includeDiscontinued: settings.includeDiscontinued
 					},
 					pagePid: settings.pagePid,
 					hideFilterOptionsNoResult: hideFilterOptionsNoResult
