@@ -252,6 +252,7 @@ class AbstractController extends ActionController
                 $product['attributesValues'] = $attributeValues;
             }
         }
+        unset($product);
         $attributeUids = $this->filterOutAttributeUidsNotDropDown(array_unique($attributeUids));
 
         foreach ($products as $product) {
