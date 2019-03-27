@@ -91,7 +91,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
+                'eval' => 'datetime,int',
                 'size' => 13,
                 'default' => 0,
                 'range' => [
@@ -106,7 +106,7 @@ return [
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
+                'eval' => 'datetime,int',
                 'size' => 13,
                 'default' => 0,
                 'range' => [
