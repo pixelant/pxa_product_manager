@@ -10,6 +10,7 @@ use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use Pixelant\PxaProductManager\Service\Mail\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
@@ -19,7 +20,6 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -56,6 +56,19 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class ProductController extends AbstractController
 {
+    /**
+     * @var LinkBuilderService
+     */
+    protected $linkBuilderService = null;
+
+    /**
+     * @param LinkBuilderService $builderService
+     */
+    public function injectLinkBuilderService(LinkBuilderService $builderService)
+    {
+        $this->linkBuilderService = $builderService;
+    }
+
     /**
      * Add JS labels for each action
      */
@@ -895,19 +908,16 @@ class ProductController extends AbstractController
      */
     protected function buildProductCanonicalUrl(Product $product)
     {
-        $arguments = MainUtility::buildLinksArguments($product, $product->getFirstCategory());
-
-        $uriBuilder = $this->controllerContext->getUriBuilder();
-        $uriBuilder
-            ->reset()
-            ->setTargetPageUid($this->settings['pageUid'] ?: MainUtility::getTSFE()->id)
-            ->setArguments($arguments)
-            ->setCreateAbsoluteUri(true);
-
-        $url = $uriBuilder->buildFrontendUri();
+        $url = $this->linkBuilderService->buildForProduct(
+            $this->settings['pageUid'] ?: MainUtility::getTSFE()->id,
+            $product,
+            $product->getFirstCategory(),
+            false,
+            true // absolute
+        );
 
         // add only absolute links
-        if (!empty($url) && StringUtility::beginsWith($url, 'http')) {
+        if (!empty($url)) {
             /** @noinspection PhpUndefinedMethodInspection */
             $this->response->addAdditionalHeaderData(
                 '<link rel="canonical" href="' . $url . '">'
