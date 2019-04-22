@@ -1,7 +1,10 @@
 <?php
+
 namespace Pixelant\PxaProductManager\UserFunction;
 
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class SolrProductLink
@@ -31,14 +34,9 @@ class SolrProductLink
             );
         }
 
-        $linkArguments = $this->buildLinksArguments($productUid);
-        $urlParams = [
-            'parameter' => $pagePid,
-            'useCacheHash' => 1,
-            'additionalParams' => '&L=' . $languageUid . '&' . http_build_query($linkArguments),
-        ];
+        $linkBuilder = GeneralUtility::makeInstance(LinkBuilderService::class, $languageUid);
 
-        return $this->cObj->typolink_URL($urlParams);
+        return $linkBuilder->buildForProduct($pagePid, $productUid);
     }
 
     /**
