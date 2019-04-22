@@ -18,11 +18,11 @@ namespace Pixelant\PxaProductManager\Hook;
 
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
-use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -713,10 +713,10 @@ class PageLayoutView
     /**
      * Get flexform service
      *
-     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
+     * @return object|FlexFormService
      */
     protected function getFlexFormService()
     {
-        return MainUtility::getFlexFormService();
+        return GeneralUtility::makeInstance(FlexFormService::class);
     }
 }

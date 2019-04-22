@@ -1073,21 +1073,17 @@ class ProductController extends AbstractController
      */
     protected function allowHiddenRecords()
     {
-        if (MainUtility::isBelowTypo3v9()) {
-            MainUtility::getTSFE()->showHiddenRecords = true;
-        } else {
-            $context = GeneralUtility::makeInstance(Context::class);
-            /** @var VisibilityAspect $visibilityAspect */
-            $visibilityAspect = $context->getAspect('visibility');
+        $context = GeneralUtility::makeInstance(Context::class);
+        /** @var VisibilityAspect $visibilityAspect */
+        $visibilityAspect = $context->getAspect('visibility');
 
-            $newVisibilityAspect = GeneralUtility::makeInstance(
-                VisibilityAspect::class,
-                $visibilityAspect->includeHiddenPages(),
-                true,
-                $visibilityAspect->includeDeletedRecords()
-            );
+        $newVisibilityAspect = GeneralUtility::makeInstance(
+            VisibilityAspect::class,
+            $visibilityAspect->includeHiddenPages(),
+            true,
+            $visibilityAspect->includeDeletedRecords()
+        );
 
-            $context->setAspect('visibility', $newVisibilityAspect);
-        }
+        $context->setAspect('visibility', $newVisibilityAspect);
     }
 }

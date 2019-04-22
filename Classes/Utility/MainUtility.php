@@ -28,10 +28,6 @@ namespace Pixelant\PxaProductManager\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Controller\NavigationController;
-use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
@@ -265,48 +261,14 @@ class MainUtility
     }
 
     /**
-     * Check if typo3 version is below 9
-     * @TODO remove it after support of TYPO3 8 is stopped
-     * @return bool
-     */
-    public static function isBelowTypo3v9(): bool
-    {
-        static $isBelowTypo39;
-
-        if ($isBelowTypo39 === null) {
-            $isBelowTypo39 = version_compare(TYPO3_version, '9.0', '<');
-        }
-
-        return $isBelowTypo39;
-    }
-
-    /**
-     * Get flexform service
-     *
-     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
-     */
-    public static function getFlexFormService()
-    {
-        if (self::isBelowTypo3v9()) {
-            return GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\FlexFormService');
-        } else {
-            return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Service\\FlexFormService');
-        }
-    }
-
-    /**
      * Check if FE user is logged in
      *
      * @return bool
      */
     public static function isFrontendLogin(): bool
     {
-        if (self::isBelowTypo3v9()) {
-            return self::getTSFE()->loginUser;
-        } else {
-            $context = GeneralUtility::makeInstance(Context::class);
-            return $context->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
-        }
+        $context = GeneralUtility::makeInstance(Context::class);
+        return $context->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
     }
 
     /**
@@ -316,11 +278,7 @@ class MainUtility
      */
     public static function isBackendLogin(): bool
     {
-        if (self::isBelowTypo3v9()) {
-            return self::getTSFE()->beUserLogin;
-        } else {
-            $context = GeneralUtility::makeInstance(Context::class);
-            return $context->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
-        }
+        $context = GeneralUtility::makeInstance(Context::class);
+        return $context->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
     }
 }
