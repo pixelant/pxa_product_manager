@@ -32,6 +32,7 @@ use Pixelant\PxaProductManager\Controller\NavigationController;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Context\Context;
@@ -93,7 +94,7 @@ class MainUtility
         if ($activeCategoryUid === null && is_array($args)) {
             // Find latest category argument
             foreach (array_reverse($args) as $argKey => $argValue) {
-                if (StringUtility::beginsWith($argKey, NavigationController::CATEGORY_ARG_START_WITH)) {
+                if (StringUtility::beginsWith($argKey, LinkBuilderService::CATEGORY_ARGUMENT_START_WITH)) {
                     $activeCategoryUid = (int)$argValue;
                     break;
                 }
