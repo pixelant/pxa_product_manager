@@ -10,7 +10,7 @@ use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Service\OrderMailService;
+use Pixelant\PxaProductManager\Service\Mail\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
