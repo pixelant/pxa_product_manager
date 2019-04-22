@@ -302,7 +302,6 @@ call_user_func(function () {
         $newCategoryColumns['pxapm_slug'] = [
             'exclude' => true,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:pages.slug',
-            'displayCond' => 'USER:' . \TYPO3\CMS\Core\Compatibility\PseudoSiteTcaDisplayCondition::class . '->isInPseudoSite:pages:false',
             'config' => [
                 'type' => 'slug',
                 'size' => 50,
@@ -311,12 +310,10 @@ call_user_func(function () {
                     'replacements' => [
                         '/' => ''
                     ],
-                    'prefixParentPageSlug' => true
                 ],
                 'fallbackCharacter' => '-',
                 'eval' => 'uniqueInPid',
                 'default' => '',
-                'prependSlash' => true
             ]
         ];
 
