@@ -3,7 +3,6 @@
 namespace Pixelant\PxaProductManager\UserFunction;
 
 use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
-use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -37,16 +36,5 @@ class SolrProductLink
         $linkBuilder = GeneralUtility::makeInstance(LinkBuilderService::class, $languageUid);
 
         return $linkBuilder->buildForProduct($pagePid, $productUid);
-    }
-
-    /**
-     * Wrapper for testing purpose
-     *
-     * @param int $productUid
-     * @return array
-     */
-    protected function buildLinksArguments(int $productUid): array
-    {
-        return MainUtility::buildLinksArguments($productUid);
     }
 }
