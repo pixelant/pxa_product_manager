@@ -21,25 +21,6 @@ class MainUtilityTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function buildLinkArgumentsOnlyProductIntegerNoCategories()
-    {
-        $product = 100;
-
-        $expected = [
-            'tx_pxaproductmanager_pi1' => [
-                'product' => $product
-            ]
-        ];
-
-        self::assertEquals(
-            $expected,
-            MainUtility::buildLinksArguments($product)
-        );
-    }
-
-    /**
-     * @test
-     */
     public function parseFluidStringReturnParsedString()
     {
         $var1 = 'Test test';
