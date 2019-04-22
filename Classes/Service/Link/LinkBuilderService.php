@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Traits\SignalSlot\DispatcherTrait;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -32,6 +33,30 @@ class LinkBuilderService
      * @var array
      */
     protected static $cacheCategories = [];
+
+    /**
+     * Language uid
+     *
+     * @var int
+     */
+    protected $languageUid = 0;
+
+    /**
+     * Initialize
+     *
+     * @param int|null $languageUid
+     */
+    public function __construct(int $languageUid = null)
+    {
+        if ($languageUid !== null) {
+            $this->languageUid = $languageUid;
+        } elseif (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_FE) {
+            /** @var SiteLanguage $siteLanguage */
+            $siteLanguage = $GLOBALS['TYPO3_REQUEST']->getAttribute('language');
+
+            $this->languageUid = $siteLanguage->getLanguageId();
+        }
+    }
 
     /**
      * Get product single view link
@@ -81,6 +106,14 @@ class LinkBuilderService
     }
 
     /**
+     * @param int $languageUid
+     */
+    public function setLanguageUid(int $languageUid): void
+    {
+        $this->languageUid = $languageUid;
+    }
+
+    /**
      * @param int|Product $product
      * @param int|Category $category
      * @return int
@@ -127,6 +160,7 @@ class LinkBuilderService
 
         $confLink = [
             'parameter' => $pageUid,
+            'language' => $this->languageUid,
             'useCacheHash' => true,
             'additionalParams' => $parameters,
             'forceAbsoluteUrl' => $absolute
