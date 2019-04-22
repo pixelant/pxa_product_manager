@@ -242,7 +242,7 @@ class ProductController extends AbstractController
         $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
 
         // Add after checkout system selected slot
-        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
+        $this->emitSignal(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
 
         // If order form enabled
         if ($this->isOrderFormAllowed()) {
@@ -614,7 +614,7 @@ class ProductController extends AbstractController
             $order->setPid($pid);
         }
 
-        $this->signalSlotDispatcher->dispatch(
+        $this->emitSignal(
             __CLASS__,
             'AfterOrderCreatedBeforeSaving',
             [$order, $productsQuantityData, $orderProducts, $orderConfiguration, $this]
@@ -849,7 +849,7 @@ class ProductController extends AbstractController
             $demand->setOrderByAllowed($settings['orderByAllowed']);
         }
 
-        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
+        $this->emitSignal(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
 
         return $demand;
     }
@@ -1018,7 +1018,7 @@ class ProductController extends AbstractController
          */
 
         // Add a signal slot so other extension could add additional buttons
-        $this->signalSlotDispatcher->dispatch(__CLASS__, 'BeforeProcessingAdditionalButtons', [$product, &$buttons]);
+        $this->emitSignal(__CLASS__, 'BeforeProcessingAdditionalButtons', [$product, &$buttons]);
 
         // Process
         foreach ($buttons as &$button) {

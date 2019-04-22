@@ -29,6 +29,7 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Navigation\CategoriesNavigationTreeBuilder;
+use Pixelant\PxaProductManager\Traits\SignalSlot\DispatcherTrait;
 use Pixelant\PxaProductManager\Utility\CategoryUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Database\Connection;
@@ -50,6 +51,8 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class AbstractController extends ActionController
 {
+    use DispatcherTrait;
+
     /**
      * productRepository
      *
@@ -85,12 +88,6 @@ class AbstractController extends ActionController
      * @inject
      */
     protected $orderConfigurationRepository = null;
-
-    /**
-     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
-     * @inject
-     */
-    protected $signalSlotDispatcher = null;
 
     /**
      * Get category
