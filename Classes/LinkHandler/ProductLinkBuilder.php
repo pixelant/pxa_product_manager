@@ -67,7 +67,7 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
                 }
             }
 
-            $linkBuilder = GeneralUtility::makeInstance(LinkBuilderService::class);
+            $linkBuilder = $this->getLinkBuilder();
 
             $finalUrl = isset($linkDetails['product'])
                 ? $linkBuilder->buildForProduct((int)$singleViewPageUid, (int)$linkDetails['product'])
@@ -75,5 +75,15 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
         }
 
         return [$finalUrl, $linkText, $target];
+    }
+
+    /**
+     * Get link builder
+     *
+     * @return LinkBuilderService
+     */
+    protected function getLinkBuilder(): LinkBuilderService
+    {
+        return GeneralUtility::makeInstance(LinkBuilderService::class);
     }
 }

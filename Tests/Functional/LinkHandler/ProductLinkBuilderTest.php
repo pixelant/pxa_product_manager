@@ -3,9 +3,9 @@
 namespace Pixelant\PxaProductManager\Tests\Functional\LinkHandler;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Pixelant\PxaProductManager\LinkHandler\ProductLinkBuilder;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -15,14 +15,9 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class ProductLinkBuilderTest extends FunctionalTestCase
 {
     /**
-     * @var ProductLinkBuilder
+     * @var ProductLinkBuilder|MockObject
      */
     protected $productLinkBuilder;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ContentObjectRenderer
-     */
-    protected $mockedContentObjectRenderer;
 
     protected $testExtensionsToLoad = ['typo3conf/ext/pxa_product_manager'];
 
@@ -32,12 +27,7 @@ class ProductLinkBuilderTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_category.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_pxaproductmanager_domain_model_product.xml');
 
-        $this->mockedContentObjectRenderer = $this->createPartialMock(ContentObjectRenderer::class, ['typolink_URL']);
-
-        $this->productLinkBuilder = GeneralUtility::makeInstance(
-            ProductLinkBuilder::class,
-            $this->mockedContentObjectRenderer
-        );
+        $this->productLinkBuilder = $this->createPartialMock(ProductLinkBuilder::class, ['getLinkBuilder']);
 
         $tsfe = $this->createMock(TypoScriptFrontendController::class);
 
@@ -76,10 +66,15 @@ class ProductLinkBuilderTest extends FunctionalTestCase
         $linkText = 'Test link';
         $target = '';
 
-        $this->mockedContentObjectRenderer
+        $mockedLinkBuilder = $this->createPartialMock(LinkBuilderService::class, ['buildForProduct']);
+        $mockedLinkBuilder
             ->expects($this->once())
-            ->method('typolink_URL')
-            ->willReturn('');
+            ->method('buildForProduct');
+
+        $this->productLinkBuilder
+            ->expects($this->once())
+            ->method('getLinkBuilder')
+            ->willReturn($mockedLinkBuilder);
 
         $this->productLinkBuilder->build($linkDetails, $linkText, $target, []);
     }
@@ -93,10 +88,15 @@ class ProductLinkBuilderTest extends FunctionalTestCase
         $linkText = 'Test link';
         $target = '';
 
-        $this->mockedContentObjectRenderer
+        $mockedLinkBuilder = $this->createPartialMock(LinkBuilderService::class, ['buildForCategory']);
+        $mockedLinkBuilder
             ->expects($this->once())
-            ->method('typolink_URL')
-            ->willReturn('');
+            ->method('buildForCategory');
+
+        $this->productLinkBuilder
+            ->expects($this->once())
+            ->method('getLinkBuilder')
+            ->willReturn($mockedLinkBuilder);
 
         $this->productLinkBuilder->build($linkDetails, $linkText, $target, []);
     }
