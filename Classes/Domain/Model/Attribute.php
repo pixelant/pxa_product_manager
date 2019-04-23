@@ -107,7 +107,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * options
      *
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @cascade
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option>
      */
@@ -152,7 +152,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * Icon
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $icon;
 

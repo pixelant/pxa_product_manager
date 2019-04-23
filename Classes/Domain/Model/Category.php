@@ -42,7 +42,7 @@ class Category extends CategoryExtbase
      * parent
      *
      * @var \Pixelant\PxaProductManager\Domain\Model\Category|NULL
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $parent;
 
@@ -70,7 +70,7 @@ class Category extends CategoryExtbase
      * Image
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $image;
 
@@ -95,7 +95,7 @@ class Category extends CategoryExtbase
      * Banner Image
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $bannerImage;
 
@@ -118,7 +118,7 @@ class Category extends CategoryExtbase
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $subCategories;
 
