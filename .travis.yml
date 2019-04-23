@@ -13,7 +13,7 @@ addons:
       - parallel
 
 cache:
-  directories:
+  directories:LinkViewHelpe
     - $HOME/.composer/cache
 
 sudo: false

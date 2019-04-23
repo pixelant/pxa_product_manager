@@ -42,7 +42,9 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
         $this->registerUniversalTagAttributes();
 
         $this->registerArgument('product', 'mixed', 'Product to link to single view', false, null);
+        // @codingStandardsIgnoreStart
         $this->registerArgument('category', 'mixed', 'Category to link to list view or product sinle view', false, null);
+        // @codingStandardsIgnoreEnd
         $this->registerArgument('pageUid', 'int', 'Target page uid', false, null);
         $this->registerArgument('excludeCategories', 'bool', 'Exclude categories from path', false, false);
         $this->registerArgument('target', 'string', 'Link target', false, null);
