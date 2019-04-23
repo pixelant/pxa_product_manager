@@ -7,9 +7,10 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Traits\SignalSlot\DispatcherTrait;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -51,10 +52,9 @@ class LinkBuilderService
         if ($languageUid !== null) {
             $this->languageUid = $languageUid;
         } elseif (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_FE) {
-            /** @var SiteLanguage $siteLanguage */
-            $siteLanguage = $GLOBALS['TYPO3_REQUEST']->getAttribute('language');
-
-            $this->languageUid = $siteLanguage->getLanguageId();
+            /** @var LanguageAspect $languageAspect */
+            $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
+            $this->languageUid = $languageAspect->getId();
         }
     }
 
