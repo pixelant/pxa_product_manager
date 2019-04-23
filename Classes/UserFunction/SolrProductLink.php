@@ -33,8 +33,17 @@ class SolrProductLink
             );
         }
 
-        $linkBuilder = GeneralUtility::makeInstance(LinkBuilderService::class, $languageUid);
+        return $this->getLinkBuilder($languageUid)->buildForProduct($pagePid, $productUid);
+    }
 
-        return $linkBuilder->buildForProduct($pagePid, $productUid);
+    /**
+     * Get link builder
+     *
+     * @param int $languageUid
+     * @return LinkBuilderService
+     */
+    public function getLinkBuilder(int $languageUid): LinkBuilderService
+    {
+        return GeneralUtility::makeInstance(LinkBuilderService::class, $languageUid);
     }
 }
