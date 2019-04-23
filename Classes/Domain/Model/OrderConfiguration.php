@@ -23,7 +23,7 @@ class OrderConfiguration extends AbstractEntity
     protected $name = '';
 
     /**
-     * @cascade
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\OrderFormField>
      */
     protected $formFields = null;

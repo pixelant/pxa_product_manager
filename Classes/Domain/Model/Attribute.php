@@ -106,7 +106,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * options
      *
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @cascade
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option>
      */
     protected $options;
