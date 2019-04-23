@@ -44,7 +44,7 @@ class LinkBuilderService
     /**
      * Initialize
      *
-     * @param int|null $languageUid
+     * @param int|null $languageUid Provide language to generate urls
      */
     public function __construct(int $languageUid = null)
     {
@@ -61,11 +61,11 @@ class LinkBuilderService
     /**
      * Get product single view link
      *
-     * @param int $pageUid
-     * @param int|Product $product
-     * @param int|Category $category
-     * @param bool $excludeCategories
-     * @param bool $absolute
+     * @param int $pageUid Page Uid
+     * @param int|Product $product Product object or UID
+     * @param int|Category $category Category object or UID to override first product category
+     * @param bool $excludeCategories Exclude categories from product single view url
+     * @param bool $absolute Absolute link
      * @return string
      */
     public function buildForProduct(
@@ -89,9 +89,9 @@ class LinkBuilderService
     /**
      * Get link for category list view
      *
-     * @param int $pageUid
-     * @param int|Category $category
-     * @param bool $absolute
+     * @param int $pageUid Page Uid
+     * @param int|Category $category Category object or UID to generate url for list view
+     * @param bool $absolute Absolute link
      * @return string
      */
     public function buildForCategory(
@@ -103,6 +103,20 @@ class LinkBuilderService
         $arguments = $this->getCategoriesArguments($categoryUid);
 
         return $this->buildUri($pageUid, 'list', $arguments, $absolute);
+    }
+
+    /**
+     * Build link for given arguments (For example from breadcrumbs)
+     *
+     * @param int $pageUid
+     * @param array $arguments
+     * @return string
+     */
+    public function buildForArguments(int $pageUid, array $arguments): string
+    {
+        $action = isset($arguments['product']) ? 'show' : 'list';
+
+        return $this->buildUri($pageUid, $action, $arguments);
     }
 
     /**

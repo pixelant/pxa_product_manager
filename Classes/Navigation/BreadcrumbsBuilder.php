@@ -26,11 +26,11 @@ namespace Pixelant\PxaProductManager\Navigation;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Controller\NavigationController;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -59,6 +59,11 @@ class BreadcrumbsBuilder
     protected $categoryRepository;
 
     /**
+     * @var LinkBuilderService
+     */
+    protected $linkBuilder = null;
+
+    /**
      * Initialize repositories
      */
     public function __construct()
@@ -68,6 +73,7 @@ class BreadcrumbsBuilder
 
         $this->productRepository = $objectManager->get(ProductRepository::class);
         $this->categoryRepository = $objectManager->get(CategoryRepository::class);
+        $this->linkBuilder = GeneralUtility::makeInstance(LinkBuilderService::class);
     }
 
     /**
@@ -78,7 +84,7 @@ class BreadcrumbsBuilder
      * @return array
      */
     public function buildBreadcrumbs(
-        /** @noinspection PhpUnusedParameterInspection */ string $content,
+        string $content,
         array $configuration
     ): array {
         $breadcrumbs = [];
@@ -86,7 +92,7 @@ class BreadcrumbsBuilder
 
         if (is_array($arguments)) {
             foreach ($arguments as $argument => $value) {
-                if (StringUtility::beginsWith($argument, NavigationController::CATEGORY_ARG_START_WITH)) {
+                if (StringUtility::beginsWith($argument, LinkBuilderService::CATEGORY_ARGUMENT_START_WITH)) {
                     /** @var Category $category */
                     $value = (int)$value;
                     $category = $this->categoryRepository->findByUid($value);
@@ -107,16 +113,6 @@ class BreadcrumbsBuilder
             if (is_object($product)) {
                 $url = $this->buildLink($breadcrumbs, $product->getUid(), true);
 
-                // @codingStandardsIgnoreStart
-                if ((int)$configuration['skipPostVarDefaultSegment'] === 0
-                    && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['realurl']['_DEFAULT']['postVarSets']['_DEFAULT']['product'])) {
-                    // static postVar realurl
-                    $breadcrumbs[] = [
-                        'title' => 'product',
-                        '_OVERRIDE_HREF' => $url,
-                        'ITEM_STATE' => 'CUR'
-                    ];
-                }
                 // @codingStandardsIgnoreEnd
                 $breadcrumbs[] = [
                     'title' => $product->getAlternativeTitle() ?: $product->getName(),
@@ -150,19 +146,14 @@ class BreadcrumbsBuilder
         $i = 0;
         foreach ($breadcrumbs as $breadcrumb) {
             if ($breadcrumb['uid']) {
-                $parameters[NavigationController::CATEGORY_ARG_START_WITH . $i++] = $breadcrumb['uid'];
+                $parameters[LinkBuilderService::CATEGORY_ARGUMENT_START_WITH . $i++] = $breadcrumb['uid'];
             }
         }
 
         // now add actual parameter
-        $key = $isProduct ? 'product' : NavigationController::CATEGORY_ARG_START_WITH . $i;
+        $key = $isProduct ? 'product' : LinkBuilderService::CATEGORY_ARGUMENT_START_WITH . $i;
         $parameters[$key] = $value;
 
-        return $this->cObj->getTypoLink_URL(
-            MainUtility::getTSFE()->id,
-            [
-                'tx_pxaproductmanager_pi1' => $parameters
-            ]
-        );
+        return $this->linkBuilder->buildForArguments((int)MainUtility::getTSFE()->id, $parameters);
     }
 }
