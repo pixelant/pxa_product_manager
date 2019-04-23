@@ -14,6 +14,7 @@ use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Validation\Validator\RequiredValidator;
 use Pixelant\PxaProductManager\Validation\ValidatorResolver;
@@ -71,7 +72,7 @@ class ProductControllerTest extends UnitTestCase
 
         $_GET = [
             'tx_pxaproductmanager_pi1' => [
-                NavigationController::CATEGORY_ARG_START_WITH . '0' => $category
+                LinkBuilderService::CATEGORY_ARGUMENT_START_WITH . '0' => $category
             ]
         ];
 

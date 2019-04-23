@@ -6,6 +6,7 @@ use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Controller\NavigationController;
 use Pixelant\PxaProductManager\Navigation\BreadcrumbsBuilder;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -20,6 +21,11 @@ class BreadcrumbsBuilderTest extends UnitTestCase
      */
     protected $mockedBreadcrumbsBuilder;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|AccessibleMockObjectInterface|LinkBuilderService
+     */
+    protected $mockedLinkBuilder;
+
     protected function setUp()
     {
         $this->mockedBreadcrumbsBuilder = $this->getAccessibleMock(
@@ -30,10 +36,9 @@ class BreadcrumbsBuilderTest extends UnitTestCase
             false
         );
 
-        $this->mockedBreadcrumbsBuilder->cObj = $this->createPartialMock(
-            ContentObjectRenderer::class,
-            ['getTypoLink_URL']
-        );
+        $this->mockedLinkBuilder = $this->createPartialMock(LinkBuilderService::class, ['buildForArguments']);
+
+        $this->inject($this->mockedBreadcrumbsBuilder, 'linkBuilder', $this->mockedLinkBuilder);
 
         $tsfe = $this->getAccessibleMock(
             TypoScriptFrontendController::class,
@@ -65,20 +70,17 @@ class BreadcrumbsBuilderTest extends UnitTestCase
             ['uid' => $category4],
         ];
 
-        $linkParams = [
-            NavigationController::CATEGORY_ARG_START_WITH . '0' => $category1,
-            NavigationController::CATEGORY_ARG_START_WITH . '1' => $category2,
-            NavigationController::CATEGORY_ARG_START_WITH . '2' => $category3,
-            NavigationController::CATEGORY_ARG_START_WITH . '3' => $category4,
-            NavigationController::CATEGORY_ARG_START_WITH . '4' => $currentCategory
-        ];
         $expectParameters = [
-            'tx_pxaproductmanager_pi1' => $linkParams
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '0' => $category1,
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '1' => $category2,
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '2' => $category3,
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '3' => $category4,
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '4' => $currentCategory
         ];
 
-        $this->mockedBreadcrumbsBuilder->cObj
+        $this->mockedLinkBuilder
             ->expects($this->once())
-            ->method('getTypoLink_URL')
+            ->method('buildForArguments')
             ->with(
                 123, // page uid
                 $expectParameters
@@ -104,20 +106,17 @@ class BreadcrumbsBuilderTest extends UnitTestCase
             ['uid' => $category4],
         ];
 
-        $linkParams = [
-            NavigationController::CATEGORY_ARG_START_WITH . '0' => $category1,
-            NavigationController::CATEGORY_ARG_START_WITH . '1' => $category2,
-            NavigationController::CATEGORY_ARG_START_WITH . '2' => $category3,
-            NavigationController::CATEGORY_ARG_START_WITH . '3' => $category4,
+        $expectParameters = [
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '0' => $category1,
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '1' => $category2,
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '2' => $category3,
+            LinkBuilderService::CATEGORY_ARGUMENT_START_WITH  . '3' => $category4,
             'product' => $product
         ];
-        $expectParameters = [
-            'tx_pxaproductmanager_pi1' => $linkParams
-        ];
 
-        $this->mockedBreadcrumbsBuilder->cObj
+        $this->mockedLinkBuilder
             ->expects($this->once())
-            ->method('getTypoLink_URL')
+            ->method('buildForArguments')
             ->with(
                 123, // page uid
                 $expectParameters
