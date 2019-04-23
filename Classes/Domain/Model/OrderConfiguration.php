@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
+use TYPO3\CMS\Extbase\Domain\Repository\FrontendUserRepository;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
@@ -48,8 +49,7 @@ class OrderConfiguration extends AbstractEntity
     protected $adminEmails = '';
 
     /**
-     * @var \TYPO3\CMS\Extbase\Domain\Repository\FrontendUserRepository
-     * @inject
+     * @var FrontendUserRepository
      */
     protected $frontendUserRepository = null;
 
@@ -80,6 +80,14 @@ class OrderConfiguration extends AbstractEntity
     public function __construct()
     {
         $this->initStorageObjects();
+    }
+
+    /**
+     * @param FrontendUserRepository $frontendUserRepository
+     */
+    public function injectFrontendUserRepository(FrontendUserRepository $frontendUserRepository)
+    {
+        $this->frontendUserRepository = $frontendUserRepository;
     }
 
     /**

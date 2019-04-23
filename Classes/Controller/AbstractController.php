@@ -28,6 +28,11 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
+use Pixelant\PxaProductManager\Domain\Repository\FilterRepository;
+use Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository;
+use Pixelant\PxaProductManager\Domain\Repository\OrderRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Navigation\CategoriesNavigationTreeBuilder;
 use Pixelant\PxaProductManager\Traits\SignalSlot\DispatcherTrait;
 use Pixelant\PxaProductManager\Utility\CategoryUtility;
@@ -56,38 +61,73 @@ class AbstractController extends ActionController
     /**
      * productRepository
      *
-     * @var \Pixelant\PxaProductManager\Domain\Repository\ProductRepository
-     * @inject
+     * @var ProductRepository
      */
     protected $productRepository = null;
 
     /**
      * productRepository
      *
-     * @var \Pixelant\PxaProductManager\Domain\Repository\FilterRepository
-     * @inject
+     * @var FilterRepository
      */
     protected $filterRepository = null;
 
     /**
      * categoryRepository
      *
-     * @var \Pixelant\PxaProductManager\Domain\Repository\CategoryRepository
-     * @inject
+     * @var CategoryRepository
      */
     protected $categoryRepository = null;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderRepository
-     * @inject
+     * @var OrderRepository
      */
     protected $orderRepository = null;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository
-     * @inject
+     * @var OrderConfigurationRepository
      */
     protected $orderConfigurationRepository = null;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function injectProductRepository(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
+     * @param FilterRepository $filterRepository
+     */
+    public function injectFilterRepository(FilterRepository $filterRepository)
+    {
+        $this->filterRepository = $filterRepository;
+    }
+
+    /**
+     * @param CategoryRepository $categoryRepository
+     */
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    /**
+     * @param OrderRepository $orderRepository
+     */
+    public function injectOrderRepository(OrderRepository $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
+
+    /**
+     * @param OrderConfigurationRepository $orderConfigurationRepository
+     */
+    public function injectOrderConfigurationRepository(OrderConfigurationRepository $orderConfigurationRepository)
+    {
+        $this->orderConfigurationRepository = $orderConfigurationRepository;
+    }
 
     /**
      * Get category

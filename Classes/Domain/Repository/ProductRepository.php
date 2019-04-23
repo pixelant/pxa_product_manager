@@ -47,10 +47,17 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 class ProductRepository extends AbstractDemandRepository
 {
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository
-     * @inject
+     * @var AttributeValueRepository
      */
     protected $attributeValueRepository;
+
+    /**
+     * @param AttributeValueRepository $attributeValueRepository
+     */
+    public function injectAttributeValueRepository(AttributeValueRepository $attributeValueRepository)
+    {
+        $this->attributeValueRepository = $attributeValueRepository;
+    }
 
     /**
      * Override basic method. Set special ordering for categories if it's not multiple
