@@ -20,7 +20,6 @@ lib.pxaProductManager {
             special = userfunction
             special {
                 userFunc = Pixelant\PxaProductManager\Navigation\BreadcrumbsBuilder->buildBreadcrumbs
-                skipPostVarDefaultSegment = 0
             }
         }
 
