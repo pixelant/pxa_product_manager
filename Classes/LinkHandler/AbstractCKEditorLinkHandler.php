@@ -27,6 +27,7 @@ namespace Pixelant\PxaProductManager\LinkHandler;
 
 use Pixelant\PxaProductManager\Backend\Tree\BrowserTreeView;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\RecordList\ElementBrowserRecordList;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -36,6 +37,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\LinkHandling\LinkService;
 use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Recordlist\LinkHandler\AbstractLinkHandler;
@@ -71,7 +73,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
     /**
      * @var int
      */
-    protected $pid;
+    protected $pid = 0;
 
     /**
      * Name of array key inside url parameters
@@ -185,7 +187,9 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
      */
     public function isCurrentlySelectedItem(array $values)
     {
-        return !empty($this->linkParts) && $this->pid === (int)$values['pid'];
+        $compareToPid = $this->expandPage ?: $this->pid;
+
+        return $compareToPid === (int)$values['pid'];
     }
 
     /**
@@ -217,7 +221,12 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
      */
     public function getBodyTagAttributes()
     {
-        return [];
+        return [
+            'data-typolink-template' => GeneralUtility::makeInstance(LinkService::class)->asString([
+                'type' => 'pxappm',
+                $this->linkPartName => '###RECORD_UID###'
+            ])
+        ];
     }
 
     /**
@@ -291,63 +300,36 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
                 $this->iconFactory->getIconForRecord('pages', $activePageRecord, Icon::SIZE_SMALL)->render()
             );
 
-            // Look up tt_content elements from the expanded page
-            /** @var QueryBuilder $queryBuilder */
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getQueryBuilderForTable($this->tableName);
+            $permsClause = $this->getBackendUser()->getPagePermsClause(Permission::PAGE_SHOW);
+            $pageInfo = BackendUtility::readPageAccess($pageId, $permsClause);
 
-            /** @noinspection PhpParamsInspection */
-            $queryBuilder->getRestrictions()
-                ->removeAll()
-                ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
-                ->add(GeneralUtility::makeInstance(BackendWorkspaceRestriction::class));
+            /** @var ElementBrowserRecordList $dbList */
+            $dbList = GeneralUtility::makeInstance(ElementBrowserRecordList::class);
+            $dbList->setOverrideUrlParameters($this->getUrlParameters([]));
+            $dbList->thisScript = $this->getScriptUrl();
+            $dbList->thumbs = false;
+            $dbList->setIsEditable(false);
+            $dbList->calcPerms = $this->getBackendUser()->calcPerms($pageInfo);
+            $dbList->noControlPanels = true;
+            $dbList->clickMenuEnabled = false;
+            $dbList->tableList = $this->tableName;
 
-            $records = $queryBuilder
-                ->select('*')
-                ->from($this->tableName)
-                ->where(
-                    $queryBuilder->expr()->eq(
-                        'pid',
-                        $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT)
-                    ),
-                    $queryBuilder->expr()->orX(
-                        $queryBuilder->expr()->eq(
-                            'sys_language_uid',
-                            $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                        ),
-                        $queryBuilder->expr()->eq(
-                            'sys_language_uid',
-                            $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
-                        )
-                    )
-                )
-                ->orderBy('uid', 'DESC')
-                ->execute()
-                ->fetchAll();
+            $dbList->start(
+                $pageId,
+                GeneralUtility::_GP('table'),
+                MathUtility::forceIntegerInRange(GeneralUtility::_GP('pointer'), 0, 100000),
+                GeneralUtility::_GP('search_field'),
+                GeneralUtility::_GP('search_levels'),
+                GeneralUtility::_GP('showLimit')
+            );
 
-            // Enrich list of records
-            foreach ($records as &$record) {
-                $record['url'] = GeneralUtility::makeInstance(LinkService::class)->asString([
-                    'type' => 'pxappm',
-                    $this->linkPartName => $record['uid']
-                ]);
+            $dbList->setDispFields();
+            $dbList->generateList();
 
-                $record['isSelected'] = !empty($this->linkParts)
-                    && (int)$this->linkParts['url'][$this->linkPartName] === (int)$record['uid'];
-                $record['icon'] = $this->iconFactory->getIconForRecord(
-                    $this->tableName,
-                    $record,
-                    Icon::SIZE_SMALL
-                )->render();
+            $dbListHTML = $dbList->getSearchBox();
+            $dbListHTML .= $dbList->HTMLcode;
 
-                $record['title'] = BackendUtility::getRecordTitle(
-                    $this->tableName,
-                    $record,
-                    true
-                );
-            }
-
-            $this->view->assign('records', $records);
+            $this->view->assign('dbListHTML', $dbListHTML);
         }
     }
 
