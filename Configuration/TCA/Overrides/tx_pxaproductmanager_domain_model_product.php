@@ -18,23 +18,5 @@ call_user_func(function () {
     );
 
     $columns = &$GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns'];
-
     $columns['categories']['onChange'] = 'reload';
-
-    // Enable slug configuration
-    if (version_compare(TYPO3_branch, '9.5', '>=')) {
-        $columns['slug']['config'] = [
-            'type' => 'slug',
-            'size' => 50,
-            'generatorOptions' => [
-                'fields' => ['name'],
-                'replacements' => [
-                    '/' => ''
-                ],
-            ],
-            'fallbackCharacter' => '-',
-            'eval' => 'uniqueInPid',
-            'default' => ''
-        ];
-    }
 });

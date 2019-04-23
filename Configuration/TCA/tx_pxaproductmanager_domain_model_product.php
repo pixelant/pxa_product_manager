@@ -148,9 +148,17 @@ return (function() {
                 'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.slug',
                 'config' => [
-                    'type' => 'input',
-                    'size' => 30,
-                    'eval' => 'nospace,alphanum_x,lower,unique',
+                    'type' => 'slug',
+                    'size' => 50,
+                    'generatorOptions' => [
+                        'fields' => ['name'],
+                        'replacements' => [
+                            '/' => ''
+                        ],
+                    ],
+                    'fallbackCharacter' => '-',
+                    'eval' => 'uniqueInPid',
+                    'default' => ''
                 ]
             ],
             'sku' => [

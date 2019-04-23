@@ -37,13 +37,21 @@ call_user_func(function () {
                 'size' => 30,
             ]
         ],
-        'path_segment' => [
-            'exclude' => 0,
-            'label' => $ll . 'tx_pxaproductmanager_domain_model_product.path_segment',
+        'pxapm_slug' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:pages.slug',
             'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'eval' => 'nospace,alphanum_x,lower'
+                'type' => 'slug',
+                'size' => 50,
+                'generatorOptions' => [
+                    'fields' => ['title'],
+                    'replacements' => [
+                        '/' => ''
+                    ],
+                ],
+                'fallbackCharacter' => '-',
+                'eval' => 'uniqueInPid',
+                'default' => '',
             ]
         ],
         'pxapm_image' => [
@@ -279,44 +287,22 @@ call_user_func(function () {
         '--div--;' . $ll . 'sys_category.metadata_tab,
         meta_description,
         keywords,
-        alternative_title,
-        path_segment',
+        alternative_title',
         '',
         'after:pxapm_subcategories'
+    );
+
+    // Slug
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+        'sys_category',
+        'pxapm_slug',
+        '',
+        'after:title'
     );
 
     if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\TCAUtility::getCategoriesTCAWhereClause())) {
         $categoriesCongifuration = &$GLOBALS['TCA']['sys_category']['columns']['parent']['config'];
         $categoriesCongifuration['foreign_table_where'] =
             $categoryWhere . ' ' . $categoriesCongifuration['foreign_table_where'];
-    }
-
-    // Product manager slug
-    if (version_compare(TYPO3_branch, '9.5', '>=')) {
-        $newCategoryColumns['pxapm_slug'] = [
-            'exclude' => true,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:pages.slug',
-            'config' => [
-                'type' => 'slug',
-                'size' => 50,
-                'generatorOptions' => [
-                    'fields' => ['title'],
-                    'replacements' => [
-                        '/' => ''
-                    ],
-                ],
-                'fallbackCharacter' => '-',
-                'eval' => 'uniqueInPid',
-                'default' => '',
-            ]
-        ];
-
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $newCategoryColumns);
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-            'sys_category',
-            'pxapm_slug',
-            '',
-            'after:title'
-        );
     }
 });

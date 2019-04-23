@@ -60,9 +60,6 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_product.alternative_title">
                 <source>Alternative title</source>
             </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_product.path_segment">
-                <source>Speaking URL path segment</source>
-            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_product.tab.attributes">
                 <source>Attributes</source>
             </trans-unit>
