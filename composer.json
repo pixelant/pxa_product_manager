@@ -24,7 +24,8 @@
     "pixelant/pxa-pm-importer": "Import products data from different sources"
   },
   "replace": {
-    "pxa_product_manager": "self.version"
+    "pxa_product_manager": "self.version",
+    "typo3-ter/pxa-product-manager": "self.version"
   },
   "autoload": {
     "psr-4": {
