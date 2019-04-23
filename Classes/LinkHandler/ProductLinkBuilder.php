@@ -29,6 +29,7 @@ namespace Pixelant\PxaProductManager\LinkHandler;
 use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Http\ImmediateResponseException;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\ErrorController;
 use TYPO3\CMS\Frontend\Typolink\AbstractTypolinkBuilder;
@@ -52,6 +53,7 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
             $singleViewPageUid = ConfigurationUtility::getSettingsByPath('pagePid');
 
             if (empty($singleViewPageUid) && !empty($GLOBALS['TYPO3_REQUEST'])) {
+                /** @var Site $site */
                 $site = $GLOBALS['TYPO3_REQUEST']->getAttribute('site');
                 $singleViewPageUid = $site->getConfiguration()['productSingleViewFallbackPid'];
 

@@ -158,12 +158,14 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
             ? (int)$request->getQueryParams()['expandPage']
             : 0;
 
+        $tsConfig = $GLOBALS['BE_USER']->getTSConfig();
+
         /** @var BrowserTreeView $pageTree */
         $pageTree = GeneralUtility::makeInstance(BrowserTreeView::class);
         $pageTree->setLinkParameterProvider($this);
-        $pageTree->ext_showNavTitle = (bool)($this->getTSValue('options.pageTree.showNavTitle') ?? false);
-        $pageTree->ext_showPageId = (bool)($this->getTSValue('options.pageTree.showPageIdWithTitle') ?? false);
-        $pageTree->ext_showPathAboveMounts = (bool)($this->getTSValue('options.pageTree.showPathAboveMounts') ?? false);
+        $pageTree->ext_showNavTitle = (bool)($tsConfig['options.']['pageTree.']['showNavTitle'] ?? false);
+        $pageTree->ext_showPageId = (bool)($tsConfig['options.']['pageTree.']['showPageIdWithTitle'] ?? false);
+        $pageTree->ext_showPathAboveMounts = (bool)($tsConfig['options.']['pageTree.']['showPathAboveMounts'] ?? false);
         $pageTree->addField('nav_title');
 
         $this->view->assignMultiple([
@@ -347,20 +349,6 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
 
             $this->view->assign('records', $records);
         }
-    }
-
-    /**
-     * Get TS value
-     *
-     * @param string $path
-     * @return mixed
-     */
-    protected function getTSValue(string $path)
-    {
-        /** @var BackendUserAuthentication $backendUser */
-        $backendUser = $GLOBALS['BE_USER'];
-
-        return $backendUser->getTSConfig($path)['value'];
     }
 
     /**
