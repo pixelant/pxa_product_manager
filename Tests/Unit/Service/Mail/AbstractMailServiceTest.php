@@ -1,6 +1,6 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Tests\Unit\Service;
+namespace Pixelant\PxaProductManager\Tests\Unit\Service\Mail;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Exception\OrderEmailException;
