@@ -311,7 +311,6 @@ CREATE TABLE tx_pxaproductmanager_product_subproducts_product_mm (
 #
 CREATE TABLE sys_category (
   pxapm_image int(11) unsigned DEFAULT '0',
-  path_segment tinytext,
   alternative_title tinytext,
   keywords text,
   meta_description text,
