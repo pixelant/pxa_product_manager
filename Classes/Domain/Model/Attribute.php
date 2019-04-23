@@ -64,7 +64,6 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * name
      *
      * @var \string
-     * @validate NotEmpty
      */
     protected $name = '';
 
@@ -72,7 +71,6 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * type
      *
      * @var \integer
-     * @validate NotEmpty
      */
     protected $type = 0;
 
