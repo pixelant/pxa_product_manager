@@ -71,7 +71,7 @@ class MainUtility
         static $pricingEnabled;
 
         if ($pricingEnabled === null) {
-            $pricingEnabled = (int)ConfigurationUtility::getExtManagerConfigurationByPath('enablePrices') === 1;
+            $pricingEnabled = (int)ConfigurationUtility::getSettingsByPath('showPricesInTemplate') === 1;
         }
 
         return $pricingEnabled;

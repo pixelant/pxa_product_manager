@@ -34,6 +34,7 @@ plugin.tx_pxaproductmanager {
         disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
         showHiddenRecords = {$plugin.tx_pxaproductmanager.settings.showHiddenRecords}
         showInSingleView = {$plugin.tx_pxaproductmanager.settings.showInSingleView}
+        showPricesInTemplate = {$plugin.tx_pxaproductmanager.settings.showPricesInTemplate}
 
         lazyLoading {
             loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}

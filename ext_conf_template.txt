@@ -10,8 +10,5 @@ subProductsRestriction = current_pid
 # cat=basic/enable/140; type=options[LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.none=none,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.pages_tsconfig=page_tsconfig,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.current_pid=current_pid,LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.restriction.siteroot=siteroot]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:extconf.accessoriesRestriction
 accessoriesRestriction = current_pid
 
-# cat=basic/enable/150; type=boolean; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.enablePrices
-enablePrices = 0
-
 # cat=basic; type=user[Pixelant\PxaProductManager\Backend\ExtensionManager\ExtendedOptions->checkoutSystemsSelector]; label=LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xml:extconf.checkoutSystem
 checkoutSystem = default

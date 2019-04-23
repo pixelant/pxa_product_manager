@@ -21,15 +21,6 @@ call_user_func(function () {
 
     $columns['categories']['onChange'] = 'reload';
 
-    if (!\Pixelant\PxaProductManager\Utility\MainUtility::isPricingEnabled()) {
-        $columns['price']['config']['readOnly'] = true;
-        $columns['tax_rate']['config']['readOnly'] = true;
-        // @codingStandardsIgnoreStart
-        $columns['price']['label'] = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_product.price_disabled';
-        $columns['tax_rate']['label'] = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_product.tax_rate.disabled';
-        // @codingStandardsIgnoreEnd
-    }
-
     // Enable slug configuration
     if (version_compare(TYPO3_branch, '9.5', '>=')) {
         $columns['slug']['config'] = [

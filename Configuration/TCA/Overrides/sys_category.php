@@ -291,12 +291,6 @@ call_user_func(function () {
             $categoryWhere . ' ' . $categoriesCongifuration['foreign_table_where'];
     }
 
-    if (!\Pixelant\PxaProductManager\Utility\MainUtility::isPricingEnabled()) {
-        $columns = &$GLOBALS['TCA']['sys_category']['columns'];
-        $columns['pxapm_tax_rate']['config']['readOnly'] = true;
-        $columns['pxapm_tax_rate']['label'] = $ll . 'sys_category.pxapm_tax_rate.disabled';
-    }
-
     // Product manager slug
     if (version_compare(TYPO3_branch, '9.5', '>=')) {
         $newCategoryColumns['pxapm_slug'] = [

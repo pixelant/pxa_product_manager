@@ -69,10 +69,10 @@ class ConfigurationUtilityTest extends UnitTestCase
      */
     public function readFromExtConfigurationByPathReturnValueOfSetting()
     {
-        $path = 'enablePrices';
+        $path = 'test';
 
         $this->assertEquals(
-            1,
+            'value',
             ConfigurationUtility::getExtManagerConfigurationByPath($path)
         );
     }
@@ -224,7 +224,6 @@ class ConfigurationUtilityTest extends UnitTestCase
     protected function getExtensionConfiguration()
     {
         return [
-            'enablePrices' => 1,
             'test' => 'value',
             'deepSettings' => [
                 'test' => 123

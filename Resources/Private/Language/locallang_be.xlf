@@ -305,9 +305,6 @@
             <trans-unit id="extconf.restriction.none" xml:space="preserve">
                 <source>No restriction</source>
             </trans-unit>
-            <trans-unit id="extconf.enablePrices">
-                <source>Enable products pricing</source>
-            </trans-unit>
             <trans-unit id="extconf.checkoutSystem">
                 <source>Checkout system</source>
             </trans-unit>
