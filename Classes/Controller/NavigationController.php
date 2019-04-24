@@ -36,11 +36,6 @@ use TYPO3\CMS\Core\Messaging\FlashMessage;
 class NavigationController extends AbstractController
 {
     /**
-     * prefix of categories arguments
-     */
-    const CATEGORY_ARG_START_WITH = 'category_';
-
-    /**
      * Action show
      */
     public function showAction()

@@ -64,7 +64,6 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * name
      *
      * @var \string
-     * @validate NotEmpty
      */
     protected $name = '';
 
@@ -72,7 +71,6 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * type
      *
      * @var \integer
-     * @validate NotEmpty
      */
     protected $type = 0;
 
@@ -107,8 +105,8 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * options
      *
-     * @lazy
-     * @cascade
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option>
      */
     protected $options;
@@ -152,7 +150,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * Icon
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $icon;
 

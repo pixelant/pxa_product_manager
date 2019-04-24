@@ -34,6 +34,7 @@ plugin.tx_pxaproductmanager {
         disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
         showHiddenRecords = {$plugin.tx_pxaproductmanager.settings.showHiddenRecords}
         showInSingleView = {$plugin.tx_pxaproductmanager.settings.showInSingleView}
+        showPricesInTemplate = {$plugin.tx_pxaproductmanager.settings.showPricesInTemplate}
 
         lazyLoading {
             loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
@@ -230,12 +231,6 @@ page {
         }
     }
 [end]
-
-# Enable single view action if product is set
-[globalVar = GP:tx_pxaproductmanager_pi1|product > 0]
-    config.defaultGetVars {
-        tx_pxaproductmanager_pi1.action = show
-    }
 
 [globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}] && [globalVar = GP:tx_pxaproductmanager_pi1|product > 0]
     # add stuff for gallery

@@ -122,7 +122,7 @@ class Product extends AbstractEntity
     /**
      * relatedProducts
      *
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
     protected $relatedProducts;
@@ -131,7 +131,7 @@ class Product extends AbstractEntity
      * Images
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $images;
 
@@ -139,14 +139,14 @@ class Product extends AbstractEntity
      * Attributes files
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFalFile>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $attributeFiles;
 
     /**
      * links
      *
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Link>
      */
     protected $links;
@@ -154,7 +154,7 @@ class Product extends AbstractEntity
     /**
      * subProducts
      *
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
     protected $subProducts;
@@ -163,7 +163,7 @@ class Product extends AbstractEntity
      * Fal links
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $falLinks;
 
@@ -191,7 +191,7 @@ class Product extends AbstractEntity
     /**
      * attributeValues
      *
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeValue>
      */
     protected $attributeValues;
@@ -247,7 +247,7 @@ class Product extends AbstractEntity
      * Assets
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $assets;
 
@@ -285,7 +285,7 @@ class Product extends AbstractEntity
     /**
      * accessories
      *
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
     protected $accessories;

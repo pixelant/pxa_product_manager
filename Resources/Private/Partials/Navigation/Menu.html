@@ -2,13 +2,13 @@
 <ul class="products-menu level-{level}">
     <f:for each="{items}" as="menuItem">
         <li class="menu-item level-{level}{f:if(condition: menuItem.subItems, then: ' has-children', else: ' no-children')}">
-            <ppm:link pageUid="{settings.pagePid}"
-                      category="{menuItem.category}"
-                      class="menu-item-link{f:if(condition: menuItem.isActive, then: ' active', else: '')}{f:if(condition: menuItem.isCurrent, then: ' current', else: '')}"
-                      title="{menuItem.item.title}"
-                      additionalAttributes="{data-uid: menuItem.item.uid}">
+            <ppm:link.link pageUid="{settings.pageUid}"
+                           class="menu-item-link{f:if(condition: menuItem.isActive, then: ' active', else: '')}{f:if(condition: menuItem.isCurrent, then: ' current', else: '')}"
+                           title="{menuItem.item.title}"
+                           additionalAttributes="{data-uid: menuItem.item.uid}"
+                           category="{menuItem.category}">
                 {menuItem.category.title}
-            </ppm:link>
+            </ppm:link.link>
             <f:if condition="{menuItem.subItems}">
                 <f:render partial="Navigation/Menu"
                           arguments="{items: menuItem.subItems, level: '{menuItem.level}'}" />

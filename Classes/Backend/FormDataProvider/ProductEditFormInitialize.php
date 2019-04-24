@@ -7,13 +7,12 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
-use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Utility\TCAUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
-use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
@@ -306,12 +305,9 @@ class ProductEditFormInitialize implements FormDataProviderInterface
             true
         );
 
-        /** @var FlashMessageQueue $flashMessageQueue */
-        $flashMessageQueue = GeneralUtility::makeInstance(
-            FlashMessageQueue::class,
+        $flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier(
             'core.template.flashMessages'
         );
-
-        $flashMessageQueue->addMessage($flashMessage);
+        $flashMessageQueue->enqueue($flashMessage);
     }
 }

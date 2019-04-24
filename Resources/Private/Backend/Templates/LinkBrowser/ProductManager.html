@@ -7,31 +7,14 @@
     </div>
     <div class="element-browser-main-content">
         <div class="element-browser-body">
-            <div class="link-browser-section link-browser-tab-content-product-manager">
+            <div class="link-browser-section">
                 <f:if condition="{expandActivePage}">
-                    <h3><f:translate key="LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager.be.select_{tableName}" /></h3>
-                    <ul class="list-tree list-tree-root list-tree-root-clean">
-                        <li class="list-tree-control-open">
-						<span class="list-tree-group">
-							<span class="list-tree-icon">{activePageIcon -> f:format.raw()}</span>
-							<span class="list-tree-title">{activePageTitle -> f:format.raw()}</span>
-						</span>
-                            <ul>
-                                <f:for each="{records}" as="record">
-                                    <li class="{f:if(condition: record.isSelected, then: 'active')}">
-                                    <span class="list-tree-group">
-										<span class="list-tree-icon">{record.icon -> f:format.raw()}</span>
-										<span class="list-tree-title">
-											<a href="{record.url}" class="t3js-recordLink">
-												{record.title -> f:format.raw()}
-											</a>
-										</span>
-									</span>
-                                    </li>
-                                </f:for>
-                            </ul>
-                        </li>
-                    </ul>
+                    <h2><f:translate key="LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:be.select_{tableName}" /></h2>
+                    <p>
+                        <f:format.raw>{activePageIcon}</f:format.raw> {activePageTitle}
+                    </p>
+                    <br>
+                    <f:format.raw>{dbListHTML}</f:format.raw>
                 </f:if>
             </div>
         </div>

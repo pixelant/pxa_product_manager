@@ -1,0 +1,104 @@
+#####################################################################
+# This is route enhancer example configuration                      #
+# You can copy configuration to your site config.yaml file          #
+# !!! Don't forget to replace limitToPages with your real page uid. #
+#####################################################################
+routeEnhancers:
+
+  ProductPlugin:
+    type: Extbase
+    limitToPages: [REPLACE_WITH_REAL_UIDS]
+    extension: PxaProductManager
+    plugin: Pi1
+    routes:
+
+      # One level categories
+      -
+        routePath: '/{category_title_0}'
+        _controller: 'Product::list'
+        _arguments:
+          category_title_0: 'category_0'
+      -
+        routePath: '/{category_title_0}/{product_title}'
+        _controller: 'Product::show'
+        _arguments:
+          category_title_0: 'category_0'
+          product_title: 'product'
+
+      # Two levels
+      -
+        routePath: '/{category_title_0}/{category_title_1}'
+        _controller: 'Product::list'
+        _arguments:
+          category_title_0: 'category_0'
+          category_title_1: 'category_1'
+
+      -
+        routePath: '/{category_title_0}/{category_title_1}/{product_title}'
+        _controller: 'Product::show'
+        _arguments:
+          category_title_0: 'category_0'
+          category_title_1: 'category_1'
+          product_title: 'product'
+
+
+      # Three levels
+      -
+        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}'
+        _controller: 'Product::list'
+        _arguments:
+          category_title_0: 'category_0'
+          category_title_1: 'category_1'
+          category_title_2: 'category_2'
+
+      -
+        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{product_title}'
+        _controller: 'Product::show'
+        _arguments:
+          category_title_0: 'category_0'
+          category_title_1: 'category_1'
+          category_title_2: 'category_2'
+          product_title: 'product'
+
+      # Four levels
+      -
+        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{category_title_3}'
+        _controller: 'Product::list'
+        _arguments:
+          category_title_0: 'category_0'
+          category_title_1: 'category_1'
+          category_title_2: 'category_2'
+          category_title_3: 'category_3'
+
+      -
+        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{category_title_3}/{product_title}'
+        _controller: 'Product::show'
+        _arguments:
+          category_title_0: 'category_0'
+          category_title_1: 'category_1'
+          category_title_2: 'category_2'
+          category_title_3: 'category_3'
+          product_title: 'product'
+
+    defaultController: 'Product::list'
+    aspects:
+      category_title_0:
+        type: PersistedAliasMapper
+        tableName: 'sys_category'
+        routeFieldName: 'pxapm_slug'
+      category_title_1:
+        type: PersistedAliasMapper
+        tableName: 'sys_category'
+        routeFieldName: 'pxapm_slug'
+      category_title_2:
+        type: PersistedAliasMapper
+        tableName: 'sys_category'
+        routeFieldName: 'pxapm_slug'
+      category_title_3:
+        type: PersistedAliasMapper
+        tableName: 'sys_category'
+        routeFieldName: 'pxapm_slug'
+      product_title:
+        type: PersistedAliasMapper
+        tableName: 'tx_pxaproductmanager_domain_model_product'
+        routeFieldName: 'slug'

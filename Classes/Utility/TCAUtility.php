@@ -296,19 +296,6 @@ class TCAUtility
     }
 
     /**
-     * Get core language file path, depends on TYPO3 version
-     * @return string
-     */
-    public static function getCoreLLPath(): string
-    {
-        $ll = MainUtility::isBelowTypo3v9()
-            ? 'LLL:EXT:lang/'
-            : 'LLL:EXT:core/Resources/Private/Language/';
-
-        return $ll;
-    }
-
-    /**
      * Generate name for attribute TCA fields
      *
      * @param int $attributeUid

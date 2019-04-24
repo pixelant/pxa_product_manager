@@ -3,7 +3,9 @@
 namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
+use Pixelant\PxaProductManager\Domain\Repository\OrderRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
@@ -46,22 +48,43 @@ class BackendManagerController extends ActionController
     protected $defaultViewObjectName = BackendTemplateView::class;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\ProductRepository
-     * @inject
+     * @var ProductRepository
      */
     protected $productRepository = null;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\CategoryRepository
-     * @inject
+     * @var CategoryRepository
      */
     protected $categoryRepository = null;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Repository\OrderRepository
-     * @inject
+     * @var OrderRepository
      */
     protected $orderRepository = null;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function injectProductRepository(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
+     * @param CategoryRepository $categoryRepository
+     */
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
+
+    /**
+     * @param OrderRepository $orderRepository
+     */
+    public function injectOrderRepository(OrderRepository $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
 
     /**
      * Current page

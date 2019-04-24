@@ -104,11 +104,3 @@ call_user_func(
     },
     $_EXTKEY
 );
-
-// Real url configuration
-// This configuration works only together with t3kit
-if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('theme_t3kit')) {
-    /** @noinspection PhpIncludeInspection */
-    include_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('pxa_product_manager') .
-        'Configuration/RealUrl/realurl.php';
-}

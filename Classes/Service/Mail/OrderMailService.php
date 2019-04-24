@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Service;
+namespace Pixelant\PxaProductManager\Service\Mail;
 
-use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 

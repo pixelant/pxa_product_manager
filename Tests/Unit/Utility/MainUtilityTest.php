@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaProductManager\Tests\Utility;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -13,113 +14,6 @@ use Pixelant\PxaProductManager\Utility\MainUtility;
  */
 class MainUtilityTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
-    public function buildLinkArgumentsOnlyProductWithCategories()
-    {
-        list($category1, $category2, $category3) = $this->getCategoriesForTest();
-
-        $product = new Product();
-        $product->_setProperty('uid', 111);
-
-        $product->addCategory($category1);
-        $product->addCategory($category2);
-        $product->addCategory($category3);
-
-        $expected = [
-            'tx_pxaproductmanager_pi1' => [
-                NavigationController::CATEGORY_ARG_START_WITH . '0' => $category1->getUid(),
-                'product' => $product->getUid()
-            ]
-        ];
-
-        self::assertEquals(
-            $expected,
-            MainUtility::buildLinksArguments($product, null, true)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function buildLinkArgumentsOnlyProductNoCategories()
-    {
-        $product = new Product();
-        $product->_setProperty('uid', 111);
-
-        $expected = [
-            'tx_pxaproductmanager_pi1' => [
-                'product' => $product->getUid()
-            ]
-        ];
-
-        self::assertEquals(
-            $expected,
-            MainUtility::buildLinksArguments($product, null, true)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function buildLinkArgumentsProductAndCategoryAreSet()
-    {
-        $product = new Product();
-        $product->_setProperty('uid', 111);
-
-        $activeCategory = new Category();
-        $activeCategory->_setProperty('uid', 222);
-
-        list($category1, $category2, $category3) = $this->getCategoriesForTest();
-        // simulate tree
-        $activeCategory->setParent($category1);
-        $category1->setParent($category2);
-        $category2->setParent($category3);
-
-        $expected = [
-            'tx_pxaproductmanager_pi1' => [
-                NavigationController::CATEGORY_ARG_START_WITH . '0' => $category2->getUid(),
-                NavigationController::CATEGORY_ARG_START_WITH . '1' => $category1->getUid(),
-                NavigationController::CATEGORY_ARG_START_WITH . '2' => $activeCategory->getUid(),
-                'product' => $product->getUid()
-            ]
-        ];
-
-        self::assertEquals(
-            $expected,
-            MainUtility::buildLinksArguments($product, $activeCategory, true)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function buildLinkArgumentsOnlyCategoryIsSet()
-    {
-        $activeCategory = new Category();
-        $activeCategory->_setProperty('uid', 222);
-
-        list($category1, $category2, $category3) = $this->getCategoriesForTest();
-        // simulate tree
-        $activeCategory->setParent($category1);
-        $category1->setParent($category2);
-        $category2->setParent($category3);
-
-        $expected = [
-            'tx_pxaproductmanager_pi1' => [
-                NavigationController::CATEGORY_ARG_START_WITH . '0' => $category2->getUid(),
-                NavigationController::CATEGORY_ARG_START_WITH . '1' => $category1->getUid(),
-                NavigationController::CATEGORY_ARG_START_WITH . '2' => $activeCategory->getUid()
-            ]
-        ];
-
-        self::assertEquals(
-            $expected,
-            MainUtility::buildLinksArguments(null, $activeCategory, true)
-        );
-    }
-
     /**
      * @test
      */

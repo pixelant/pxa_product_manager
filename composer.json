@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "typo3/cms-core": "^8.7|| >=9.1.0 <9.6.0",
+    "typo3/cms-core": "^9.5",
     "php": ">=7.0.0"
   },
   "require-dev": {
@@ -24,7 +24,8 @@
     "pixelant/pxa-pm-importer": "Import products data from different sources"
   },
   "replace": {
-    "pxa_product_manager": "self.version"
+    "pxa_product_manager": "self.version",
+    "typo3-ter/pxa-product-manager": "self.version"
   },
   "autoload": {
     "psr-4": {

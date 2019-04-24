@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Service;
+namespace Pixelant\PxaProductManager\Service\Mail;
 
 use Pixelant\PxaProductManager\Exception\OrderEmailException;
 use TYPO3\CMS\Core\Mail\MailMessage;

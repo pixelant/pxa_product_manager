@@ -10,7 +10,8 @@ use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Service\OrderMailService;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
+use Pixelant\PxaProductManager\Service\Mail\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
@@ -19,7 +20,6 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\VisibilityAspect;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -56,6 +56,19 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class ProductController extends AbstractController
 {
+    /**
+     * @var LinkBuilderService
+     */
+    protected $linkBuilderService = null;
+
+    /**
+     * @param LinkBuilderService $builderService
+     */
+    public function injectLinkBuilderService(LinkBuilderService $builderService)
+    {
+        $this->linkBuilderService = $builderService;
+    }
+
     /**
      * Add JS labels for each action
      */
@@ -242,7 +255,7 @@ class ProductController extends AbstractController
         $checkout = $checkOutSystems[$checkoutToUse] ?: $checkOutSystems['default'];
 
         // Add after checkout system selected slot
-        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
+        $this->emitSignal(__CLASS__, 'AfterCheckoutSystemSelected', [&$checkout, $this]);
 
         // If order form enabled
         if ($this->isOrderFormAllowed()) {
@@ -614,7 +627,7 @@ class ProductController extends AbstractController
             $order->setPid($pid);
         }
 
-        $this->signalSlotDispatcher->dispatch(
+        $this->emitSignal(
             __CLASS__,
             'AfterOrderCreatedBeforeSaving',
             [$order, $productsQuantityData, $orderProducts, $orderConfiguration, $this]
@@ -849,7 +862,7 @@ class ProductController extends AbstractController
             $demand->setOrderByAllowed($settings['orderByAllowed']);
         }
 
-        $this->signalSlotDispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
+        $this->emitSignal(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
 
         return $demand;
     }
@@ -895,19 +908,16 @@ class ProductController extends AbstractController
      */
     protected function buildProductCanonicalUrl(Product $product)
     {
-        $arguments = MainUtility::buildLinksArguments($product, $product->getFirstCategory());
-
-        $uriBuilder = $this->controllerContext->getUriBuilder();
-        $uriBuilder
-            ->reset()
-            ->setTargetPageUid($this->settings['pageUid'] ?: MainUtility::getTSFE()->id)
-            ->setArguments($arguments)
-            ->setCreateAbsoluteUri(true);
-
-        $url = $uriBuilder->buildFrontendUri();
+        $url = $this->linkBuilderService->buildForProduct(
+            $this->settings['pageUid'] ?: MainUtility::getTSFE()->id,
+            $product,
+            $product->getFirstCategory(),
+            false,
+            true // absolute
+        );
 
         // add only absolute links
-        if (!empty($url) && StringUtility::beginsWith($url, 'http')) {
+        if (!empty($url)) {
             /** @noinspection PhpUndefinedMethodInspection */
             $this->response->addAdditionalHeaderData(
                 '<link rel="canonical" href="' . $url . '">'
@@ -1018,7 +1028,7 @@ class ProductController extends AbstractController
          */
 
         // Add a signal slot so other extension could add additional buttons
-        $this->signalSlotDispatcher->dispatch(__CLASS__, 'BeforeProcessingAdditionalButtons', [$product, &$buttons]);
+        $this->emitSignal(__CLASS__, 'BeforeProcessingAdditionalButtons', [$product, &$buttons]);
 
         // Process
         foreach ($buttons as &$button) {
@@ -1063,21 +1073,17 @@ class ProductController extends AbstractController
      */
     protected function allowHiddenRecords()
     {
-        if (MainUtility::isBelowTypo3v9()) {
-            MainUtility::getTSFE()->showHiddenRecords = true;
-        } else {
-            $context = GeneralUtility::makeInstance(Context::class);
-            /** @var VisibilityAspect $visibilityAspect */
-            $visibilityAspect = $context->getAspect('visibility');
+        $context = GeneralUtility::makeInstance(Context::class);
+        /** @var VisibilityAspect $visibilityAspect */
+        $visibilityAspect = $context->getAspect('visibility');
 
-            $newVisibilityAspect = GeneralUtility::makeInstance(
-                VisibilityAspect::class,
-                $visibilityAspect->includeHiddenPages(),
-                true,
-                $visibilityAspect->includeDeletedRecords()
-            );
+        $newVisibilityAspect = GeneralUtility::makeInstance(
+            VisibilityAspect::class,
+            $visibilityAspect->includeHiddenPages(),
+            true,
+            $visibilityAspect->includeDeletedRecords()
+        );
 
-            $context->setAspect('visibility', $newVisibilityAspect);
-        }
+        $context->setAspect('visibility', $newVisibilityAspect);
     }
 }

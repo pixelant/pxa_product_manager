@@ -117,14 +117,8 @@ class ConfigurationUtility
     public static function getExtMgrConfiguration(): array
     {
         if (self::$extMgrConfiguration === null) {
-            if (class_exists('TYPO3\\CMS\\Core\\Configuration\\ExtensionConfiguration')) {
-                $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)
-                    ->get('pxa_product_manager');
-            } else {
-                $extensionConfiguration = unserialize(
-                    $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['pxa_product_manager'] ?? ''
-                );
-            }
+            $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)
+                ->get('pxa_product_manager');
 
             self::$extMgrConfiguration = $extensionConfiguration ?: [];
         }

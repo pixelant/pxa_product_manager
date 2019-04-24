@@ -28,10 +28,7 @@ namespace Pixelant\PxaProductManager\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Controller\NavigationController;
-use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Context\Context;
@@ -74,7 +71,7 @@ class MainUtility
         static $pricingEnabled;
 
         if ($pricingEnabled === null) {
-            $pricingEnabled = (int)ConfigurationUtility::getExtManagerConfigurationByPath('enablePrices') === 1;
+            $pricingEnabled = (int)ConfigurationUtility::getSettingsByPath('showPricesInTemplate') === 1;
         }
 
         return $pricingEnabled;
@@ -93,7 +90,7 @@ class MainUtility
         if ($activeCategoryUid === null && is_array($args)) {
             // Find latest category argument
             foreach (array_reverse($args) as $argKey => $argValue) {
-                if (StringUtility::beginsWith($argKey, NavigationController::CATEGORY_ARG_START_WITH)) {
+                if (StringUtility::beginsWith($argKey, LinkBuilderService::CATEGORY_ARGUMENT_START_WITH)) {
                     $activeCategoryUid = (int)$argValue;
                     break;
                 }
@@ -193,68 +190,6 @@ class MainUtility
     }
 
     /**
-     * Build parameters for product link
-     *
-     * @param Product|int|null $product
-     * @param Category|null $category
-     * @param bool $forceIncludeCategoriesInUrl
-     * @return array
-     */
-    public static function buildLinksArguments(
-        $product = null,
-        Category $category = null,
-        bool $forceIncludeCategoriesInUrl = false
-    ): array {
-        $arguments = [];
-        if ($product !== null && !is_object($product)) {
-            /** @var ProductRepository $productRepository */
-            $productRepository = self::getObjectManager()->get(ProductRepository::class);
-            $product = $productRepository->findByUid((int)$product);
-        }
-
-        // If categories allowed in url
-        if ($forceIncludeCategoriesInUrl
-            || intval(ConfigurationUtility::getSettingsByPath('excludeCategoriesFromUrl')) === 0
-        ) {
-            // If no category, try to get it from product
-            if ($category === null
-                && is_object($product)
-                && $product->getCategories()->count() > 0
-            ) {
-                $category = $product->getFirstCategory();
-            }
-
-            if ($category !== null) {
-                // Get tree, don't use root category in url
-                /**
-                 * @TODO always remove first category ?
-                 */
-                $categories = array_slice(
-                    array_reverse(// use descending order
-                        CategoryUtility::getParentCategories($category)
-                    ),
-                    1
-                );
-                // add current category
-                $categories[] = $category;
-
-                $i = 0;
-                /** @var Category $category */
-                foreach ($categories as $category) {
-                    $arguments[NavigationController::CATEGORY_ARG_START_WITH . $i++] = $category->getUid();
-                }
-            }
-        }
-
-        // Add product
-        if ($product !== null) {
-            $arguments['product'] = is_object($product) ? $product->getUid() : $product;
-        }
-
-        return !empty($arguments) ? ['tx_pxaproductmanager_pi1' => $arguments] : [];
-    }
-
-    /**
      * Parse fluid string
      *
      * @param string $string
@@ -326,48 +261,14 @@ class MainUtility
     }
 
     /**
-     * Check if typo3 version is below 9
-     * @TODO remove it after support of TYPO3 8 is stopped
-     * @return bool
-     */
-    public static function isBelowTypo3v9(): bool
-    {
-        static $isBelowTypo39;
-
-        if ($isBelowTypo39 === null) {
-            $isBelowTypo39 = version_compare(TYPO3_version, '9.0', '<');
-        }
-
-        return $isBelowTypo39;
-    }
-
-    /**
-     * Get flexform service
-     *
-     * @return object|\TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
-     */
-    public static function getFlexFormService()
-    {
-        if (self::isBelowTypo3v9()) {
-            return GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\FlexFormService');
-        } else {
-            return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Service\\FlexFormService');
-        }
-    }
-
-    /**
      * Check if FE user is logged in
      *
      * @return bool
      */
     public static function isFrontendLogin(): bool
     {
-        if (self::isBelowTypo3v9()) {
-            return self::getTSFE()->loginUser;
-        } else {
-            $context = GeneralUtility::makeInstance(Context::class);
-            return $context->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
-        }
+        $context = GeneralUtility::makeInstance(Context::class);
+        return $context->getPropertyFromAspect('frontend.user', 'isLoggedIn', false);
     }
 
     /**
@@ -377,11 +278,7 @@ class MainUtility
      */
     public static function isBackendLogin(): bool
     {
-        if (self::isBelowTypo3v9()) {
-            return self::getTSFE()->beUserLogin;
-        } else {
-            $context = GeneralUtility::makeInstance(Context::class);
-            return $context->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
-        }
+        $context = GeneralUtility::makeInstance(Context::class);
+        return $context->getPropertyFromAspect('backend.user', 'isLoggedIn', false);
     }
 }

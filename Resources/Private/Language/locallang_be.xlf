@@ -20,6 +20,12 @@
             <trans-unit id="be.category_link_handler">
                 <source>Category (PM)</source>
             </trans-unit>
+            <trans-unit id="be.select_tx_pxaproductmanager_domain_model_product">
+                <source>Select product</source>
+            </trans-unit>
+            <trans-unit id="be.select_sys_category">
+                <source>Select category</source>
+            </trans-unit>
             <!--Link handler:END-->
 
             <!--Extension info hook:START-->
@@ -272,9 +278,6 @@
             <trans-unit id="extconf.dontCheckPidForSysCategory">
                 <source>Don't check pid when assigning category (enable if the whole installation shares the same categories)</source>
             </trans-unit>
-            <trans-unit id="extconf.includeSkuInRealurlConfiguration">
-                <source>Use sku field to combine it with name in url</source>
-            </trans-unit>
             <trans-unit id="extconf.accessoriesRestriction" xml:space="preserve">
             <source>Accessories PID restriction: Restrict the available accessories in product records. PageTsConfig:
                 TCEFORM.tx_pxaproductmanager_domain_model_product.accessories.PAGE_TSCONFIG_IDLIST=xxx,xxx.
@@ -301,9 +304,6 @@
             </trans-unit>
             <trans-unit id="extconf.restriction.none" xml:space="preserve">
                 <source>No restriction</source>
-            </trans-unit>
-            <trans-unit id="extconf.enablePrices">
-                <source>Enable products pricing</source>
             </trans-unit>
             <trans-unit id="extconf.checkoutSystem">
                 <source>Checkout system</source>

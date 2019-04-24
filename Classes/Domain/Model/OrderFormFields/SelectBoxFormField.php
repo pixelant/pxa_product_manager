@@ -14,8 +14,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 class SelectBoxFormField extends OrderFormField
 {
     /**
-     * @lazy
-     * @cascade
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option>
      */
     protected $options = [];

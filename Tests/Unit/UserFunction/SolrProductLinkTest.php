@@ -1,7 +1,9 @@
 <?php
+
 namespace Pixelant\PxaProductManager\Tests\Unit\UserFunction;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use Pixelant\PxaProductManager\UserFunction\SolrProductLink;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -16,17 +18,10 @@ class SolrProductLinkTest extends UnitTestCase
      */
     protected $mockedSolrProductLinkTest = null;
 
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected $cObj = null;
-
     public function setUp()
     {
-        $this->mockedSolrProductLinkTest = $this->createPartialMock(SolrProductLink::class, ['buildLinksArguments']);
-        $this->cObj = $this->createMock(ContentObjectRenderer::class);
-
-        $this->mockedSolrProductLinkTest->cObj = $this->cObj;
+        $this->mockedSolrProductLinkTest = $this->createPartialMock(SolrProductLink::class, ['getLinkBuilder']);
+        $this->mockedSolrProductLinkTest->cObj = $this->createMock(ContentObjectRenderer::class);
     }
 
     /**
@@ -46,33 +41,31 @@ class SolrProductLinkTest extends UnitTestCase
     public function getLinkWithValidParamsWillBuildLink()
     {
         $pagePid = 111;
+        $productUid = 1;
+        $lang = 1;
+
         $data = [
-            'uid' => 1,
-            '__solr_index_language' => 1
+            'uid' => $productUid,
+            '__solr_index_language' => $lang
         ];
-        $testParams = ['testparam' => 'test'];
         $params = [
             'pageUid' => $pagePid
         ];
 
-        $this->cObj->data = $data;
+        $this->mockedSolrProductLinkTest->cObj->data = $data;
+
+        $mockedLinkBuilder = $this->createMock(LinkBuilderService::class);
+        $mockedLinkBuilder
+            ->expects($this->once())
+            ->method('buildForProduct')
+            ->with($pagePid, $productUid)
+            ->willReturn('');
 
         $this->mockedSolrProductLinkTest
             ->expects($this->once())
-            ->method('buildLinksArguments')
-            ->willReturn($testParams);
-
-        $urlParams = [
-            'parameter' => $pagePid,
-            'useCacheHash' => 1,
-            'additionalParams' => '&L=1&' . http_build_query($testParams),
-        ];
-
-        $this->cObj
-            ->expects($this->once())
-            ->method('typolink_URL')
-            ->with($urlParams)
-            ->willReturn('');
+            ->method('getLinkBuilder')
+            ->with($lang)
+            ->willReturn($mockedLinkBuilder);
 
         $this->mockedSolrProductLinkTest->getLink('', $params);
     }
