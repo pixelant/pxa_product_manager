@@ -20,6 +20,12 @@
             <trans-unit id="be.category_link_handler">
                 <source>Category (PM)</source>
             </trans-unit>
+            <trans-unit id="be.select_tx_pxaproductmanager_domain_model_product">
+                <source>Select product</source>
+            </trans-unit>
+            <trans-unit id="be.select_sys_category">
+                <source>Select category</source>
+            </trans-unit>
             <!--Link handler:END-->
 
             <!--Extension info hook:START-->
