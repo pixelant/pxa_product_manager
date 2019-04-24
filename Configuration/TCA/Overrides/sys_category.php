@@ -58,6 +58,11 @@ call_user_func(function () {
                         'fileUploadAllowed' => false
                         // @codingStandardsIgnoreEnd
                     ],
+                    'foreign_match_fields' => [
+                        'fieldname' => 'pxapm_image',
+                        'tablenames' => 'sys_category',
+                        'table_local' => 'sys_file',
+                    ],
                     'overrideChildTca' => [
                         'types' => [
                             '0' => [
