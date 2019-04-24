@@ -313,6 +313,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
             $dbList->noControlPanels = true;
             $dbList->clickMenuEnabled = false;
             $dbList->tableList = $this->tableName;
+            $dbList->hideTranslations = $this->tableName;
 
             $dbList->start(
                 $pageId,
