@@ -1,39 +1,54 @@
 define(['jquery', 'TYPO3/CMS/Recordlist/LinkBrowser'], function ($, LinkBrowser) {
 
-	'use strict';
+    'use strict';
 
-	/**
-	 *
-	 * @type {{}}
-	 * @exports TYPO3/CMS/Recordlist/LinkHandler
-	 */
-	var LinkHandler = {};
+    /**
+     *
+     * @type object
+     * @exports TYPO3/CMS/Recordlist/LinkHandler
+     */
+    var LinkHandler = {};
 
-	/**
-	 *
-	 * @param {Event} event
-	 */
-	LinkHandler.linkCurrent = function (event) {
-		event.preventDefault();
+    /**
+     * TypoLink template
+     *
+     * @type {string}
+     */
+    var linkTemplate = '';
 
-		var value = $(this).attr('href');
+    /**
+     *
+     * @param {Event} event
+     */
+    LinkHandler.linkCurrent = function (event) {
+        event.preventDefault();
 
-		// LinkBrowser.setAdditionalLinkAttribute('data-product-manager', '1');
+        var $this = $(this);
+        var value = linkTemplate.replace('###RECORD_UID###', $this.data('uid'));
 
-		LinkBrowser.finalizeFunction(value);
-	};
+        LinkBrowser.finalizeFunction(value);
+    };
 
-	$(function () {
-		$('.t3js-recordLink').on('click', LinkHandler.linkCurrent);
-		$('.t3js-pageLink').on('click', function (e) {
-			e.preventDefault();
+    $(function () {
+        // Set typolink template
+        linkTemplate = $('body').data('typolink-template');
 
-			$(this)
-				.closest('.list-tree-group')
-				.find('.list-tree-show')
-				.trigger('click');
-		})
-	});
+        // Make search bar visible
+        $('#db_list-searchbox-toolbar').show();
 
-	return LinkHandler;
+        // Catch click
+        $('.recordlist table td span[data-table]').on('click', LinkHandler.linkCurrent);
+
+        // Catch page click
+        $('.t3js-pageLink').on('click', function (e) {
+            e.preventDefault();
+
+            $(this)
+                .closest('.list-tree-group')
+                .find('.list-tree-show')
+                .trigger('click');
+        })
+    });
+
+    return LinkHandler;
 });
