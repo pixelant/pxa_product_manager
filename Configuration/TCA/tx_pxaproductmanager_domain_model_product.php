@@ -390,6 +390,11 @@ return [
                             'tx_pxaproductmanager_domain_model_product.fal_links.add_button',
                         'fileUploadAllowed' => false,
                     ],
+                    'foreign_match_fields' => [
+                        'fieldname' => 'fal_links',
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                        'table_local' => 'sys_file',
+                    ],
                     'overrideChildTca' => [
                         'types' => [
                             '0' => [
@@ -559,6 +564,11 @@ return [
             'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig('assets', [
                 'appearance' => [
                     'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/Database.xlf:tt_content.asset_references.addFileReference'
+                ],
+                'foreign_match_fields' => [
+                    'fieldname' => 'assets',
+                    'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                    'table_local' => 'sys_file',
                 ],
                 // custom configuration for displaying fields in the overlay/reference table
                 // behaves the same as the image field.
