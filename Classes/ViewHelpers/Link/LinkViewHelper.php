@@ -43,7 +43,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
 
         $this->registerArgument('product', 'mixed', 'Product to link to single view', false, null);
         // @codingStandardsIgnoreStart
-        $this->registerArgument('category', 'mixed', 'Category to link to list view or product sinle view', false, null);
+        $this->registerArgument('category', 'mixed', 'Category to link to list view or product single view', false, null);
         // @codingStandardsIgnoreEnd
         $this->registerArgument('pageUid', 'int', 'Target page uid', false, null);
         $this->registerArgument('excludeCategories', 'bool', 'Exclude categories from path', false, false);
@@ -58,7 +58,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
      */
     public function render()
     {
-        $pageUid = intval($this->arguments['pagePid'] ?? $GLOBALS['TSFE']->id);
+        $pageUid = intval($this->arguments['pageUid'] ?? $GLOBALS['TSFE']->id);
         $product = $this->arguments['product'];
         $category = $this->arguments['category'];
         $target = $this->arguments['target'];

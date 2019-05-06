@@ -22,6 +22,10 @@ plugin.tx_pxaproductmanager {
 
     }
 
+    mvc {
+        callDefaultActionIfActionCantBeResolved = 1
+    }
+
     settings {
         # pid
         pagePid = {$plugin.tx_pxaproductmanager.settings.pagePid}
