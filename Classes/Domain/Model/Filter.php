@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 
 /**
  * Filter
@@ -120,6 +121,9 @@ class Filter extends AbstractEntity
      */
     public function getParentCategory()
     {
+        if ($this->parentCategory instanceof LazyLoadingProxy) {
+            $this->parentCategory->_loadRealInstance();
+        }
         return $this->parentCategory;
     }
 
@@ -162,6 +166,9 @@ class Filter extends AbstractEntity
      */
     public function getAttribute()
     {
+        if ($this->attribute instanceof LazyLoadingProxy) {
+            $this->attribute->_loadRealInstance();
+        }
         return $this->attribute;
     }
 
