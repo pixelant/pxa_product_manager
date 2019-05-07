@@ -87,7 +87,7 @@ class Demand implements DemandInterface
     protected $filters = [];
 
     /**
-     * Category conjunction
+     * Filters conjunction
      * could be 'or'
      *
      * @var string
