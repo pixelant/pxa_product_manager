@@ -239,6 +239,11 @@ class PageLayoutView
             $this->translate('be.extension_info.checkbox_' .
                 ($settings['hideFilterOptionsNoResult'] ? 'yes' : 'no'))
         );
+        $info .= sprintf(
+            '<b>%s</b>: %s<br>',
+            $this->translate('flexform.filters_conjunction'),
+            $this->translate('flexform.filters_conjunction_' . $settings['filtersConjunction'] ?: 'and')
+        );
         $info .= $this->getFiltersInfo($settings['filters'] ?? '');
 
 
