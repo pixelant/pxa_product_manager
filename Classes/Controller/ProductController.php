@@ -834,7 +834,7 @@ class ProductController extends AbstractController
         if (isset($settings['filters']) && is_array($settings['filters'])) {
             $demand->setFilters($settings['filters']);
         }
-        if (isset($settings['includeDiscontinued'])) {
+        if (!empty($settings['includeDiscontinued'])) {
             $demand->setIncludeDiscontinued((bool)$settings['includeDiscontinued']);
         }
 

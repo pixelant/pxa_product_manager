@@ -24,7 +24,6 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
@@ -318,7 +317,9 @@ class ProductRepository extends AbstractDemandRepository
     {
         $constraints = [];
 
-        $constraints['discontinued'] = $this->createDiscontinuedConstraints($demand, $query);
+        if (!$demand->getIncludeDiscontinued()) {
+            $constraints['discontinued'] = $this->createDiscontinuedConstraints($query);
+        }
 
         if (!empty($demand->getCategories())) {
             $constraints['categories'] = $this->createCategoryConstraints(
@@ -494,30 +495,22 @@ class ProductRepository extends AbstractDemandRepository
     /**
      * Create discontinued constraints
      *
-     * @param DemandInterface $demand
      * @param QueryInterface $query
      * @return \TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    protected function createDiscontinuedConstraints(DemandInterface $demand, QueryInterface $query)
+    protected function createDiscontinuedConstraints(QueryInterface $query)
     {
-        // Include discontinued
-        if ($demand->getIncludeDiscontinued()) {
-            $constraints = [];
+        $constraints = [];
 
-            // include if discontinued isn't set
-            $constraints['ns'] = $query->equals('discontinued', 0);
-            // or discontinued is greater than today
-            $constraints['gt'] = $query->greaterThan('discontinued', new \DateTime('00:00'));
+        // include if discontinued isn't set
+        $constraints['ns'] = $query->equals('discontinued', 0);
+        // or discontinued is greater than today
+        $constraints['gt'] = $query->greaterThan('discontinued', new \DateTime('00:00'));
 
-            return $this->createConstraintFromConstraintsArray(
-                $query,
-                $constraints,
-                'or'
-            );
-        }
-
-        // Exclude discontinued
-        return $query->equals('discontinued', 0);
+        return $this->createConstraintFromConstraintsArray(
+            $query,
+            $constraints,
+            'or'
+        );
     }
 }
