@@ -424,7 +424,7 @@ class ProductRepository extends AbstractDemandRepository
                         $constraints[] = $this->createConstraintFromConstraintsArray(
                             $query,
                             $categoriesConstraints,
-                            'or'
+                            $filterConjunction
                         );
                         break;
                     case Filter::TYPE_ATTRIBUTES_MINMAX:
