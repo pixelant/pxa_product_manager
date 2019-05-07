@@ -1,0 +1,97 @@
+From 37b1e797335d30905d3c440cc78d33fd6236feee Mon Sep 17 00:00:00 2001
+From: anjeylink <andriy.oprysko@resultify.se>
+Date: Tue, 7 May 2019 11:18:32 +0300
+Subject: [PATCH] [TASK] add inverse_conjunction option for filter TCA
+ configuration
+
+---
+ ...tx_pxaproductmanager_domain_model_filter.php | 17 +++++++++++++----
+ ...tx_pxaproductmanager_domain_model_filter.xlf |  3 +++
+ Resources/Private/Language/locallang_db.xlf     |  3 +++
+ ext_tables.sql                                  |  1 +
+ 4 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/Configuration/TCA/tx_pxaproductmanager_domain_model_filter.php b/Configuration/TCA/tx_pxaproductmanager_domain_model_filter.php
+index 4651241..57f0369 100644
+--- a/Configuration/TCA/tx_pxaproductmanager_domain_model_filter.php
++++ b/Configuration/TCA/tx_pxaproductmanager_domain_model_filter.php
+@@ -30,7 +30,7 @@ return [
+         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg'
+     ],
+     'interface' => [
+-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, parent_category, attribute, starttime, endtime',
++        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, parent_category, inverse_conjunction, attribute, starttime, endtime',
+     ],
+     'types' => [
+         '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang'],
+@@ -40,8 +40,8 @@ return [
+     'palettes' => [
+         'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
+         'common' => ['showitem' => 'type, --linebreak--, name, --linebreak--, label'],
+-        'categories' => ['showitem' => 'parent_category'],
+-        'attributes' => ['showitem' => 'attribute'],
++        'categories' => ['showitem' => 'inverse_conjunction, --linebreak--, parent_category'],
++        'attributes' => ['showitem' => 'inverse_conjunction, --linebreak--, attribute'],
+         'lang' => ['showitem' => 'starttime, --linebreak--, endtime']
+     ],
+     'columns' => [
+@@ -202,6 +202,15 @@ return [
+                 'minitems' => 1,
+                 'maxitems' => 1,
+             ]
+-        ]
++        ],
++        'inverse_conjunction' => [
++            'displayCond' => 'FIELD:type:!=:3', // hide for range filter
++            'exclude' => 1,
++            'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.inverse_conjunction',
++            'config' => [
++                'type' => 'check',
++                'default' => 0
++            ],
++        ],
+     ]
+ ];
+diff --git a/Resources/Private/Language/locallang_csh_tx_pxaproductmanager_domain_model_filter.xlf b/Resources/Private/Language/locallang_csh_tx_pxaproductmanager_domain_model_filter.xlf
+index 94ff652..aa39023 100644
+--- a/Resources/Private/Language/locallang_csh_tx_pxaproductmanager_domain_model_filter.xlf
++++ b/Resources/Private/Language/locallang_csh_tx_pxaproductmanager_domain_model_filter.xlf
+@@ -15,6 +15,9 @@
+ 			<trans-unit id="attribute.description">
+ 				<source>Filter attribute (Only selectbox)</source>
+ 			</trans-unit>
++			<trans-unit id="inverse_conjunction.description">
++			    <source>Use "AND" logical behaviour</source>
++			</trans-unit>
+ 			<trans-unit id="label.description">
+ 				<source>Default behaviour is to use value from label if filled in, else name, when filter is rendered frontend.</source>
+ 			</trans-unit>
+diff --git a/Resources/Private/Language/locallang_db.xlf b/Resources/Private/Language/locallang_db.xlf
+index 7d93212..87b1995 100644
+--- a/Resources/Private/Language/locallang_db.xlf
++++ b/Resources/Private/Language/locallang_db.xlf
+@@ -210,6 +210,9 @@
+             <trans-unit id="tx_pxaproductmanager_domain_model_filter.attribute">
+                 <source>Attribute</source>
+             </trans-unit>
++            <trans-unit id="tx_pxaproductmanager_domain_model_filter.inverse_conjunction">
++                <source>Use login "AND" conjunction (default is "OR")</source>
++            </trans-unit>
+             <!--Filter TCA:END-->
+ 
+             <!--Option TCA:START-->
+diff --git a/ext_tables.sql b/ext_tables.sql
+index f8166cf..c330305 100644
+--- a/ext_tables.sql
++++ b/ext_tables.sql
+@@ -373,6 +373,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_filter (
+   label varchar(255) DEFAULT '' NOT NULL,
+   parent_category int(11) unsigned DEFAULT '0',
+   attribute int(11) unsigned DEFAULT '0',
++  inverse_conjunction tinyint(4) unsigned DEFAULT '0' NOT NULL,
+ 
+   sorting int(11) unsigned DEFAULT '0' NOT NULL,
+   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+-- 
+2.20.1
+
