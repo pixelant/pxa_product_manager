@@ -61,11 +61,16 @@ class AttributeValueRepository extends Repository
      *
      * @param $attribute
      * @param array $values
+     * @param string $filterConjunction
      * @param bool $rawResult
      * @return QueryResultInterface|array
      */
-    public function findAttributeValuesByAttributeAndValues($attribute, array $values, string $filterConjunction = 'or', $rawResult = false)
-    {
+    public function findAttributeValuesByAttributeAndValues(
+        $attribute,
+        array $values,
+        string $filterConjunction = 'or',
+        $rawResult = false
+    ) {
         $query = $this->createQuery();
 
         $query
