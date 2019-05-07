@@ -51,6 +51,7 @@
 			compareListEnable = false,
 			firstLoadingLimit = 0,
 			lazyListInitialized = false,
+			filtersConjunction = 'and',
 			hideFilterOptionsNoResult = 0;
 
 		/**
@@ -113,6 +114,7 @@
 			wishListEnable = parseInt(settings.wishListEnable, 10) === 1;
 			compareListEnable = parseInt(settings.compareListEnable, 10) === 1;
 			hideFilterOptionsNoResult = parseInt(settings.hideFilterOptionsNoResult, 10);
+			filtersConjunction = settings.filtersConjunction === 'or' ? 'or' : 'and';
 
 			// Jquery objects
 			$wrapper = $(settings.wrapper);
@@ -205,7 +207,8 @@
 						storagePid: storage,
 						orderBy: settings.orderBy,
 						orderDirection: settings.orderDirection,
-						includeDiscontinued: settings.includeDiscontinued
+						includeDiscontinued: settings.includeDiscontinued,
+						filtersConjunction: filtersConjunction
 					},
 					pagePid: settings.pagePid,
 					hideFilterOptionsNoResult: hideFilterOptionsNoResult
