@@ -6,6 +6,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
+use Pixelant\PxaProductManager\Domain\Repository\FilterRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
@@ -176,23 +177,82 @@ class ProductRepositoryTest extends UnitTestCase
      */
     public function constraintsAreCreatedForFilters()
     {
+        $fakeFilter1 = new Filter();
+        $fakeFilter1->_setProperty('uid', 22);
+        $fakeFilter1->setType(Filter::TYPE_ATTRIBUTES);
+
+        $fakeFilter2 = new Filter();
+        $fakeFilter2->_setProperty('uid', 33);
+        $fakeFilter2->setType(Filter::TYPE_ATTRIBUTES);
+        $fakeFilter2->setInverseConjunction(true);
+
+        $fakeFilter3 = new Filter();
+        $fakeFilter3->_setProperty('uid', 44);
+        $fakeFilter3->setType(Filter::TYPE_CATEGORIES);
+
         $filters = [
             [
-                'value' => ['test', 'test2'],
-                'type' => Filter::TYPE_CATEGORIES
+                'uid' => 22,
+                'value' => [4, 5],
+                'attributeUid' => 6,
             ],
             [
+                'uid' => 33,
                 'value' => [2],
                 'attributeUid' => 5,
-                'type' => Filter::TYPE_ATTRIBUTES
+            ],
+            [
+                'uid' => 44,
+                'value' => ['cat1', 'cat2'],
+                'attributeUid' => 88,
             ]
         ];
+
+        $mockedFilterRepository = $this->createPartialMock(FilterRepository::class, ['findByUid']);
+        $mockedFilterRepository
+            ->expects($this->at(0))
+            ->method('findByUid')
+            ->with(22)
+            ->willReturn($fakeFilter1);
+
+        $mockedFilterRepository
+            ->expects($this->at(1))
+            ->method('findByUid')
+            ->with(33)
+            ->willReturn($fakeFilter2);
+
+        $mockedFilterRepository
+            ->expects($this->at(2))
+            ->method('findByUid')
+            ->with(44)
+            ->willReturn($fakeFilter3);
 
         $mockedQuery = $this->createMock(QueryInterface::class);
         $mockedAttributeValueRepository = $this->createPartialMock(
             AttributeValueRepository::class,
-            ['findAttributeValuesByAttributeAndValue']
+            ['findAttributeValuesByAttributeAndValues']
         );
+        $mockedAttributeValueRepository
+            ->expects($this->at(0))
+            ->method('findAttributeValuesByAttributeAndValues')
+            ->with(
+                6,
+                [4, 5],
+                'or', // default conjunction
+                true
+            )
+            ->willReturn([['uid' => 123]]);
+
+        $mockedAttributeValueRepository
+            ->expects($this->at(1))
+            ->method('findAttributeValuesByAttributeAndValues')
+            ->with(
+                5,
+                [2],
+                'and', // invert conjunction
+                true
+            )
+            ->willReturn([['uid' => 123]]);
 
         $mockedRepository = $this->getAccessibleMock(
             ProductRepository::class,
@@ -201,20 +261,13 @@ class ProductRepositoryTest extends UnitTestCase
             '',
             false
         );
-        $mockedRepository->_set('attributeValueRepository', $mockedAttributeValueRepository);
 
-        $mockedAttributeValueRepository
-            ->expects($this->once())
-            ->method('findAttributeValuesByAttributeAndValue')
-            ->with(
-                5, // uid of attribute filter
-                2, // value of filter
-                true // raw result
-            )
-            ->willReturn([['uid' => 123]]);
+        $mockedRepository->_set('attributeValueRepository', $mockedAttributeValueRepository);
+        $mockedRepository->_set('filterRepository', $mockedFilterRepository);
+
 
         $mockedRepository
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(count($filters) + 1))
             ->method('createConstraintFromConstraintsArray');
 
         $mockedRepository->_call('createFilteringConstraints', $mockedQuery, $filters);
