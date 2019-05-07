@@ -4,7 +4,8 @@
 <f:render section="select" arguments="{label: 'to', range: 'max', filter: filter}"/>
 
 <f:section name="select">
-    <select data-filter-type="{filter.type}"
+    <select data-uid="{filter.uid}"
+            data-filter-type="{filter.type}"
             data-attribute-uid="{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}"
             data-identifier="{filter.type}-{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}-{range}"
             data-placeholder="{f:translate(key: 'fe.minmax.{label}')}"

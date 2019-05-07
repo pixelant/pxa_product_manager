@@ -197,17 +197,18 @@
 
 			$selectBoxes.each(function () {
 				let $this = $(this),
-					type = parseInt($this.data('filter-type')),
-					uid = parseInt($this.data('attribute-uid'));
+					uid = parseInt($this.data('uid')), // Filter uid
+					type = parseInt($this.data('filter-type')), // Type of filter
+					attributeUid = parseInt($this.data('attribute-uid')); // Attribute uid or parent category
 				// select box type
 				if (type <= 2) {
 					currentValue = $this.val();
-					key = type + '-' + uid;
+					key = type + '-' + attributeUid;
 
 					if (currentValue !== null && currentValue.length > 0) {
 						filteringData[key] = {
-							type: type,
-							attributeUid: uid,
+							uid: uid,
+							attributeUid: attributeUid,
 							value: currentValue
 						}
 					}
@@ -217,11 +218,11 @@
 				if (type === 3) {
 					currentValue = $this.val();
 					// string, two dropdowns so add data-range to key
-					key = type + '-' + uid + '-' + $this.data('range');
+					key = type + '-' + attributeUid + '-' + $this.data('range');
 					if (currentValue !== null && currentValue.length > 0) {
 						filteringData[key] = {
-							attributeUid: uid,
-							type: type,
+							uid: uid,
+							attributeUid: attributeUid,
 							value: [currentValue, $this.data('range')]
 						}
 					}

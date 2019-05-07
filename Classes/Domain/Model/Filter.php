@@ -68,6 +68,7 @@ class Filter extends AbstractEntity
      * parentCategory
      *
      * @var \Pixelant\PxaProductManager\Domain\Model\Category
+     * @lazy
      */
     protected $parentCategory;
 
@@ -75,6 +76,7 @@ class Filter extends AbstractEntity
      * attribute
      *
      * @var \Pixelant\PxaProductManager\Domain\Model\Attribute
+     * @lazy
      */
     protected $attribute;
 
@@ -84,6 +86,11 @@ class Filter extends AbstractEntity
      * @var \string
      */
     protected $label = '';
+
+    /**
+     * @var bool
+     */
+    protected $inverseConjunction = false;
 
     /**
      * Returns the name
@@ -188,5 +195,21 @@ class Filter extends AbstractEntity
     public function setLabel(string $label)
     {
         $this->label = $label;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInverseConjunction(): bool
+    {
+        return $this->inverseConjunction;
+    }
+
+    /**
+     * @param bool $inverseConjunction
+     */
+    public function setInverseConjunction(bool $inverseConjunction)
+    {
+        $this->inverseConjunction = $inverseConjunction;
     }
 }

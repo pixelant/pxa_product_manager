@@ -51,7 +51,13 @@ class ProductRepository extends AbstractDemandRepository
      * @var \Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository
      * @inject
      */
-    protected $attributeValueRepository;
+    protected $attributeValueRepository = null;
+
+    /**
+     * @var \Pixelant\PxaProductManager\Domain\Repository\FilterRepository
+     * @inject
+     */
+    protected $filterRepository = null;
 
     /**
      * Override basic method. Set special ordering for categories if it's not multiple
@@ -343,7 +349,6 @@ class ProductRepository extends AbstractDemandRepository
      * (
      *  [2-13] => Array // type + uid of filter
      * (
-     *  [type] => 2 // type of filter
      *  [attributeUid] => 13 // UID of attribute or parent category
      *  [value] => Array // array of values
      * (
@@ -351,36 +356,42 @@ class ProductRepository extends AbstractDemandRepository
      *  )
      * )
      * @param QueryInterface $query
-     * @param array $filters
+     * @param array $filtersData
      * @param string $conjunction
      * @return mixed
      */
-    protected function createFilteringConstraints(QueryInterface $query, array $filters, string $conjunction = 'or')
+    protected function createFilteringConstraints(QueryInterface $query, array $filtersData, string $conjunction = 'or')
     {
         $constraints = [];
         $ranges = [];
+        foreach ($filtersData as $filterKey => $filterData) {
+            if (!empty($filterData['value']) && !empty($filterData['uid'])) {
+                /** @var Filter $filter */
+                $filter = $this->filterRepository->findByUid((int)$filterData['uid']);
+                if ($filter === null) {
+                    continue;
+                }
 
-        foreach ($filters as $filter) {
-            if (!empty($filter['value'])) {
-                switch ((int)$filter['type']) {
+                $filterConjunction = $filter->isInverseConjunction() ? 'and' : 'or';
+                switch ($filter->getType()) {
                     case Filter::TYPE_ATTRIBUTES:
                         $filterConstraints = [];
+                        $attributeValues = $this->attributeValueRepository->findAttributeValuesByAttributeAndValues(
+                            (int)$filterData['attributeUid'],
+                            $filterData['value'],
+                            $filterConjunction,
+                            true
+                        );
 
-                        foreach ($filter['value'] as $value) {
-                            $attributeValues = $this->attributeValueRepository->findAttributeValuesByAttributeAndValue(
-                                (int)$filter['attributeUid'],
-                                $value,
-                                true
-                            );
-                            if (empty($attributeValues)) {
-                                // force no result for filter constraint if no value was found but filter was set on FE
-                                $filterConstraints[] = $query->contains('attributeValues', 0);
-                            } else {
-                                foreach ($attributeValues as $attributeValue) {
-                                    $filterConstraints[] = $query->contains('attributeValues', $attributeValue['uid']);
-                                }
+                        if (empty($attributeValues)) {
+                            // force no result for filter constraint if no value was found but filter was set on FE
+                            $filterConstraints[] = $query->contains('attributeValues', 0);
+                        } else {
+                            foreach ($attributeValues as $attributeValue) {
+                                $filterConstraints[] = $query->contains('attributeValues', $attributeValue['uid']);
                             }
                         }
+
                         if (!empty($filterConstraints)) {
                             $constraints[] = $this->createConstraintFromConstraintsArray(
                                 $query,
@@ -391,20 +402,20 @@ class ProductRepository extends AbstractDemandRepository
                         break;
                     case Filter::TYPE_CATEGORIES:
                         $categoriesConstraints = [];
-                        foreach ($filter['value'] as $value) {
+                        foreach ($filterData['value'] as $value) {
                             $categoriesConstraints[] = $query->contains('categories', $value);
                         }
 
                         $constraints[] = $this->createConstraintFromConstraintsArray(
                             $query,
                             $categoriesConstraints,
-                            'or'
+                            $filterConjunction
                         );
                         break;
                     case Filter::TYPE_ATTRIBUTES_MINMAX:
                         // need to just prebuild array since minmax attribute filter can consist of two inputs
-                        list($value, $rangeType) = $filter['value'];
-                        $rangeKey = (int)$filter['attributeUid'];
+                        list($value, $rangeType) = $filterData['value'];
+                        $rangeKey = (int)$filterData['attributeUid'];
 
                         $ranges[$rangeKey][$rangeType] = $value;
 
