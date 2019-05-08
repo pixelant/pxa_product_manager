@@ -7,6 +7,7 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Class LinkBuilderServiceTest
@@ -58,6 +59,30 @@ class LinkBuilderServiceTest extends UnitTestCase
         );
 
         $this->assertEquals($languageUid, $subject->_get('languageUid'));
+    }
+
+    /**
+     * @test
+     */
+    public function defaultTypoScriptFrontendControllerIsNull()
+    {
+        $this->assertNull($this->subject->_get('typoScriptFrontendController'));
+    }
+
+    /**
+     * @test
+     */
+    public function typoScriptFrontendControllerPassedToConstructorIsSet()
+    {
+        $tsfe = $this->createMock(TypoScriptFrontendController::class);
+
+        $subject = $this->getAccessibleMock(
+            LinkBuilderService::class,
+            null,
+            [null, $tsfe]
+        );
+
+        $this->assertSame($tsfe, $subject->_get('typoScriptFrontendController'));
     }
 
     /**
