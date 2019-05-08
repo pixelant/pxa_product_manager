@@ -84,6 +84,10 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
      */
     protected function getLinkBuilder(): LinkBuilderService
     {
-        return GeneralUtility::makeInstance(LinkBuilderService::class);
+        return GeneralUtility::makeInstance(
+            LinkBuilderService::class,
+            null, // Detect language automatically
+            $this->getTypoScriptFrontendController() // Pass give TypoScriptFrontendController
+        );
     }
 }
