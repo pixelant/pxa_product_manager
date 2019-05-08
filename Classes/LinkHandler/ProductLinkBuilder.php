@@ -146,12 +146,13 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
      */
     protected function getSite(): ?Site
     {
-        if (isset($GLOBALS['TYPO3_REQUEST'])) {
-            /** @var Site $site */
-            $site = $GLOBALS['TYPO3_REQUEST']->getAttribute('site');
-        }
+        /** @var Site $site */
+        $site = isset($GLOBALS['TYPO3_REQUEST'])
+            ? $GLOBALS['TYPO3_REQUEST']->getAttribute('site')
+            : null;
+
         // Try to find site by record PID
-        if (isset($site) && $site instanceof NullSite) {
+        if ($site === null || $site instanceof NullSite) {
             $table = $this->mode === self::PRODUCT_MODE
                 ? 'tx_pxaproductmanager_domain_model_product'
                 : 'sys_category';
@@ -164,17 +165,18 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
                     ['uid' => $this->recordUid]
                 )
                 ->fetchColumn(0);
-            
+
             if ($pid > 0) {
                 $siteFinder = GeneralUtility::makeInstance(SiteFinder::class);
                 try {
                     return $siteFinder->getSiteByPageId((int)$pid);
                 } catch (SiteNotFoundException $exception) {
                     // Just return null
+                    return null;
                 }
             }
         }
 
-        return null;
+        return $site;
     }
 }
