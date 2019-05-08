@@ -61,7 +61,7 @@ class LinkBuilderService
     ) {
         if ($languageUid !== null) {
             $this->languageUid = $languageUid;
-        } elseif (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_FE) {
+        } elseif ($this->isFrontendRequestType()) {
             /** @var LanguageAspect $languageAspect */
             $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
             $this->languageUid = $languageAspect->getId();
@@ -272,5 +272,19 @@ class LinkBuilderService
         static::$cacheCategories[$categoryUid] = $arguments;
 
         return $arguments;
+    }
+
+    /**
+     * Check if FE request
+     *
+     * @return bool
+     */
+    protected function isFrontendRequestType(): bool
+    {
+        if (!defined('TYPO3_REQUESTTYPE')) {
+            return false;
+        }
+
+        return (bool)(TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_FE);
     }
 }
