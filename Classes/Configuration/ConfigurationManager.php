@@ -13,7 +13,7 @@ namespace Pixelant\PxaProductManager\Configuration;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use Pixelant\PxaProductManager\Configuration\BackendConfigurationManager;
+
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager as ExtbaseConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\FrontendConfigurationManager;
 
