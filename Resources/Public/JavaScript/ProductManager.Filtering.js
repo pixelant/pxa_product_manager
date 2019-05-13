@@ -43,7 +43,7 @@
 		 * @type {null}
 		 * @private
 		 */
-		let _lastFilterBoxIdentifier = null;
+		let _lastFilterBox = null;
 
 		/**
 		 * Main initialize filtering
@@ -111,7 +111,7 @@
 		 */
 		const _selectBoxChanged = function (event, $selectBox) {
 			if (_triggerSelectBoxChange) {
-				_lastFilterBoxIdentifier = $selectBox.data('identifier');
+				_lastFilterBox = $selectBox;
 				_triggerUpdate();
 			}
 		};
@@ -124,7 +124,7 @@
 			// while reset disable onchange
 			_triggerSelectBoxChange = false;
 			// remove last filter box
-			_lastFilterBoxIdentifier = null;
+			_lastFilterBox = null;
 
 			$selectBoxes.select2().val(null).trigger('change');
 
@@ -242,9 +242,10 @@
 			// Go for each filter
 			$selectBoxes.each(function () {
 				let identifier = $(this).data('identifier'),
-					filterType = $(this).data('filter-type');
+					filterType = $(this).data('filter-type'),
+					filterConjunction = $(this).data('filter-conjunction') || 'or';
 
-				if (identifier !== _lastFilterBoxIdentifier) {
+				if (filterConjunction === 'and' || _lastFilterBox === null || identifier !== _lastFilterBox.data('identifier')) {
 					let $selectFilter = $(this);
 
 					$selectFilter.find('option').each(function () {
@@ -291,7 +292,7 @@
 			// we need to disable options with bigger/lower values
 			if (minMaxFilter !== null) {
 				let isCurrentMinMaxFilterRangeMin = minMaxFilter.data('range') === 'min',
-					identifierParts = _lastFilterBoxIdentifier.split('-'),
+					identifierParts = _lastFilterBox.data('identifier').split('-'),
 					secondMinMaxFilterIdentifier = identifierParts[0] + '-' + identifierParts[1] + '-' + (isCurrentMinMaxFilterRangeMin ? 'max' : 'min'),
 					secondMinMaxFilter = $('[data-identifier="' + secondMinMaxFilterIdentifier + '"]');
 
