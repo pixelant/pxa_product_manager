@@ -78,16 +78,10 @@ class AjaxProductsController extends ProductController
         }
 
         // Get available options if required
-        try {
-            if ((int)$this->request->getArgument('hideFilterOptionsNoResult') === 1) {
-                // @codingStandardsIgnoreStart
-                list($availableOptions, $availableCategories, $productsNoLimitCount) = $this->getAvailableFilterOptionsAndCountProductFromDemand(
-                    $demand
-                );
-                // @codingStandardsIgnoreEnd
-            }
-        } catch (NoSuchArgumentException $exception) {
-            // just show all available options
+        if ($this->request->hasArgument('hideFilterOptionsNoResult')
+            && !empty($this->request->getArgument('hideFilterOptionsNoResult'))
+        ) {
+            $filtersAvailableOptions = $this->createFiltersAvailableOptions($demand);
         }
 
         $countResults = $productsNoLimitCount ?? $this->countDemanded($demand);
@@ -100,8 +94,7 @@ class AjaxProductsController extends ProductController
         $response = [
             'lazyLoadingStop' => $stopLoading,
             'countResults' => $countResults,
-            'availableOptionsList' => implode(',', $availableOptions ?? []),
-            'availableCategoriesList' => implode(',', $availableCategories ?? []),
+            'filtersAvailableOptions' => $filtersAvailableOptions ?? [],
             'html' => $this->view->render()
         ];
 

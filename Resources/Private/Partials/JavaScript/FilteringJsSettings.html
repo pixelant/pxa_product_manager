@@ -8,8 +8,7 @@
 		ProductManager.settings.filtering = {
 			selectBoxes: '.tx-pxa-product-manager select[data-filter-type]',
 			resetButton: '.tx-pxa-product-manager [data-reset-filter]',
-			availableOptionsList: '<f:format.raw>{availableOptionsList}</f:format.raw>',
-			availableCategoriesList: '<f:format.raw>{availableCategoriesList}</f:format.raw>'
+            filtersAvailableOptions: <f:format.raw>{filtersAvailableOptions -> f:format.json()}</f:format.raw>
 		};
 
 		w.ProductManager = ProductManager;

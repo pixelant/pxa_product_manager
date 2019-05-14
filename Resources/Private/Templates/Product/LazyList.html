@@ -4,7 +4,7 @@
 
 <f:section name="main">
     <f:render partial="JavaScript/LazyLoadingJsConfiguration" arguments="{_all}"/>
-    <f:render partial="JavaScript/FilteringJsSettings" arguments="{availableOptionsList: availableOptionsList, availableCategoriesList: availableCategoriesList}"/>
+    <f:render partial="JavaScript/FilteringJsSettings" arguments="{filtersAvailableOptions: filtersAvailableOptions}"/>
 
     <f:if condition="{filters}">
         <f:render partial="Filtering/Filters" arguments="{filters: filters}"/>
