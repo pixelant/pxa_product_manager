@@ -153,7 +153,7 @@ return (function () {
                     'generatorOptions' => [
                         'fields' => ['name'],
                         'replacements' => [
-                            '/' => ''
+                            '/' => '-'
                         ],
                     ],
                     'fallbackCharacter' => '-',

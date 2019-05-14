@@ -46,7 +46,7 @@ call_user_func(function () {
                 'generatorOptions' => [
                     'fields' => ['title'],
                     'replacements' => [
-                        '/' => ''
+                        '/' => '-'
                     ],
                 ],
                 'fallbackCharacter' => '-',
