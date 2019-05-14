@@ -88,6 +88,7 @@ class Category extends CategoryExtbase
      * Attribute sets
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $attributeSets;
 

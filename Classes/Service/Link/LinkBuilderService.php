@@ -13,6 +13,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Class LinkBuilderService
@@ -36,6 +37,11 @@ class LinkBuilderService
     protected static $cacheCategories = [];
 
     /**
+     * @var TypoScriptFrontendController
+     */
+    protected $typoScriptFrontendController = null;
+
+    /**
      * Language uid
      *
      * @var int
@@ -46,16 +52,22 @@ class LinkBuilderService
      * Initialize
      *
      * @param int|null $languageUid Provide language to generate urls
+     * @param TypoScriptFrontendController|null $typoScriptFrontendController
+     * @throws \TYPO3\CMS\Core\Context\Exception\AspectNotFoundException
      */
-    public function __construct(int $languageUid = null)
-    {
+    public function __construct(
+        int $languageUid = null,
+        TypoScriptFrontendController $typoScriptFrontendController = null
+    ) {
         if ($languageUid !== null) {
             $this->languageUid = $languageUid;
-        } elseif (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_FE) {
+        } elseif ($this->isFrontendRequestType()) {
             /** @var LanguageAspect $languageAspect */
             $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
             $this->languageUid = $languageAspect->getId();
         }
+
+        $this->typoScriptFrontendController = $typoScriptFrontendController;
     }
 
     /**
@@ -186,7 +198,10 @@ class LinkBuilderService
         $this->emitSignal(__CLASS__, 'beforeBuildUri', $signalArguments);
 
         /** @var ContentObjectRenderer $contentObjectRenderer */
-        $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $contentObjectRenderer = GeneralUtility::makeInstance(
+            ContentObjectRenderer::class,
+            $this->typoScriptFrontendController
+        );
         return $contentObjectRenderer->typolink_URL($confLink);
     }
 
@@ -257,5 +272,19 @@ class LinkBuilderService
         static::$cacheCategories[$categoryUid] = $arguments;
 
         return $arguments;
+    }
+
+    /**
+     * Check if FE request
+     *
+     * @return bool
+     */
+    protected function isFrontendRequestType(): bool
+    {
+        if (!defined('TYPO3_REQUESTTYPE')) {
+            return false;
+        }
+
+        return (bool)(TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_FE);
     }
 }
