@@ -5,6 +5,7 @@
 
 <f:section name="select">
     <select data-uid="{filter.uid}"
+            data-filter-conjunction="{filter.conjunctionAsString}"
             data-filter-type="{filter.type}"
             data-attribute-uid="{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}"
             data-identifier="{filter.type}-{f:if(condition: filter.attribute, then: '{filter.attribute.uid}', else: '{filter.parentCategory.uid}')}-{range}"

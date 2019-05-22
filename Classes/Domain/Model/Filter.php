@@ -35,6 +35,11 @@ use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
  */
 class Filter extends AbstractEntity
 {
+    /**
+     * Conjunctions as string
+     */
+    const CONJUNCTION_OR = 'or';
+    const CONJUNCTION_AND = 'and';
 
     /**
      * categories type
@@ -218,5 +223,15 @@ class Filter extends AbstractEntity
     public function setInverseConjunction(bool $inverseConjunction): void
     {
         $this->inverseConjunction = $inverseConjunction;
+    }
+
+    /**
+     * Return filter conjunction as string
+     *
+     * @return string
+     */
+    public function getConjunctionAsString(): string
+    {
+        return $this->isInverseConjunction() ? self::CONJUNCTION_AND : self::CONJUNCTION_OR;
     }
 }

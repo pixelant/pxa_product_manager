@@ -388,7 +388,7 @@ class ProductRepository extends AbstractDemandRepository
                     continue;
                 }
 
-                $filterConjunction = $filter->isInverseConjunction() ? 'and' : 'or';
+                $filterConjunction = $filter->getConjunctionAsString();
                 switch ($filter->getType()) {
                     case Filter::TYPE_ATTRIBUTES:
                         $filterConstraints = [];
