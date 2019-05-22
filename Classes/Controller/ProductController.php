@@ -111,7 +111,7 @@ class ProductController extends AbstractController
                 );
             }
 
-            if (count($subCategories) > 0 || $this->settings['showCategoriesWithProducts']) {
+            if (count($subCategories) === 0 || $this->settings['showCategoriesWithProducts']) {
                 $this->settings['demandCategories'] = [$category->getUid()];
 
                 $demand = $this->createDemandFromSettings($this->settings);
