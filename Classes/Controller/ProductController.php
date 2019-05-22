@@ -4,6 +4,7 @@ namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
+use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Order;
@@ -92,13 +93,25 @@ class ProductController extends AbstractController
         );
 
         if ($category) {
-            /** @var QueryResultInterface $subCategories */
+            /** @var Category[] $subCategories */
             $subCategories = $this->categoryRepository->findByParent(
                 $category,
                 $this->getOrderingsForCategories()
-            );
+            )->toArray();
 
-            if ($subCategories->count() === 0 || $this->settings['showCategoriesWithProducts']) {
+            // Exclude categories without products if enabled
+            if (count($subCategories) > 0 && (bool)$this->settings['navigationHideCategoriesWithoutProducts']) {
+                $subCategories = array_filter(
+                    $subCategories,
+                    function ($subCategory) {
+                        // Show category in case it has subcategories or products
+                        return $subCategory->getSubCategories()->count() > 0
+                            || $this->productRepository->countByCategory($subCategory) > 0;
+                    }
+                );
+            }
+
+            if (count($subCategories) === 0 || $this->settings['showCategoriesWithProducts']) {
                 $this->settings['demandCategories'] = [$category->getUid()];
 
                 $demand = $this->createDemandFromSettings($this->settings);
