@@ -24,6 +24,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -165,7 +166,7 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
         );
         $queryBuilder->getRestrictions()->removeAll();
 
-        $rows = $queryBuilder
+        $statement = $queryBuilder
             ->select('uid_local')
             ->from('sys_category_record_mm')
             ->where(
@@ -191,14 +192,13 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
                     )
                 )
             )
-            ->execute()
-            ->fetchAll();
+            ->execute();
 
-        foreach ($rows as $row) {
-            $categories[] = $row['uid_local'];
+        while ($uid = $statement->fetchColumn(0)) {
+            $categories[] = $uid;
         }
 
-        return array_unique($categories);
+        return array_values(array_unique($categories));
     }
 
     /**

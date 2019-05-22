@@ -32,7 +32,7 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg'
         ],
         'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, parent_category, attribute, starttime, endtime',
+            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, parent_category, inverse_conjunction, attribute, starttime, endtime',
         ],
         'types' => [
             '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang'],
@@ -42,8 +42,8 @@ return (function () {
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
             'common' => ['showitem' => 'type, --linebreak--, name, --linebreak--, label'],
-            'categories' => ['showitem' => 'parent_category'],
-            'attributes' => ['showitem' => 'attribute'],
+            'categories' => ['showitem' => 'inverse_conjunction, --linebreak--, parent_category'],
+            'attributes' => ['showitem' => 'inverse_conjunction, --linebreak--, attribute'],
             'lang' => ['showitem' => 'starttime, --linebreak--, endtime']
         ],
         'columns' => [
@@ -204,7 +204,16 @@ return (function () {
                     'minitems' => 1,
                     'maxitems' => 1,
                 ]
-            ]
+            ],
+            'inverse_conjunction' => [
+                'displayCond' => 'FIELD:type:!=:3', // hide for range filter
+                'exclude' => 1,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.inverse_conjunction',
+                'config' => [
+                    'type' => 'check',
+                    'default' => 0
+                ],
+            ],
         ]
     ];
 })();

@@ -60,24 +60,38 @@ class AttributeValueRepository extends Repository
      * Find attribute value by attribute and its value
      *
      * @param $attribute
-     * @param $value
+     * @param array $values
+     * @param string $filterConjunction
      * @param bool $rawResult
      * @return QueryResultInterface|array
      */
-    public function findAttributeValuesByAttributeAndValue($attribute, $value, $rawResult = false)
-    {
+    public function findAttributeValuesByAttributeAndValues(
+        $attribute,
+        array $values,
+        string $filterConjunction = 'or',
+        $rawResult = false
+    ) {
         $query = $this->createQuery();
 
         $query
             ->getQuerySettings()
             ->setRespectStoragePage(false);
 
-        return $query->matching(
+        $valuesConstraints = [];
+        foreach ($values as $value) {
+            $valuesConstraints[] = $this->createInRowQuery($query, 'value', $value);
+        }
+
+        $query->matching(
             $query->logicalAnd([
                 $query->equals('attribute', $attribute),
-                $this->createInRowQuery($query, 'value', $value)
+                $filterConjunction === 'and'
+                    ? $query->logicalAnd($valuesConstraints)
+                    : $query->logicalOr($valuesConstraints)
             ])
-        )->execute($rawResult);
+        );
+
+        return $query->execute($rawResult);
     }
 
     /**

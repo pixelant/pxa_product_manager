@@ -28,6 +28,8 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\FiltersAvailableOptions;
+use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\FilterRepository;
 use Pixelant\PxaProductManager\Domain\Repository\OrderConfigurationRepository;
@@ -242,26 +244,60 @@ class AbstractController extends ActionController
     }
 
     /**
-     * Find all available filtering options for demand and count result
+     * Create object with available filters options
      *
      * @param Demand $demand
-     * @return array
+     * @return FiltersAvailableOptions
      */
-    protected function getAvailableFilterOptionsAndCountProductFromDemand(Demand $demand)
+    protected function createFiltersAvailableOptions(Demand $demand): FiltersAvailableOptions
     {
-        $demandNoLimit = clone $demand;
-        $demandNoLimit->setLimit(0);
-        $demandNoLimit->setOffset(0);
-        $productsNoLimit = $this->productRepository->findDemandedRaw($demandNoLimit);
+        $filtersDemand = clone $demand;
+        $filtersDemand->setLimit(0);
+        $filtersDemand->setOffset(0);
+        $filtersAvailableOptions = GeneralUtility::makeInstance(FiltersAvailableOptions::class);
+        // Find with all filters
+        $allAvailableProducts = $this->productRepository->findDemandedRaw($filtersDemand);
 
-        list($availableOptions, $availableCategories) = $this->getAvailableFilteringOptionsForProducts(
-            $productsNoLimit
+        // Set for non active filters
+        $filtersAvailableOptions->setAvailableCategoriesForAll(
+            $this->getAvailableFilteringCategoriesForProducts($allAvailableProducts)
         );
+        $filtersAvailableOptions->setAvailableAttributesForAll(
+            $this->getAvailableFilteringAttributesOptionsForProducts($allAvailableProducts)
+        );
+        // Now get results per filter
+        $demandFilters = $filtersDemand->getFilters();
+        foreach ($demandFilters as $key => $demandFilter) {
+            /** @var Filter $filter */
+            $filter = $this->filterRepository->findByUid((int)$demandFilter['uid']);
+            if ($filter === null) {
+                continue;
+            }
+            unset($productsNoLimit, $demandNoLimit);
+            // Get options variants for all 'OR' filters
+            if ($filter->getConjunctionAsString() === Filter::CONJUNCTION_OR) {
+                // Create new filters
+                $demandFiltersVariant = $demandFilters;
+                unset($demandFiltersVariant[$key]);
+                // Set new filters
+                $filtersDemand->setFilters($demandFiltersVariant);
+                // Get result for new filters
+                $allAvailableProductsVariant = $this->productRepository->findDemandedRaw($filtersDemand);
+                if ($filter->getType() === Filter::TYPE_CATEGORIES) {
+                    $filtersAvailableOptions->setAvailableCategoriesForFilter(
+                        $filter->getUid(),
+                        $this->getAvailableFilteringCategoriesForProducts($allAvailableProductsVariant)
+                    );
+                } else {
+                    $filtersAvailableOptions->setAvailableAttributesForFilter(
+                        $filter->getUid(),
+                        $this->getAvailableFilteringAttributesOptionsForProducts($allAvailableProductsVariant)
+                    );
+                }
+            }
+        }
 
-        $productsNoLimitCount = count($productsNoLimit);
-        unset($productsNoLimit, $demandNoLimit);
-
-        return [$availableOptions, $availableCategories, $productsNoLimitCount];
+        return $filtersAvailableOptions;
     }
 
     /**
@@ -270,15 +306,12 @@ class AbstractController extends ActionController
      * @param array $products Raw data of products from DB
      * @return array
      */
-    protected function getAvailableFilteringOptionsForProducts($products): array
+    protected function getAvailableFilteringAttributesOptionsForProducts($products): array
     {
-        $productUids = [];
         $attributeUids = [];
         $availableOptions = [];
 
         foreach ($products as &$product) {
-            $productUids[] = $product['uid'];
-
             if ($product['serialized_attributes_values']) {
                 $attributeValues = unserialize($product['serialized_attributes_values']);
                 $attributeUids = array_merge(
@@ -306,10 +339,25 @@ class AbstractController extends ActionController
             }
         }
 
-        $availableCategories = $this->categoryRepository->getProductsCategoriesUids($productUids);
-        $availableOptions = array_unique($availableOptions);
+        return array_values(array_unique($availableOptions));
+    }
 
-        return [$availableOptions, $availableCategories];
+    /**
+     * Get available categories for products query raw result
+     *
+     * @param array $productsRawResult
+     * @return array
+     */
+    protected function getAvailableFilteringCategoriesForProducts(array $productsRawResult): array
+    {
+        return $this->categoryRepository->getProductsCategoriesUids(
+            array_map(
+                function ($item) {
+                    return $item['uid'];
+                },
+                $productsRawResult
+            )
+        );
     }
 
     /**
@@ -366,6 +414,16 @@ class AbstractController extends ActionController
         }
 
         return $rows;
+    }
+
+    /**
+     * Check if options without results need to be hidden
+     *
+     * @return bool
+     */
+    protected function hideFilterOptionsNoResult(): bool
+    {
+        return (int)$this->settings['hideFilterOptionsNoResult'] === 1;
     }
 
     /**

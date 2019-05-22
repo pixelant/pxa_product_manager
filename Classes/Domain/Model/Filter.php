@@ -28,12 +28,18 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 
 /**
  * Filter
  */
 class Filter extends AbstractEntity
 {
+    /**
+     * Conjunctions as string
+     */
+    const CONJUNCTION_OR = 'or';
+    const CONJUNCTION_AND = 'and';
 
     /**
      * categories type
@@ -68,6 +74,7 @@ class Filter extends AbstractEntity
      * parentCategory
      *
      * @var \Pixelant\PxaProductManager\Domain\Model\Category
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $parentCategory;
 
@@ -75,6 +82,7 @@ class Filter extends AbstractEntity
      * attribute
      *
      * @var \Pixelant\PxaProductManager\Domain\Model\Attribute
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $attribute;
 
@@ -84,6 +92,11 @@ class Filter extends AbstractEntity
      * @var \string
      */
     protected $label = '';
+
+    /**
+     * @var bool
+     */
+    protected $inverseConjunction = false;
 
     /**
      * Returns the name
@@ -113,6 +126,9 @@ class Filter extends AbstractEntity
      */
     public function getParentCategory()
     {
+        if ($this->parentCategory instanceof LazyLoadingProxy) {
+            $this->parentCategory->_loadRealInstance();
+        }
         return $this->parentCategory;
     }
 
@@ -155,6 +171,9 @@ class Filter extends AbstractEntity
      */
     public function getAttribute()
     {
+        if ($this->attribute instanceof LazyLoadingProxy) {
+            $this->attribute->_loadRealInstance();
+        }
         return $this->attribute;
     }
 
@@ -188,5 +207,31 @@ class Filter extends AbstractEntity
     public function setLabel(string $label)
     {
         $this->label = $label;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInverseConjunction(): bool
+    {
+        return $this->inverseConjunction;
+    }
+
+    /**
+     * @param bool $inverseConjunction
+     */
+    public function setInverseConjunction(bool $inverseConjunction): void
+    {
+        $this->inverseConjunction = $inverseConjunction;
+    }
+
+    /**
+     * Return filter conjunction as string
+     *
+     * @return string
+     */
+    public function getConjunctionAsString(): string
+    {
+        return $this->isInverseConjunction() ? self::CONJUNCTION_AND : self::CONJUNCTION_OR;
     }
 }

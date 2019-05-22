@@ -142,12 +142,8 @@ class ProductController extends AbstractController
                 $filtersUids
             );
 
-            if ((int)$this->settings['hideFilterOptionsNoResult'] === 1) {
-                // @codingStandardsIgnoreStart
-                list($availableOptions, $availableCategories, $productsNoLimitCount) = $this->getAvailableFilterOptionsAndCountProductFromDemand(
-                    $demand
-                );
-                // @codingStandardsIgnoreEnd
+            if ($this->hideFilterOptionsNoResult()) {
+                $filtersAvailableOptions = $this->createFiltersAvailableOptions($demand);
             }
         }
 
@@ -165,8 +161,7 @@ class ProductController extends AbstractController
             'storagePid' => $storagePid ?? '',
             'lazyLoadingStop' => ($limit === 0 || $limit >= $countResults) ? 1 : 0,
             'filters' => $filters ?? [],
-            'availableOptionsList' => implode(',', $availableOptions ?? []),
-            'availableCategoriesList' => implode(',', $availableCategories ?? []),
+            'filtersAvailableOptions' => $filtersAvailableOptions ?? []
         ]);
     }
 

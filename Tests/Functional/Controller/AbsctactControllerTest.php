@@ -39,7 +39,7 @@ class AbsctactControllerTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getAvailableFilteringOptionsForProductsGenerateValidDataForFilter()
+    public function getAvailableFilteringAttributesOptionsForProductsReturnAttiributes()
     {
         $serialized = serialize($this->getAttributesToValues());
         $products = [
@@ -64,19 +64,56 @@ class AbsctactControllerTest extends FunctionalTestCase
             '',
             true
         );
-        $mockedController->_set('productRepository', $this->productRepository);
         $mockedController->_set('categoryRepository', $this->categoryRepository);
 
-        list($availableOptions, $availableCategories) = $mockedController->_call(
-            'getAvailableFilteringOptionsForProducts',
+        $availableOptions = $mockedController->_call(
+            'getAvailableFilteringAttributesOptionsForProducts',
+            $products
+        );
+
+        $expectOptions = [556, 889, 336];
+
+        $this->asserEqualsCustom($expectOptions, $availableOptions);
+    }
+
+    /**
+     * @test
+     */
+    public function getAvailableFilteringCategoriesForProductsReturnCategories()
+    {
+        $serialized = serialize($this->getAttributesToValues());
+        $products = [
+            [
+                'uid' => 1,
+                'serialized_attributes_values' => $serialized
+            ],
+            [
+                'uid' => 2,
+                'serialized_attributes_values' => $serialized
+            ],
+            [
+                'uid' => 3,
+                'serialized_attributes_values' => $serialized
+            ],
+        ];
+
+        $mockedController = $this->getAccessibleMock(
+            AbstractController::class,
+            ['dummy'],
+            [],
+            '',
+            true
+        );
+        $mockedController->_set('categoryRepository', $this->categoryRepository);
+
+        $availableCategories = $mockedController->_call(
+            'getAvailableFilteringCategoriesForProducts',
             $products
         );
 
         $expectCategories = [4, 5, 6];
-        $expectOptions = [556, 889, 336];
 
         $this->asserEqualsCustom($expectCategories, $availableCategories);
-        $this->asserEqualsCustom($expectOptions, $availableOptions);
     }
 
     /**
