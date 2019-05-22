@@ -29,8 +29,7 @@
 		/**
 		 * Available options and categories for filtering
 		 */
-		let _availableOptionsList = '',
-			_availableCategoriesList = '';
+		let _filtersAvailableOptions = {};
 
 		let _filterTypeCategories = 1,
 			_filterTypeAttributeOptions = 2,
@@ -66,9 +65,10 @@
 
 			updateFilteringOptions();
 
-			$selectBoxes.on('change', function (e) {
-				_selectBoxChanged(e, $(this));
+			$selectBoxes.on('change', function () {
+				_selectBoxChanged($(this));
 			});
+
 			$resetButton.on('click', function (e) {
 				e.preventDefault();
 				_resetFiltering();
@@ -105,11 +105,10 @@
 		/**
 		 * Selection was changed
 		 *
-		 * @param event
 		 * @param $selectBox
 		 * @private
 		 */
-		const _selectBoxChanged = function (event, $selectBox) {
+		const _selectBoxChanged = function ($selectBox) {
 			if (_triggerSelectBoxChange) {
 				_lastFilterBox = $selectBox;
 				_triggerUpdate();
@@ -176,11 +175,8 @@
 			$selectBoxes = $(_settings.selectBoxes);
 			$resetButton = $(_settings.resetButton);
 
-			if (_settings.availableOptionsList) {
-				_availableOptionsList = _settings.availableOptionsList
-			}
-			if (_settings.availableCategoriesList) {
-				_availableCategoriesList = _settings.availableCategoriesList
+			if (_settings.filtersAvailableOptions) {
+				_filtersAvailableOptions = _settings.filtersAvailableOptions
 			}
 		};
 
@@ -242,12 +238,18 @@
 			// Go for each filter
 			$selectBoxes.each(function () {
 				let identifier = $(this).data('identifier'),
-					filterType = $(this).data('filter-type'),
-					filterConjunction = $(this).data('filter-conjunction') || 'or';
+					filterUid = $(this).data('uid'),
+					filterType = $(this).data('filter-type');
 
-				if (filterConjunction === 'and' || _lastFilterBox === null || identifier !== _lastFilterBox.data('identifier')) {
+				if (_lastFilterBox !== null
+					&& identifier === _lastFilterBox.data('identifier')
+					&& filterType === _filterTypeAttributeMinMax
+				) {
+					minMaxFilter = $(this);
+				} else {
 					let $selectFilter = $(this);
 
+					let availableListOfOptionsForFilter = _getAvailableListOfOptionsForFilter(filterUid, filterType);
 					$selectFilter.find('option').each(function () {
 						let $option = $(this);
 
@@ -260,37 +262,31 @@
 								case _filterTypeCategories:
 								case _filterTypeAttributeOptions:
 									inList = ProductManager.Main.isInList(
-										filterType === 1 ? _availableCategoriesList : _availableOptionsList,
+										availableListOfOptionsForFilter,
 										$option.attr('value')
 									);
 									break;
 								// max and min
 								case _filterTypeAttributeMinMax:
 									inList = ProductManager.Main.isInList(
-										_availableOptionsList,
+										availableListOfOptionsForFilter,
 										$option.data('option-uid')
 									);
 									break;
 							}
 
-							if (inList || (_availableCategoriesList + _availableOptionsList) === '') {
-								$option.prop('disabled', false);
-							} else {
-								$option.prop('disabled', true);
-							}
+							$option.prop('disabled', !inList);
 						}
 					});
 
 					// re-init to respect changes
 					$selectFilter.select2();
-				} else if (filterType === _filterTypeAttributeMinMax) {
-					minMaxFilter = $(this);
 				}
 			});
 
-			// If last changed filter was min-max type
-			// we need to disable options with bigger/lower values
 			if (minMaxFilter !== null) {
+				// If last changed filter was min-max type
+				// we need to disable options with bigger/lower values
 				let isCurrentMinMaxFilterRangeMin = minMaxFilter.data('range') === 'min',
 					identifierParts = _lastFilterBox.data('identifier').split('-'),
 					secondMinMaxFilterIdentifier = identifierParts[0] + '-' + identifierParts[1] + '-' + (isCurrentMinMaxFilterRangeMin ? 'max' : 'min'),
@@ -305,7 +301,8 @@
 							value = parseInt($optionMinMax.attr('value'));
 
 						if ((isCurrentMinMaxFilterRangeMin && value < currentFilterValue)
-							|| (!isCurrentMinMaxFilterRangeMin && value > currentFilterValue)) {
+							|| (!isCurrentMinMaxFilterRangeMin && value > currentFilterValue)
+						) {
 							$optionMinMax.prop('disabled', true);
 						}
 					});
@@ -314,29 +311,39 @@
 		};
 
 		/**
-		 * Used to update available options
+		 * Available options for filter
 		 *
-		 * @param newAvailableCategoriesList
+		 * @param filterUid
+		 * @param filterType
 		 */
-		const setAvailableCategoriesList = function (newAvailableCategoriesList) {
-			_availableCategoriesList = newAvailableCategoriesList;
+		const _getAvailableListOfOptionsForFilter = function (filterUid, filterType) {
+			let options = _filtersAvailableOptions[filterType === 1 ? 'availableCategories' : 'availableAttributes'];
+
+			if (typeof options === 'object') {
+				let optionsResult = options.hasOwnProperty(filterUid)
+					? options[filterUid]
+					: options['all'];
+
+				return optionsResult.join(',');
+			}
+
+			return '';
 		};
 
 		/**
 		 * Used to update available options
 		 *
-		 * @param newAvailableOptionsList
+		 * @param newFiltersAvailableOptions
 		 */
-		const setAvailableOptionsList = function (newAvailableOptionsList) {
-			_availableOptionsList = newAvailableOptionsList;
+		const setFiltersAvailableOptions = function (newFiltersAvailableOptions) {
+			_filtersAvailableOptions = newFiltersAvailableOptions;
 		};
 
 		return {
 			init: init,
 			buildFilteringData: buildFilteringData,
 			updateFilteringOptions: updateFilteringOptions,
-			setAvailableCategoriesList: setAvailableCategoriesList,
-			setAvailableOptionsList: setAvailableOptionsList
+			setFiltersAvailableOptions: setFiltersAvailableOptions
 		}
 	})();
 
