@@ -226,6 +226,15 @@
             <trans-unit id="flexform.hide_filter_options_no_result">
                 <source>Hide filtering options without result</source>
             </trans-unit>
+            <trans-unit id="flexform.filters_conjunction">
+                <source>Conjunction between filters</source>
+            </trans-unit>
+            <trans-unit id="flexform.filters_conjunction_and">
+                <source>AND</source>
+            </trans-unit>
+            <trans-unit id="flexform.filters_conjunction_or">
+                <source>OR</source>
+            </trans-unit>
             <trans-unit id="flexform.include_discontinued">
                 <source>Include discontinued products</source>
             </trans-unit>

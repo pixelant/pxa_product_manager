@@ -651,6 +651,26 @@
                         </TCEforms>
                     </settings.hideFilterOptionsNoResult>
 
+                    <settings.filtersConjunction>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters_conjunction</label>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <config>
+                                <type>select</type>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters_conjunction_and</numIndex>
+                                        <numIndex index="1">and</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters_conjunction_or</numIndex>
+                                        <numIndex index="1">or</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.filtersConjunction>
+
                     <settings.filters>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters</label>

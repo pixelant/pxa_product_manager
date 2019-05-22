@@ -51,6 +51,7 @@
 			compareListEnable = false,
 			firstLoadingLimit = 0,
 			lazyListInitialized = false,
+			filtersConjunction = 'and',
 			hideFilterOptionsNoResult = 0;
 
 		/**
@@ -113,6 +114,7 @@
 			wishListEnable = parseInt(settings.wishListEnable, 10) === 1;
 			compareListEnable = parseInt(settings.compareListEnable, 10) === 1;
 			hideFilterOptionsNoResult = parseInt(settings.hideFilterOptionsNoResult, 10);
+			filtersConjunction = settings.filtersConjunction === 'or' ? 'or' : 'and';
 
 			// Jquery objects
 			$wrapper = $(settings.wrapper);
@@ -194,19 +196,21 @@
 			$loaderOverlay.removeClass(settings.hiddenClass);
 
 			let limit = overrideLimit || settings.limit;
+			let demand = {
+				offSet: offSet,
+				categories: (settings.demandCategories.length > 0) ? settings.demandCategories.split(',') : [],
+				limit: limit,
+				filters: filteringData,
+				storagePid: storage,
+				orderBy: settings.orderBy,
+				orderDirection: settings.orderDirection,
+				includeDiscontinued: settings.includeDiscontinued,
+				filtersConjunction: filtersConjunction,
+			};
 
 			let data = {
 				tx_pxaproductmanager_pi1: {
-					demand: {
-						offSet: offSet,
-						categories: (settings.demandCategories.length > 0) ? settings.demandCategories.split(',') : [],
-						limit: limit,
-						filters: filteringData,
-						storagePid: storage,
-						orderBy: settings.orderBy,
-						orderDirection: settings.orderDirection,
-						includeDiscontinued: settings.includeDiscontinued
-					},
+					demand: demand,
 					pagePid: settings.pagePid,
 					hideFilterOptionsNoResult: hideFilterOptionsNoResult
 				}
@@ -261,8 +265,7 @@
 
 					// Update filtering options
 					if (hideFilterOptionsNoResult && updateFilteringOptions) {
-						ProductManager.Filtering.setAvailableCategoriesList(data.availableCategoriesList);
-						ProductManager.Filtering.setAvailableOptionsList(data.availableOptionsList);
+						ProductManager.Filtering.setFiltersAvailableOptions(data.filtersAvailableOptions);
 						ProductManager.Filtering.updateFilteringOptions();
 					}
 				} else {

@@ -4,19 +4,15 @@
         <a class="filter-clear__link" href="javascript: {}" data-reset-filter="1">
             <f:translate key="fe.clear_filter"/>
             <span class="filter-clear__icon">
-                    <ppm:svg
-                            source="{f:uri.resource(path: 'Icons/Svg/circle-cross.svg', extensionName: 'pxa_product_manager')}"/>
-                </span>
+                <ppm:svg source="{f:uri.resource(path: 'Icons/Svg/circle-cross.svg', extensionName: 'pxa_product_manager')}"/>
+            </span>
         </a>
     </div>
     <form class="row productmanager-filter_options" name="pxa-pm-filtering">
         <f:for each="{filters}" as="filter">
             <div class="filter-wrapper col-sm-3">
-                <f:alias map="{filterName: '{f:if(condition: filter.label, then: filter.label, else: filter.name)}'}">
-                    <h3>{filterName}</h3>
-
-                    <f:render partial="Filtering/FilterType{filter.type}" arguments="{filter: filter, filterName: filterName}" />
-                </f:alias>
+                <h3>{filterName}</h3>
+                <f:render partial="Filtering/FilterType{filter.type}" arguments="{filter: filter, filterName: '{f:if(condition: filter.label, then: filter.label, else: filter.name)}'}" />
             </div>
         </f:for>
     </form>
