@@ -89,6 +89,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
             }
             $this->tag->addAttribute('href', $uri);
             $this->tag->setContent($content);
+            $this->tag->forceClosingTag(true);
 
             return $this->tag->render();
         }

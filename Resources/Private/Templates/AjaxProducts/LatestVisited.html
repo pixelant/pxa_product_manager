@@ -10,9 +10,9 @@
                     <f:render section="product" arguments="{product: p}"/>
                 </f:then>
                 <f:else>
-                    <ppm:link pageUid="{settings.pagePid}" product="{p}">
+                    <ppm:link.link pageUid="{settings.pagePid}" product="{p}">
                         <f:render section="product" arguments="{product: p}"/>
-                    </ppm:link>
+                    </ppm:link.link>
                 </f:else>
             </f:if>
         </div>
