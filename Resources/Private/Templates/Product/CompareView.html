@@ -21,9 +21,9 @@
                                     <f:render section="item" arguments="{product: product}"/>
                                 </f:then>
                                 <f:else>
-                                    <ppm:link pageUid="{settings.pagePid}" product="{product}">
+                                    <ppm:link.link pageUid="{settings.pagePid}" product="{product}">
                                         <f:render section="item" arguments="{product: product}"/>
-                                    </ppm:link>
+                                    </ppm:link.link>
                                 </f:else>
                             </f:if>
                         </td>
@@ -75,9 +75,9 @@
             <f:if condition="{product.disableSingleView}">
                 <f:then>{product.name}</f:then>
                 <f:else>
-                    <ppm:link pageUid="{settings.pagePid}" product="{product}">
+                    <ppm:link.link pageUid="{settings.pagePid}" product="{product}">
                         {product.name}
-                    </ppm:link>
+                    </ppm:link.link>
                 </f:else>
             </f:if>
         </td>
