@@ -277,7 +277,16 @@ class ProductController extends AbstractController
             if ($sendOrder && $orderConfiguration !== null) {
                 try {
                     $orderProducts = $this->request->getArgument('orderProducts');
-                    $values = $this->request->getArgument('orderFields');
+                    if ($orderConfiguration->isEnabledReplaceWithFeUserFields()) {
+                        // If replace FE user fields, there still might be some free answer inputs
+                        $values = $this->request->hasArgument('orderFields')
+                            ? $this->request->getArgument('orderFields')
+                            : [];
+                    } else {
+                        // Don't do check if argument exist. It's always required if values not replaced
+                        // with FE user fields
+                        $values = $this->request->getArgument('orderFields');
+                    }
 
                     if ($this->validateOrderFields($orderConfiguration, $values)) {
                         $order = $this->createAndSaveOrder(
