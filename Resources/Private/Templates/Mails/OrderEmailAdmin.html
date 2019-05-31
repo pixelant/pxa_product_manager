@@ -14,7 +14,11 @@
             <th>UID</th>
             <th><f:translate key="fe.product_name" extensionName="PxaProductManager" /></th>
             <th><f:translate key="fe.sku"  extensionName="PxaProductManager" /></th>
-            <th><f:if condition="{ppm:isPricingEnabled()}" then="{f:translate(key: 'fe.price_per',  extensionName: 'PxaProductManager')}" else=""/></th>
+            <f:if condition="{ppm:isPricingEnabled()}">
+                <th>
+                    <f:translate key="fe.price_per" extensionName="PxaProductManager" />
+                </th>
+            </f:if>
             <f:if condition="{ppm:isPricingEnabled()} && {settings.wishList.showTaxInfo}">
                 <th>
                     <f:translate key="fe.tax" extensionName="PxaProductManager" />
@@ -30,17 +34,17 @@
                 <td>{product.uid}</td>
                 <td>{product.name}</td>
                 <td><f:if condition="{product.sku}" then="{product.sku}" else=" -- "/></td>
-                <td>
-                    <f:if condition="{ppm:isPricingEnabled()}">
+                <f:if condition="{ppm:isPricingEnabled()}">
+                    <td>
                         <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatPrice}" />
-                    </f:if>
-                </td>
+                    </td>
+                </f:if>
                 <f:if condition="{ppm:isPricingEnabled()} && {settings.wishList.showTaxInfo}">
                     <td>
                         <f:translate key="fe.price_currency_format"  extensionName="PxaProductManager" arguments="{0: product.formatTax}" />
                     </td>
                 </f:if>
-                <td>{order.productsQuantity.{product.uid}}</td>
+                <td>{order.productsQuantity.{product.uid}.quantity}</td>
             </tr>
         </f:for>
         <f:if condition="{ppm:isPricingEnabled()}">
