@@ -539,7 +539,6 @@ class ProductController extends AbstractController
             } else {
                 $products = $this->productRepository->findProductsByCategories(
                     $categories,
-                    false,
                     ['tstamp' => QueryInterface::ORDER_DESCENDING],
                     'or',
                     (int)$this->settings['limit']

@@ -262,7 +262,7 @@ class BackendManagerController extends ActionController
      */
     public function listProductsAction(Category $category)
     {
-        $products = $this->productRepository->findProductsByCategories([$category], true);
+        $products = $this->productRepository->findAllProductsByCategories([$category]);
 
         $this->view->assignMultiple([
             'products' => $products,
@@ -286,7 +286,7 @@ class BackendManagerController extends ActionController
 
         /** @var Category $category */
         foreach ($categories as $category) {
-            $products[$category->getUid()] = $this->productRepository->findProductsByCategories([$category], true);
+            $products[$category->getUid()] = $this->productRepository->findAllProductsByCategories([$category]);
         }
 
         return $products;
