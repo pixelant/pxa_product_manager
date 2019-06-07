@@ -38,10 +38,10 @@ class BackendManagerControllerTest extends UnitTestCase
     {
         list($category1, $category2) = $this->getCategories();
 
-        $mockedProductRepository = $this->createPartialMock(ProductRepository::class, ['findProductsByCategories']);
+        $mockedProductRepository = $this->createPartialMock(ProductRepository::class, ['findAllProductsByCategories']);
         $mockedProductRepository
             ->expects($this->exactly(2))
-            ->method('findProductsByCategories');
+            ->method('findAllProductsByCategories');
         $this->mockedBackendManagerController->_set('productRepository', $mockedProductRepository);
 
         $expect = [12, 21];

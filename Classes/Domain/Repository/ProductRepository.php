@@ -24,6 +24,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
@@ -201,15 +202,14 @@ class ProductRepository extends AbstractDemandRepository
      * Find products by categories
      *
      * @param array $categories
-     * @param bool $showHidden
      * @param array $orderings
      * @param string $conjunction
      * @param int $limit
      * @return array|QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function findProductsByCategories(
         array $categories,
-        bool $showHidden = false,
         array $orderings = ['sorting' => QueryInterface::ORDER_ASCENDING],
         string $conjunction = 'and',
         int $limit = 0
@@ -220,12 +220,6 @@ class ProductRepository extends AbstractDemandRepository
 
         // Find products our own way, because CategoryCollection::load doesn't have options to set the ordering
         $query = $this->createQuery();
-        if (true === $showHidden) {
-            $query
-                ->getQuerySettings()
-                ->setIgnoreEnableFields(true)
-                ->setEnableFieldsToBeIgnored(['disabled']);
-        }
 
         $constraints = [];
         /** @var Category $category */
@@ -247,6 +241,50 @@ class ProductRepository extends AbstractDemandRepository
         if ($limit > 0) {
             $query->setLimit($limit);
         }
+
+        return $query->execute();
+    }
+
+    /**
+     * Same as findProductsByCategories, but doesn't respect disable field and storage
+     *
+     * @param array $categories
+     * @param string $conjunction
+     * @return array|QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     */
+    public function findAllProductsByCategories(
+        array $categories,
+        string $conjunction = 'or'
+    ) {
+        if (empty($categories)) {
+            return [];
+        }
+
+        // Find products our own way, because CategoryCollection::load doesn't have options to set the ordering
+        $query = $this->createQuery();
+        $query
+            ->getQuerySettings()
+            ->setRespectStoragePage(false)
+            ->setRespectSysLanguage(false)
+            ->setIgnoreEnableFields(true)
+            ->setEnableFieldsToBeIgnored(['disabled']);
+
+        $constraints = [];
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $constraints[] = $query->contains('categories', $category);
+        }
+
+        $query->matching(
+            $this->createConstraintFromConstraintsArray(
+                $query,
+                $constraints,
+                $conjunction
+            )
+        );
+
+        $query->setOrderings(['sorting' => QueryInterface::ORDER_ASCENDING]);
 
         return $query->execute();
     }
