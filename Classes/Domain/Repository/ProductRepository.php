@@ -266,7 +266,6 @@ class ProductRepository extends AbstractDemandRepository
         $query
             ->getQuerySettings()
             ->setRespectStoragePage(false)
-            ->setRespectSysLanguage(false)
             ->setIgnoreEnableFields(true)
             ->setEnableFieldsToBeIgnored(['disabled']);
 
