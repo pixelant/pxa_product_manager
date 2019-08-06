@@ -973,7 +973,7 @@ class Product extends AbstractEntity
 
             /** @var Image $image */
             foreach ($images as $image) {
-                if ($image->getOriginalResource()->getUid() === $mainImage->getUid()) {
+                if ($image->getUid() === $mainImage->getUid()) {
                     $sortedImages->attach($image);
                     $images->detach($image);
                 }
