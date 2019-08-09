@@ -57,7 +57,7 @@ class ProductsXmlSitemapDataProviderTest extends UnitTestCase
     {
         $config = [
             'url' => [
-                'excludeCategories' => 0
+                'excludeCategories' => 1
             ]
         ];
 
