@@ -34,11 +34,11 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     protected $excludeCategories = false;
 
     /**
-     * Target url page UID
+     * Target url page ID
      *
      * @var int
      */
-    protected $pageUid = null;
+    protected $pageId = null;
 
     /**
      * @param ServerRequestInterface $request
@@ -51,8 +51,8 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     {
         parent::__construct($request, $key, $config, $cObj);
 
-        $this->excludeCategories = boolval($this->config['url']['excludeCategories'] ?? false);
-        $this->pageUid = intval($this->config['url']['pageId'] ?? $GLOBALS['TSFE']->id);
+        $this->excludeCategories = boolval($config['url']['excludeCategories'] ?? false);
+        $this->pageId = intval($config['url']['pageId'] ?? $GLOBALS['TSFE']->id);
 
         $this->generateItems();
     }
@@ -109,7 +109,7 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     protected function defineUrl(array $data): array
     {
         $linkService = $this->getLinkBuilderService();
-        $url = $linkService->buildForProduct($this->pageUid, $data['data']['uid'], null, $this->excludeCategories, true);
+        $url = $linkService->buildForProduct($this->pageId, $data['data']['uid'], null, $this->excludeCategories, true);
 
         if (!empty($url)) {
             $data['loc'] = $url;
@@ -183,7 +183,7 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     protected function getConfigFields(): array
     {
         return [
-            GeneralUtility::intExplode(',', $this->config['pid'] ?: ''),
+            GeneralUtility::intExplode(',', $this->config['pid'] ?? '', true),
             $this->config['lastModifiedField'] ?? 'tstamp',
             $this->config['sortField'] ?? 'sorting'
         ];
