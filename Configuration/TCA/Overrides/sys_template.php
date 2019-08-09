@@ -12,3 +12,9 @@ defined('TYPO3_MODE') || die;
     'Configuration/TypoScript/Solr',
     'Products Manager: Solr Configuration'
 );
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
+    'pxa_product_manager',
+    'Configuration/TypoScript/Sitemap',
+    'Products Manager: Xml Sitemap'
+);
