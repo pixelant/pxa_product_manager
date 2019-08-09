@@ -11,7 +11,6 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Seo\XmlSitemap\AbstractXmlSitemapDataProvider;
-use TYPO3\CMS\Seo\XmlSitemap\Exception\MissingConfigurationException;
 
 /**
  * Class ProductsXmlSitemapDataProvider
@@ -45,7 +44,6 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
      * @param string $key
      * @param array $config
      * @param ContentObjectRenderer|null $cObj
-     * @throws MissingConfigurationException
      */
     public function __construct(ServerRequestInterface $request, string $key, array $config = [], ContentObjectRenderer $cObj = null)
     {
