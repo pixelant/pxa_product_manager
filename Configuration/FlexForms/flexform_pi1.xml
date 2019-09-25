@@ -40,7 +40,7 @@
                                     </numIndex>
                                     <numIndex index="6">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_lazy_list</numIndex>
-                                        <numIndex index="1">Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                        <numIndex index="1">Product->lazyList;AjaxProducts->ajaxLazyList;Product->show</numIndex>
                                     </numIndex>
                                     <numIndex index="7">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_wish_list</numIndex>
@@ -127,7 +127,7 @@
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.limit</label>
                             <displayCond>
                                 <OR>
-                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                    <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show</numIndex>
                                     <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->promotionList</numIndex>
                                     <AND>
                                         <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->customProductsList;Product->show</numIndex>
@@ -248,7 +248,7 @@
                     <settings.includeDiscontinued>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.include_discontinued</label>
-                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->groupedList;Product->show,Product->lazyList;AjaxProducts->ajaxLazyList,Product->promotionList</displayCond>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:IN:Product->list;Product->show,Product->groupedList;Product->show,Product->lazyList;AjaxProducts->ajaxLazyList;Product->show,Product->promotionList</displayCond>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -259,7 +259,7 @@
                     <settings.allowedCategories>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.allowed_categories</label>
-                            <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList,Product->promotionList</displayCond>
+                            <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show,Product->promotionList</displayCond>
                             <config>
                                 <type>select</type>
                                 <renderMode>tree</renderMode>
@@ -304,7 +304,7 @@
                     <settings.excludeCategories>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.exclude_categories</label>
-                            <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList,Navigation->show,Product->groupedList;Product->show</displayCond>
+                            <displayCond>FIELD:switchableControllerActions:IN:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show,Navigation->show,Product->groupedList;Product->show</displayCond>
                             <config>
                                 <type>select</type>
                                 <renderMode>tree</renderMode>
@@ -502,7 +502,7 @@
                             <displayCond>
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show</numIndex>
                                     <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                     <numIndex index="3">FIELD:sDEF.switchableControllerActions:=:Product->promotionList</numIndex>
                                 </OR>
@@ -544,7 +544,7 @@
                             <displayCond>
                                 <OR>
                                     <numIndex index="0">FIELD:sDEF.switchableControllerActions:=:Product->list;Product->show</numIndex>
-                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</numIndex>
+                                    <numIndex index="1">FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show</numIndex>
                                     <numIndex index="2">FIELD:sDEF.switchableControllerActions:=:Product->groupedList;Product->show</numIndex>
                                     <numIndex index="3">FIELD:sDEF.switchableControllerActions:=:Product->promotionList</numIndex>
                                 </OR>
@@ -643,7 +643,7 @@
                     <settings.hideFilterOptionsNoResult>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.hide_filter_options_no_result</label>
-                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show</displayCond>
                             <config>
                                 <type>check</type>
                                 <default>0</default>
@@ -654,7 +654,7 @@
                     <settings.filtersConjunction>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters_conjunction</label>
-                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show</displayCond>
                             <config>
                                 <type>select</type>
                                 <items type="array">
@@ -674,7 +674,7 @@
                     <settings.filters>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filters</label>
-                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList</displayCond>
+                            <displayCond>FIELD:sDEF.switchableControllerActions:=:Product->lazyList;AjaxProducts->ajaxLazyList;Product->show</displayCond>
                             <config>
                                 <type>select</type>
                                 <foreign_table>tx_pxaproductmanager_domain_model_filter</foreign_table>
