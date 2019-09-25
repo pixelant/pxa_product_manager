@@ -11,6 +11,12 @@ routeEnhancers:
     extension: PxaProductManager
     plugin: Pi1
     routes:
+      # Just product in URL when categories are excluded
+      -
+        routePath: '/{product_title}'
+        _controller: 'Product::show'
+        _arguments:
+          product_title: 'product'
 
       # One level categories
       -
