@@ -58,9 +58,9 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
      */
     public function render()
     {
-        $pageUid = !empty($this->arguments['pageUid'])
-            ? (int)$this->arguments['pageUid']
-            : $GLOBALS['TSFE']->id;
+        $pageUid = empty($this->arguments['pageUid'])
+            ? (int)$GLOBALS['TSFE']->id
+            : (int)$this->arguments['pageUid'];
         $product = $this->arguments['product'];
         $category = $this->arguments['category'];
         $target = $this->arguments['target'];
