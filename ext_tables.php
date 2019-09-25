@@ -80,7 +80,7 @@ call_user_func(
                 ],
                 [          // Additional configuration
                     'access' => 'user,group',
-                    'icon' => 'EXT:' . $_EXTKEY . '/ext_icon.svg',
+                    'icon' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/Extension.svg',
                     'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_mod.xml',
                 ]
             );
