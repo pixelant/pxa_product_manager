@@ -11,7 +11,7 @@
         <f:render section="item" arguments="{_all}"/>
     </f:then>
     <f:else>
-        <ppm:link.link category="{category}" product="{product}" pageUid="{settings.pageUid}" excludeCategories="{settings.excludeCategoriesFromUrl}">
+        <ppm:link.link category="{category}" product="{product}" pageUid="{settings.pagePid}" excludeCategories="{settings.excludeCategoriesFromUrl}">
             <f:render section="item" arguments="{_all}"/>
         </ppm:link.link>
     </f:else>
