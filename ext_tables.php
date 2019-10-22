@@ -51,24 +51,24 @@ call_user_func(
             '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pxa_product_manager/Configuration/TypoScript/PageTS/linkHandler.ts">'
         );
 
-        if (TYPO3_MODE === 'BE') {
-            $icons = [
-                'ext-pxa-product-manager-wizard-icon' => 'package.svg',
-            ];
+        $icons = [
+            'ext-pxa-product-manager-wizard-icon' => 'package.svg',
+        ];
 
-            /** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
-            $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                \TYPO3\CMS\Core\Imaging\IconRegistry::class
+        /** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
+        $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Imaging\IconRegistry::class
+        );
+
+        foreach ($icons as $identifier => $path) {
+            $iconRegistry->registerIcon(
+                $identifier,
+                \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+                ['source' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/' . $path]
             );
+        }
 
-            foreach ($icons as $identifier => $path) {
-                $iconRegistry->registerIcon(
-                    $identifier,
-                    \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
-                    ['source' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/' . $path]
-                );
-            }
-
+        if (TYPO3_MODE === 'BE') {
             // Register BE module
             \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
                 'Pixelant.' . $_EXTKEY,
