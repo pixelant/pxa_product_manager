@@ -100,9 +100,6 @@ call_user_func(function () {
                 'type' => 'inline',
                 'foreign_table' => 'sys_category',
                 'foreign_field' => 'parent',
-                'foreign_match_fields' => [
-                    'sys_language_uid' => 0, /* To hide localized elements, sorting is done in Default language */
-                ],
                 'maxitems' => 9999,
                 'behaviour' => [],
                 'appearance' => [
