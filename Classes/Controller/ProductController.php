@@ -99,6 +99,12 @@ class ProductController extends AbstractController
                 $this->getOrderingsForCategories()
             )->toArray();
 
+            // Try and set meta tags if defined in selected category
+            $this->setMetaTags(
+                $category->getMetaDescription(),
+                $category->getKeywords()
+            );
+
             // Exclude categories without products if enabled
             if (count($subCategories) > 0 && (bool)$this->settings['navigationHideCategoriesWithoutProducts']) {
                 $subCategories = array_filter(
@@ -199,6 +205,12 @@ class ProductController extends AbstractController
             GeneralUtility::makeInstance(PageRenderer::class)->addJsInlineCode(
                 'pxaproductmanager_current_product_uid',
                 'const pxaproductmanager_current_product_uid=' . $product->getUid()
+            );
+
+            // Try and set meta tags if defined in selected product
+            $this->setMetaTags(
+                $product->getMetaDescription(),
+                $product->getKeywords()
             );
 
             // check if categories have a custom single view template set
@@ -440,6 +452,12 @@ class ProductController extends AbstractController
             $subCategories = $this->categoryRepository->findByParent(
                 $category,
                 $this->getOrderingsForCategories()
+            );
+
+            // Try and set meta tags if defined in selected category
+            $this->setMetaTags(
+                $category->getMetaDescription(),
+                $category->getKeywords()
             );
 
             if ($subCategories->count() > 0) {
