@@ -291,8 +291,10 @@ class TCAUtility
      */
     public static function getCategoriesTCAWhereClause(): string
     {
-        return (int)ConfigurationUtility::getExtManagerConfigurationByPath('dontCheckPidForSysCategory') === 1
-            ? '' : 'AND sys_category.pid=###CURRENT_PID### ';
+        return self::getDynamicForeignTableWhere(
+            'categoriesRestriction',
+            'sys_category'
+        );
     }
 
     /**
