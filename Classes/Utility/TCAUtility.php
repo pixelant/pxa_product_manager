@@ -286,6 +286,19 @@ class TCAUtility
     }
 
     /**
+     * Table where for attributes sets
+     *
+     * @return string
+     */
+    public static function getAttributesSetsForeignTableWherePid(): string
+    {
+        return self::getDynamicForeignTableWhere(
+            'attributesSetsRestriction',
+            'tx_pxaproductmanager_domain_model_attributeset'
+        );
+    }
+
+    /**
      * TCA where clause for categories
      * @return string
      */

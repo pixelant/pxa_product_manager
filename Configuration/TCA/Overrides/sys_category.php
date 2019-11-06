@@ -124,8 +124,10 @@ call_user_func(function () {
                 'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_attributeset',
                 // @codingStandardsIgnoreStart
-                'foreign_table_where' => ' AND tx_pxaproductmanager_domain_model_attributeset.pid = ###CURRENT_PID### AND tx_pxaproductmanager_domain_model_attributeset.sys_language_uid IN (-1,0) ORDER BY tx_pxaproductmanager_domain_model_attributeset.sorting',
-                // @codingStandardsIgnoreEndZ
+                'foreign_table_where' =>  \Pixelant\PxaProductManager\Utility\TCAUtility::getAttributesSetsForeignTableWherePid() .
+                    ' AND tx_pxaproductmanager_domain_model_attributeset.sys_language_uid IN (-1,0)' .
+                    ' ORDER BY tx_pxaproductmanager_domain_model_attributeset.sorting',
+                // @codingStandardsIgnoreEnd
                 'MM' => 'tx_pxaproductmanager_category_attributeset_mm',
                 'size' => 10,
                 'autoSizeMax' => 30,

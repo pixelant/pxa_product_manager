@@ -303,6 +303,10 @@
                 TCEFORM.tx_pxaproductmanager_domain_model_product.sub_products.PAGE_TSCONFIG_IDLIST=xxx,xxx.
             </source>
             </trans-unit>
+            <trans-unit id="extconf.attributesSetsRestriction">
+                <source>Attributes Sets PID restriction: Restrict the available attributes sets in categories records. PageTsConfig:
+                    TCEFORM.sys_category.pxapm_attributes_sets.PAGE_TSCONFIG_IDLIST=xxx,xxx.</source>
+            </trans-unit>
             <trans-unit id="extconf.restriction.current_pid" xml:space="preserve">
                 <source>Current page</source>
             </trans-unit>
