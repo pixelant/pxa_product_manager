@@ -91,6 +91,27 @@ class Order extends AbstractEntity
     protected $checkoutType = 'default';
 
     /**
+     * Coupons used for this order
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Coupon>
+     */
+    protected $coupons = null;
+
+    /**
+     * The price of the order all inclusive at checkout time, independent on changing product prices, taxes and coupons
+     *
+     * @var float
+     */
+    protected $priceAtCheckout = 0.0;
+
+    /**
+     * The tax for the order at checkout time, independent on changing product prices, taxes and coupons
+     *
+     * @var float
+     */
+    protected $taxAtCheckout = 0.0;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -376,5 +397,61 @@ class Order extends AbstractEntity
     public function setCheckoutType(string $checkoutType)
     {
         $this->checkoutType = $checkoutType;
+    }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getCoupons(): ObjectStorage
+    {
+        return $this->coupons;
+    }
+
+    /**
+     * @param ObjectStorage $coupons
+     */
+    public function setCoupons(ObjectStorage $coupons)
+    {
+        $this->coupons = $coupons;
+    }
+
+    /**
+     * The all-inclusive price at checkout time
+     *
+     * @return float
+     */
+    public function getPriceAtCheckout(): float
+    {
+        return $this->priceAtCheckout;
+    }
+
+    /**
+     * The all-inclusive price at checkout time
+     *
+     * @param float $priceAtCheckout
+     */
+    public function setPriceAtCheckout(float $priceAtCheckout)
+    {
+        $this->priceAtCheckout = $priceAtCheckout;
+    }
+
+    /**
+     * The tax sum at checkout time
+     *
+     * @return float
+     */
+    public function getTaxAtCheckout(): float
+    {
+        return $this->taxAtCheckout;
+    }
+
+    /**
+     * The tax sum at checkout time
+     *
+     * @param float $taxAtCheckout
+     */
+    public function setTaxAtCheckout(float $taxAtCheckout)
+    {
+        $this->taxAtCheckout = $taxAtCheckout;
     }
 }

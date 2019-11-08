@@ -203,6 +203,48 @@ return [
                 'readOnly' => true,
                 'default' => 'default'
             ],
-        ]
+        ],
+        'coupons' => [
+            'exclude' => 0,
+            'label' => $ll . '.coupons',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'foreign_table' => 'tx_pxaproductmanager_domain_model_coupon',
+                'MM' => 'tx_pxaproductmanager_order_coupon_mm',
+                'size' => 10,
+                'autoSizeMax' => 30,
+                'maxitems' => 9999,
+                'multiple' => 0,
+                'fieldControl' => [
+                    'editPopup' => [
+                        'disabled' => false
+                    ],
+                    'addRecord' => [
+                        'disabled' => false,
+                    ]
+                ]
+            ],
+        ],
+        'price_at_checkout' => [
+            'exclude' => 0,
+            'label' => $ll . '.price_at_checkout',
+            'config' => [
+                'type' => 'input',
+                'default' => 0.0,
+                'size' => 5,
+                'eval' => 'double2'
+            ],
+        ],
+        'tax_at_checkout' => [
+            'exclude' => 0,
+            'label' => $ll . '.tax_at_checkout',
+            'config' => [
+                'type' => 'input',
+                'default' => 0.0,
+                'size' => 5,
+                'eval' => 'double2'
+            ],
+        ],
     ]
 ];

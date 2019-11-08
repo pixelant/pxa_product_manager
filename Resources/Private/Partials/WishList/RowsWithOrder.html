@@ -90,6 +90,8 @@
                 </div>
             </f:if>
         </f:form>
+
+        <f:render section="addCouponCodes" />
     </f:if>
     <div class="list-no-products-found">
         0 -
@@ -201,6 +203,20 @@
                     <div class="lds-dual-ring"><div class="small"></div></div>
                 </div>
             </div>
+        </div>
+    </div>
+</f:section>
+
+<f:section name="addCouponCodes">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <f:form action="addCouponCodeToOrder">
+                <div class="form-inline">
+                    <label for="couponCodeTextfield" class="sr-only"><f:translate key="fe.couponCode.fieldLabel" /></label>
+                    <f:form.textfield name="couponCode" id="couponCodeTextfield" value="" placeholder="{f:translate(key: 'fe.couponCode.fieldPlaceholder')}" size="10" class="form-control" />
+                    <button type="submit" class="btn btn-secondary"><f:translate key="fe.couponCode.addButton" /></button>
+                </div>
+            </f:form>
         </div>
     </div>
 </f:section>

@@ -282,6 +282,17 @@ class ProductController extends AbstractController
     }
 
     /**
+     * @param string $couponCode submitted by the user
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     */
+    public function addCouponCodeToOrderAction($couponCode = '') {
+        
+
+        $this->redirect('wishList');
+    }
+
+    /**
      * Finish order text
      * Show some successful texts
      */

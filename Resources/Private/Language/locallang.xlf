@@ -205,6 +205,16 @@
                 <target>Products</target>
             </trans-unit>
 
+	        <trans-unit id="fe.couponCode.addButton">
+		        <target>Add discount code</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.fieldPlaceholder">
+		        <target>Add discount code</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.fieldLabel">
+		        <target>Enter discount code</target>
+	        </trans-unit>
+
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <source>No results</source>
