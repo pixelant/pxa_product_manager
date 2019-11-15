@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Domain\Repository\OrderRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Exception\UnknownProductException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
@@ -171,6 +172,6 @@ class OrderUtility
      */
     public static function updateOrder(Order $order)
     {
-        GeneralUtility::makeInstance(OrderRepository::class)->update($order);
+        GeneralUtility::makeInstance(ObjectManager::class)->get(OrderRepository::class)->update($order);
     }
 }

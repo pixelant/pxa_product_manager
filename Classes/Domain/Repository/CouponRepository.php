@@ -45,7 +45,7 @@ class CouponRepository extends Repository
      *
      * @return Coupon|null
      */
-    public function findByCaseInsensitiveCode(string $code): Coupon
+    public function findByCaseInsensitiveCode(string $code): ?Coupon
     {
         $query = $this->createQuery();
 

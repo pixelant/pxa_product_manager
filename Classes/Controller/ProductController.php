@@ -301,7 +301,7 @@ class ProductController extends AbstractController
         }
 
         /** @var CouponRepository $couponRepository */
-        $couponRepository = GeneralUtility::makeInstance(CouponRepository::class);
+        $couponRepository = $this->objectManager->get(CouponRepository::class);
 
         $coupon = $couponRepository->findByCaseInsensitiveCode($couponCode);
 
