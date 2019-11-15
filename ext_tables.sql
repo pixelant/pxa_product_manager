@@ -434,6 +434,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
   	external_id varchar(255) DEFAULT '' NOT NULL,
   	checkout_type varchar(255) DEFAULT 'default' NOT NULL,
   	coupons int(11) unsigned DEFAULT '0' NOT NULL,
+  	price_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
+  	tax_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,
@@ -466,9 +468,9 @@ CREATE TABLE tx_pxaproductmanager_order_product_mm (
 );
 
 #
-# Table structure for table 'tx_pxaproductmanager_order_coupons_mm'
+# Table structure for table 'tx_pxaproductmanager_order_coupon_mm'
 #
-CREATE TABLE tx_pxaproductmanager_order_product_mm (
+CREATE TABLE tx_pxaproductmanager_order_coupon_mm (
   uid_local int(11) unsigned DEFAULT '0' NOT NULL,
   uid_foreign int(11) unsigned DEFAULT '0' NOT NULL,
   sorting int(11) unsigned DEFAULT '0' NOT NULL,
