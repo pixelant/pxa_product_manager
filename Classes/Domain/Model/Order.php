@@ -416,6 +416,26 @@ class Order extends AbstractEntity
     }
 
     /**
+     * Add a coupon
+     *
+     * @param Coupon $coupon
+     */
+    public function addCoupon(Coupon $coupon)
+    {
+        $this->coupons->attach($coupon);
+    }
+
+    /**
+     * Remove a coupon
+     *
+     * @param Coupon $coupon
+     */
+    public function removeCoupon(Coupon $coupon)
+    {
+        $this->coupons->detach($coupon);
+    }
+
+    /**
      * The all-inclusive price at checkout time
      *
      * @return float
