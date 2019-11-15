@@ -10,6 +10,7 @@ use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Exception\UnknownProductException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 /***************************************************************
@@ -78,7 +79,7 @@ class OrderUtility
         $orderRepository->add($order);
 
         /** @var PersistenceManagerInterface $persistanceManager */
-        $persistanceManager = GeneralUtility::makeInstance(PersistenceManagerInterface::class);
+        $persistanceManager = GeneralUtility::makeInstance(PersistenceManager::class);
 
         //Make sure we get a UID
         $persistanceManager->persistAll();
