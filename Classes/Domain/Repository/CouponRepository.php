@@ -45,8 +45,16 @@ class CouponRepository extends Repository
      *
      * @return Coupon|null
      */
-    public function findByCodeCaseInsensitive(string $code): Coupon
+    public function findByCaseInsensitiveCode(string $code): Coupon
     {
+        $query = $this->createQuery();
 
+        /** @var Coupon|null $coupon */
+        $coupon = $query
+            ->matching($query->like('code', $code, false))
+            ->execute()
+            ->getFirst();
+
+        return $coupon;
     }
 }
