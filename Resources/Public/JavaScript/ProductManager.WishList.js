@@ -53,7 +53,9 @@
 			);
 			ajaxLoadingInProgress = false;
 
-			_updatePriceAndTax();
+			if ($(settings.wishListContainer).length > 0) {
+				_updatePriceAndTax();
+			}
 			_saveCurrentStateOfAmountOfProducts();
 			_trackOrderAmountChanges();
 		};
@@ -160,91 +162,24 @@
 			});
 		};
 
-		/**
-		 * Update total price if pricing enabled
-		 *
-		 * @returns {boolean}
-		 * @private
-		 */
-		const _updateTotalPrice = function () {
-			if ($totalPrice.length === 0) {
-				return false;
-			}
-
-			let sum = 0,
-				currencyFormat = $totalPrice.first().data('currency-format') || '',
-				numberFormat = $totalPrice.first().data('nubmer-format') || '',
-				format = ProductManager.Main.trimChar(numberFormat, '|').split('|'),
-
-				decimals = parseInt(format[0]) || 2,
-				decimalSep = format[1] || '.',
-				thousandsSep = format[2] || ',';
-
-			$orderItemsPrices.each(function () {
-				const $this = $(this);
-
-				let productUid = parseInt($this.data('product-uid'));
-				if (productUid > 0) {
-					let $amountItem = $(_convertClassToIdWithProductId(settings.orderItemAmountClass, productUid));
-					if ($amountItem.length === 1) {
-						let amount = parseInt($amountItem.val());
-						sum += amount * parseFloat($this.data('price'));
-					}
-				}
-			});
-
-			$totalPrice.text(
-				sprintf(
-					currencyFormat,
-					ProductManager.Main.numberFormat(sum, decimals, decimalSep, thousandsSep)
-				)
-			);
-		};
-
-		/**
-		 * Update total tax if pricing enabled
-		 *
-		 * @returns {boolean}
-		 * @private
-		 */
-		const _updateTotalTax = function () {
-			if ($totalTax.length === 0) {
-				return false;
-			}
-
-			let sum = 0,
-				currencyFormat = $totalTax.first().data('currency-format') || '',
-				numberFormat = $totalTax.first().data('nubmer-format') || '',
-				format = ProductManager.Main.trimChar(numberFormat, '|').split('|'),
-
-				decimals = parseInt(format[0]) || 2,
-				decimalSep = format[1] || '.',
-				thousandsSep = format[2] || ',';
-
-			$orderItemsTaxes.each(function () {
-				const $this = $(this);
-
-				let productUid = parseInt($this.data('product-uid'));
-				if (productUid > 0) {
-					let $amountItem = $(_convertClassToIdWithProductId(settings.orderItemAmountClass, productUid));
-					if ($amountItem.length === 1) {
-						let amount = parseInt($amountItem.val());
-						sum += amount * parseFloat($this.data('tax'));
-					}
-				}
-			});
-
-			$totalTax.text(
-				sprintf(
-					currencyFormat,
-					ProductManager.Main.numberFormat(sum, decimals, decimalSep, thousandsSep)
-				)
-			);
-		};
-
 		const _updatePriceAndTax = function () {
-			_updateTotalPrice();
-			_updateTotalTax();
+			const uri = $(settings.wishListContainer).data('total-order-prices-ajax-uri');
+
+			if (uri.length <= 0) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+			}
+
+			$.ajax({
+				url: uri,
+				dataType: 'json'
+			}).done(function (data) {
+				$totalPrice.text(data.totalPrice);
+				$totalTax.text(data.totalTaxPrice);
+			}).fail(function (jqXHR, textStatus) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
 		};
 
 		/**
@@ -259,6 +194,7 @@
 			}
 
 			$orderItemsAmount.on('change', function () {
+
 				const $this = $(this);
 				let value = parseInt($this.val());
 

@@ -126,7 +126,8 @@ class PriceService
      */
     public function calculateTotalPrice(): float
     {
-
+        // TODO
+        return rand(20, 100);
     }
 
     /**
@@ -136,7 +137,8 @@ class PriceService
      */
     public function caluclateTotalTax(): float
     {
-
+        // TODO
+        return rand(1, 10);
     }
 
     /**
