@@ -33,6 +33,7 @@ use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Exception\UnknownProductException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -254,9 +255,7 @@ class ProductUtility
      */
     public static function getWishList(): array
     {
-        $list = $_COOKIE[self::WISH_LIST_COOKIE_NAME] ?: '';
-
-        return GeneralUtility::intExplode(',', $list, true);
+        return OrderUtility::getSessionOrder()->getProducts()->getArray();
     }
 
     /**
@@ -267,9 +266,32 @@ class ProductUtility
      */
     public static function isProductInWishList($product): bool
     {
-        $list = $_COOKIE[self::WISH_LIST_COOKIE_NAME] ?: '';
+        if (!is_object($product)) {
+            $product = self::getProductByUid($product);
+        }
+        return OrderUtility::getSessionOrder()->getProducts()->contains($product);
+    }
 
-        return GeneralUtility::inList($list, is_object($product) ? $product->getUid() : (int)$product);
+    /**
+     * Returns the product
+     *
+     * @param int $uid
+     * @return Product
+     * @throws UnknownProductException
+     */
+    public static function getProductByUid(int $uid)
+    {
+        /** @var ProductRepository $productRepository */
+        $productRepository = GeneralUtility::makeInstance(ProductRepository::class);
+
+        /** @var Product $product */
+        $product = $productRepository->findByUid($uid);
+
+        if ($product === null) {
+            throw new UnknownProductException('Product with UID ' . $uid . ' does not exist.');
+        }
+
+        return $product;
     }
 
     /**
