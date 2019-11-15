@@ -121,15 +121,15 @@ class OrderUtility
      */
     public static function addProductToSessionOrder(Product $product)
     {
-        $settings = ConfigurationUtility::getSettingsByPath('pagePid');
+        $wishListLimitFromSettings = ConfigurationUtility::getSettingsByPath('wishList/limit');
 
         $order = self::getSessionOrder();
 
         //If there are too many products, remove one.
         if (
-            ((int) $settings['wishList']['limit'] > 0 && $order->getProducts()->count() + 1 > (int) $settings['wishList']['limit'])
+            ((int) $wishListLimitFromSettings > 0 && $order->getProducts()->count() + 1 > (int) $settings['wishList']['limit'])
             ||
-            ((int) $settings['wishList']['limit'] === 0 && $order->getProducts()->count() + 1 > self::MAX_PRODUCTS)
+            ((int) $wishListLimitFromSettings === 0 && $order->getProducts()->count() + 1 > self::MAX_PRODUCTS)
         ) {
             $order->getProducts()->rewind();
             $order->removeProduct($order->getProducts()->current());
