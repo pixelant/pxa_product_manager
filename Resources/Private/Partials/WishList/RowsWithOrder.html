@@ -21,6 +21,13 @@
                 </div>
             </f:for>
 
+            <f:for each="{coupons}" as="coupon">
+                <div class="row item-order-row">
+                    <f:render section="coupon"
+                              arguments="{coupon: coupon}" />
+                </div>
+            </f:for>
+
             <div class="row">
                 <div class="col-sm-12 col-md-12">
                     <div class="pull-right">
@@ -205,6 +212,10 @@
             </div>
         </div>
     </div>
+</f:section>
+
+<f:section name="coupon">
+    {coupon.code}
 </f:section>
 
 <f:section name="addCouponCodes">

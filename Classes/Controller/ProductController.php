@@ -232,6 +232,8 @@ class ProductController extends AbstractController
      */
     public function wishListAction(bool $sendOrder = false)
     {
+        $order = OrderUtility::getSessionOrder();
+
         // Select the checkout system to use
         $checkoutToUse = $this->settings['wishList']['checkoutSystem']
             ?: ConfigurationUtility::getExtManagerConfigurationByPath('checkoutSystem') ?: 'default';
@@ -278,9 +280,10 @@ class ProductController extends AbstractController
 
         $this->view->assignMultiple([
             'checkout' => $checkout,
-            'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
+            'products' => $order->getProducts(),
             'orderProducts' => $orderState ?? [],
-            'sendOrder' => $sendOrder
+            'sendOrder' => $sendOrder,
+            'coupons' => $order->getCoupons()
         ]);
     }
 
