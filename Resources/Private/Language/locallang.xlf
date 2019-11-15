@@ -214,6 +214,18 @@
 	        <trans-unit id="fe.couponCode.fieldLabel">
 		        <target>Enter discount code</target>
 	        </trans-unit>
+	        <trans-unit id="fe.couponCode.noCodeSuppliedWarning">
+		        <target>No discount code was supplied. Please enter the code in the text field before clicking the Add discount code button.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.codeNotFoundError">
+		        <target>The coupon code you supplied could not be found. Please check that you entered it correctly.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.codeAlreadyAddedWarning">
+		        <target>You cannot add a coupon code twice. The coupon code you supplied was already in the list.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.codeNotFoundError">
+		        <target>The coupon code was successfully applied.</target>
+	        </trans-unit>
 
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
