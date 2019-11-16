@@ -189,8 +189,8 @@ class AjaxJsonController extends AbstractController
         try {
             $priceService = (new PriceServiceFactory())->createFromSession();
 
-            $totalPrice = $priceService->calculateTotalPrice();
-            $totalTaxPrice = $priceService->caluclateTotalTax();
+            $totalPrice = $priceService->calculatePrice();
+            $totalTaxPrice = $priceService->calculateTax();
         } catch (\Exception $e) {
             $this->response->setStatus(500, 'Price calculation error');
             return null;
