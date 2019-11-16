@@ -157,22 +157,12 @@
 		 * @param $cartCounters
 		 * @param modifier
 		 */
-		updateCartCounter: function ($mainCartCounter, $cartCounters, modifier) {
-			modifier = modifier || 0;
-
-			if ($mainCartCounter.length === 1) {
-				let currentValue = parseInt($mainCartCounter.text().trim());
-				if (isNaN(currentValue)) {
-					currentValue = 0;
-				}
-
-				let newValue = currentValue + modifier;
-				newValue = newValue > 0 ? newValue : 0;
+		updateCartCounter: function ($mainCartCounter, $cartCounters, newValue) {
 
 				if ($cartCounters.length >= 1) {
 					$cartCounters.text(newValue);
 				}
-			}
+
 		},
 
 		/**
