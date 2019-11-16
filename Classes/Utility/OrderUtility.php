@@ -62,7 +62,7 @@ class OrderUtility
     public static function getSessionOrder()
     {
         /** @var OrderRepository $orderRepository */
-        $orderRepository = GeneralUtility::makeInstance(OrderRepository::class);
+        $orderRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(OrderRepository::class);
 
         $orderUid = (int) $GLOBALS['TSFE']->fe_user->getKey('ses', self::SESSION_KEY);
 
