@@ -120,6 +120,42 @@ class PriceService
     }
 
     /**
+     * Resets the order
+     *
+     * @return $this;
+     */
+    public function resetOrder(): self
+    {
+        $this->order = null;
+
+        return $this;
+    }
+
+    /**
+     * Resets the product
+     *
+     * @return $this;
+     */
+    public function resetProduct(): self
+    {
+        $this->product = null;
+
+        return $this;
+    }
+
+    /**
+     * Resets the coupon
+     *
+     * @return $this;
+     */
+    public function resetCoupon(): self
+    {
+        $this->coupon = null;
+
+        return $this;
+    }
+
+    /**
      * Returns the total net price with all modifiers included
      *
      * @return float
@@ -155,6 +191,26 @@ class PriceService
     }
 
     /**
+     * Returns the change in value before tax resulting from the applied coupons
+     *
+     * @return float
+     */
+    public function calculateCouponValueBeforeTax(): float
+    {
+        if (($this->order === null && $this->coupon === null) || ($this->order === null && $this->product === null)) {
+            return 0.0;
+        }
+
+        $beforePrice = $this->calculateProductPriceBeforeTaxAndCoupon();
+
+        if ($this->order === null) {
+            return $this->applyCouponToValue($beforePrice) - $beforePrice;
+        }
+
+        return $this->applyOrderCouponsToValue($beforePrice) - $beforePrice;
+    }
+
+    /**
      * Returns the change in value resulting from the applied coupons
      *
      * @return float
@@ -165,7 +221,7 @@ class PriceService
             return 0.0;
         }
 
-        $beforePrice = $this->calculateProductPriceBeforeTaxAndCoupon();
+        $beforePrice = $this->calculateProductPrice();
 
         if ($this->order === null) {
             return $this->applyCouponToValue($beforePrice) - $beforePrice;
@@ -218,6 +274,60 @@ class PriceService
     }
 
     /**
+     * Calculates the tax for $this->product, including coupons
+     *
+     * @return float
+     */
+    public function calculateProductTax()
+    {
+        if ($this->getProduct() === null) {
+            return 0.0;
+        }
+
+        if($this->order === null) {
+            return $this->applyCouponToValue($this->product->getTax());
+        }
+
+        return $this->applyOrderCouponsToValue($this->product->getTaxForCheckout());
+    }
+
+    /**
+     * The product price without coupon, but including tax
+     *
+     * @return float
+     */
+    public function calculateProductPriceBeforeCoupon(): float
+    {
+        if ($this->getProduct() === null) {
+            return 0.0;
+        }
+
+        if($this->order === null) {
+            return $this->product->getPrice() + $this->product->getTax();
+        }
+
+        return $this->product->getPriceForCheckout() + $this->product->getTaxForCheckout();
+    }
+
+    /**
+     * The product price including tax and coupon
+     *
+     * @return float
+     */
+    public function calculateProductPrice(): float
+    {
+        if ($this->getProduct() === null) {
+            return 0.0;
+        }
+
+        if($this->order === null) {
+            return $this->applyCouponToValue($this->calculateProductPriceBeforeCoupon());
+        }
+
+        return $this->applyOrderCouponsToValue($this->calculateProductPriceBeforeCoupon());
+    }
+
+    /**
      * Get the product price
      *
      * @return float
@@ -236,7 +346,7 @@ class PriceService
     }
 
     /**
-     * Returns the product total (i.e. price * quantity) for product
+     * Returns the product total (i.e. price * quantity) for product without tax and coupon codes
      *
      * @return float
      */
@@ -247,6 +357,51 @@ class PriceService
         }
 
         return $this->order->getProductQuantity($this->getProduct()) * $this->calculateProductPriceBeforeTaxAndCoupon();
+    }
+
+    /**
+     * Returns the product product in the order (i.e. price * quantity)
+     *
+     * @return float
+     */
+    public function calculateOrderTotalForProduct(): float
+    {
+        if ($this->order === null) {
+            return $this->calculatePrice();
+        }
+
+        return $this->order->getProductQuantity($this->getProduct()) * $this->calculateProductPrice();
+    }
+
+    /**
+     * Returns the coupon value for the product in the order
+     *
+     * The resulting sum is the amount discounted from this product (including quantity) in the order.
+     * For discounts, it will be a positive sum.
+     *
+     * @return float
+     */
+    public function calculateOrderTotalCouponValueForProduct(): float
+    {
+        if ($this->order === null) {
+            return $this->calculateCouponValue();
+        }
+
+        return $this->applyOrderCouponsToValue($this->calculateOrderTotalForProduct()) - $this->calculateOrderTotalForProduct();
+    }
+
+    /**
+     * Returns the total tax for within an order (i.e. tax * quantity) $this->product
+     *
+     * @return float
+     */
+    public function calculateOrderTotalTaxForProduct(): float
+    {
+        if ($this->order === null) {
+            return $this->calculateProductTax();
+        }
+
+        return $this->applyOrderCouponsToValue($this->order->getProductQuantity($this->getProduct()) * $this->calculateProductTax());
     }
 
     /**
