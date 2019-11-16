@@ -178,4 +178,25 @@ class PriceService
     {
 
     }
+
+    /**
+     * Format value an integer using the smallest unit of currency
+     *
+     * This adheres to the ISO 4217 standard used by most payment gateways
+     * https://en.wikipedia.org/wiki/ISO_4217
+     *
+     * @param float $value Any currency value
+     * @param int $fractionalDigits Fractional digits in currency (default is 2)
+     * @param string $locale The PHP locale to use. Will override $fractionalDigits
+     *
+     * @return int
+     */
+    public static function formatForIso4217(float $value, int $fractionalDigits = 2, string $locale = null)
+    {
+        if ($locale !== null) {
+            $fractionalDigits = localeconv($locale)['int_frac_digits'];
+        }
+
+        return (int) pow($value, $fractionalDigits);
+    }
 }
