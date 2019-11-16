@@ -27,6 +27,8 @@ namespace Pixelant\PxaProductManager\Controller;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Exception\InvalidPriceCalculationException;
+use Pixelant\PxaProductManager\Factory\PriceServiceFactory;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Extbase\Mvc\View\JsonView;
@@ -177,5 +179,34 @@ class AjaxJsonController extends AbstractController
         );
 
         $this->view->assign('value', ['success' => true]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function totalOrderPricesAction()
+    {
+        try {
+            $priceService = (new PriceServiceFactory())->createFromSession();
+
+            $totalPrice = $priceService->calculateTotalPrice();
+            $totalTaxPrice = $priceService->caluclateTotalTax();
+        } catch (\Exception $e) {
+            $this->response->setStatus(500, 'Price calculation error');
+            return null;
+        }
+
+        if ($totalPrice <= 0 || $totalTaxPrice <= 0) {
+            $this->response->setStatus(500, 'Price calculation error');
+            return null;
+        }
+
+        $response = [
+            'totalPrice' => $totalPrice,
+            'totalTaxPrice' => $totalTaxPrice
+        ];
+
+        $this->response->setStatus(200, 'OK');
+        $this->view->assign('value', $response);
     }
 }
