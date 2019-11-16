@@ -237,6 +237,17 @@ class Order extends AbstractEntity
     }
 
     /**
+     * Returns the quantity of a specific product in the order
+     *
+     * @param Product $product
+     * @return int
+     */
+    public function getProductQuantity(Product $product)
+    {
+        return (int) $this->getProductsQuantity()[$product->getUid()];
+    }
+
+    /**
      * Save products quantity as serialized string
      *
      * @param array $productsQuantity
