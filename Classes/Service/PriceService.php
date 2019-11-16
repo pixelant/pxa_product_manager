@@ -50,9 +50,9 @@ class PriceService
     protected $product;
 
     /**
-     * @var array<Coupon>
+     * @var Coupon
      */
-    protected $coupons = [];
+    protected $coupon;
 
     /**
      * @return Order
@@ -89,19 +89,19 @@ class PriceService
     }
 
     /**
-     * @return array
+     * @return Coupon
      */
-    public function getCoupons(): array
+    public function getCoupon(): Coupon
     {
-        return $this->coupons;
+        return $this->coupon;
     }
 
     /**
-     * @param array $coupons
+     * @param Coupon $coupon
      */
-    public function setCoupons(array $coupons): self
+    public function setCoupon(array $coupon): self
     {
-        $this->coupons = $coupons;
+        $this->coupon = $coupon;
         return $this;
     }
 
@@ -114,7 +114,7 @@ class PriceService
     {
         $this->order = null;
         $this->product = null;
-        $this->coupons = [];
+        $this->coupon = null;
 
         return $this;
     }
@@ -194,9 +194,17 @@ class PriceService
     public static function formatForIso4217(float $value, int $fractionalDigits = 2, string $locale = null)
     {
         if ($locale !== null) {
-            $fractionalDigits = localeconv($locale)['int_frac_digits'];
+            $oldLocale = setlocale(LC_ALL, 0);
+            setlocale(LC_ALL, $locale);
+            $fractionalDigits = localeconv()['int_frac_digits'];
         }
 
-        return (int) pow($value, $fractionalDigits);
+        $convertedValue = (int) pow($value, $fractionalDigits);
+
+        if ($locale !== null) {
+            setlocale(LC_ALL, $oldLocale);
+        }
+
+        return $convertedValue;
     }
 }
