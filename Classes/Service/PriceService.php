@@ -57,7 +57,7 @@ class PriceService
     /**
      * @return Order
      */
-    public function getOrder(): Order
+    public function getOrder(): ?Order
     {
         return $this->order;
     }
@@ -74,7 +74,7 @@ class PriceService
     /**
      * @return Product
      */
-    public function getProduct(): Product
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
@@ -91,7 +91,7 @@ class PriceService
     /**
      * @return Coupon
      */
-    public function getCoupon(): Coupon
+    public function getCoupon(): ?Coupon
     {
         return $this->coupon;
     }
@@ -124,10 +124,11 @@ class PriceService
      *
      * @return float
      */
-    public function calculateTotalPrice(): float
+    public function calculatePrice(): float
     {
-        // TODO
-        return rand(20, 100);
+        return $this->calculateProductPriceBeforeTaxAndCoupon()
+            + $this->calculateTax()
+            + $this->calculateCouponValue();
     }
 
     /**
@@ -135,10 +136,22 @@ class PriceService
      *
      * @return float
      */
-    public function caluclateTotalTax(): float
+    public function calculateTax(): float
     {
-        // TODO
-        return rand(1, 10);
+        if ($this->order === null && $this->product === null) {
+            return 0.0;
+        } elseif ($this->order === null) {
+            return $this->product->getTax();
+        }
+
+        $value = 0.0;
+
+        /** @var Product $product */
+        foreach ($this->order->getProducts() as $product) {
+            $value += $product->getTaxForCheckout() * $this->order->getProductQuantity($product);
+        }
+
+        return $value;
     }
 
     /**
@@ -146,9 +159,19 @@ class PriceService
      *
      * @return float
      */
-    public function calculateTotalCouponValue(): float
+    public function calculateCouponValue(): float
     {
+        if (($this->order === null && $this->coupon === null) || ($this->order === null && $this->product === null)) {
+            return 0.0;
+        }
 
+        $beforePrice = $this->calculateProductPriceBeforeTaxAndCoupon();
+
+        if ($this->order === null) {
+            return $this->applyCouponToValue($beforePrice) - $beforePrice;
+        }
+
+        return $this->applyOrderCouponsToValue($beforePrice) - $beforePrice;
     }
 
     /**
@@ -158,7 +181,7 @@ class PriceService
      */
     public function calculatePriceBeforeTax(): float
     {
-
+        return $this->calculatePriceBeforeTaxAndCoupon() - $this->calculateTax();
     }
 
     /**
@@ -168,7 +191,20 @@ class PriceService
      */
     public function calculatePriceBeforeTaxAndCoupon(): float
     {
+        if ($this->order === null || $this->product !== null) {
+            return $this->calculateProductPriceBeforeTaxAndCoupon();
+        }
 
+        $total = 0.0;
+
+        foreach ($this->order->getProducts() as $product) {
+            $this->setProduct($product);
+            $total += $this->calculateOrderTotalPriceForProductBeforeTaxAndCoupon();
+        }
+
+        $this->product = null;
+
+        return $total;
     }
 
     /**
@@ -178,7 +214,39 @@ class PriceService
      */
     public function calculatePriceBeforeCoupon(): float
     {
+        return $this->calculatePrice() - $this->calculateCouponValue();
+    }
 
+    /**
+     * Get the product price
+     *
+     * @return float
+     */
+    public function calculateProductPriceBeforeTaxAndCoupon(): float
+    {
+        if ($this->getProduct() === null) {
+            return 0.0;
+        }
+
+        if($this->order === null) {
+            return $this->product->getPrice();
+        }
+
+        return $this->product->getPriceForCheckout();
+    }
+
+    /**
+     * Returns the product total (i.e. price * quantity) for product
+     *
+     * @return float
+     */
+    public function calculateOrderTotalForProductBeforeTaxAndCoupon(): float
+    {
+        if ($this->order === null) {
+            return $this->calculateProductPriceBeforeTaxAndCoupon();
+        }
+
+        return $this->order->getProductQuantity($this->getProduct()) * $this->calculateProductPriceBeforeTaxAndCoupon();
     }
 
     /**
@@ -208,5 +276,60 @@ class PriceService
         }
 
         return $convertedValue;
+    }
+
+    /**
+     * Apply the $this->coupon to the supplied value
+     *
+     * Returns zero if the resulting sum is less than zero
+     *
+     * @param float $value
+     * @return float
+     */
+    protected function applyCouponToValue(float $value): float
+    {
+        if ($this->coupon === null) {
+            return $value;
+        }
+
+        switch ($this->coupon->getType()) {
+            case Coupon::TYPE_CASH_REBATE:
+                $value -= $this->coupon->getValue();
+                break;
+            case Coupon::TYPE_PERCENTAGE_REBATE:
+                $value -= $value * ($this->coupon->getValue() / 100);
+                break;
+        }
+
+        //Make sure the coupon doesn't return a negative value
+        if ($value < 0) {
+            $value = 0.0;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Applies the coupons in $this->order to the supplied value
+     *
+     * @param float $value
+     * @return float
+     */
+    protected function applyOrderCouponsToValue(float $value): float
+    {
+        if ($this->order === null) {
+            return $value;
+        }
+
+        $previousCoupon = $this->coupon;
+
+        foreach ($this->order->getCoupons() as $coupon) {
+            $this->setCoupon($coupon);
+            $value = $this->applyCouponToValue($value);
+        }
+
+        $this->coupon = $previousCoupon;
+
+        return $value;
     }
 }
