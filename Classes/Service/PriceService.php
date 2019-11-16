@@ -162,9 +162,7 @@ class PriceService
      */
     public function calculatePrice(): float
     {
-        return $this->calculatePriceBeforeTaxAndCoupon()
-            + $this->calculateTax()
-            + $this->calculateCouponValue();
+        return $this->applyOrderCouponsToValue($this->calculatePriceBeforeTaxAndCoupon() + $this->calculateTax());
     }
 
     /**
@@ -339,10 +337,10 @@ class PriceService
         }
 
         if($this->order === null) {
-            return $this->product->getPrice();
+            return $this->product->getPrice() - $this->product->getTax();
         }
 
-        return $this->product->getPriceForCheckout();
+        return $this->product->getPriceForCheckout() - $this->product->getTaxForCheckout();
     }
 
     /**

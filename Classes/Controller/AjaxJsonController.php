@@ -71,7 +71,6 @@ class AjaxJsonController extends AbstractController
                 $this->orderRepository->update($order);
 
                 $response['success'] = true;
-                $response['inList'] = !$inWishList;
 
                 $message = $this->translate(
                     'fe.added_to_list',
@@ -189,6 +188,7 @@ class AjaxJsonController extends AbstractController
     {
         try {
             $priceService = (new PriceServiceFactory())->createFromSession();
+
             $totalPrice = $priceService->calculatePrice();
             $totalTaxPrice = $priceService->calculateTax();
         } catch (\Exception $e) {
