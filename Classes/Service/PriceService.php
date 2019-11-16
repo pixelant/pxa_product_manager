@@ -164,7 +164,7 @@ class PriceService
      *
      * @return float
      */
-    public function calculatePriceBeforeTaxAndCoupons(): float
+    public function calculatePriceBeforeTaxAndCoupon(): float
     {
 
     }
@@ -174,7 +174,7 @@ class PriceService
      *
      * @return float
      */
-    public function calculatePriceBeforeCoupons(): float
+    public function calculatePriceBeforeCoupon(): float
     {
 
     }
