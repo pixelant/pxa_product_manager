@@ -190,7 +190,7 @@
                 <f:form.textfield
                     name="orderProducts[{product.uid}]"
                     type="number"
-                    value="{f:if(condition: '{orderProducts.{product.uid}}', then: '{orderProducts.{product.uid}}', else: 1)}"
+                    value="{orderProducts.{product.uid}}"
                     class="order-product-amount"
                     id="order-product-amount-{product.uid}"
                     data="{product-uid: product.uid}" />

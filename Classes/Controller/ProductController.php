@@ -272,16 +272,10 @@ class ProductController extends AbstractController
             }
         }
 
-        if ($this->request->hasArgument('orderProducts')) {
-            $orderState = $this->request->getArgument('orderProducts');
-        } else {
-            $orderState = ProductUtility::getOrderState();
-        }
-
         $this->view->assignMultiple([
             'checkout' => $checkout,
             'products' => $order->getProducts(),
-            'orderProducts' => $orderState ?? [],
+            'orderProducts' => $order->getProductsQuantity(),
             'sendOrder' => $sendOrder,
             'coupons' => $order->getCoupons()
         ]);

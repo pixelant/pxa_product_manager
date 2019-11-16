@@ -127,9 +127,9 @@ class OrderUtility
 
         //If there are too many products, remove one.
         if (
-            ((int) $wishListLimitFromSettings > 0 && $order->getProducts()->count() + 1 > (int) $wishListLimitFromSettings)
+            ((int) $wishListLimitFromSettings > 0 && $order->getProductsQuantityTotal() + 1 > (int) $wishListLimitFromSettings)
             ||
-            ((int) $wishListLimitFromSettings === 0 && $order->getProducts()->count() + 1 > self::MAX_PRODUCTS)
+            ((int) $wishListLimitFromSettings === 0 && $order->getProductsQuantityTotal() + 1 > self::MAX_PRODUCTS)
         ) {
             $order->getProducts()->rewind();
             $order->removeProduct($order->getProducts()->current());

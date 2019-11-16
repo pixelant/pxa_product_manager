@@ -99,7 +99,7 @@ class PriceService
     /**
      * @param Coupon $coupon
      */
-    public function setCoupon(array $coupon): self
+    public function setCoupon(Coupon $coupon): self
     {
         $this->coupon = $coupon;
         return $this;
@@ -162,7 +162,7 @@ class PriceService
      */
     public function calculatePrice(): float
     {
-        return $this->calculateProductPriceBeforeTaxAndCoupon()
+        return $this->calculatePriceBeforeTaxAndCoupon()
             + $this->calculateTax()
             + $this->calculateCouponValue();
     }
@@ -254,8 +254,8 @@ class PriceService
         $total = 0.0;
 
         foreach ($this->order->getProducts() as $product) {
-            $this->setProduct($product);
-            $total += $this->calculateOrderTotalPriceForProductBeforeTaxAndCoupon();
+            $this->product = $product;
+            $total += $this->calculateOrderTotalForProductBeforeTaxAndCoupon();
         }
 
         $this->product = null;
@@ -352,6 +352,10 @@ class PriceService
      */
     public function calculateOrderTotalForProductBeforeTaxAndCoupon(): float
     {
+        if ($this->product === null) {
+            return 0.0;
+        }
+
         if ($this->order === null) {
             return $this->calculateProductPriceBeforeTaxAndCoupon();
         }
@@ -366,6 +370,10 @@ class PriceService
      */
     public function calculateOrderTotalForProduct(): float
     {
+        if ($this->product === null) {
+            return 0.0;
+        }
+
         if ($this->order === null) {
             return $this->calculatePrice();
         }
@@ -383,6 +391,10 @@ class PriceService
      */
     public function calculateOrderTotalCouponValueForProduct(): float
     {
+        if ($this->product === null) {
+            return 0.0;
+        }
+
         if ($this->order === null) {
             return $this->calculateCouponValue();
         }
@@ -397,6 +409,10 @@ class PriceService
      */
     public function calculateOrderTotalTaxForProduct(): float
     {
+        if ($this->product === null) {
+            return 0.0;
+        }
+
         if ($this->order === null) {
             return $this->calculateProductTax();
         }
@@ -486,5 +502,36 @@ class PriceService
         $this->coupon = $previousCoupon;
 
         return $value;
+    }
+
+    /**
+     * Internal debugging function
+     *
+     * @internal
+     * @return array
+     */
+    public function debugPrices():array
+    {
+        return [
+            'order' => $this->order !== null ? $this->order->getUid() : '',
+            'product' => $this->product !== null ? $this->product->getUid() : '',
+            'coupon' => $this->coupon !== null ? $this->coupon->getUid() : '',
+            'productQuantitiesInOrder' => $this->order !== null ? $this->order->getProductsQuantity() : '',
+            'calculateCouponValue' => $this->calculateCouponValue(),
+            'calculateCouponValueBeforeTax' => $this->calculateCouponValueBeforeTax(),
+            'calculateOrderTotalCouponValueForProduct' => $this->calculateOrderTotalCouponValueForProduct(),
+            'calculateOrderTotalForProduct' => $this->calculateOrderTotalForProduct(),
+            'calculateOrderTotalForProductBeforeTaxAndCoupon' => $this->calculateOrderTotalForProductBeforeTaxAndCoupon(),
+            'calculateOrderTotalTaxForProduct' => $this->calculateOrderTotalTaxForProduct(),
+            'calculatePrice' => $this->calculatePrice(),
+            'calculatePriceBeforeCoupon' => $this->calculatePriceBeforeCoupon(),
+            'calculatePriceBeforeTax' => $this->calculatePriceBeforeTax(),
+            'calculatePriceBeforeTaxAndCoupon' => $this->calculatePriceBeforeTaxAndCoupon(),
+            'calculateProductPrice' => $this->calculateProductPrice(),
+            'calculateProductPriceBeforeCoupon' => $this->calculateProductPriceBeforeCoupon(),
+            'calculateProductPriceBeforeTaxAndCoupon' => $this->calculateProductPriceBeforeTaxAndCoupon(),
+            'calculateProductTax' => $this->calculateProductTax(),
+            'calculateTax' => $this->calculateTax()
+        ];
     }
 }

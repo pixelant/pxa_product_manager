@@ -131,6 +131,7 @@ class Order extends AbstractEntity
     protected function initStorageObjects()
     {
         $this->products = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->coupons = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -141,7 +142,11 @@ class Order extends AbstractEntity
      */
     public function addProduct(\Pixelant\PxaProductManager\Domain\Model\Product $product)
     {
-        $this->products->attach($product);
+        if ($this->getProductQuantity($product) < 1) {
+            $this->products->attach($product);
+        }
+
+        $this->setProductQuantity($product, $this->getProductQuantity($product) + 1);
     }
 
     /**
@@ -152,7 +157,11 @@ class Order extends AbstractEntity
      */
     public function removeProduct(\Pixelant\PxaProductManager\Domain\Model\Product $productToRemove)
     {
-        $this->products->detach($productToRemove);
+        if ($this->getProductQuantity($productToRemove) <= 1) {
+            $this->products->detach($productToRemove);
+        }
+
+        $this->setProductQuantity($productToRemove, $this->getProductQuantity($productToRemove) - 1);
     }
 
     /**
@@ -237,6 +246,16 @@ class Order extends AbstractEntity
     }
 
     /**
+     * Returns the sum of products including the products quantity
+     *
+     * @return int
+     */
+    public function getProductsQuantityTotal(): int
+    {
+        return array_sum($this->getProductsQuantity());
+    }
+
+    /**
      * Returns the quantity of a specific product in the order
      *
      * @param Product $product
@@ -245,6 +264,18 @@ class Order extends AbstractEntity
     public function getProductQuantity(Product $product)
     {
         return (int) $this->getProductsQuantity()[$product->getUid()];
+    }
+
+    /**
+     * Sets the quantity of a specific product
+     * @param Product $product
+     * @param int $quantity
+     */
+    public function setProductQuantity(Product $product, int $quantity)
+    {
+        $productQuantities = $this->getProductsQuantity();
+        $productQuantities[$product->getUid()] = $quantity;
+        $this->setProductsQuantity($productQuantities);
     }
 
     /**

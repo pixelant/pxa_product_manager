@@ -30,6 +30,7 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Exception\InvalidPriceCalculationException;
 use Pixelant\PxaProductManager\Factory\PriceServiceFactory;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use Pixelant\PxaProductManager\Utility\OrderUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Extbase\Mvc\View\JsonView;
 
@@ -53,35 +54,35 @@ class AjaxJsonController extends AbstractController
      */
     public function toggleWishListAction(Product $wishProduct = null)
     {
+        $order = OrderUtility::getSessionOrder();
+
         $response = [
-            'success' => false
+            'success' => false,
         ];
 
         $limit = (int)$this->settings['wishList']['limit'];
 
         if ($wishProduct !== null) {
-            $inWishList = ProductUtility::isProductInWishList($wishProduct);
-
-            if (!$inWishList && count(ProductUtility::getWishList()) >= $limit) {
+            if ($order->getProductsQuantityTotal() + 1 > $limit) {
                 $message = $this->translate('fe.error_limit');
             } else {
-                MainUtility::{$inWishList ? 'removeValueFromListCookie' : 'addValueToListCookie'}(
-                    ProductUtility::WISH_LIST_COOKIE_NAME,
-                    $wishProduct->getUid(),
-                    $limit
-                );
+                $order->addProduct($wishProduct);
+
+                $this->orderRepository->update($order);
+
+                $response['success'] = true;
+                $response['inList'] = !$inWishList;
 
                 $message = $this->translate(
-                    $inWishList ? 'fe.remove_from_list' : 'fe.added_to_list',
+                    'fe.added_to_list',
                     [
                         $this->translate('fe.wish_list')
                     ]
                 );
-
-                $response['success'] = true;
-                $response['inList'] = !$inWishList;
             }
         }
+
+        $response['itemCount'] = $order->getProductsQuantityTotal();
 
         $response['message'] = $message ?? $this->translate('fe.error_request');
 
@@ -188,7 +189,6 @@ class AjaxJsonController extends AbstractController
     {
         try {
             $priceService = (new PriceServiceFactory())->createFromSession();
-
             $totalPrice = $priceService->calculatePrice();
             $totalTaxPrice = $priceService->calculateTax();
         } catch (\Exception $e) {
@@ -196,7 +196,7 @@ class AjaxJsonController extends AbstractController
             return null;
         }
 
-        if ($totalPrice <= 0 || $totalTaxPrice <= 0) {
+        if ($totalPrice < 0 || $totalTaxPrice < 0) {
             $this->response->setStatus(500, 'Price calculation error');
             return null;
         }
