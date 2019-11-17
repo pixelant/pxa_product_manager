@@ -1402,7 +1402,8 @@ class Product extends AbstractEntity
      */
     public function getTax(): float
     {
-        return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+        // @TODO: Make it possible to define price as inclusive or inclusive tax
+        return $this->getPrice() - ($this->getPrice() / (($this->getTaxRateRecursively() / 100) + 1));
     }
 
     /**
