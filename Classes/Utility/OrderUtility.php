@@ -54,6 +54,11 @@ class OrderUtility
     const MAX_PRODUCTS = 20;
 
     /**
+     * @var Order $sessionOrder
+     */
+    protected static $sessionOrder = null;
+
+    /**
      * Fetches the current session's order
      *
      * @return Order
@@ -68,10 +73,17 @@ class OrderUtility
 
         if ($orderUid > 0) {
             /** @var Order $order */
-            $order = $orderRepository->findByUid($orderUid);
+            if (self::$sessionOrder !== null) {
+                $order = self::$sessionOrder;
+            } else {
+                $order = $orderRepository->findByUid($orderUid);
+                self::$sessionOrder = $order;
+            }
 
             if ($order !== null && !$order->isComplete()) {
                 return $order;
+            } elseif ($order->isComplete()) {
+                self::$sessionOrder = null;
             }
         }
 
