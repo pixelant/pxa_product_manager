@@ -84,7 +84,7 @@ class Coupon extends AbstractEntity
      */
     public function getName(): string
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
@@ -92,7 +92,7 @@ class Coupon extends AbstractEntity
      */
     public function setName(string $name)
     {
-        $this->title = $title;
+        $this->name = $name;
     }
 
     /**
@@ -116,7 +116,7 @@ class Coupon extends AbstractEntity
      */
     public function getUsageLimit(): int
     {
-        return $this->maxUses;
+        return $this->usageLimit;
     }
 
     /**
@@ -124,7 +124,7 @@ class Coupon extends AbstractEntity
      */
     public function setUsageLimit(int $usageLimit)
     {
-        $this->maxUses = $maxUses;
+        $this->usageLimit = $usageLimit;
     }
 
     /**
@@ -132,7 +132,7 @@ class Coupon extends AbstractEntity
      */
     public function getCostLimit(): float
     {
-        return $this->maxCost;
+        return $this->costLimit;
     }
 
     /**
@@ -140,7 +140,7 @@ class Coupon extends AbstractEntity
      */
     public function setCostLimit(float $costLimit)
     {
-        $this->maxCost = $maxCost;
+        $this->costLimit = $costLimit;
     }
 
     /**
