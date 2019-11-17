@@ -223,7 +223,7 @@
 	        <trans-unit id="fe.couponCode.codeAlreadyAddedWarning">
 		        <source>You cannot add a coupon code twice. The coupon code you supplied was already in the list.</source>
 	        </trans-unit>
-	        <trans-unit id="fe.couponCode.codeNotFoundError">
+	        <trans-unit id="fe.couponCode.newCodeAdded">
 		        <source>The coupon code was successfully applied.</source>
 	        </trans-unit>
 
