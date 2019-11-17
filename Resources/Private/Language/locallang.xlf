@@ -202,29 +202,29 @@
             </trans-unit>
 
             <trans-unit id="fe.solr.type_facet_name">
-                <target>Products</target>
+                <source>Products</source>
             </trans-unit>
 
 	        <trans-unit id="fe.couponCode.addButton">
-		        <target>Add discount code</target>
+		        <source>Add discount code</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.fieldPlaceholder">
-		        <target>Add discount code</target>
+		        <source>Add discount code</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.fieldLabel">
-		        <target>Enter discount code</target>
+		        <source>Enter discount code</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.noCodeSuppliedWarning">
-		        <target>No discount code was supplied. Please enter the code in the text field before clicking the Add discount code button.</target>
+		        <source>No discount code was supplied. Please enter the code in the text field before clicking the Add discount code button.</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.codeNotFoundError">
-		        <target>The coupon code you supplied could not be found. Please check that you entered it correctly.</target>
+		        <source>The coupon code you supplied could not be found. Please check that you entered it correctly.</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.codeAlreadyAddedWarning">
-		        <target>You cannot add a coupon code twice. The coupon code you supplied was already in the list.</target>
+		        <source>You cannot add a coupon code twice. The coupon code you supplied was already in the list.</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.codeNotFoundError">
-		        <target>The coupon code was successfully applied.</target>
+		        <source>The coupon code was successfully applied.</source>
 	        </trans-unit>
 
             <!--Javascript labels-->
