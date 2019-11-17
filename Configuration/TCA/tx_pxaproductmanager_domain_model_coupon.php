@@ -130,7 +130,7 @@ return [
         ],
         'usage_count' => [
             'exclude' => 1,
-            'label' => $ll . '.usage_limit',
+            'label' => $ll . '.usage_count',
             'config' => [
                 'type' => 'input',
                 'default' => 0,
