@@ -68,6 +68,12 @@ class AjaxJsonController extends AbstractController
                 $this->orderRepository->update($order);
 
                 $response['success'] = true;
+                $message = $this->translate(
+                    'fe.remove_from_list',
+                    [
+                        $this->translate('fe.wish_list')
+                    ]
+                );
             } else {
                 if ($order->getProductsQuantityTotal() + 1 > $limit) {
                     $message = $this->translate('fe.error_limit');
