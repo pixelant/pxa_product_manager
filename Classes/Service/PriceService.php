@@ -235,7 +235,7 @@ class PriceService
      */
     public function calculatePriceBeforeTax(): float
     {
-        return $this->calculatePriceBeforeTaxAndCoupon() - $this->calculateTax();
+        return $this->calculatePriceBeforeTaxAndCoupon() + $this->calculateCouponValue();
     }
 
     /**
@@ -438,7 +438,7 @@ class PriceService
             $fractionalDigits = localeconv()['int_frac_digits'];
         }
 
-        $convertedValue = (int) pow($value, $fractionalDigits);
+        $convertedValue = (int) $value * pow(10, $fractionalDigits);
 
         if ($locale !== null) {
             setlocale(LC_ALL, $oldLocale);
@@ -522,6 +522,7 @@ class PriceService
             'calculateOrderTotalForProductBeforeTaxAndCoupon' => $this->calculateOrderTotalForProductBeforeTaxAndCoupon(),
             'calculateOrderTotalTaxForProduct' => $this->calculateOrderTotalTaxForProduct(),
             'calculatePrice' => $this->calculatePrice(),
+            'formatForIso4217(calculatePrice())' => self::formatForIso4217($this->calculatePrice()),
             'calculatePriceBeforeCoupon' => $this->calculatePriceBeforeCoupon(),
             'calculatePriceBeforeTax' => $this->calculatePriceBeforeTax(),
             'calculatePriceBeforeTaxAndCoupon' => $this->calculatePriceBeforeTaxAndCoupon(),
