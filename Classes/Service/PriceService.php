@@ -301,10 +301,10 @@ class PriceService
         }
 
         if($this->order === null) {
-            return $this->product->getPrice() + $this->product->getTax();
+            return $this->product->getPrice();
         }
 
-        return $this->product->getPriceForCheckout() + $this->product->getTaxForCheckout();
+        return $this->product->getPriceForCheckout();
     }
 
     /**
@@ -314,7 +314,7 @@ class PriceService
      */
     public function calculateProductPrice(): float
     {
-        if ($this->getProduct() === null) {
+        if ($this->product === null) {
             return 0.0;
         }
 
