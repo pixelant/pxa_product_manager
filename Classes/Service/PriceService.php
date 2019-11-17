@@ -438,7 +438,7 @@ class PriceService
             $fractionalDigits = localeconv()['int_frac_digits'];
         }
 
-        $convertedValue = (int) $value * pow(10, $fractionalDigits);
+        $convertedValue = (int) ($value * pow(10, $fractionalDigits));
 
         if ($locale !== null) {
             setlocale(LC_ALL, $oldLocale);
