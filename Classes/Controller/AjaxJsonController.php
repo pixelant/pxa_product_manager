@@ -55,7 +55,6 @@ class AjaxJsonController extends AbstractController
     public function toggleWishListAction(Product $wishProduct = null)
     {
         $order = OrderUtility::getSessionOrder();
-
         $response = [
             'success' => false,
         ];
@@ -63,21 +62,27 @@ class AjaxJsonController extends AbstractController
         $limit = (int)$this->settings['wishList']['limit'];
 
         if ($wishProduct !== null) {
-            if ($order->getProductsQuantityTotal() + 1 > $limit) {
-                $message = $this->translate('fe.error_limit');
-            } else {
-                $order->addProduct($wishProduct);
-
+            if ($this->request->getArguments()['removeProduct']) {
+                $order->removeProduct($wishProduct);
                 $this->orderRepository->update($order);
-
                 $response['success'] = true;
+            } else {
+                if ($order->getProductsQuantityTotal() + 1 > $limit) {
+                    $message = $this->translate('fe.error_limit');
+                } else {
+                    $order->addProduct($wishProduct);
 
-                $message = $this->translate(
-                    'fe.added_to_list',
-                    [
-                        $this->translate('fe.wish_list')
-                    ]
-                );
+                    $this->orderRepository->update($order);
+
+                    $response['success'] = true;
+
+                    $message = $this->translate(
+                        'fe.added_to_list',
+                        [
+                            $this->translate('fe.wish_list')
+                        ]
+                    );
+                }
             }
         }
 
