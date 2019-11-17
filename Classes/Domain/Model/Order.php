@@ -158,7 +158,13 @@ class Order extends AbstractEntity
     public function removeProduct(\Pixelant\PxaProductManager\Domain\Model\Product $productToRemove)
     {
         $this->setProductQuantity($productToRemove, 0);
-        $this->products->detach($productToRemove);
+
+        foreach ($this->products as $product) {
+            if ($product->getUid() === $productToRemove->getUid()) {
+                $this->products->detach($product);
+                break;
+            }
+        }
     }
 
     /**
