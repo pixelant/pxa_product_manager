@@ -132,7 +132,11 @@ class OrderUtility
             ((int) $wishListLimitFromSettings === 0 && $order->getProductsQuantityTotal() + 1 > self::MAX_PRODUCTS)
         ) {
             $order->getProducts()->rewind();
-            $order->removeProduct($order->getProducts()->current());
+            if ($order->getProductQuantity($order->getProducts()->current()) <= 1) {
+                $order->removeProduct($order->getProducts()->current());
+            } else {
+                $order->setProductQuantity($order->getProducts()->current(), $order->getProductQuantity($order->getProducts()->current()) - 1);
+            }
         }
 
         $order->addProduct($product);

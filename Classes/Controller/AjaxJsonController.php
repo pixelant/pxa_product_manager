@@ -64,7 +64,9 @@ class AjaxJsonController extends AbstractController
         if ($wishProduct !== null) {
             if ($this->request->getArguments()['removeProduct']) {
                 $order->removeProduct($wishProduct);
+
                 $this->orderRepository->update($order);
+
                 $response['success'] = true;
             } else {
                 if ($order->getProductsQuantityTotal() + 1 > $limit) {

@@ -157,11 +157,8 @@ class Order extends AbstractEntity
      */
     public function removeProduct(\Pixelant\PxaProductManager\Domain\Model\Product $productToRemove)
     {
-        if ($this->getProductQuantity($productToRemove) <= 1) {
-            $this->products->detach($productToRemove);
-        }
-
-        $this->setProductQuantity($productToRemove, $this->getProductQuantity($productToRemove) - 1);
+        $this->setProductQuantity($productToRemove, 0);
+        $this->products->detach($productToRemove);
     }
 
     /**
@@ -274,7 +271,13 @@ class Order extends AbstractEntity
     public function setProductQuantity(Product $product, int $quantity)
     {
         $productQuantities = $this->getProductsQuantity();
-        $productQuantities[$product->getUid()] = $quantity;
+
+        if ($quantity === 0) {
+            unset($productQuantities[$product->getUid()]);
+        } else {
+            $productQuantities[$product->getUid()] = $quantity;
+        }
+
         $this->setProductsQuantity($productQuantities);
     }
 
