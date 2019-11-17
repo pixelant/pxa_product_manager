@@ -209,7 +209,7 @@
 		        <source>Add discount code</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.fieldPlaceholder">
-		        <source>Add discount code</source>
+		        <source>Enter code</source>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.fieldLabel">
 		        <source>Enter discount code</source>
