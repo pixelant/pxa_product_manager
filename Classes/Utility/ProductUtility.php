@@ -263,13 +263,21 @@ class ProductUtility
      *
      * @param object|int $product
      * @return bool
+     * @throws UnknownProductException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public static function isProductInWishList($product): bool
     {
         if (!is_object($product)) {
             $product = self::getProductByUid($product);
         }
-        return OrderUtility::getSessionOrder()->getProducts()->contains($product);
+
+        $wishlistUids = array_map(function ($item) {
+            return $item->getUid();
+        }, OrderUtility::getSessionOrder()->getProducts()->toArray());
+
+        // TODO: objectStorage->contains() doesn't work here. Find out why
+        return in_array($product->getUid(), $wishlistUids);
     }
 
     /**

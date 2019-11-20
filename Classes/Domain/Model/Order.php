@@ -525,4 +525,12 @@ class Order extends AbstractEntity
     {
         $this->taxAtCheckout = $taxAtCheckout;
     }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfProducts()
+    {
+        return $this->getProducts()->count();
+    }
 }
