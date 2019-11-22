@@ -37,6 +37,19 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 class Order extends AbstractEntity
 {
     /**
+     * Recurring (Subscription) periods
+     */
+    const RECURRING_FOR_WEEK = 1;
+    const RECURRING_FOR_MONTH = 2;
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_PAUSED = 2;
+    const STATUS_CANCELLED = 3;
+
+    const WEEK_TIME_MODIFIER = '+5 days';
+    const MONTH_TIME_MODIFIER = '+1 months';
+
+    /**
      * @var bool
      */
     protected $hidden = false;
@@ -112,6 +125,12 @@ class Order extends AbstractEntity
     protected $taxAtCheckout = 0.0;
 
     /**
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\SubscriptionRenewal>
+     */
+    protected $renewals = null;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -132,6 +151,7 @@ class Order extends AbstractEntity
     {
         $this->products = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->coupons = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->renewals = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -524,5 +544,41 @@ class Order extends AbstractEntity
     public function setTaxAtCheckout(float $taxAtCheckout)
     {
         $this->taxAtCheckout = $taxAtCheckout;
+    }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getRenewals(): ObjectStorage
+    {
+        return $this->renewals;
+    }
+
+    /**
+     * @param ObjectStorage $renewals
+     */
+    public function setRenewals(ObjectStorage $renewals)
+    {
+        $this->renewals = $renewals;
+    }
+
+    /**
+     * Add a renewal
+     *
+     * @param SubscriptionRenewal $renewal
+     */
+    public function addRenewal(SubscriptionRenewal $renewal)
+    {
+        $this->renewals->attach($renewal);
+    }
+
+    /**
+     * Remove a renewal
+     *
+     * @param SubscriptionRenewal $renewal
+     */
+    public function removeRenewal(SubscriptionRenewal $renewal)
+    {
+        $this->renewals->detach($renewal);
     }
 }

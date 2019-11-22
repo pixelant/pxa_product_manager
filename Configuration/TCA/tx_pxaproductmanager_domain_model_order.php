@@ -25,13 +25,14 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/cart_tca.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user, checkout_type, price_at_checkout, tax_at_checkout',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user, checkout_type, price_at_checkout, tax_at_checkout, renewals',
     ],
     'types' => [
         '1' => [
             'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, fe_user, checkout_type, price_at_checkout, tax_at_checkout
             --div--;' . $ll . '.order_fields,|order_fields|,
-            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'
+            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime,
+            --div--;' . $ll . '.tabs.recurring_payments, renewals',
         ],
     ],
     'columns' => [
@@ -246,5 +247,19 @@ return [
                 'eval' => 'double2'
             ],
         ],
+        'renewals' => [
+            'exclude' => 1,
+            'label' => $ll . '.renewals',
+            'config' => [
+                'type' => 'inline',
+                'foreign_table' => 'tx_pxaproductmanager_domain_model_subscriptionrenewal',
+                'foreign_field' => 'order',
+                'foreign_sortby' => 'payment_date',
+                'appearance' => [
+                    'collapseAll' => 1,
+                    'expandSingle' => 1,
+                ],
+            ]
+        ]
     ]
 ];

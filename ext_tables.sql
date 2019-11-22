@@ -436,6 +436,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
   	coupons int(11) unsigned DEFAULT '0' NOT NULL,
   	price_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
   	tax_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
+    renewals int(11) unsigned DEFAULT '0' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,
@@ -574,4 +575,33 @@ CREATE TABLE tx_pxaproductmanager_domain_model_coupon (
 	PRIMARY KEY (uid),
 	KEY couponcode (code),
 	KEY parent (pid)
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_domain_model_subscriptionrenewal'
+#
+CREATE TABLE tx_pxaproductmanager_domain_model_subscriptionrenewal (
+    uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
+
+    payment_date int(11) unsigned DEFAULT '0' NOT NULL,
+    payment_next_try int(11) unsigned DEFAULT '0' NOT NULL,
+    payment_done tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    payment_attempts_left int(11) unsigned DEFAULT '0' NOT NULL,
+    shipment_date int(11) unsigned DEFAULT '0' NOT NULL,
+    shipment_next_try int(11) unsigned DEFAULT '0' NOT NULL,
+    shipment_done tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    shipment_attempts_left int(11) unsigned DEFAULT '0' NOT NULL,
+    order int(11) unsigned DEFAULT '0' NOT NULL,
+
+    tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+    crdate int(11) unsigned DEFAULT '0' NOT NULL,
+    cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+    deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    hidden tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    starttime int(11) unsigned DEFAULT '0' NOT NULL,
+    endtime int(11) unsigned DEFAULT '0' NOT NULL,
+
+    PRIMARY KEY (uid),
+    KEY parent (pid)
 );
