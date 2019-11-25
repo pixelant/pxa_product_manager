@@ -23,13 +23,15 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/subscription_renewal_tca.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'payment_date, payment_next_try, payment_done, payment_attempts_left, shipment_date,
-                                    shipment_next_try, shipment_done, shipment_attempts_left'
+        'showRecordFieldList' => 'payment_date, payment_next_try, payment_done, payment_attempts_left, payment_id,
+                                    payment_status, shipment_date, shipment_next_try, shipment_done,
+                                    shipment_attempts_left'
     ],
     'types' => [
         '1' => [
-            'showitem' => 'payment_date, payment_next_try, payment_done, payment_attempts_left, shipment_date,
-                            shipment_next_try, shipment_done, shipment_attempts_left'
+            'showitem' => 'payment_date, payment_next_try, payment_done, payment_attempts_left, payment_id,
+                                    payment_status, shipment_date, shipment_next_try, shipment_done,
+                                    shipment_attempts_left'
         ],
     ],
     'columns' => [
@@ -116,6 +118,24 @@ return [
                 'size' => 30,
 //                'readOnly' => 1
             ],
+        ],
+        'payment_id' => [
+            'exclude' => 0,
+            'label' => $ll . '.payment_id',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ]
+        ],
+        'payment_status' => [
+            'exclude' => 0,
+            'label' => $ll . '.payment_status',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ]
         ],
         'shipment_date' => [
             'exclude' => true,

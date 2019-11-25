@@ -463,6 +463,12 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_attempts_left">
                 <source>Payment attempts left</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_id">
+                <source>Payment id</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_status">
+                <source>Payment status</source>
+            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.shipment_date">
                 <source>Shipment date</source>
             </trans-unit>

@@ -588,11 +588,14 @@ CREATE TABLE tx_pxaproductmanager_domain_model_subscriptionrenewal (
     payment_next_try int(11) unsigned DEFAULT '0' NOT NULL,
     payment_done tinyint(4) unsigned DEFAULT '0' NOT NULL,
     payment_attempts_left int(11) unsigned DEFAULT '0' NOT NULL,
+    payment_id varchar(255) DEFAULT '' NOT NULL,
+    payment_status varchar(255) DEFAULT '' NOT NULL,
     shipment_date int(11) unsigned DEFAULT '0' NOT NULL,
     shipment_next_try int(11) unsigned DEFAULT '0' NOT NULL,
     shipment_done tinyint(4) unsigned DEFAULT '0' NOT NULL,
     shipment_attempts_left int(11) unsigned DEFAULT '0' NOT NULL,
     order int(11) unsigned DEFAULT '0' NOT NULL,
+
 
     tstamp int(11) unsigned DEFAULT '0' NOT NULL,
     crdate int(11) unsigned DEFAULT '0' NOT NULL,

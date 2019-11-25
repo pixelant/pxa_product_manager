@@ -154,6 +154,16 @@ plugin.tx_pxaproductmanager {
 
         # don't compare images and links
         ignoreAttributeTypesInCompareView = 6,7
+        payments {
+            ## To debug the payments. Used for  faking today date and few other things
+            debug = 0
+
+            ### !!! WARNING !!! Be careful. This will replace the today date with whatever you specify
+            ### It is added to test the subscription renewals
+            ### Only works if 'debug' option is enabled
+            ### The format is Y-m-d
+            todayDate =
+        }
     }
 
     _LOCAL_LANG {

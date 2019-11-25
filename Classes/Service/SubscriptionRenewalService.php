@@ -7,6 +7,7 @@ use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\SubscriptionRenewal;
 use Pixelant\PxaProductManager\Domain\Repository\OrderRepository;
 use Pixelant\PxaProductManager\Exception\NotARecurringOrderException;
+use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
@@ -37,11 +38,22 @@ class SubscriptionRenewalService
      * SubscriptionRenewalService constructor.
      * @param Order $order
      * @throws NotARecurringOrderException
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
     public function __construct(Order $order)
     {
-        $this->today = \DateTime::createFromFormat('Y-m-d', '2019-11-22');
-        $this->today = \DateTime::createFromFormat('Y-m-d', '2020-01-21');
+        $settings = ConfigurationUtility::getSettings();
+
+        $this->today = new \DateTime();
+
+        if ($settings['payments']['debug'] === '1' && $settings['payments']['todayDate']) {
+            try {
+                $this->today = \DateTime::createFromFormat('Y-m-d', $settings['payments']['todayDate']);
+            } catch (\Exception $e) {
+                // Do nothing
+            }
+        }
+
         $this->order = $order;
         if ($this->order->getRecurringPeriod() <= 0) {
             throw new NotARecurringOrderException();

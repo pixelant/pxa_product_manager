@@ -37,6 +37,16 @@ class SubscriptionRenewal extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $paymentAttemptsLeft = null;
 
     /**
+     * @var string
+     */
+    protected $paymentId;
+
+    /**
+     * @var string
+     */
+    protected $paymentStatus;
+
+    /**
      * $shipmentDate
      *
      * @var \DateTime
@@ -187,6 +197,42 @@ class SubscriptionRenewal extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setPaymentAttemptsLeft(int $paymentAttemptsLeft): SubscriptionRenewal
     {
         $this->paymentAttemptsLeft = $paymentAttemptsLeft;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentId(): string
+    {
+        return $this->paymentId;
+    }
+
+    /**
+     * @param string $paymentId
+     * @return SubscriptionRenewal
+     */
+    public function setPaymentId(string $paymentId): SubscriptionRenewal
+    {
+        $this->paymentId = $paymentId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentStatus(): string
+    {
+        return $this->paymentStatus;
+    }
+
+    /**
+     * @param string $paymentStatus
+     * @return SubscriptionRenewal
+     */
+    public function setPaymentStatus(string $paymentStatus): SubscriptionRenewal
+    {
+        $this->paymentStatus = $paymentStatus;
         return $this;
     }
 
