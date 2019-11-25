@@ -291,4 +291,16 @@ class SubscriptionRenewal extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->setPaymentNextTry($nextTry);
         return $nextTry;
     }
+
+    /**
+     * @param string $paymentId
+     * @param string $paymentStatus
+     */
+    public function registerPayment(string $paymentId, string $paymentStatus)
+    {
+        $this->setPaymentDone(true);
+        $this->setPaymentAttemptsLeft(0);
+        $this->setPaymentId($paymentId);
+        $this->setPaymentStatus($paymentStatus);
+    }
 }

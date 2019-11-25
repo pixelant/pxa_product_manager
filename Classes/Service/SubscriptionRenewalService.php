@@ -77,7 +77,7 @@ class SubscriptionRenewalService
     /**
      * @return SubscriptionRenewal|null
      */
-    protected function getLatestRenewal()
+    public function getLatestRenewal()
     {
         return array_pop($this->order->getRenewals()->toArray());
     }
@@ -108,10 +108,10 @@ class SubscriptionRenewalService
 
         // If no renewals exist yet
         if (!$latestRenewal) {
-            return $this->addRenewal($this->order->getCrdate());
+            return $this->addRenewal($this->order->getCrdate() ?? new \DateTime());
         } else {
-            $date = $this->getNextRenewalDate($latestRenewal);
-            return $this->addRenewal($date);
+            $nextDate = $this->getNextRenewalDate($latestRenewal);
+            return $this->addRenewal($nextDate);
         }
     }
 

@@ -422,9 +422,9 @@ class Order extends AbstractEntity
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getCrdate(): \DateTime
+    public function getCrdate(): ?\DateTime
     {
         return $this->crdate;
     }
