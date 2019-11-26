@@ -482,6 +482,50 @@
                 <source>Shipment attempts left</source>
             </trans-unit>
 
+            <!-- Subscription -->
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription">
+                <source>Subscription</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.renew_date">
+                <source>Renew date</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.next_try">
+                <source>Next try</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status">
+                <source>Status</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status.1">
+                <source>Active</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status.2">
+                <source>Paused</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status.3">
+                <source>Cancelled</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.last_renew_status">
+                <source>Last renew status</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.attempts_left">
+                <source>Attempts left</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.orders">
+                <source>Orders</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.serialized_products_quantity">
+                <source>Serialized products quantity</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.subscription_period">
+                <source>Subscription period</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.subscription_period.1">
+                <source>Week subscription</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.subscription_period.2">
+                <source>Month subscription</source>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
