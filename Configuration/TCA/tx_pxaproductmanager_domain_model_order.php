@@ -20,7 +20,7 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'searchFields' => 'products',
+        'searchFields' => 'products, external_id',
         #'hideTable' => true,
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/cart_tca.svg'
     ],
@@ -29,10 +29,9 @@ return [
     ],
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, fe_user, checkout_type, price_at_checkout, tax_at_checkout
+            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, fe_user, checkout_type, price_at_checkout, tax_at_checkout, external_id,
             --div--;' . $ll . '.order_fields,|order_fields|,
-            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime,
-            --div--;' . $ll . '.tabs.recurring_payments, renewals, subscription',
+            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime',
         ],
     ],
     'columns' => [
@@ -186,7 +185,10 @@ return [
             'exclude' => 1,
             'label' => 'External id',
             'config' => [
-                'type' => 'passthrough'
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim',
+                'readOnly' => true
             ]
         ],
         'crdate' => [
