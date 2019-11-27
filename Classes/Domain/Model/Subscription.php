@@ -2,6 +2,8 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
+use Pixelant\PxaProductManager\Exception\EmptySubscriptionException;
+
 /**
  * Class Subscription
  * @package Pixelant\PxaProductManager\Domain\Model
@@ -274,5 +276,20 @@ class Subscription extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->subscriptionPeriod = $subscriptionPeriod;
         return $this;
+    }
+
+    /**
+     * @return Order
+     * @throws EmptySubscriptionException
+     */
+    public function getFirstOrder()
+    {
+        /** @var Order $firstOrder */
+        $firstOrder = $this->getOrders()->toArray()[0] ?? null;
+        if (!$firstOrder) {
+            throw new EmptySubscriptionException('Subscription has no orders');
+        }
+
+        return $firstOrder;
     }
 }

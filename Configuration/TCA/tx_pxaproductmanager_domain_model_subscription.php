@@ -129,7 +129,7 @@ return [
                 'type' => 'inline',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_order',
                 'foreign_field' => 'subscription',
-                'foreign_sortby' => 'crdate',
+                'foreign_default_sortby' => 'crdate',
                 'appearance' => [
                     'collapseAll' => 1,
                     'expandSingle' => 1,

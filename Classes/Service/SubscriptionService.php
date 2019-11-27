@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Service;
 use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Subscription;
 use Pixelant\PxaProductManager\Domain\Repository\SubscriptionRepository;
+use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
@@ -22,6 +23,31 @@ class SubscriptionService
      * TODO: get from settings
      */
     protected $numberOfAttempts = 3;
+
+    /**
+     * @var \DateTime
+     */
+    protected $today;
+
+    /**
+     * SubscriptionService constructor.
+     * @param Order $order
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     */
+    public function __construct(Order $order)
+    {
+        $settings = ConfigurationUtility::getSettings();
+
+        $this->today = new \DateTime();
+
+        if ($settings['payments']['debug'] === '1' && $settings['payments']['todayDate']) {
+            try {
+                $this->today = \DateTime::createFromFormat('Y-m-d', $settings['payments']['todayDate']);
+            } catch (\Exception $e) {
+                // Do nothing
+            }
+        }
+    }
 
     /**
      * @param SubscriptionRepository $subscriptionRepository
@@ -100,5 +126,14 @@ class SubscriptionService
         $subscription->setAttemptsLeft($this->numberOfAttempts);
 
         return $subscription;
+    }
+
+    /**
+     * @param Subscription $subscription
+     * @return bool
+     */
+    public function isItRenewalTime(Subscription $subscription)
+    {
+        return $this->today > $subscription->getNextTry();
     }
 }
