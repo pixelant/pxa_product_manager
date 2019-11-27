@@ -131,6 +131,11 @@ class Order extends AbstractEntity
     protected $renewals = null;
 
     /**
+     * @var int
+     */
+    protected $subscription = 0;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -580,5 +585,23 @@ class Order extends AbstractEntity
     public function removeRenewal(SubscriptionRenewal $renewal)
     {
         $this->renewals->detach($renewal);
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubscription(): int
+    {
+        return $this->subscription;
+    }
+
+    /**
+     * @param int $subscription
+     * @return Order
+     */
+    public function setSubscription(int $subscription): Order
+    {
+        $this->subscription = $subscription;
+        return $this;
     }
 }
