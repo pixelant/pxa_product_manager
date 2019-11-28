@@ -20,18 +20,18 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'searchFields' => 'products',
+        'searchFields' => 'products, external_id',
         #'hideTable' => true,
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/cart_tca.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user, checkout_type, price_at_checkout, tax_at_checkout',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, serialized_products_quantity, serialized_order_fields, external_id, fe_user, checkout_type, price_at_checkout, tax_at_checkout, subscription',
     ],
     'types' => [
         '1' => [
-            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, fe_user, checkout_type, price_at_checkout, tax_at_checkout
+            'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, complete, products, fe_user, checkout_type, price_at_checkout, tax_at_checkout, external_id, subscription,
             --div--;' . $ll . '.order_fields,|order_fields|,
-            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'
+            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime',
         ],
     ],
     'columns' => [
@@ -185,7 +185,10 @@ return [
             'exclude' => 1,
             'label' => 'External id',
             'config' => [
-                'type' => 'passthrough'
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim',
+                'readOnly' => true
             ]
         ],
         'crdate' => [
@@ -244,6 +247,29 @@ return [
                 'default' => 0.0,
                 'size' => 5,
                 'eval' => 'double2'
+            ],
+        ],
+        'subscription' => [
+            'exclude' => 1,
+            'label' => $ll . '.subscription',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'foreign_table' => 'tx_pxaproductmanager_domain_model_subscription',
+                'size' => 1,
+                'maxitems' => 1,
+                'default' => 0,
+                'items' => [
+                    [$ll . '.subscription.single', 0]
+                ],
+                'fieldControl' => [
+                    'editPopup' => [
+                        'disabled' => true
+                    ],
+                    'addRecord' => [
+                        'disabled' => false,
+                    ]
+                ]
             ],
         ],
     ]

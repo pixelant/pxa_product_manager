@@ -37,6 +37,19 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 class Order extends AbstractEntity
 {
     /**
+     * Recurring (Subscription) periods
+     */
+    const RECURRING_FOR_WEEK = 1;
+    const RECURRING_FOR_MONTH = 2;
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_PAUSED = 2;
+    const STATUS_CANCELLED = 3;
+
+    const WEEK_TIME_MODIFIER = '+5 days';
+    const MONTH_TIME_MODIFIER = '+1 months';
+
+    /**
      * @var bool
      */
     protected $hidden = false;
@@ -110,6 +123,11 @@ class Order extends AbstractEntity
      * @var float
      */
     protected $taxAtCheckout = 0.0;
+
+    /**
+     * @var int
+     */
+    protected $subscription = 0;
 
     /**
      * __construct
@@ -402,9 +420,9 @@ class Order extends AbstractEntity
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getCrdate(): \DateTime
+    public function getCrdate(): ?\DateTime
     {
         return $this->crdate;
     }
@@ -524,5 +542,23 @@ class Order extends AbstractEntity
     public function setTaxAtCheckout(float $taxAtCheckout)
     {
         $this->taxAtCheckout = $taxAtCheckout;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubscription(): int
+    {
+        return $this->subscription;
+    }
+
+    /**
+     * @param int $subscription
+     * @return Order
+     */
+    public function setSubscription(int $subscription): Order
+    {
+        $this->subscription = $subscription;
+        return $this;
     }
 }
