@@ -6,7 +6,7 @@ $llCore = \Pixelant\PxaProductManager\Utility\TCAUtility::getCoreLLPath();
 return [
     'ctrl' => [
         'title' => $ll,
-        'label' => 'renew_date',
+        'label' => 'uid',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',

@@ -279,6 +279,12 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_order.tabs.recurring_payments">
                 <source>Recurring payments</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.subscription">
+                <source>Subscription</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.subscription.single">
+                <source>Single purchase</source>
+            </trans-unit>
 
             <trans-unit id="tx_pxaproductmanager_domain_model_coupon">
                 <source>Price coupon</source>
