@@ -273,9 +273,6 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_order.tax_at_checkout">
                 <source>Tax at checkout</source>
             </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_order.renewals">
-                <source>Renewals</source>
-            </trans-unit>
             <trans-unit id="tx_pxaproductmanager_domain_model_order.tabs.recurring_payments">
                 <source>Recurring payments</source>
             </trans-unit>
@@ -453,40 +450,6 @@
                 <source>Default</source>
             </trans-unit>
             <!--sys_category TCA:END-->
-
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal">
-                <source>Subscription renewal</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_date">
-                <source>Payment date</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_next_try">
-                <source>Payment next try</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_done">
-                <source>Payment done</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_attempts_left">
-                <source>Payment attempts left</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_id">
-                <source>Payment id</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.payment_status">
-                <source>Payment status</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.shipment_date">
-                <source>Shipment date</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.shipment_next_try">
-                <source>Shipment next try</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.shipment_done">
-                <source>Shipment done</source>
-            </trans-unit>
-            <trans-unit id="tx_pxaproductmanager_domain_model_subscriptionrenewal.shipment_attempts_left">
-                <source>Shipment attempts left</source>
-            </trans-unit>
 
             <!-- Subscription -->
             <trans-unit id="tx_pxaproductmanager_domain_model_subscription">

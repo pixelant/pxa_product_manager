@@ -125,12 +125,6 @@ class Order extends AbstractEntity
     protected $taxAtCheckout = 0.0;
 
     /**
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\SubscriptionRenewal>
-     */
-    protected $renewals = null;
-
-    /**
      * @var int
      */
     protected $subscription = 0;
@@ -156,7 +150,6 @@ class Order extends AbstractEntity
     {
         $this->products = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->coupons = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->renewals = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -549,42 +542,6 @@ class Order extends AbstractEntity
     public function setTaxAtCheckout(float $taxAtCheckout)
     {
         $this->taxAtCheckout = $taxAtCheckout;
-    }
-
-    /**
-     * @return ObjectStorage
-     */
-    public function getRenewals(): ObjectStorage
-    {
-        return $this->renewals;
-    }
-
-    /**
-     * @param ObjectStorage $renewals
-     */
-    public function setRenewals(ObjectStorage $renewals)
-    {
-        $this->renewals = $renewals;
-    }
-
-    /**
-     * Add a renewal
-     *
-     * @param SubscriptionRenewal $renewal
-     */
-    public function addRenewal(SubscriptionRenewal $renewal)
-    {
-        $this->renewals->attach($renewal);
-    }
-
-    /**
-     * Remove a renewal
-     *
-     * @param SubscriptionRenewal $renewal
-     */
-    public function removeRenewal(SubscriptionRenewal $renewal)
-    {
-        $this->renewals->detach($renewal);
     }
 
     /**
