@@ -337,6 +337,25 @@
 			}).always(function () {
 				ajaxLoadingInProgress = false;
 			});
+		}
+
+		/**
+		 *
+		 * @param price
+		 * @param $element
+		 * @returns {string}
+		 */
+		const formattedPrice = function (price, $element) {
+			if ($totalPrice.first().length <= 0) {
+				return '';
+			}
+
+			const priceCurrencyFormat = $element.first().data('currency-format') || '';
+			const priceNumberFormat = $element.first().data('nubmer-format') || '';
+			return sprintf(
+				priceCurrencyFormat,
+				ProductManager.Main.formatNumberFromFormatString(price, priceNumberFormat)
+			);
 		};
 
 		return {
