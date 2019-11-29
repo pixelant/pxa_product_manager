@@ -158,10 +158,23 @@
 		 * @param modifier
 		 */
 		updateCartCounter: function ($mainCartCounter, $cartCounters, newValue) {
+			const uri = $(ProductManager.settings.wishList.wishListCartContainer).data('wishlist-product-count-ajax-uri');
 
-				if ($cartCounters.length >= 1) {
-					$cartCounters.text(newValue);
-				}
+			if (!uri) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+				return false;
+			}
+
+			$.ajax({
+				url: uri,
+				dataType: 'json'
+			}).done(function (data) {
+				$cartCounters.text(data);
+			}).fail(function (jqXHR, textStatus) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
 
 		},
 

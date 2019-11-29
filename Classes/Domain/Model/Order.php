@@ -547,6 +547,14 @@ class Order extends AbstractEntity
     /**
      * @return int
      */
+    public function getNumberOfProducts()
+    {
+        return $this->getProducts()->count();
+    }
+
+    /**
+     * @return int
+     */
     public function getSubscription(): int
     {
         return $this->subscription;

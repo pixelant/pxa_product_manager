@@ -314,6 +314,7 @@ PXA_PRODUCT_MANAGER_WISH_LIST {
                 4 = emptyCompareList
                 5 = loadWishList
                 6 = totalOrderPrices
+                7 = wishlistProductsCount
             }
         }
     }

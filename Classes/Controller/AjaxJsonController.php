@@ -29,9 +29,11 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Exception\InvalidPriceCalculationException;
 use Pixelant\PxaProductManager\Factory\PriceServiceFactory;
+use Pixelant\PxaProductManager\Service\WishlistService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use Pixelant\PxaProductManager\Utility\OrderUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\JsonView;
 
 /**
@@ -62,7 +64,10 @@ class AjaxJsonController extends AbstractController
         $limit = (int)$this->settings['wishList']['limit'];
 
         if ($wishProduct !== null) {
-            if ($this->request->getArguments()['removeProduct']) {
+            $inWishList = ProductUtility::isProductInWishList($wishProduct);
+            $response['inList'] = !$inWishList;
+
+            if ($inWishList) {
                 $order->removeProduct($wishProduct);
 
                 $this->orderRepository->update($order);
@@ -77,6 +82,7 @@ class AjaxJsonController extends AbstractController
             } else {
                 if ($order->getProductsQuantityTotal() + 1 > $limit) {
                     $message = $this->translate('fe.error_limit');
+                    unset($response['inList']);
                 } else {
                     $order->addProduct($wishProduct);
 
@@ -93,8 +99,6 @@ class AjaxJsonController extends AbstractController
                 }
             }
         }
-
-        $response['itemCount'] = $order->getProductsQuantityTotal();
 
         $response['message'] = $message ?? $this->translate('fe.error_request');
 
@@ -221,5 +225,16 @@ class AjaxJsonController extends AbstractController
 
         $this->response->setStatus(200, 'OK');
         $this->view->assign('value', $response);
+    }
+
+    /**
+     * @return int
+     */
+    public function wishlistProductsCountAction()
+    {
+        /** @var WishlistService $wishlistService */
+        $wishlistService = GeneralUtility::makeInstance(WishlistService::class);
+        $this->response->setStatus(200, 'OK');
+        $this->view->assign('value', $wishlistService->productsCount() ?? 0);
     }
 }
