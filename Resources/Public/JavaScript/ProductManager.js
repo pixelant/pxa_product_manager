@@ -194,6 +194,16 @@
 			return sign + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : '');
 		},
 
+		formatNumberFromFormatString: function (number, format) {
+			format = this.trimChar(format, '|').split('|');
+
+			const decimals = parseInt(format[0]) || 2;
+			const decimalSep = format[1] || '.';
+			const thousandsSep = format[2] || ',';
+
+			return this.numberFormat(number, decimals, decimalSep, thousandsSep);
+		},
+
 		/**
 		 * Write to status by key
 		 *
