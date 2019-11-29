@@ -35,6 +35,8 @@
 			$totalPrice,
 			$totalTax;
 
+		let wishlist = [];
+
 		/**
 		 * Main wish list function
 		 *
@@ -266,26 +268,28 @@
 				}
 			});
 
-			$buttons.each(function () {
-				let button = $(this),
-					productUid = parseInt(button.data('product-uid')),
-					text = '',
-					className = '';
+			_getWhilist(function (wishlistProducts) {
+				$buttons.each(function () {
+					let button = $(this),
+						productUid = parseInt(button.data('product-uid')),
+						text = '',
+						className = '';
 
-				if (ProductManager.Main.isInList(productsWishList, productUid)) {
-					text = button.data('remove-from-list-text');
-					className = settings.inListClass;
-				} else {
-					text = button.data('add-to-list-text');
-					className = settings.notInListClass;
-				}
+					if (ProductManager.Main.isInList(wishlistProducts, productUid)) {
+						text = button.data('remove-from-list-text');
+						className = settings.inListClass;
+					} else {
+						text = button.data('add-to-list-text');
+						className = settings.notInListClass;
+					}
 
-				button
-					.attr('title', text)
-					.removeClass(settings.loadingClass)
-					.removeClass(settings.initializationClass)
-					.addClass(className)
-					.find(settings.wishListButtonSingleView).text(text);
+					button
+						.attr('title', text)
+						.removeClass(settings.loadingClass)
+						.removeClass(settings.initializationClass)
+						.addClass(className)
+						.find(settings.wishListButtonSingleView).text(text);
+				});
 			});
 		};
 
@@ -296,6 +300,43 @@
 		 */
 		const getSettings = function () {
 			return settings;
+		};
+
+		const _getWhilist = function (callback) {
+			if (wishlist.length > 0) {
+				callback(wishlist);
+				return true;
+			}
+
+			_loadWhishlistState(callback);
+		};
+
+		const _loadWhishlistState = function (callback) {
+			const uri = $(ProductManager.settings.productManagerMainWrapper).data('load-whishlist-ajax-uri');
+
+			if (!uri) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+				return false;
+			}
+
+			$.ajax({
+				url: uri,
+				dataType: 'json'
+			}).done(function (data) {
+				if (data.wishList === undefined) {
+					return false;
+				}
+
+				wishlist = Array.from(data.wishList).map(function (product) {
+					return product.uid;
+				});
+
+				callback(wishlist);
+			}).fail(function (jqXHR, textStatus) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
 		};
 
 		return {
