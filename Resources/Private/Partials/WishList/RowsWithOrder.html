@@ -3,7 +3,8 @@
 
 <div id="pm-products-wishlist"
      class="container-fluid pm-products-user-list {f:if(condition: '{ppm:isPricingEnabled()}', then: 'pricing-enabled')}"
-     data-total-order-prices-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'totalOrderPrices', absolute: '1', pageType: '{settings.wishList.pageType}')}">
+     data-total-order-prices-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'totalOrderPrices', absolute: '1', pageType: '{settings.wishList.pageType}')}"
+     data-update-order-quantities-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'updateOrderQuantities', absolute: '1', pageType: '{settings.wishList.pageType}')}">
 
     <f:if condition="{products}">
         <f:form pageUid="{checkout.pid}" extensionName="{checkout.extension}" controller="{checkout.controller}"

@@ -237,4 +237,43 @@ class AjaxJsonController extends AbstractController
         $this->response->setStatus(200, 'OK');
         $this->view->assign('value', $wishlistService->productsCount() ?? 0);
     }
+
+    /**
+     * @return bool
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    public function updateOrderQuantitiesAction()
+    {
+        if (!GeneralUtility::_GP('quantities')) {
+            $this->response->setStatus(400, 'Quantities are required');
+            return false;
+        }
+
+        $quantities = GeneralUtility::_GP('quantities');
+
+        // REST violation yay!!! :D
+        $order = OrderUtility::getSessionOrder();
+
+        if (!$order) {
+            $this->response->setStatus(400, 'Order not found');
+            return false;
+        }
+
+        // Dont want to just set the whole quantities field in case it will contain incorrect data
+        /** @var Product $product */
+        foreach ($order->getProducts() as $product) {
+            $uid = $product->getUid();
+            if (array_key_exists($uid, $quantities)) {
+                $order->setProductQuantity($product, $quantities[$uid]);
+            }
+        }
+
+        $this->orderRepository->update($order);
+
+        $response = null;
+        $this->response->setStatus(200, 'OK');
+        $this->view->assign('value', $response);
+        return true;
+    }
 }
