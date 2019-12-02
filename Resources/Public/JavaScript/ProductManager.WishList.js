@@ -37,6 +37,9 @@
 
 		let wishlist = [];
 
+		let updateOrderRequest = null;
+		let updateOrderDispatcher = null;
+
 		/**
 		 * Main wish list function
 		 *
@@ -171,12 +174,17 @@
 				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
 			}
 
+			$totalPrice.addClass(settings.loadingClass);
+			$totalTax.addClass(settings.loadingClass);
+
 			$.ajax({
 				url: uri,
 				dataType: 'json'
 			}).done(function (data) {
-				$totalPrice.text(data.totalPrice);
-				$totalTax.text(data.totalTaxPrice);
+				$totalPrice.find('.value').text(formattedPrice(data.totalPrice, $totalPrice));
+				$totalPrice.removeClass(settings.loadingClass);
+				$totalTax.find('.value').text(formattedPrice(data.totalTaxPrice, $totalTax));
+				$totalTax.removeClass(settings.loadingClass);
 			}).fail(function (jqXHR, textStatus) {
 				ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
 			}).always(function () {
@@ -204,8 +212,16 @@
 					$this.val(1);
 				}
 
-				_updatePriceAndTax();
-				_saveCurrentStateOfAmountOfProducts();
+				if(updateOrderDispatcher) {
+					clearTimeout(updateOrderDispatcher);
+				}
+
+				updateOrderDispatcher = setTimeout(function() {
+					_updateOrder(function () {
+						_updatePriceAndTax();
+						_saveCurrentStateOfAmountOfProducts();
+					});
+				}, 500);
 			});
 		};
 
@@ -216,20 +232,7 @@
 		 * @private
 		 */
 		const _saveCurrentStateOfAmountOfProducts = function () {
-			let currentState = {};
-
-			if ($orderItemsAmount.length <= 0) {
-				return false;
-			}
-
-			$orderItemsAmount.each(function () {
-				const $this = $(this);
-				let productUid = parseInt($this.data('product-uid'));
-
-				if (productUid > 0) {
-					currentState[productUid] = parseInt($this.val());
-				}
-			});
+			const currentState = _getCurrentOrderState();
 
 			ProductManager.Main.setCookie(
 				ORDER_STATE_COOKIE_NAME,
@@ -258,8 +261,6 @@
 		 * @public
 		 */
 		const initButtons = function ($buttons) {
-			const productsWishList = ProductManager.Main.getCookie('pxa_pm_wish_list') || '';
-
 			$buttons.on('click', function (e) {
 				e.preventDefault();
 
@@ -337,7 +338,7 @@
 			}).always(function () {
 				ajaxLoadingInProgress = false;
 			});
-		}
+		};
 
 		/**
 		 *
@@ -356,6 +357,67 @@
 				priceCurrencyFormat,
 				ProductManager.Main.formatNumberFromFormatString(price, priceNumberFormat)
 			);
+		};
+
+		/**
+		 *  Get current state
+		 *
+		 * @returns {{}|boolean}
+		 * @private
+		 */
+		const _getCurrentOrderState = function () {
+			let currentState = {};
+
+			if ($orderItemsAmount.length <= 0) {
+				return false;
+			}
+
+			$orderItemsAmount.each(function () {
+				const $this = $(this);
+				let productUid = parseInt($this.data('product-uid'));
+
+				if (productUid > 0) {
+					currentState[productUid] = parseInt($this.val());
+				}
+			});
+
+			return currentState;
+		};
+
+		/**
+		 *
+		 * @param callback
+		 * @returns {boolean}
+		 * @private
+		 */
+		const _updateOrder = function(callback) {
+			const currentState = _getCurrentOrderState();
+			const uri = $(settings.wishListContainer).data('update-order-quantities-ajax-uri');
+
+			if (!uri) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+				return false;
+			}
+
+			if (updateOrderRequest !== null) {
+				updateOrderRequest.abort();
+			}
+
+			updateOrderRequest = $.ajax({
+				type: 'POST',
+				url: uri,
+				data: {
+					'quantities': currentState
+				}
+			}).done(function (data) {
+				callback();
+			}).fail(function (jqXHR, textStatus) {
+				if (status !== 0 && textStatus !== 'abort') {
+					ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+				}
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
 		};
 
 		return {

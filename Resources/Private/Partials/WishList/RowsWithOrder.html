@@ -3,7 +3,8 @@
 
 <div id="pm-products-wishlist"
      class="container-fluid pm-products-user-list {f:if(condition: '{ppm:isPricingEnabled()}', then: 'pricing-enabled')}"
-     data-total-order-prices-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'totalOrderPrices', absolute: '1', pageType: '{settings.wishList.pageType}')}">
+     data-total-order-prices-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'totalOrderPrices', absolute: '1', pageType: '{settings.wishList.pageType}')}"
+     data-update-order-quantities-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'updateOrderQuantities', absolute: '1', pageType: '{settings.wishList.pageType}')}">
 
     <f:if condition="{products}">
         <f:form pageUid="{checkout.pid}" extensionName="{checkout.extension}" controller="{checkout.controller}"
@@ -40,6 +41,7 @@
                                 <span class="pxa-pm-order-total-price"
                                       data-nubmer-format="{f:translate(key: 'priceFormat')}"
                                       data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                                    <span class="value"></span>
                                     <div class="lds-dual-ring"><div class="small"></div></div>
                                 </span>
                                 <f:if condition="{settings.wishList.showTaxInfo}">
@@ -49,10 +51,11 @@
                                         <span class="pxa-pm-order-total-tax"
                                               data-nubmer-format="{f:translate(key: 'priceFormat')}"
                                               data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
-                                        <div class="lds-dual-ring">
-                                            <div class="small"></div>
-                                        </div>
-                                    </span>
+                                            <span class="value"></span>
+                                            <div class="lds-dual-ring">
+                                                <div class="small"></div>
+                                            </div>
+                                        </span>
                                         )
                                     </small>
                                 </f:if>
