@@ -41,6 +41,7 @@
                                 <span class="pxa-pm-order-total-price"
                                       data-nubmer-format="{f:translate(key: 'priceFormat')}"
                                       data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                                    <span class="value"></span>
                                     <div class="lds-dual-ring"><div class="small"></div></div>
                                 </span>
                                 <f:if condition="{settings.wishList.showTaxInfo}">
@@ -50,10 +51,11 @@
                                         <span class="pxa-pm-order-total-tax"
                                               data-nubmer-format="{f:translate(key: 'priceFormat')}"
                                               data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
-                                        <div class="lds-dual-ring">
-                                            <div class="small"></div>
-                                        </div>
-                                    </span>
+                                            <span class="value"></span>
+                                            <div class="lds-dual-ring">
+                                                <div class="small"></div>
+                                            </div>
+                                        </span>
                                         )
                                     </small>
                                 </f:if>
