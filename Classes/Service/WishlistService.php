@@ -11,12 +11,16 @@ use Pixelant\PxaProductManager\Utility\OrderUtility;
  */
 class WishlistService
 {
-    public function hasProduct()
-    {
-    }
-
+    /**
+     * @return int
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     */
     public function productsCount()
     {
+        if (! OrderUtility::sessionOrderExists()) {
+            return 0;
+        }
+
         $order = OrderUtility::getSessionOrder();
         return $order->getNumberOfProducts();
     }
