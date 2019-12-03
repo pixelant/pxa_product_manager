@@ -125,9 +125,9 @@ class Order extends AbstractEntity
     protected $taxAtCheckout = 0.0;
 
     /**
-     * @var int
+     * @var \Pixelant\PxaProductManager\Domain\Model\Subscription
      */
-    protected $subscription = 0;
+    protected $subscription = null;
 
     /**
      * __construct
@@ -553,18 +553,18 @@ class Order extends AbstractEntity
     }
 
     /**
-     * @return int
+     * @return Subscription|null
      */
-    public function getSubscription(): int
+    public function getSubscription(): ?Subscription
     {
         return $this->subscription;
     }
 
     /**
-     * @param int $subscription
+     * @param \Pixelant\PxaProductManager\Domain\Model\Subscription $subscription
      * @return Order
      */
-    public function setSubscription(int $subscription): Order
+    public function setSubscription(Subscription $subscription): Order
     {
         $this->subscription = $subscription;
         return $this;
