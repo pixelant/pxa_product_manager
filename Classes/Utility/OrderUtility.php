@@ -101,6 +101,16 @@ class OrderUtility
 
         return $order;
     }
+
+    /**
+     * @return bool
+     */
+    public static function sessionOrderExists()
+    {
+        $orderUid = (int) $GLOBALS['TSFE']->fe_user->getKey('ses', self::SESSION_KEY);
+        return $orderUid > 0;
+    }
+
     /**
      * Adds a product to the session order using the product's UID
      *

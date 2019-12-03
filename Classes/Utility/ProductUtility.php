@@ -252,10 +252,11 @@ class ProductUtility
      * Uids of wish list
      *
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public static function getWishList(): array
     {
-        return OrderUtility::getSessionOrder()->getProducts()->getArray();
+        return OrderUtility::sessionOrderExists() ? OrderUtility::getSessionOrder()->getProducts()->getArray() : [];
     }
 
     /**
