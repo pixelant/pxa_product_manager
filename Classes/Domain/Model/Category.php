@@ -131,12 +131,12 @@ class Category extends CategoryExtbase
     /**
      * @var int
      */
-    protected $contentPage;
+    protected $contentPage = 0;
 
     /**
      * @var int
      */
-    protected $contentColPos;
+    protected $contentColPos = 0;
 
     /**
      * __construct
