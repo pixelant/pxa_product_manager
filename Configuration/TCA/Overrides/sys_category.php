@@ -252,6 +252,7 @@ call_user_func(function () {
         ],
         'pxapm_content_page' => [
             'exclude' => 1,
+            'onChange' => 'reload',
             'label' => $ll . 'sys_category.pxapm_content_page',
             'config' => [
                 'type' => 'group',
@@ -261,8 +262,20 @@ call_user_func(function () {
                 'max_size' => 1,
             ],
         ],
+        'pxapm_content_page_link' => [
+            'exclude' => 1,
+            'displayCond' => 'FIELD:pxapm_content_page:>:0',
+            'label' => $ll . 'sys_category.pxapm_content_page_link',
+            'config' => [
+                'type' => 'user',
+                'userFunc' => \Pixelant\PxaProductManager\UserFunction\SysCategoryExtendedTca::class . '->pageModuleLinkField',
+                'parameters' => [
+                ],
+            ],
+        ],
         'pxapm_content_colpos' => [
             'exclude' => 1,
+            'displayCond' => 'FIELD:pxapm_content_page:>:0',
             'label' => $ll . 'sys_category.pxapm_content_colpos',
             'config' => [
                 'type' => 'input',
@@ -278,7 +291,8 @@ call_user_func(function () {
         'sys_category',
         '--div--;' . $ll . 'sys_category.content_tab,
         pxapm_content_page,
-        pxapm_content_colpos,',
+        pxapm_content_page_link,
+        pxapm_content_colpos',
         '',
         'after:parent'
     );
