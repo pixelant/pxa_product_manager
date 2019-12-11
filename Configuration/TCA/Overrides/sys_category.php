@@ -249,9 +249,39 @@ call_user_func(function () {
                 'maxitems' => 1,
                 'eval' => ''
             ]
-        ]
+        ],
+        'pxapm_content_page' => [
+            'exclude' => 1,
+            'label' => $ll . 'sys_category.pxapm_content_page',
+            'config' => [
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'pages',
+                'size' => 1,
+                'max_size' => 1,
+            ],
+        ],
+        'pxapm_content_colpos' => [
+            'exclude' => 1,
+            'label' => $ll . 'sys_category.pxapm_content_colpos',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'default' => 0
+            ]
+        ],
     ];
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $tempColumns);
+
+    // Additional fields
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+        'sys_category',
+        '--div--;' . $ll . 'sys_category.content_tab,
+        pxapm_content_page,
+        pxapm_content_colpos,',
+        '',
+        'after:parent'
+    );
 
     // Additional fields
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(

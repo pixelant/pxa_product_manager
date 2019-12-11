@@ -129,6 +129,16 @@ class Category extends CategoryExtbase
     protected $slug = '';
 
     /**
+     * @var int
+     */
+    protected $contentPage;
+
+    /**
+     * @var int
+     */
+    protected $contentColPos;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -459,5 +469,37 @@ class Category extends CategoryExtbase
     public function setSlug(string $slug)
     {
         $this->slug = $slug;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContentPage(): int
+    {
+        return $this->contentPage;
+    }
+
+    /**
+     * @param int $contentPage
+     */
+    public function setContentPage(int $contentPage): void
+    {
+        $this->contentPage = $contentPage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContentColPos(): int
+    {
+        return $this->contentColPos;
+    }
+
+    /**
+     * @param int $contentColPos
+     */
+    public function setContentColPos(int $contentColPos): void
+    {
+        $this->contentColPos = $contentColPos;
     }
 }
