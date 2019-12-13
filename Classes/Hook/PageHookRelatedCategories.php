@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Hook;
 
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
+use Pixelant\PxaProductManager\Service\BackendUriService;
 use Pixelant\PxaProductManager\Service\TemplateService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Controller\PageLayoutController;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -29,23 +29,15 @@ class PageHookRelatedCategories
         $categoriesRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(CategoryRepository::class);
         $categories = $categoriesRepository->findByRelatedToContentPage($pageLayoutController->id);
 
-        /** @var UriBuilder $uriBuilder */
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        /** @var BackendUriService $backendUriService */
+        $backendUriService = GeneralUtility::makeInstance(BackendUriService::class);
 
         $data = [];
         foreach ($categories as $category) {
-            $params = [
+            $uri = $backendUriService->buildUri('record_edit', [
                 "edit[sys_category][{$category['uid']}]" => 'edit',
                 'returnUrl' => \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI')
-            ];
-
-            try {
-                $uri = $uriBuilder->buildUriFromRoute('record_edit', $params, UriBuilder::ABSOLUTE_URL);
-            } catch (\TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException $e) {
-                return 'Can\'t generate the link';
-            }
-
-            $uri = (string)$uri;
+            ]);
 
             $data[] = [
                 'uri' => $uri,

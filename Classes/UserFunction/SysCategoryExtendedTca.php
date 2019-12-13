@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction;
 
-use TYPO3\CMS\Backend\Routing\UriBuilder;
+use Pixelant\PxaProductManager\Service\BackendUriService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class SysCategoryExtendedTca
@@ -22,20 +22,12 @@ class SysCategoryExtendedTca
 
         $page = current($PA['row']['pxapm_content_page']);
 
-        /** @var UriBuilder $uriBuilder */
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        /** @var BackendUriService $backendUriService */
+        $backendUriService = GeneralUtility::makeInstance(BackendUriService::class);
 
-        $params = [
-            "id" => $page['uid']
-        ];
-
-        try {
-            $uri = $uriBuilder->buildUriFromRoute('web_layout', $params, UriBuilder::ABSOLUTE_URL);
-        } catch (\TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException $e) {
-            return 'Can\'t generate the link';
-        }
-
-        $uri = (string)$uri;
+        $uri = $backendUriService->buildUri('web_layout', [
+            'id' => $page['uid']
+        ]);
 
         return "<a class='btn btn-default' href='{$uri}'>
                     <span class='text-primary'>{$page['title']}</span>
