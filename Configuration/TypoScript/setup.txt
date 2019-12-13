@@ -13,6 +13,20 @@ plugin.tx_pxaproductmanager {
         }
     }
 
+    backend {
+        templateRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.backend.templateRootPath}
+        }
+
+        partialRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.backend.partialRootPath}
+        }
+
+        layoutRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.backend.layoutRootPath}
+        }
+    }
+
     persistence {
         storagePid = {$plugin.tx_pxaproductmanager.persistence.storagePid}
         recursive = {$plugin.tx_pxaproductmanager.persistence.recursive}

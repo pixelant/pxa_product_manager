@@ -269,8 +269,6 @@ call_user_func(function () {
             'config' => [
                 'type' => 'user',
                 'userFunc' => \Pixelant\PxaProductManager\UserFunction\SysCategoryExtendedTca::class . '->pageModuleLinkField',
-                'parameters' => [
-                ],
             ],
         ],
         'pxapm_content_colpos' => [

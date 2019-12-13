@@ -37,7 +37,7 @@ class SysCategoryExtendedTca
 
         $uri = (string)$uri;
 
-        return "<a class='btn btn-default' target='_blank' href='{$uri}'>
+        return "<a class='btn btn-default' href='{$uri}'>
                     <span class='text-primary'>{$page['title']}</span>
                 </a>";
     }

@@ -239,4 +239,26 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
 
         return $result;
     }
+
+    /**
+     * @param int $pageId
+     * @return array|QueryResultInterface
+     */
+    public function findByRelatedToContentPage(int $pageId)
+    {
+        $query = $this->findAll()->getQuery();
+        $results = $query->matching(
+            $query->equals(
+                'pxapm_content_page',
+                $pageId
+            )
+        )->execute(true);
+
+        return array_map(function ($result) {
+            return [
+                'uid' => $result['uid'],
+                'title' => $result['title']
+            ];
+        }, $results);
+    }
 }

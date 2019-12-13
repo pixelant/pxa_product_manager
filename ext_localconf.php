@@ -41,6 +41,9 @@ call_user_func(
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['pxaproductmanager_pi1']['pxa_product_manager'] =
             \Pixelant\PxaProductManager\Hook\PageLayoutView::class . '->getExtensionSummary';
 
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/db_layout.php']['drawHeaderHook']['pxa_product_manager'] =
+            \Pixelant\PxaProductManager\Hook\PageHookRelatedCategories::class . '->render';
+
         // Form data provider hook, to generate attributes TCA
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\ProductEditFormInitialize::class] = [
             'depends' => [
