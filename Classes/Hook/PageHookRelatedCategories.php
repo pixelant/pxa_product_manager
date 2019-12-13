@@ -29,10 +29,15 @@ class PageHookRelatedCategories
         $categoriesRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(CategoryRepository::class);
         $categories = $categoriesRepository->findByRelatedToContentPage($pageLayoutController->id);
 
+        if (!$categories) {
+            return '';
+        }
+
         /** @var BackendUriService $backendUriService */
         $backendUriService = GeneralUtility::makeInstance(BackendUriService::class);
 
         $data = [];
+
         foreach ($categories as $category) {
             $uri = $backendUriService->buildUri('record_edit', [
                 "edit[sys_category][{$category['uid']}]" => 'edit',
