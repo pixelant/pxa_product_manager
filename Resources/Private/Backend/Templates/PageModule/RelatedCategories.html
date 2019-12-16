@@ -1,0 +1,16 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+      <p>
+          <f:translate key="LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:be.page_is_used_for_categories_content" />
+      </p>
+      <ul class="list-group">
+          <f:for each="{data}" as="category">
+              <li class="list-group-item">
+                  <a href="{category.uri}" class="btn btn-default">
+                      <span class="text-primary">{category.title}</span>
+                  </a>
+              </li>
+          </f:for>
+      </ul>
+  </div>
+</div>

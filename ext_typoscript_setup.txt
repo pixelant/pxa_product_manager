@@ -37,6 +37,8 @@ config.tx_extbase {
                         pxapm_subcategories.mapOnProperty = subCategories
                         pxapm_tax_rate.mapOnProperty = taxRate
                         pxapm_slug.mapOnProperty = slug
+                        pxapm_content_page.mapOnProperty = contentPage
+                        pxapm_content_colpos.mapOnProperty = contentColPos
                     }
                 }
             }

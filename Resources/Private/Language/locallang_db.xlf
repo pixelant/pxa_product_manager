@@ -385,6 +385,18 @@
             <trans-unit id="sys_category.default">
                 <source>Default</source>
             </trans-unit>
+            <trans-unit id="sys_category.pxapm_content_page">
+                <source>Content page</source>
+            </trans-unit>
+            <trans-unit id="sys_category.pxapm_content_colpos">
+                <source>Content column id</source>
+            </trans-unit>
+            <trans-unit id="sys_category.content_tab">
+                <source>Content</source>
+            </trans-unit>
+            <trans-unit id="sys_category.pxapm_content_page_link">
+                <source>Edit page content</source>
+            </trans-unit>
             <!--sys_category TCA:END-->
         </body>
     </file>

@@ -464,6 +464,10 @@
                 <source>Sync with "Name" field</source>
             </trans-unit>
             <!--TCA notifications:END-->
+
+            <trans-unit id="be.page_is_used_for_categories_content">
+                <source>This page is used as a content source in theses categories</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
