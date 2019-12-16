@@ -249,7 +249,7 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
         $query = $this->findAll()->getQuery();
         $results = $query->matching(
             $query->equals(
-                'pxapm_content_page',
+                'contentPage',
                 $pageId
             )
         )->execute(true);
