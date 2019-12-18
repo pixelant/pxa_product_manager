@@ -26,6 +26,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaProductManager\Utility\OrderUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -128,6 +129,13 @@ class Order extends AbstractEntity
      * @var \Pixelant\PxaProductManager\Domain\Model\Subscription
      */
     protected $subscription = null;
+
+    /**
+     * The order state hash
+     *
+     * @var string
+     */
+    protected $stateHash = '';
 
     /**
      * __construct
@@ -569,4 +577,30 @@ class Order extends AbstractEntity
         $this->subscription = $subscription;
         return $this;
     }
+
+    /**
+     * Get the order's state hash
+     *
+     * @see OrderUtility::calculateOrderStateHash()
+     *
+     * @return string
+     */
+    public function getStateHash(): string
+    {
+        return $this->stateHash;
+    }
+
+    /**
+     * Set the order's state hash
+     *
+     * @see OrderUtility::calculateOrderStateHash()
+     *
+     * @param string $stateHash
+     */
+    public function setStateHash(string $stateHash)
+    {
+        $this->stateHash = $stateHash;
+    }
+
+
 }
