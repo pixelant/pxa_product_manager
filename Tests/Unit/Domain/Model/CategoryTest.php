@@ -345,4 +345,14 @@ class CategoryTest extends UnitTestCase
             $this->fixture->getContentColPos()
         );
     }
+
+    /**
+     * @test
+     */
+    public function navHideCanBeSet()
+    {
+        $this->fixture->setNavHide(true);
+
+        $this->assertTrue($this->fixture->isNavHide());
+    }
 }
