@@ -22,6 +22,11 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
      */
     protected $categoryRepository;
 
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager = null;
+
     protected $testExtensionsToLoad = ['typo3conf/ext/pxa_product_manager'];
 
     protected function setUp()
@@ -29,7 +34,10 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
         parent::setUp();
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_category.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_pxaproductmanager_domain_model_product.xml');
-        $this->categoryRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(CategoryRepository::class);
+
+        $objectManager = $this->objectManager->get;
+        $this->categoryRepository = $objectManager->get(CategoryRepository::class);
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -78,7 +86,7 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
         ];
 
         /** @var CategoriesNavigationTreeBuilder $navigationBuilder */
-        $navigationBuilder = GeneralUtility::makeInstance(CategoriesNavigationTreeBuilder::class);
+        $navigationBuilder = $this->objectManager->get(CategoriesNavigationTreeBuilder::class);
         $result = $navigationBuilder->buildTree($rootCategoryUid, $activeCategoryUid);
 
         $this->dataIsSimilar($expectData, $result);
@@ -138,7 +146,7 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
         ];
 
         /** @var CategoriesNavigationTreeBuilder $navigationBuilder */
-        $navigationBuilder = GeneralUtility::makeInstance(CategoriesNavigationTreeBuilder::class);
+        $navigationBuilder = $this->objectManager->get(CategoriesNavigationTreeBuilder::class);
         $navigationBuilder->setExpandAll(true);
 
         $result = $navigationBuilder->buildTree($rootCategoryUid, $activeCategoryUid);
@@ -186,7 +194,7 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
         ];
 
         /** @var CategoriesNavigationTreeBuilder $navigationBuilder */
-        $navigationBuilder = GeneralUtility::makeInstance(CategoriesNavigationTreeBuilder::class);
+        $navigationBuilder = $this->objectManager->get(CategoriesNavigationTreeBuilder::class);
         $navigationBuilder
             ->setExpandAll(true)
             ->setExcludeCategories($excludeCategories);
@@ -228,15 +236,15 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
 
         // Repository with custom settings
         /** @var Typo3QuerySettings $querySettings */
-        $querySettings = GeneralUtility::makeInstance(ObjectManager::class)->get(Typo3QuerySettings::class);
+        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
         $querySettings->setRespectStoragePage(false);
 
         /** @var ProductRepository $productRepository */
-        $productRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(ProductRepository::class);
+        $productRepository = $this->objectManager->get(ProductRepository::class);
         $productRepository->setDefaultQuerySettings($querySettings);
 
         /** @var CategoriesNavigationTreeBuilder $navigationBuilder */
-        $navigationBuilder = GeneralUtility::makeInstance(CategoriesNavigationTreeBuilder::class);
+        $navigationBuilder = $this->objectManager->get(CategoriesNavigationTreeBuilder::class);
         $navigationBuilder
             ->setExpandAll(true)
             ->setHideCategoriesWithoutProducts(true)
