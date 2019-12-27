@@ -139,6 +139,11 @@ class Category extends CategoryExtbase
     protected $contentColPos = 0;
 
     /**
+     * @var bool
+     */
+    protected $navHide = false;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -381,7 +386,7 @@ class Category extends CategoryExtbase
      *
      * @return float $pxaPmTaxRate
      */
-    public function getTaxRate() : float
+    public function getTaxRate(): float
     {
         return $this->taxRate;
     }
@@ -501,5 +506,21 @@ class Category extends CategoryExtbase
     public function setContentColPos(int $contentColPos): void
     {
         $this->contentColPos = $contentColPos;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNavHide(): bool
+    {
+        return $this->navHide;
+    }
+
+    /**
+     * @param bool $navHide
+     */
+    public function setNavHide(bool $navHide): void
+    {
+        $this->navHide = $navHide;
     }
 }
