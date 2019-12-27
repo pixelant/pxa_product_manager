@@ -35,7 +35,7 @@ class CategoriesNavigationTreeBuilderFunctionalTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_category.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/tx_pxaproductmanager_domain_model_product.xml');
 
-        $objectManager = $this->objectManager->get;
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->categoryRepository = $objectManager->get(CategoryRepository::class);
         $this->objectManager = $objectManager;
     }
