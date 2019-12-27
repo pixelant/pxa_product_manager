@@ -173,7 +173,7 @@ class AbstractController extends ActionController
         );
 
         /** @var CategoriesNavigationTreeBuilder $treeBuilder */
-        $treeBuilder = GeneralUtility::makeInstance(CategoriesNavigationTreeBuilder::class);
+        $treeBuilder = $this->objectManager->get(CategoriesNavigationTreeBuilder::class);
 
         $treeBuilder
             ->setExpandAll((bool)$this->settings['navigationExpandAll'])
