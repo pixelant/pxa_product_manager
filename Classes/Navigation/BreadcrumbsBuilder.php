@@ -96,7 +96,7 @@ class BreadcrumbsBuilder
                     /** @var Category $category */
                     $value = (int)$value;
                     $category = $this->categoryRepository->findByUid($value);
-                    if ($category !== null) {
+                    if ($category !== null && !$category->isNavHide()) {
                         $breadcrumbs[] = [
                             'title' => $category->getAlternativeTitle() ?: $category->getTitle(),
                             'uid' => $value,
