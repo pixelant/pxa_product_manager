@@ -281,6 +281,24 @@ call_user_func(function () {
                 'default' => 0
             ]
         ],
+        'pxapm_nav_hide' => [
+            'exclude' => true,
+            'label' => $ll . 'sys_category.pxapm_nav_hide',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ],
+            ]
+        ],
     ];
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $tempColumns);
 
@@ -309,7 +327,7 @@ call_user_func(function () {
         'after:items'
     );
 
-    // Attibutes
+    // Attributes
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
         'sys_category',
         '--div--;' . $ll . 'sys_category.attributes_tab,
@@ -344,6 +362,14 @@ call_user_func(function () {
         'pxapm_slug',
         '',
         'after:title'
+    );
+
+    // Access
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+        'sys_category',
+        'pxapm_nav_hide',
+        '',
+        'after:hidden'
     );
 
     if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\TCAUtility::getCategoriesTCAWhereClause())) {

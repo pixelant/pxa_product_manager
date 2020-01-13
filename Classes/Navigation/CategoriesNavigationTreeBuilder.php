@@ -99,19 +99,6 @@ class CategoriesNavigationTreeBuilder
     ];
 
     /**
-     * CategoriesNavigationTreeBuilder constructor.
-     */
-    public function __construct()
-    {
-        $objectManager = MainUtility::getObjectManager();
-
-        /** @noinspection PhpParamsInspection */
-        $this->injectProductRepository($objectManager->get(ProductRepository::class));
-        /** @noinspection PhpParamsInspection */
-        $this->injectCategoryRepository($objectManager->get(CategoryRepository::class));
-    }
-
-    /**
      * Mostly for testing purpose
      *
      * @param ProductRepository $productRepository
@@ -316,7 +303,7 @@ class CategoriesNavigationTreeBuilder
 
         $this->parentCategoriesUids[] = $parentCategory->getUid();
 
-        return $this->categoryRepository->findByParent(
+        return $this->categoryRepository->findByParentVisibleMenu(
             $parentCategory,
             $this->orderings
         );

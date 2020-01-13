@@ -39,6 +39,7 @@ config.tx_extbase {
                         pxapm_slug.mapOnProperty = slug
                         pxapm_content_page.mapOnProperty = contentPage
                         pxapm_content_colpos.mapOnProperty = contentColPos
+                        pxapm_nav_hide.mapOnProperty = navHide
                     }
                 }
             }
