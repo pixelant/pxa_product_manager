@@ -355,4 +355,14 @@ class CategoryTest extends UnitTestCase
 
         $this->assertTrue($this->fixture->isNavHide());
     }
+
+    /**
+     * @test
+     */
+    public function hideProductsCanBeSet()
+    {
+        $this->fixture->setHideProducts(true);
+
+        $this->assertTrue($this->fixture->isHideProducts());
+    }
 }
