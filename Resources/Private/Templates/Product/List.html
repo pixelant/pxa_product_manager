@@ -56,7 +56,7 @@
             </f:if>
 
             <!-- Show products -->
-            <f:if condition="{subCategories->f:count()} == 0 || {settings.showCategoriesWithProducts}">
+            <f:if condition="!{category.hideProducts} && ({subCategories->f:count()} == 0 || {settings.showCategoriesWithProducts})">
                 <f:if condition="{products}">
                     <f:then>
                         <f:for each="{products}" as="product">

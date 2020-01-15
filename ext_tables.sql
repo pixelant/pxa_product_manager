@@ -325,6 +325,7 @@ CREATE TABLE sys_category (
   pxapm_content_page int(11) unsigned DEFAULT '0' NOT NULL,
   pxapm_content_colpos int(11) unsigned DEFAULT '0' NOT NULL,
   pxapm_nav_hide tinyint(4) unsigned DEFAULT '0' NOT NULL,
+  pxapm_hide_products tinyint(4) unsigned DEFAULT '0' NOT NULL,
 );
 
 #

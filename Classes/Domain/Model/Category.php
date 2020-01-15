@@ -144,6 +144,11 @@ class Category extends CategoryExtbase
     protected $navHide = false;
 
     /**
+     * @var bool
+     */
+    protected $hideProducts = false;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -522,5 +527,21 @@ class Category extends CategoryExtbase
     public function setNavHide(bool $navHide): void
     {
         $this->navHide = $navHide;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHideProducts(): bool
+    {
+        return $this->hideProducts;
+    }
+
+    /**
+     * @param bool $hideProducts
+     */
+    public function setHideProducts(bool $hideProducts): void
+    {
+        $this->hideProducts = $hideProducts;
     }
 }

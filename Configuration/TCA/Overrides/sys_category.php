@@ -299,6 +299,24 @@ call_user_func(function () {
                 ],
             ]
         ],
+        'pxapm_hide_products' => [
+            'exclude' => true,
+            'label' => $ll . 'sys_category.pxapm_hide_products',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ],
+            ]
+        ],
     ];
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $tempColumns);
 
@@ -306,6 +324,7 @@ call_user_func(function () {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
         'sys_category',
         '--div--;' . $ll . 'sys_category.content_tab,
+        pxapm_hide_products,
         pxapm_content_page,
         pxapm_content_page_link,
         pxapm_content_colpos',
