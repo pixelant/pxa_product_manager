@@ -146,7 +146,7 @@ class Category extends CategoryExtbase
     /**
      * @var bool
      */
-    protected $hideProducts = true;
+    protected $hideProducts = false;
 
     /**
      * __construct
@@ -532,7 +532,7 @@ class Category extends CategoryExtbase
     /**
      * @return bool
      */
-    public function ishideProducts(): bool
+    public function isHideProducts(): bool
     {
         return $this->hideProducts;
     }
@@ -540,7 +540,7 @@ class Category extends CategoryExtbase
     /**
      * @param bool $hideProducts
      */
-    public function sethideProducts(bool $hideProducts): void
+    public function setHideProducts(bool $hideProducts): void
     {
         $this->hideProducts = $hideProducts;
     }
