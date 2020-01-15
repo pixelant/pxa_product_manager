@@ -247,7 +247,7 @@ class LinkBuilderService
             $expr = $queryBuilder->expr();
 
             $parentRow = $queryBuilder
-                ->select('uid', 'parent')
+                ->select('uid', 'parent', 'pxapm_nav_hide')
                 ->from('sys_category')
                 ->where(
                     $expr->eq('uid', $queryBuilder->createNamedParameter($parentUid, \PDO::PARAM_INT)),
@@ -258,7 +258,7 @@ class LinkBuilderService
                 ->fetch();
             // Save result
             $parentUid = is_array($parentRow) ? $parentRow['parent'] : 0;
-            if ($parentUid !== 0) {
+            if ($parentUid !== 0 && !$parentRow['pxapm_nav_hide']) {
                 $categories[] = $parentRow['uid'];
             }
         }
