@@ -40,6 +40,9 @@
             <div class="products-header">
                 <h1>{category.title}</h1>
                 <f:format.html>{category.description}</f:format.html>
+                <div>
+                    <f:cObject typoscriptObjectPath="lib.dynamicContent" data="{pageUid: category.contentPage, colPos: category.contentColPos}" />
+                </div>
             </div>
         </f:if>
 
@@ -53,7 +56,7 @@
             </f:if>
 
             <!-- Show products -->
-            <f:if condition="{subCategories->f:count()} == 0 || {settings.showCategoriesWithProducts}">
+            <f:if condition="!{category.hideProducts} && ({subCategories->f:count()} == 0 || {settings.showCategoriesWithProducts})">
                 <f:if condition="{products}">
                     <f:then>
                         <f:for each="{products}" as="product">

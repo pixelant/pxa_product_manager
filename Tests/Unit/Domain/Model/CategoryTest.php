@@ -315,4 +315,54 @@ class CategoryTest extends UnitTestCase
             $this->fixture->getSlug()
         );
     }
+
+    /**
+     * @test
+     */
+    public function contentPageCanBeSet()
+    {
+        $value = 120;
+
+        $this->fixture->setContentPage($value);
+
+        $this->assertEquals(
+            $value,
+            $this->fixture->getContentPage()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function contentColPosCanBeSet()
+    {
+        $value = 1;
+
+        $this->fixture->setContentColPos($value);
+
+        $this->assertEquals(
+            $value,
+            $this->fixture->getContentColPos()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function navHideCanBeSet()
+    {
+        $this->fixture->setNavHide(true);
+
+        $this->assertTrue($this->fixture->isNavHide());
+    }
+
+    /**
+     * @test
+     */
+    public function hideProductsCanBeSet()
+    {
+        $this->fixture->setHideProducts(true);
+
+        $this->assertTrue($this->fixture->isHideProducts());
+    }
 }

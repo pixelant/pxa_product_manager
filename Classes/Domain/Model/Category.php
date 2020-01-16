@@ -129,6 +129,26 @@ class Category extends CategoryExtbase
     protected $slug = '';
 
     /**
+     * @var int
+     */
+    protected $contentPage = 0;
+
+    /**
+     * @var int
+     */
+    protected $contentColPos = 0;
+
+    /**
+     * @var bool
+     */
+    protected $navHide = false;
+
+    /**
+     * @var bool
+     */
+    protected $hideProducts = false;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -371,7 +391,7 @@ class Category extends CategoryExtbase
      *
      * @return float $pxaPmTaxRate
      */
-    public function getTaxRate() : float
+    public function getTaxRate(): float
     {
         return $this->taxRate;
     }
@@ -459,5 +479,69 @@ class Category extends CategoryExtbase
     public function setSlug(string $slug)
     {
         $this->slug = $slug;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContentPage(): int
+    {
+        return $this->contentPage;
+    }
+
+    /**
+     * @param int $contentPage
+     */
+    public function setContentPage(int $contentPage): void
+    {
+        $this->contentPage = $contentPage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContentColPos(): int
+    {
+        return $this->contentColPos;
+    }
+
+    /**
+     * @param int $contentColPos
+     */
+    public function setContentColPos(int $contentColPos): void
+    {
+        $this->contentColPos = $contentColPos;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNavHide(): bool
+    {
+        return $this->navHide;
+    }
+
+    /**
+     * @param bool $navHide
+     */
+    public function setNavHide(bool $navHide): void
+    {
+        $this->navHide = $navHide;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHideProducts(): bool
+    {
+        return $this->hideProducts;
+    }
+
+    /**
+     * @param bool $hideProducts
+     */
+    public function setHideProducts(bool $hideProducts): void
+    {
+        $this->hideProducts = $hideProducts;
     }
 }

@@ -13,6 +13,20 @@ plugin.tx_pxaproductmanager {
         }
     }
 
+    backend {
+        templateRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.backend.templateRootPath}
+        }
+
+        partialRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.backend.partialRootPath}
+        }
+
+        layoutRootPaths {
+            10 = {$plugin.tx_pxaproductmanager.backend.layoutRootPath}
+        }
+    }
+
     persistence {
         storagePid = {$plugin.tx_pxaproductmanager.persistence.storagePid}
         recursive = {$plugin.tx_pxaproductmanager.persistence.recursive}
@@ -237,7 +251,7 @@ page {
     }
 [end]
 
-[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}] && [globalVar = GP:tx_pxaproductmanager_pi1|product > 0]
+[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}] && [request.getQueryParams()['tx_pxaproductmanager_pi1']['product'] > 0]
     # add stuff for gallery
     page {
         includeCSS {

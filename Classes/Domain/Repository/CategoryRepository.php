@@ -134,7 +134,7 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
      * Find categories by parent category
      * This is mostly used for navigation, so we need possibility to set direction
      *
-     * @param mixed $parentCategory
+     * @param int|Category $parentCategory
      * @param array $ordering
      * @return QueryResultInterface
      */
@@ -143,6 +143,29 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
         $query = $this->createQuery();
 
         $query->matching($query->equals('parent', $parentCategory));
+        if (!empty($ordering)) {
+            $query->setOrderings($ordering);
+        }
+
+        return $query->execute();
+    }
+
+    /**
+     * Find by parent visible in menu
+     *
+     * @param int|Category $parentCategory
+     * @param array $ordering
+     * @return array|QueryResultInterface
+     */
+    public function findByParentVisibleMenu($parentCategory, array $ordering = [])
+    {
+        $query = $this->createQuery();
+
+        $query->matching($query->logicalAnd(
+            $query->equals('parent', $parentCategory),
+            $query->equals('navHide', false)
+        ));
+
         if (!empty($ordering)) {
             $query->setOrderings($ordering);
         }
@@ -238,5 +261,27 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
         }
 
         return $result;
+    }
+
+    /**
+     * @param int $pageId
+     * @return array|QueryResultInterface
+     */
+    public function findByRelatedToContentPage(int $pageId)
+    {
+        $query = $this->findAll()->getQuery();
+        $results = $query->matching(
+            $query->equals(
+                'contentPage',
+                $pageId
+            )
+        )->execute(true);
+
+        return array_map(function ($result) {
+            return [
+                'uid' => $result['uid'],
+                'title' => $result['title']
+            ];
+        }, $results);
     }
 }

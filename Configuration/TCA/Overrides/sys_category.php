@@ -249,9 +249,88 @@ call_user_func(function () {
                 'maxitems' => 1,
                 'eval' => ''
             ]
-        ]
+        ],
+        'pxapm_content_page' => [
+            'exclude' => 1,
+            'onChange' => 'reload',
+            'label' => $ll . 'sys_category.pxapm_content_page',
+            'config' => [
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'pages',
+                'size' => 1,
+                'max_size' => 1,
+            ],
+        ],
+        'pxapm_content_page_link' => [
+            'exclude' => 1,
+            'displayCond' => 'FIELD:pxapm_content_page:>:0',
+            'label' => $ll . 'sys_category.pxapm_content_page_link',
+            'config' => [
+                'type' => 'user',
+                'userFunc' => \Pixelant\PxaProductManager\UserFunction\SysCategoryExtendedTca::class . '->pageModuleLinkField',
+            ],
+        ],
+        'pxapm_content_colpos' => [
+            'exclude' => 1,
+            'displayCond' => 'FIELD:pxapm_content_page:>:0',
+            'label' => $ll . 'sys_category.pxapm_content_colpos',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'default' => 0
+            ]
+        ],
+        'pxapm_nav_hide' => [
+            'exclude' => true,
+            'label' => $ll . 'sys_category.pxapm_nav_hide',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ],
+            ]
+        ],
+        'pxapm_hide_products' => [
+            'exclude' => true,
+            'label' => $ll . 'sys_category.pxapm_hide_products',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ],
+            ]
+        ],
     ];
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $tempColumns);
+
+    // Additional fields
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+        'sys_category',
+        '--div--;' . $ll . 'sys_category.content_tab,
+        pxapm_hide_products,
+        pxapm_content_page,
+        pxapm_content_page_link,
+        pxapm_content_colpos',
+        '',
+        'after:parent'
+    );
 
     // Additional fields
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
@@ -267,7 +346,7 @@ call_user_func(function () {
         'after:items'
     );
 
-    // Attibutes
+    // Attributes
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
         'sys_category',
         '--div--;' . $ll . 'sys_category.attributes_tab,
@@ -302,6 +381,14 @@ call_user_func(function () {
         'pxapm_slug',
         '',
         'after:title'
+    );
+
+    // Access
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+        'sys_category',
+        'pxapm_nav_hide',
+        '',
+        'after:hidden'
     );
 
     if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\TCAUtility::getCategoriesTCAWhereClause())) {
