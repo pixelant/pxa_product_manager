@@ -65,6 +65,9 @@ plugin.tx_pxaproductmanager {
 
         # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/130; type=options[Yes=1,No=0]; label=Show prices
         showPricesInTemplate = 1
+
+        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/140; type=int; label=Meta Description max length
+        metaDescriptionMaxLength = 150
     }
 
     # customsubcategory=pxaproductmanager_pid=Link product settings

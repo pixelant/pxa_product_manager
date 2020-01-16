@@ -9,7 +9,7 @@
             </div>
         </f:then>
         <f:else>
-            <ppm:setPageTitle><f:if condition="{product.alternativeTitle}" then="{product.alternativeTitle}" else="{product.name}"/></ppm:setPageTitle>
+            <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
 
             <div class="row">
                 <f:if condition="{treeData}">

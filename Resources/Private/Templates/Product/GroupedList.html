@@ -6,7 +6,7 @@
 
     <f:flashMessages />
 
-    <ppm:setPageTitle><f:if condition="{category.alternativeTitle}" then="{category.alternativeTitle}" else="{category.title}"/></ppm:setPageTitle>
+    <f:render partial="SEO/CategoryTitleMetaTags" arguments="{category: category}" />
 
     <f:render section="productWrapper" arguments="{_all}"/>
 

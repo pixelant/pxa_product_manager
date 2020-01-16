@@ -1,11 +1,11 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 
 <f:layout name="Default" />
 
 <f:section name="main">
     <f:flashMessages />
 
-    <ppm:setPageTitle><f:if condition="{category.alternativeTitle}" then="{category.alternativeTitle}" else="{category.title}"/></ppm:setPageTitle>
+    <f:render partial="SEO/CategoryTitleMetaTags" arguments="{category: category}" />
 
     <div class="row">
         <f:if condition="{treeData}">

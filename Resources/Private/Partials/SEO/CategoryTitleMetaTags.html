@@ -1,0 +1,7 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<ppm:setPageTitle><f:if condition="{category.alternativeTitle}" then="{category.alternativeTitle}" else="{category.title}"/></ppm:setPageTitle>
+<ppm:metaTag name="keywords">{category.keywords}</ppm:metaTag>
+<ppm:metaTag name="description">
+    {category.metaDescription -> f:format.crop(maxCharacters: '{f:if(condition: settings.metaDescriptionMaxLength, then: settings.metaDescriptionMaxLength, else: 150)}')}
+</ppm:metaTag>
+</html>

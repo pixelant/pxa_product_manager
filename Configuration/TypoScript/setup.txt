@@ -53,6 +53,7 @@ plugin.tx_pxaproductmanager {
         showHiddenRecords = {$plugin.tx_pxaproductmanager.settings.showHiddenRecords}
         showInSingleView = {$plugin.tx_pxaproductmanager.settings.showInSingleView}
         showPricesInTemplate = {$plugin.tx_pxaproductmanager.settings.showPricesInTemplate}
+        metaDescriptionMaxLength = {$plugin.tx_pxaproductmanager.settings.metaDescriptionMaxLength}
 
         lazyLoading {
             loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
