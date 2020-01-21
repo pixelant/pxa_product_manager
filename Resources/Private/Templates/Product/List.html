@@ -40,9 +40,11 @@
             <div class="products-header">
                 <h1>{category.title}</h1>
                 <f:format.html>{category.description}</f:format.html>
-                <div>
-                    <f:cObject typoscriptObjectPath="lib.dynamicContent" data="{pageUid: category.contentPage, colPos: category.contentColPos}" />
-                </div>
+                <f:if condition="{category.contentPage}">
+                    <div>
+                        <f:cObject typoscriptObjectPath="lib.dynamicContent" data="{pageUid: category.contentPage, colPos: category.contentColPos}" />
+                    </div>
+                </f:if>
             </div>
         </f:if>
 
