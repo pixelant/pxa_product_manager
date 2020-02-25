@@ -19,7 +19,7 @@
 				<source>Use "AND" logical behaviour</source>
 			</trans-unit>
 			<trans-unit id="label.description">
-				<source>Default behaviour is to use value from label if filled in, else name, when filter is rendered frontend.</source>
+				<source>Override name on frontend</source>
 			</trans-unit>
 		</body>
 	</file>

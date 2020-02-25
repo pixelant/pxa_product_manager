@@ -7,32 +7,38 @@
             <trans-unit id="name.description">
                 <source>Product name</source>
             </trans-unit>
-            <trans-unit id="slug.description">
-                <source>Use for url path segment</source>
-            </trans-unit>
             <trans-unit id="sku.description">
                 <source>Product identifier</source>
             </trans-unit>
+            <trans-unit id="slug.description">
+                <source>Use for url path segment</source>
+            </trans-unit>
+            <trans-unit id="price.description">
+                <source>Price of the product</source>
+            </trans-unit>
+            <trans-unit id="tax_rate.description">
+                <source>Tax rate (Override value from category tax rate)</source>
+            </trans-unit>
             <trans-unit id="description.description">
-                <source>Product description text</source>
+                <source>Description text</source>
             </trans-unit>
-            <trans-unit id="disable_single_view.description">
-                <source>Disable single view</source>
+            <trans-unit id="teaser.description">
+                <source>Teaser text</source>
             </trans-unit>
-            <trans-unit id="related_products.description">
-                <source>Related products list</source>
-            </trans-unit>
-            <trans-unit id="images.description">
-                <source>Product images (list view, main image, gallery)</source>
+            <trans-unit id="usp.description">
+                <source>Unique selling points</source>
             </trans-unit>
             <trans-unit id="links.description">
-                <source>Additional links</source>
+                <source>Additional product links</source>
             </trans-unit>
             <trans-unit id="fal_links.description">
-                <source>Files links</source>
+                <source>Files</source>
             </trans-unit>
-            <trans-unit id="sub_products.description">
-                <source>Sub-products</source>
+            <trans-unit id="assets.description">
+                <source>Media resources (Video, youtube, etc.)</source>
+            </trans-unit>
+            <trans-unit id="alternative_title.description">
+                <source>Alternative title - use as title of page instead of name</source>
             </trans-unit>
         </body>
     </file>
