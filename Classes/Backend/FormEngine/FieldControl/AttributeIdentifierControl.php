@@ -3,16 +3,15 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormEngine\FieldControl;
 
-use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
+use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
 use TYPO3\CMS\Backend\Form\AbstractNode;
 
 /**
- * Class AttributeIdentifierControl
  * @package Pixelant\PxaProductManager\Backend\FormEngine\FieldControl
  */
 class AttributeIdentifierControl extends AbstractNode
 {
-    use TranslateBeTrait;
+    use CanTranslateInBackend;
 
     /**
      * Render field control
@@ -20,7 +19,7 @@ class AttributeIdentifierControl extends AbstractNode
      */
     public function render(): array
     {
-        $result = [
+        return [
             'iconIdentifier' => 'actions-synchronize',
             'title' => $this->translate('tca.sync_attribute_identifier'),
             'linkAttributes' => [
@@ -28,7 +27,5 @@ class AttributeIdentifierControl extends AbstractNode
             ],
             'requireJsModules' => ['TYPO3/CMS/PxaProductManager/Backend/AttributeIdentifierControl'],
         ];
-
-        return $result;
     }
 }
