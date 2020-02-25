@@ -24,7 +24,6 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
     alternative_title   varchar(255)         DEFAULT ''     NOT NULL,
     keywords            text,
     meta_description    text,
-    disable_single_view smallint(5) unsigned DEFAULT '0'    NOT NULL,
     slug                varchar(2048)
 );
 

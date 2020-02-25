@@ -1,7 +1,16 @@
 <?php
 defined('TYPO3_MODE') || die;
 
-call_user_func(
+(function () {
+    // Register field control for identifier attribute
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
+        'nodeName' => 'attributeIdentifierControl',
+        'priority' => 30,
+        'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
+    ];
+})();
+
+/*call_user_func(
     function ($_EXTKEY) {
         // @codingStandardsIgnoreStart
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
@@ -103,4 +112,4 @@ call_user_func(
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][\Pixelant\PxaProductManager\Backend\Evaluation\LcFirstEvaluation::class] = '';
     },
     $_EXTKEY
-);
+);*/
