@@ -3,7 +3,6 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
-    $llCore = 'LLL:EXT:core/Resources/Private/Language/';
 
     return [
         'ctrl' => [
@@ -14,7 +13,6 @@ return (function () {
             'crdate' => 'crdate',
             'cruser_id' => 'cruser_id',
             'dividers2tabs' => true,
-            'versioningWS' => true,
 
             'languageField' => 'sys_language_uid',
             'transOrigPointerField' => 'l10n_parent',
@@ -22,41 +20,38 @@ return (function () {
             'delete' => 'deleted',
             'enablecolumns' => [
                 'disabled' => 'hidden',
-                'starttime' => 'starttime',
-                'endtime' => 'endtime',
             ],
 
             'type' => 'type',
 
-            'searchFields' => 'name,parent_category,attribute,',
+            'searchFields' => 'name,category,attribute',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg'
         ],
         'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, parent_category, inverse_conjunction, attribute, starttime, endtime',
+            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, category, attribute, inverse_conjunction',
         ],
         'types' => [
-            '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang'],
-            '2' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang'],
-            '3' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,--palette--;;lang']
+            '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories,'],
+            '2' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes,'],
+            '3' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes,']
         ],
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
             'common' => ['showitem' => 'type, --linebreak--, name, --linebreak--, label'],
-            'categories' => ['showitem' => 'inverse_conjunction, --linebreak--, parent_category'],
+            'categories' => ['showitem' => 'inverse_conjunction, --linebreak--, category'],
             'attributes' => ['showitem' => 'inverse_conjunction, --linebreak--, attribute'],
-            'lang' => ['showitem' => 'starttime, --linebreak--, endtime']
         ],
         'columns' => [
             'sys_language_uid' => [
-                'exclude' => 1,
-                'label' => $llCore . 'locallang_general.xlf:LGL.language',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'special' => 'languages',
                     'items' => [
                         [
-                            $llCore . 'locallang_general.xlf:LGL.allLanguages',
+                            'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                             -1,
                             'flags-multiple'
                         ],
@@ -66,8 +61,8 @@ return (function () {
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
-                'exclude' => 1,
-                'label' => $llCore . 'locallang_general.xlf:LGL.l18n_parent',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
@@ -85,55 +80,53 @@ return (function () {
                 ],
             ],
 
-            't3ver_label' => [
-                'label' => $llCore . 'locallang_general.xlf:LGL.versionLabel',
-                'config' => [
-                    'type' => 'input',
-                    'size' => 30,
-                    'max' => 255,
-                ]
-            ],
-
             'hidden' => [
-                'exclude' => 1,
-                'label' => $llCore . 'locallang_general.xlf:LGL.hidden',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
                 'config' => [
                     'type' => 'check',
+                    'renderType' => 'checkboxToggle',
+                    'items' => [
+                        [
+                            0 => '',
+                            1 => '',
+                            'invertStateDisplay' => true
+                        ]
+                    ],
                 ],
             ],
             'starttime' => [
-                'exclude' => 1,
-                'l10n_mode' => 'exclude',
-                'label' => $llCore . 'locallang_general.xlf:LGL.starttime',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
                 'config' => [
                     'type' => 'input',
                     'renderType' => 'inputDateTime',
                     'eval' => 'datetime,int',
-                    'size' => 13,
                     'default' => 0,
-                    'range' => [
-                        'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true
+                    ]
                 ],
             ],
             'endtime' => [
-                'exclude' => 1,
-                'l10n_mode' => 'exclude',
-                'label' => $llCore . 'locallang_general.xlf:LGL.endtime',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
                 'config' => [
                     'type' => 'input',
                     'renderType' => 'inputDateTime',
                     'eval' => 'datetime,int',
-                    'size' => 13,
                     'default' => 0,
                     'range' => [
-                        'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
+                        'upper' => mktime(0, 0, 0, 1, 1, 2038)
                     ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true
+                    ]
                 ],
             ],
 
             'type' => [
-                'exclude' => 1,
+                'exclude' => true,
                 'onChange' => 'reload',
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.type',
                 'config' => [
@@ -150,7 +143,7 @@ return (function () {
                 ],
             ],
             'name' => [
-                'exclude' => 1,
+                'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.name',
                 'config' => [
                     'type' => 'input',
@@ -159,7 +152,7 @@ return (function () {
                 ],
             ],
             'label' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.label',
                 'config' => [
                     'type' => 'input',
@@ -167,9 +160,9 @@ return (function () {
                     'eval' => 'trim'
                 ]
             ],
-            'parent_category' => [
-                'exclude' => 1,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.parent_category',
+            'category' => [
+                'exclude' => true,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.category',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectTree',
@@ -186,11 +179,10 @@ return (function () {
                     'size' => 20,
                     'minitems' => 1,
                     'maxitems' => 1,
-                    'default' => 0
                 ]
             ],
             'attribute' => [
-                'exclude' => 1,
+                'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.attribute',
                 'config' => [
                     'type' => 'select',
@@ -207,11 +199,17 @@ return (function () {
             ],
             'inverse_conjunction' => [
                 'displayCond' => 'FIELD:type:!=:3', // hide for range filter
-                'exclude' => 1,
+                'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.inverse_conjunction',
                 'config' => [
                     'type' => 'check',
-                    'default' => 0
+                    'renderType' => 'checkboxToggle',
+                    'items' => [
+                        [
+                            0 => '',
+                            1 => '',
+                        ]
+                    ],
                 ],
             ],
         ]

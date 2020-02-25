@@ -1,55 +1,55 @@
 <?php
 defined('TYPO3_MODE') || die;
 
-call_user_func(function () {
+(function () {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
 
-    $newSysFileReferenceColumns = [
-        'pxapm_use_in_listing' => [
-            'label' => $ll . 'sys_file_reference.pxapm_use_in_listing',
+    $columns = [
+        'pxapm_type' => [
+            'label' => $ll . 'sys_file_reference.pxapm_type',
             'config' => [
-                'type' => 'check',
-                'default' => 0
-            ]
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    [$ll . 'sys_file_reference.pxapm_type.0', 0],
+                    [$ll . 'sys_file_reference.pxapm_type.1', 1],
+                    [$ll . 'sys_file_reference.pxapm_type.2', 2],
+                ],
+            ],
         ],
-        'pxapm_main_image' => [
-            'label' => $ll . 'sys_file_reference.pxapm_main_image',
-            'config' => [
-                'type' => 'check',
-                'default' => 0
-            ]
-        ]
     ];
 
-    $newSysFileReferenceColumnsForAttribute = [
+
+    $columnsForAttribute = [
         'pxa_attribute' => [
             'label' => 'pxa_attribute',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                'items' => []
-            ]
+                'foreign_table' => 'tx_pxaproductmanager_domain_model_attribute',
+                'items' => [],
+            ],
         ],
     ];
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns(
         'sys_file_reference',
-        $newSysFileReferenceColumns
+        $columns
     );
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns(
         'sys_file_reference',
-        $newSysFileReferenceColumnsForAttribute
+        $columnsForAttribute
     );
 
     // add special product manager palette
     $GLOBALS['TCA']['sys_file_reference']['palettes']['pxaProductManagerPalette'] = [
-        'showitem' => 'pxapm_use_in_listing, pxapm_main_image',
+        'showitem' => 'pxapm_type',
         'canNotCollapse' => true
     ];
 
-    $GLOBALS['TCA']['sys_file_reference']['palettes']['pxaProductManagerPaletteAttribute'] = [
+    $GLOBALS['TCA']['sys_file_reference']['palettes']['pxaProductManagerAttributePalette'] = [
         'showitem' => 'pxa_attribute',
         'canNotCollapse' => true
     ];
-});
+})();

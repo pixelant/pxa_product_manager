@@ -4,10 +4,8 @@ defined('TYPO3_MODE') || die;
 return (function () {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
     $llType = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_attribute.type_';
-    $accessTab = '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime';
-    $llCore = 'LLL:EXT:core/Resources/Private/Language/';
 
-    $tx_pxaproductmanager_domain_model_attribute = [
+    return [
         'ctrl' => [
             'title' => $ll . 'tx_pxaproductmanager_domain_model_attribute',
             'label' => 'name',
@@ -16,7 +14,6 @@ return (function () {
             'cruser_id' => 'cruser_id',
             'dividers2tabs' => true,
             'sortby' => 'sorting',
-            'versioningWS' => true,
             'origUid' => 't3_origuid',
             'languageField' => 'sys_language_uid',
             'transOrigPointerField' => 'l10n_parent',
@@ -30,20 +27,20 @@ return (function () {
 
             'type' => 'type',
 
-            'searchFields' => 'name,type,required,show_in_attribute_listing,identifier,options,',
+            'searchFields' => 'name, label, label_checked, label_unchecked',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/tag.svg'
         ],
-        // @codingStandardsIgnoreStart
+
         'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, label, type, required, show_in_attribute_listing, show_in_compare, identifier, icon, default_value, options, label_unchecked, label_checked',
+            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, label, type, required, show_in_attribute_listing, show_in_compare, identifier, default_value, options, label_checked, label_unchecked, starttime, endtime',
         ],
         'types' => [
-            '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value,' . $accessTab],
-            '4' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value, options,' . $accessTab],
-            '9' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value, options,' . $accessTab],
-            '5' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.checkbox_values;checkbox_values, --palette--;' . $ll . 'palette.options;options, identifier, default_value,' . $accessTab],
+            '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+            '4' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value, options, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+            '9' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value, options, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+            '5' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.checkbox_values;checkbox_values, --palette--;' . $ll . 'palette.options;options, identifier, default_value, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
         ],
-        // @codingStandardsIgnoreEnd
+
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
             'common' => ['showitem' => 'name, --linebreak--, label, --linebreak--, type'],
@@ -52,15 +49,15 @@ return (function () {
         ],
         'columns' => [
             'sys_language_uid' => [
-                'exclude' => 1,
-                'label' => $llCore . 'locallang_general.xlf:LGL.language',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'special' => 'languages',
                     'items' => [
                         [
-                            $llCore . 'locallang_general.xlf:LGL.allLanguages',
+                            'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                             -1,
                             'flags-multiple'
                         ],
@@ -70,8 +67,8 @@ return (function () {
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
-                'exclude' => 1,
-                'label' => $llCore . 'locallang_general.xlf:LGL.l18n_parent',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
@@ -82,52 +79,60 @@ return (function () {
                     'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_attribute.pid=###CURRENT_PID###' .
                         ' AND tx_pxaproductmanager_domain_model_attribute.sys_language_uid IN (-1,0)',
                     'default' => 0
-                ]
+                ],
             ],
             'l10n_diffsource' => [
                 'config' => [
                     'type' => 'passthrough',
-                ]
+                ],
             ],
             'hidden' => [
-                'exclude' => 1,
-                'label' => $llCore . 'locallang_general.xlf:LGL.hidden',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
                 'config' => [
                     'type' => 'check',
-                ]
+                    'renderType' => 'checkboxToggle',
+                    'items' => [
+                        [
+                            0 => '',
+                            1 => '',
+                            'invertStateDisplay' => true
+                        ]
+                    ],
+                ],
             ],
             'starttime' => [
-                'exclude' => 1,
-                'l10n_mode' => 'exclude',
-                'label' => $llCore . 'locallang_general.xlf:LGL.starttime',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
                 'config' => [
                     'type' => 'input',
                     'renderType' => 'inputDateTime',
                     'eval' => 'datetime,int',
-                    'size' => 13,
                     'default' => 0,
-                    'range' => [
-                        'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                    ],
-                ]
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true
+                    ]
+                ],
             ],
             'endtime' => [
-                'exclude' => 1,
-                'l10n_mode' => 'exclude',
-                'label' => $llCore . 'locallang_general.xlf:LGL.endtime',
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
                 'config' => [
                     'type' => 'input',
                     'renderType' => 'inputDateTime',
                     'eval' => 'datetime,int',
-                    'size' => 13,
                     'default' => 0,
                     'range' => [
-                        'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
+                        'upper' => mktime(0, 0, 0, 1, 1, 2038)
                     ],
-                ]
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true
+                    ]
+                ],
             ],
+
             'name' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.name',
                 'config' => [
                     'type' => 'input',
@@ -136,7 +141,7 @@ return (function () {
                 ]
             ],
             'label' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.label',
                 'config' => [
                     'type' => 'input',
@@ -145,14 +150,53 @@ return (function () {
                 ]
             ],
             'type' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'onChange' => 'reload',
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.type',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => [
-                        ['-- Label --', 0],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_INPUT,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_INPUT
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_TEXT,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_TEXT
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE
+                        ],
+                        [
+                            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL,
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL
+                        ],
                     ],
                     'size' => 1,
                     'maxitems' => 1,
@@ -160,31 +204,52 @@ return (function () {
                 ]
             ],
             'required' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.required',
                 'config' => [
                     'type' => 'check',
+                    'renderType' => 'checkboxToggle',
+                    'items' => [
+                        [
+                            0 => '',
+                            1 => '',
+                        ]
+                    ],
                     'default' => 0
                 ]
             ],
             'show_in_attribute_listing' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.show_in_attribute_listing',
                 'config' => [
                     'type' => 'check',
+                    'renderType' => 'checkboxToggle',
+                    'items' => [
+                        [
+                            0 => '',
+                            1 => '',
+                        ]
+                    ],
                     'default' => 1
                 ]
             ],
             'show_in_compare' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.show_in_compare',
                 'config' => [
                     'type' => 'check',
+                    'renderType' => 'checkboxToggle',
+                    'items' => [
+                        [
+                            0 => '',
+                            1 => '',
+                        ]
+                    ],
                     'default' => 1
                 ]
             ],
             'identifier' => [
-                'exclude' => 1,
+                'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.identifier',
                 'l10n_mode' => 'exclude',
                 'l10n_display' => 'defaultAsReadonly',
@@ -200,7 +265,7 @@ return (function () {
                 ]
             ],
             'default_value' => [
-                'exclude' => 1,
+                'exclude' => true,
                 'displayCond' => [
                     'AND' => [
                         'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN,
@@ -220,7 +285,7 @@ return (function () {
                 ]
             ],
             'label_checked' => [
-                'exclude' => 1,
+                'exclude' => true,
                 'displayCond' => 'FIELD:type:=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.label_checked',
                 'config' => [
@@ -230,7 +295,7 @@ return (function () {
                 ]
             ],
             'label_unchecked' => [
-                'exclude' => 1,
+                'exclude' => true,
                 'displayCond' => 'FIELD:type:=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.label_unchecked',
                 'config' => [
@@ -240,10 +305,14 @@ return (function () {
                 ]
             ],
             'options' => [
-                'exclude' => 0,
+                'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.options',
-                'displayCond' => 'FIELD:type:IN:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN .
-                    ',' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT . '',
+                'displayCond' => [
+                    'OR' => [
+                        'FIELD:type:=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN,
+                        'FIELD:type:=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT,
+                    ]
+                ],
                 'config' => [
                     'type' => 'inline',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_option',
@@ -251,106 +320,15 @@ return (function () {
                     'foreign_sortby' => 'sorting',
                     'maxitems' => 9999,
                     'appearance' => [
-                        'collapseAll' => 1,
+                        'collapseAll' => true,
                         'levelLinksPosition' => 'bottom',
-                        'showSynchronizationLink' => 1,
-                        'showPossibleLocalizationRecords' => 1,
-                        'showAllLocalizationLink' => 1,
-                        'useSortable' => 1
+                        'showSynchronizationLink' => true,
+                        'showPossibleLocalizationRecords' => true,
+                        'showAllLocalizationLink' => true,
+                        'useSortable' => true,
                     ]
                 ]
             ],
-            'icon' => [
-                'exclude' => 1,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.icon',
-                'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                    'icon',
-                    [
-                        'appearance' => [
-                            'createNewRelationLinkTitle' =>
-                                'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
-                            'showPossibleLocalizationRecords' => false,
-                            'showRemovedLocalizationRecords' => true,
-                            'showAllLocalizationLink' => false,
-                            'showSynchronizationLink' => false
-                        ],
-                        'foreign_match_fields' => [
-                            'fieldname' => 'icon',
-                            'tablenames' => 'tx_pxaproductmanager_domain_model_attribute',
-                            'table_local' => 'sys_file',
-                        ],
-                        'maxitems' => 1,
-                        // @codingStandardsIgnoreStart
-                        'overrideChildTca' => [
-                            'types' => [
-                                '0' => [
-                                    'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                                ],
-                                \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
-                                    'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                                ]
-                            ]
-                        ],
-                        // @codingStandardsIgnoreEnd
-                        'behaviour' => [
-                            'allowLanguageSynchronization' => true
-                        ],
-                    ],
-                    'svg'
-                ),
-            ],
         ]
     ];
-
-
-    $tx_pxaproductmanager_domain_model_attribute['columns']['type']['config']['items'] = [
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_INPUT,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_INPUT
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_TEXT,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_TEXT
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE
-        ],
-        [
-            $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL,
-            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL
-        ],
-    ];
-
-    return $tx_pxaproductmanager_domain_model_attribute;
 })();

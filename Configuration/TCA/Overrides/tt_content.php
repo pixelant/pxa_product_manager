@@ -1,7 +1,7 @@
 <?php
 defined('TYPO3_MODE') || die;
 
-call_user_func(function () {
+(function () {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
         'pxa_product_manager',
         'Pi1',
@@ -15,4 +15,5 @@ call_user_func(function () {
         $pluginSignature,
         'FILE:EXT:pxa_product_manager/Configuration/FlexForms/flexform_pi1.xml'
     );
-});
+})();
+

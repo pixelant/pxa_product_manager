@@ -3,14 +3,13 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 return [
     'ctrl' => [
-        'title'    => 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_option',
+        'title' => 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_option',
         'label' => 'value',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
         'dividers2tabs' => true,
         'sortby' => 'sorting',
-        'versioningWS' => true,
         'origUid' => 't3_origuid',
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
@@ -18,10 +17,8 @@ return [
         'delete' => 'deleted',
         'enablecolumns' => [
             'disabled' => 'hidden',
-            'starttime' => 'starttime',
-            'endtime' => 'endtime',
         ],
-        'hideTable' => 1,
+        'hideTable' => true,
         'searchFields' => 'value,',
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/elipsis.svg'
     ],
@@ -29,10 +26,10 @@ return [
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, value',
     ],
     'types' => [
-        '1' => ['showitem' => 'hidden, --palette--;;1'],
+        '1' => ['showitem' => 'hidden, value'],
     ],
     'palettes' => [
-        '1' => ['showitem' => 'value'],
+        '1' => ['showitem' => ''],
     ],
     'columns' => [
         'sys_language_uid' => [
@@ -63,7 +60,8 @@ return [
                     ['', 0],
                 ],
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_option',
-                'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_option.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_option.sys_language_uid IN (-1,0)',
+                'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_option.pid=###CURRENT_PID###' .
+                    ' AND tx_pxaproductmanager_domain_model_option.sys_language_uid IN (-1,0)',
                 'default' => 0
             ],
         ],
@@ -72,53 +70,24 @@ return [
                 'type' => 'passthrough',
             ],
         ],
-        't3ver_label' => [
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.versionLabel',
-            'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'max' => 255
-            ]
-        ],
         'hidden' => [
-            'exclude' => 1,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
             'config' => [
                 'type' => 'check',
-            ],
-        ],
-        'starttime' => [
-            'exclude' => 1,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-            'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime,int',
-                'size' => 13,
-                'default' => 0,
-                'range' => [
-                    'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
                 ],
             ],
         ],
-        'endtime' => [
-            'exclude' => 1,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
-            'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime,int',
-                'size' => 13,
-                'default' => 0,
-                'range' => [
-                    'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                ],
-            ],
-        ],
+
         'value' => [
-            'exclude' => 0,
+            'exclude' => false,
             'label' => 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_option.value',
             'config' => [
                 'type' => 'input',
