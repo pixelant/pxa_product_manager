@@ -1,22 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\UserFunction;
+namespace Pixelant\PxaProductManager\UserFunction\TCA;
 
 use Pixelant\PxaProductManager\Service\BackendUriService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class SysCategoryExtendedTca
+/**
+ * TCA user function
+ *
+ * @package Pixelant\PxaProductManager\UserFunction
+ */
+class CategoryUserFunction
 {
     /**
      * @param $PA
      * @param $fObj
      * @return string
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
-    public function pageModuleLinkField($PA, $fObj)
+    public function pageModuleLinkField($PA, $fObj): string
     {
-        if (! current($PA['row']['pxapm_content_page'])) {
+        if (!current($PA['row']['pxapm_content_page'])) {
             return '';
         }
 
@@ -29,8 +33,6 @@ class SysCategoryExtendedTca
             'id' => $page['uid']
         ]);
 
-        return "<a class='btn btn-default' href='{$uri}'>
-                    <span class='text-primary'>{$page['title']}</span>
-                </a>";
+        return sprintf('<a href="%s" class="btn btn-default">%s</a>', $uri, $page['title']);
     }
 }
