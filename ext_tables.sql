@@ -33,7 +33,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
 CREATE TABLE tx_pxaproductmanager_domain_model_attributeset
 (
     name       varchar(255)     DEFAULT ''  NOT NULL,
-    attributes int(11) unsigned DEFAULT '0' NOT NULL
+    attributes int(11) unsigned DEFAULT '0' NOT NULL,
+    categories int(11) unsigned DEFAULT '0' NOT NULL,
 );
 
 #
@@ -134,36 +135,19 @@ CREATE TABLE sys_file_reference
 );
 
 #
-# Table structure for table 'tx_pxaproductmanager_attributeset_attribute_mm'
+# Table structure for table 'tx_pxaproductmanager_attributeset_record_mm'
 #
-CREATE TABLE tx_pxaproductmanager_attributeset_attribute_mm
+CREATE TABLE tx_pxaproductmanager_attributeset_record_mm
 (
-    uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
-    uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting         int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+    uid_local       int(11)      DEFAULT '0' NOT NULL,
+    uid_foreign     int(11)      DEFAULT '0' NOT NULL,
+    tablenames      varchar(255) DEFAULT ''  NOT NULL,
+    fieldname       varchar(255) DEFAULT ''  NOT NULL,
+    sorting         int(11)      DEFAULT '0' NOT NULL,
+    sorting_foreign int(11)      DEFAULT '0' NOT NULL,
 
-    PRIMARY KEY (uid_local, uid_foreign),
-    KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign)
-);
-
-#
-# Table structure for table 'tx_pxaproductmanager_record_attributeset_mm'
-#
-CREATE TABLE tx_pxaproductmanager_record_attributeset_mm
-(
-    uid             int(11)                 NOT NULL auto_increment,
-    uid_local       int(11)     DEFAULT '0' NOT NULL,
-    uid_foreign     int(11)     DEFAULT '0' NOT NULL,
-    tablenames      varchar(30) DEFAULT ''  NOT NULL,
-    sorting         int(11)     DEFAULT '0' NOT NULL,
-    sorting_foreign int(11)     DEFAULT '0' NOT NULL,
-    ident           varchar(30) DEFAULT ''  NOT NULL,
-
-    KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign),
-    PRIMARY KEY (uid)
+    KEY uid_local_foreign (uid_local, uid_foreign),
+    KEY uid_foreign_tablefield (uid_foreign, tablenames(40), fieldname(3), sorting_foreign)
 );
 
 #

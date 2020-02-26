@@ -25,7 +25,7 @@ return (function () {
             'showRecordFieldList' => 'hidden, name, attributes',
         ],
         'types' => [
-            '1' => ['showitem' => 'name, attributes, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
+            '1' => ['showitem' => 'name, attributes, categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -62,7 +62,11 @@ return (function () {
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_attribute',
                     'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_attribute.pid = ###CURRENT_PID###' .
                         ' AND tx_pxaproductmanager_domain_model_attribute.sys_language_uid <= 0',
-                    'MM' => 'tx_pxaproductmanager_attributeset_attribute_mm',
+                    'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
+                    'MM_match_fields' => [
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_attribute',
+                        'fieldname' => 'attributes',
+                    ],
                     'size' => 10,
                     'autoSizeMax' => 30,
                     'maxitems' => 9999,
@@ -76,7 +80,34 @@ return (function () {
                         ]
                     ]
                 ]
-            ]
+            ],
+            'categories' => [
+                'label' => $ll . 'categories',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'sys_category',
+                    'foreign_table_where' => 'AND sys_category.pid = ###CURRENT_PID###' .
+                        ' AND sys_category.sys_language_uid <= 0',
+                    'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
+                    'MM_match_fields' => [
+                        'tablenames' => 'sys_category',
+                        'fieldname' => 'categories',
+                    ],
+                    'size' => 10,
+                    'autoSizeMax' => 30,
+                    'maxitems' => 9999,
+                    'multiple' => 0,
+                    'fieldControl' => [
+                        'editPopup' => [
+                            'disabled' => false
+                        ],
+                        'addRecord' => [
+                            'disabled' => false,
+                        ]
+                    ]
+                ]
+            ],
         ],
     ];
 })();
