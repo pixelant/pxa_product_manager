@@ -238,7 +238,7 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getRelatedProductsForeignTableWherePid() .
+                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
                         ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                         ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
                     'MM' => 'tx_pxaproductmanager_product_product_mm',
@@ -429,7 +429,7 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getSubProductsForeignTableWherePid() .
+                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getSubProductsForeignTableWherePid() .
                         ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                         ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
                     'MM' => 'tx_pxaproductmanager_product_subproducts_product_mm',
@@ -555,7 +555,7 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getAccessoriesForeignTableWherePid() .
+                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAccessoriesForeignTableWherePid() .
                         ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                         ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
                     'MM' => 'tx_pxaproductmanager_product_accessories_product_mm',

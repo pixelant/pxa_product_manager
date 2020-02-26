@@ -10,7 +10,7 @@ defined('TYPO3_MODE') || die;
     // optional: add TCA options which controls how the field is displayed. e.g position and name of the category tree.
     [
         'fieldConfiguration' => [
-            'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getCategoriesTCAWhereClause()
+            'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause()
                 . 'AND sys_category.sys_language_uid IN (-1, 0)'
         ]
     ]

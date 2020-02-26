@@ -133,7 +133,7 @@ defined('TYPO3_MODE') || die;
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_attributeset',
-                'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TCAUtility::getAttributesSetsForeignTableWherePid() .
+                'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAttributesSetsForeignTableWherePid() .
                     ' AND tx_pxaproductmanager_domain_model_attributeset.sys_language_uid IN (-1,0)' .
                     ' ORDER BY tx_pxaproductmanager_domain_model_attributeset.sorting',
                 'MM' => 'tx_pxaproductmanager_category_attributeset_mm',
@@ -325,7 +325,7 @@ defined('TYPO3_MODE') || die;
         'after:title'
     );
 
-    if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\TCAUtility::getCategoriesTCAWhereClause())) {
+    if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause())) {
         $config = &$GLOBALS['TCA']['sys_category']['columns']['parent']['config'];
         $config['foreign_table_where'] = $categoryWhere . ' ' . $config['foreign_table_where'];
     }
