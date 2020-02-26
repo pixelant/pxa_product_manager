@@ -80,6 +80,9 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_product.assets">
 				<source>Media assets</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_product.attributes_sets">
+			    <source>Attributes sets</source>
+			</trans-unit>
 			<!--Products TCA:END-->
 
 			<!--Filter TCA:START-->
@@ -115,6 +118,9 @@
 			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.attributes">
 				<source>Attributes</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.categories">
+			    <source>Categories</source>
 			</trans-unit>
 			<!--Attributes Set TCA:END-->
 

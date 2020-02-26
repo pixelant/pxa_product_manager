@@ -22,7 +22,7 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg'
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, attributes',
+            'showRecordFieldList' => 'hidden, name, attributes, categories',
         ],
         'types' => [
             '1' => ['showitem' => 'name, attributes, categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
@@ -82,13 +82,12 @@ return (function () {
                 ]
             ],
             'categories' => [
-                'label' => $ll . 'categories',
+                'label' => $ll . '.categories',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'sys_category',
-                    'foreign_table_where' => 'AND sys_category.pid = ###CURRENT_PID###' .
-                        ' AND sys_category.sys_language_uid <= 0',
+                    'foreign_table_where' => 'AND sys_category.sys_language_uid <= 0',
                     'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
                     'MM_match_fields' => [
                         'tablenames' => 'sys_category',

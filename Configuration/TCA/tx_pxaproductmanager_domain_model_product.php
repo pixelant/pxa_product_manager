@@ -30,11 +30,12 @@ return (function () {
         ],
         'interface' => [
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp,
-            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attribute_values, alternative_title, keywords, meta_description, slug',
+            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attribute_values, alternative_title, keywords, meta_description, slug, attributes_sets',
         ],
         'types' => [
             '1' => [
                 'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;general,
+--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.attributes_sets, attributes_sets,
 --palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, related_products, sub_products, accessories,
@@ -576,6 +577,35 @@ return (function () {
                     'maxitems' => 9999,
                     'multiple' => 0,
                     'enableMultiSelectFilterTextfield' => true,
+                    'fieldControl' => [
+                        'editPopup' => [
+                            'disabled' => false
+                        ],
+                        'addRecord' => [
+                            'disabled' => false,
+                        ]
+                    ]
+                ]
+            ],
+            'attributes_sets' => [
+                'exclude' => true,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.attributes_sets',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_pxaproductmanager_domain_model_attributeset',
+                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAttributesSetsForeignTableWherePid() .
+                        ' ORDER BY tx_pxaproductmanager_domain_model_attributeset.sorting',
+                    'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
+                    'MM_match_fields' => [
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                        'fieldname' => 'products',
+                    ],
+                    'MM_opposite_field' => 'products',
+                    'size' => 10,
+                    'autoSizeMax' => 30,
+                    'maxitems' => 9999,
+                    'multiple' => 0,
                     'fieldControl' => [
                         'editPopup' => [
                             'disabled' => false
