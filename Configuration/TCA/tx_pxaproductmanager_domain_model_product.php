@@ -242,6 +242,10 @@ return (function () {
                         ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                         ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
                     'MM' => 'tx_pxaproductmanager_product_product_mm',
+                    'MM_match_fields' => [
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                        'fieldname' => 'related_products',
+                    ],
                     'size' => 10,
                     'autoSizeMax' => 30,
                     'maxitems' => 9999,
@@ -432,7 +436,11 @@ return (function () {
                     'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getSubProductsForeignTableWherePid() .
                         ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                         ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
-                    'MM' => 'tx_pxaproductmanager_product_subproducts_product_mm',
+                    'MM' => 'tx_pxaproductmanager_product_product_mm',
+                    'MM_match_fields' => [
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                        'fieldname' => 'sub_products',
+                    ],
                     'size' => 10,
                     'autoSizeMax' => 30,
                     'maxitems' => 9999,
@@ -558,7 +566,11 @@ return (function () {
                     'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAccessoriesForeignTableWherePid() .
                         ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                         ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
-                    'MM' => 'tx_pxaproductmanager_product_accessories_product_mm',
+                    'MM' => 'tx_pxaproductmanager_product_product_mm',
+                    'MM_match_fields' => [
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                        'fieldname' => 'accessories',
+                    ],
                     'size' => 10,
                     'autoSizeMax' => 30,
                     'maxitems' => 9999,

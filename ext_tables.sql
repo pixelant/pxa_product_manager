@@ -3,28 +3,28 @@
 #
 CREATE TABLE tx_pxaproductmanager_domain_model_product
 (
-    name                varchar(255)         DEFAULT ''     NOT NULL,
-    sku                 varchar(55)          DEFAULT ''     NOT NULL,
-    price               double(11, 2)        DEFAULT '0.00' NOT NULL,
-    tax_rate            double(11, 2)        DEFAULT '0.00' NOT NULL,
-    teaser              text,
-    description         text,
-    usp                 text,
+    name              varchar(255)     DEFAULT ''     NOT NULL,
+    sku               varchar(55)      DEFAULT ''     NOT NULL,
+    price             double(11, 2)    DEFAULT '0.00' NOT NULL,
+    tax_rate          double(11, 2)    DEFAULT '0.00' NOT NULL,
+    teaser            text,
+    description       text,
+    usp               text,
 
-    related_products    int(11) unsigned     DEFAULT '0'    NOT NULL,
-    sub_products        int(11) unsigned     DEFAULT '0'    NOT NULL,
-    accessories         int(11) unsigned     DEFAULT '0'    NOT NULL,
-    images              int(11) unsigned     DEFAULT '0'    NOT NULL,
-    attribute_files     int(11) unsigned     DEFAULT '0'    NOT NULL,
-    links               int(11) unsigned     DEFAULT '0'    NOT NULL,
-    fal_links           int(11) unsigned     DEFAULT '0'    NOT NULL,
-    assets              int(11) unsigned     DEFAULT '0'    NOT NULL,
-    attribute_values    int(11) unsigned     DEFAULT '0'    NOT NULL,
+    related_products  int(11) unsigned DEFAULT '0'    NOT NULL,
+    sub_products      int(11) unsigned DEFAULT '0'    NOT NULL,
+    accessories       int(11) unsigned DEFAULT '0'    NOT NULL,
+    images            int(11) unsigned DEFAULT '0'    NOT NULL,
+    attribute_files   int(11) unsigned DEFAULT '0'    NOT NULL,
+    links             int(11) unsigned DEFAULT '0'    NOT NULL,
+    fal_links         int(11) unsigned DEFAULT '0'    NOT NULL,
+    assets            int(11) unsigned DEFAULT '0'    NOT NULL,
+    attribute_values  int(11) unsigned DEFAULT '0'    NOT NULL,
 
-    alternative_title   varchar(255)         DEFAULT ''     NOT NULL,
-    keywords            text,
-    meta_description    text,
-    slug                varchar(2048)
+    alternative_title varchar(255)     DEFAULT ''     NOT NULL,
+    keywords          text,
+    meta_description  text,
+    slug              varchar(2048)
 );
 
 #
@@ -92,29 +92,15 @@ CREATE TABLE tx_pxaproductmanager_domain_model_link
 #
 CREATE TABLE tx_pxaproductmanager_product_product_mm
 (
-    uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
-    uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting         int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+    uid_local       int(11)      DEFAULT '0' NOT NULL,
+    uid_foreign     int(11)      DEFAULT '0' NOT NULL,
+    tablenames      varchar(255) DEFAULT ''  NOT NULL,
+    fieldname       varchar(255) DEFAULT ''  NOT NULL,
+    sorting         int(11)      DEFAULT '0' NOT NULL,
+    sorting_foreign int(11)      DEFAULT '0' NOT NULL,
 
-    PRIMARY KEY (uid_local, uid_foreign),
-    KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign)
-);
-
-#
-# Table structure for table 'tx_pxaproductmanager_product_subproducts_product_mm'
-#
-CREATE TABLE tx_pxaproductmanager_product_subproducts_product_mm
-(
-    uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
-    uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting         int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
-
-    PRIMARY KEY (uid_local, uid_foreign),
-    KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign)
+    KEY uid_local_foreign (uid_local, uid_foreign),
+    KEY uid_foreign_tablefield (uid_foreign, tablenames(40), fieldname(3), sorting_foreign)
 );
 
 #
@@ -163,18 +149,21 @@ CREATE TABLE tx_pxaproductmanager_attributeset_attribute_mm
 );
 
 #
-# Table structure for table 'tx_pxaproductmanager_product_category_mm'
+# Table structure for table 'tx_pxaproductmanager_record_attributeset_mm'
 #
-CREATE TABLE tx_pxaproductmanager_category_attributeset_mm
+CREATE TABLE tx_pxaproductmanager_record_attributeset_mm
 (
-    uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
-    uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting         int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+    uid             int(11)                 NOT NULL auto_increment,
+    uid_local       int(11)     DEFAULT '0' NOT NULL,
+    uid_foreign     int(11)     DEFAULT '0' NOT NULL,
+    tablenames      varchar(30) DEFAULT ''  NOT NULL,
+    sorting         int(11)     DEFAULT '0' NOT NULL,
+    sorting_foreign int(11)     DEFAULT '0' NOT NULL,
+    ident           varchar(30) DEFAULT ''  NOT NULL,
 
-    PRIMARY KEY (uid_local, uid_foreign),
     KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign)
+    KEY uid_foreign (uid_foreign),
+    PRIMARY KEY (uid)
 );
 
 #
@@ -188,19 +177,4 @@ CREATE TABLE tx_pxaproductmanager_domain_model_filter
     category            int(11) unsigned     DEFAULT '0' NOT NULL,
     attribute           int(11) unsigned     DEFAULT '0' NOT NULL,
     inverse_conjunction smallint(5) unsigned DEFAULT '0' NOT NULL
-);
-
-#
-# Table structure for table 'tx_pxaproductmanager_product_accessories_product_mm'
-#
-CREATE TABLE tx_pxaproductmanager_product_accessories_product_mm
-(
-    uid_local       int(11) unsigned DEFAULT '0' NOT NULL,
-    uid_foreign     int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting         int(11) unsigned DEFAULT '0' NOT NULL,
-    sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
-
-    PRIMARY KEY (uid_local, uid_foreign),
-    KEY uid_local (uid_local),
-    KEY uid_foreign (uid_foreign)
 );
