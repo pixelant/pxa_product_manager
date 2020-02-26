@@ -26,278 +26,140 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
-use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
-use Pixelant\PxaProductManager\Utility\ProductUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use DateTime;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 /**
- *
- *
- * @package pxa_product_manager
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
+ * Product model
  */
 class Product extends AbstractEntity
 {
-
     /**
-     * Categories
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
-     */
-    protected $categories;
-
-    /**
-     * name
-     *
      * @var string
      */
-    protected $name;
+    protected string $name = '';
 
     /**
      * @var string
      */
-    protected $slug = '';
+    protected string $sku = '';
 
     /**
-     * sku
-     *
-     * @var \string
-     */
-    protected $sku;
-
-    /**
-     * Price
-     *
      * @var float
      */
-    protected $price = 0.0;
+    protected float $price = 0.0;
 
     /**
-     * taxRate
-     *
-     * @var float $taxRate
+     * @var float
      */
-    protected $taxRate = 0.00;
+    protected float $taxRate = 0.0;
 
     /**
-     * description
-     *
-     * @var \string
-     */
-    protected $description = '';
-
-    /**
-     * disableSingleView
-     *
-     * @var boolean
-     */
-    protected $disableSingleView = false;
-
-    /**
-     * @var \string
-     */
-    protected $alternativeTitle = '';
-
-    /**
-     * @var \string
-     */
-    protected $pathSegment = '';
-
-    /**
-     * @var \string
-     */
-    protected $keywords = '';
-
-    /**
-     * @var \string
-     */
-    protected $metaDescription = '';
-
-    /**
-     * relatedProducts
-     *
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
-     */
-    protected $relatedProducts;
-
-    /**
-     * Images
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     */
-    protected $images;
-
-    /**
-     * Attributes files
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFalFile>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     */
-    protected $attributeFiles;
-
-    /**
-     * links
-     *
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Link>
-     */
-    protected $links;
-
-    /**
-     * subProducts
-     *
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
-     */
-    protected $subProducts;
-
-    /**
-     * Fal links
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     */
-    protected $falLinks;
-
-    /**
-     * Attributes
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Attribute>
-     */
-    protected $attributes;
-
-    /**
-     * Attributes as array with identifier as index
-     *
-     * @var array
-     */
-    protected $attributesIdentifiersArray = [];
-
-    /**
-     * Attributes grouped by sets
-     *
-     * @var ObjectStorage
-     */
-    protected $attributesGroupedBySets;
-
-    /**
-     * attributeValues
-     *
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeValue>
-     */
-    protected $attributeValues;
-
-    /**
-     * @var int
-     */
-    protected $crdate;
-
-    /**
-     * @var int
-     */
-    protected $tstamp;
-
-    /**
-     * @var boolean
-     */
-    protected $hidden;
-
-    /**
-     * @var boolean
-     */
-    protected $deleted;
-
-    /**
-     * Attribute values
-     *
      * @var string
      */
-    protected $serializedAttributesValues = '';
+    protected string $teaser = '';
 
     /**
-     * Product main image
-     *
-     * @var Image
+     * @var string
      */
-    protected $mainImage;
+    protected string $description = '';
 
     /**
-     * Product listing image
-     * @var Image
+     * @var string
      */
-    protected $thumbnailImage;
+    protected string $usp = '';
 
     /**
-     * attributesDescription
-     *
-     * @var \string
+     * @var string
      */
-    protected $attributesDescription = '';
+    protected string $alternativeTitle = '';
 
     /**
-     * Assets
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var string
      */
-    protected $assets;
+    protected string $keywords = '';
 
     /**
-     * additionalInformation
-     *
-     * @var \string
+     * @var string
      */
-    protected $additionalInformation = '';
+    protected string $metaDescription = '';
 
     /**
-     * teaser
-     *
-     * @var \string
+     * @var bool
      */
-    protected $teaser = '';
+    protected bool $deleted = false;
 
     /**
-     * usp
-     *
-     * @var \string
+     * @var DateTime
      */
-    protected $usp = '';
+    protected ?DateTime $crdate = null;
 
     /**
-     * @var \DateTime|NULL
+     * @var DateTime
      */
-    protected $launched;
+    protected ?DateTime $tstamp = null;
 
     /**
-     * @var \DateTime|NULL
-     */
-    protected $discontinued;
-
-    /**
-     * accessories
-     *
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
-    protected $accessories;
+    protected ObjectStorage $relatedProducts;
 
     /**
-     * @var int
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
-    protected $customSorting = 0;
+    protected ObjectStorage $subProducts;
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
+     */
+    protected ObjectStorage $accessories;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image>
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
+     */
+    protected ObjectStorage $images;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFile>
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
+     */
+    protected ObjectStorage $attributeFiles;
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Link>
+     */
+    protected ObjectStorage $links;
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     */
+    protected ObjectStorage $falLinks;
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     */
+    protected ObjectStorage $assets;
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeValue>
+     */
+    protected ObjectStorage $attributeValues;
 
     /**
      * __construct
-     *
      */
     public function __construct()
     {
@@ -306,42 +168,37 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Initializes all ObjectStorage properties.
+     * Extbase container doesn't call constructor,
+     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     */
+    public function initializeObject()
+    {
+        $this->initStorageObjects();
+    }
+
+    /**
+     * Initializes all ObjectStorage properties
+     * Do not modify this method!
+     * It will be rewritten on each save in the extension builder
+     * You may modify the constructor of this class instead
      *
      * @return void
      */
     protected function initStorageObjects()
     {
-        /**
-         * Do not modify this method!
-         * It will be rewritten on each save in the extension builder
-         * You may modify the constructor of this class instead
-         */
         $this->relatedProducts = new ObjectStorage();
-
-        $this->images = new ObjectStorage();
-
-        $this->attributeFiles = new ObjectStorage();
-
-        $this->links = new ObjectStorage();
-
         $this->subProducts = new ObjectStorage();
-
-        $this->falLinks = new ObjectStorage();
-
-        $this->categories = new ObjectStorage();
-
-        $this->attributeValues = new ObjectStorage();
-
-        $this->assets = new ObjectStorage();
-
         $this->accessories = new ObjectStorage();
+        $this->images = new ObjectStorage();
+        $this->attributeFiles = new ObjectStorage();
+        $this->links = new ObjectStorage();
+        $this->falLinks = new ObjectStorage();
+        $this->assets = new ObjectStorage();
+        $this->attributeValues = new ObjectStorage();
     }
 
     /**
-     * Returns the name
-     *
-     * @return \string $name
+     * @return string
      */
     public function getName(): string
     {
@@ -349,36 +206,17 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Sets the name
-     *
-     * @param \string $name
-     * @return void
+     * @param string $name
+     * @return Product
      */
-    public function setName(string $name)
+    public function setName(string $name): Product
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
      * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     */
-    public function setSlug(string $slug)
-    {
-        $this->slug = $slug;
-    }
-
-    /**
-     * Returns the sku
-     *
-     * @return \string $sku
      */
     public function getSku(): string
     {
@@ -386,14 +224,13 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Sets the sku
-     *
-     * @param \string $sku
-     * @return void
+     * @param string $sku
+     * @return Product
      */
-    public function setSku(string $sku)
+    public function setSku(string $sku): Product
     {
         $this->sku = $sku;
+        return $this;
     }
 
     /**
@@ -405,27 +242,17 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Format price
-     *
-     * @return float
-     */
-    public function getFormatPrice(): string
-    {
-        return ProductUtility::formatPrice($this->price);
-    }
-
-    /**
      * @param float $price
+     * @return Product
      */
-    public function setPrice(float $price)
+    public function setPrice(float $price): Product
     {
         $this->price = $price;
+        return $this;
     }
 
     /**
-     * Returns the taxRate
-     *
-     * @return float $taxRate
+     * @return float
      */
     public function getTaxRate(): float
     {
@@ -433,63 +260,35 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Sets the taxRate
-     *
      * @param float $taxRate
-     * @return void
+     * @return Product
      */
-    public function setTaxRate(float $taxRate)
+    public function setTaxRate(float $taxRate): Product
     {
         $this->taxRate = $taxRate;
+        return $this;
     }
 
     /**
-     * Adds a Product
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Product $relatedProduct
-     * @return void
+     * @return string
      */
-    public function addRelatedProduct(Product $relatedProduct)
+    public function getTeaser(): string
     {
-        $this->relatedProducts->attach($relatedProduct);
+        return $this->teaser;
     }
 
     /**
-     * Removes a Product
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Product $relatedProductToRemove The Product to be removed
-     * @return void
+     * @param string $teaser
+     * @return Product
      */
-    public function removeRelatedProduct(Product $relatedProductToRemove)
+    public function setTeaser(string $teaser): Product
     {
-        $this->relatedProducts->detach($relatedProductToRemove);
+        $this->teaser = $teaser;
+        return $this;
     }
 
     /**
-     * Returns the relatedProducts
-     *
-     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product> $relatedProducts
-     */
-    public function getRelatedProducts(): ObjectStorage
-    {
-        return $this->relatedProducts;
-    }
-
-    /**
-     * Sets the relatedProducts
-     *
-     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\Product> $relatedProducts
-     * @return void
-     */
-    public function setRelatedProducts(ObjectStorage $relatedProducts)
-    {
-        $this->relatedProducts = $relatedProducts;
-    }
-
-    /**
-     * Returns the description
-     *
-     * @return \string $description
+     * @return string
      */
     public function getDescription(): string
     {
@@ -497,388 +296,35 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Sets the description
-     *
-     * @param \string $description
-     * @return void
+     * @param string $description
+     * @return Product
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): Product
     {
         $this->description = $description;
+        return $this;
     }
 
     /**
-     * Adds a Image
-     *
-     * @param Image $image
-     * @return void
+     * @return string
      */
-    public function addImage(Image $image)
+    public function getUsp(): string
     {
-        $this->images->attach($image);
+        return $this->usp;
     }
 
     /**
-     * Removes a Image
-     *
-     * @param Image $image The Image to be removed
-     * @return void
+     * @param string $usp
+     * @return Product
      */
-    public function removeImage(Image $image)
+    public function setUsp(string $usp): Product
     {
-        $this->images->detach($image);
+        $this->usp = $usp;
+        return $this;
     }
 
     /**
-     * Returns the images
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image> $images
-     */
-    public function getImages(): ObjectStorage
-    {
-        return $this->images;
-    }
-
-    /**
-     * Sets the images
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Image> $images
-     * @return void
-     */
-    public function setImages(ObjectStorage $images)
-    {
-        $this->images = $images;
-    }
-
-    /**
-     * Returns the Attribute files
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFalFile>
-     */
-    public function getAttributeFiles(): ObjectStorage
-    {
-        return $this->attributeFiles;
-    }
-
-    /**
-     * Sets the Attribute files
-     *
-     * @param ObjectStorage $files
-     * @return void
-     */
-    public function setAttributeFiles(ObjectStorage $files)
-    {
-        $this->attributeFiles = $files;
-    }
-
-    /**
-     * Adds a Category
-     *
-     * @param Category $category
-     * @return void
-     */
-    public function addCategory(Category $category)
-    {
-        $this->categories->attach($category);
-    }
-
-    /**
-     * Removes a Category
-     *
-     * @param Category $categoryToRemove The Category to be removed
-     * @return void
-     */
-    public function removeCategory(Category $categoryToRemove)
-    {
-        $this->categories->detach($categoryToRemove);
-    }
-
-    /**
-     * Returns the categories
-     *
-     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category> $categories
-     */
-    public function getCategories(): ObjectStorage
-    {
-        return $this->categories;
-    }
-
-    /**
-     * Returns the categories
-     *
-     * @return \Pixelant\PxaProductManager\Domain\Model\Category
-     */
-    public function getFirstCategory()
-    {
-        $this->categories->rewind();
-        return $this->categories->current();
-    }
-
-    /**
-     * Sets the categories
-     *
-     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\Category> $categories
-     * @return void
-     */
-    public function setCategories(ObjectStorage $categories)
-    {
-        $this->categories = $categories;
-    }
-
-    /**
-     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Attribute> $attributes
-     */
-    public function getAttributes(): ObjectStorage
-    {
-        if ($this->attributes === null) {
-            if (!(int)$this->getUid()) {
-                return (new ObjectStorage());
-            }
-            $this->initializeAttributes();
-        }
-
-        return $this->attributes;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributesGroupedBySets(): ObjectStorage
-    {
-        if ($this->attributesGroupedBySets === null) {
-            if (!(int)$this->getUid()) {
-                return (new ObjectStorage());
-            }
-            $this->initializeAttributes();
-        }
-
-        return $this->attributesGroupedBySets;
-    }
-
-    /**
-     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\Attribute> $attributes
-     */
-    public function setAttributes(ObjectStorage $attributes)
-    {
-        $this->attributes = $attributes;
-    }
-
-    /**
-     * Adds a attribute
-     *
-     * @param Attribute $attribute
-     * @return void
-     */
-    public function addAttribute(Attribute $attribute)
-    {
-        if ($this->attributes === null) {
-            $this->attributes = new ObjectStorage();
-        }
-        $this->attributes->attach($attribute);
-    }
-
-    /**
-     * Removes a attribute
-     *
-     * @param Attribute $attribute
-     * @return void
-     */
-    public function removeAttribute(Attribute $attribute)
-    {
-        if ($this->attributes !== null) {
-            $this->attributes->detach($attribute);
-        }
-    }
-
-
-    /**
-     * Adds a AttributeValue
-     *
-     * @param AttributeValue $attributeValue
-     * @return void
-     */
-    public function addAttributeValue(AttributeValue $attributeValue)
-    {
-        $this->attributeValues->attach($attributeValue);
-    }
-
-    /**
-     * Removes a AttributeValue
-     *
-     * @param AttributeValue $attributeValueToRemove The AttributeValue to be removed
-     * @return void
-     */
-    public function removeAttributeValue(AttributeValue $attributeValueToRemove)
-    {
-        $this->attributeValues->detach($attributeValueToRemove);
-    }
-
-    /**
-     * Returns the attributeValues
-     *
-     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeValue> $attributeValues
-     */
-    public function getAttributeValues(): ObjectStorage
-    {
-        return $this->attributeValues;
-    }
-
-    /**
-     * Sets the attributeValues
-     *
-     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\AttributeValue> $attributeValues
-     * @return void
-     */
-    public function setAttributeValues(ObjectStorage $attributeValues)
-    {
-        $this->attributeValues = $attributeValues;
-    }
-
-    /**
-     * getMainProductImage
-     *
-     * @return Image
-     */
-    public function getMainImage()
-    {
-        if ($this->mainImage === null) {
-            $this->mainImage = $this->getImageFor('mainImage');
-        }
-        return $this->mainImage;
-    }
-
-    /**
-     * getThumbnail
-     *
-     * @return Image
-     */
-    public function getThumbnail()
-    {
-        if ($this->thumbnailImage === null) {
-            $this->thumbnailImage = $this->getImageFor('useInListing');
-        }
-        return $this->thumbnailImage;
-    }
-
-    /**
-     * Adds a File
-     *
-     * @param Link $link
-     */
-    public function addLink(Link $link)
-    {
-        $this->links->attach($link);
-    }
-
-    /**
-     * Removes a File
-     *
-     * @param Link $linkToRemove The Link to be removed
-     */
-    public function removeLink(Link $linkToRemove)
-    {
-        $this->links->detach($linkToRemove);
-    }
-
-    /**
-     * Returns the links
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Link> links
-     */
-    public function getLinks(): ObjectStorage
-    {
-        return $this->links;
-    }
-
-    /**
-     * Sets the links
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Link> $links
-     */
-    public function setLinks(ObjectStorage $links)
-    {
-        $this->links = $links;
-    }
-
-    /**
-     * Sets the disableSingleView
-     *
-     * @param boolean $disableSingleView
-     * @return void
-     */
-    public function setDisableSingleView(bool $disableSingleView)
-    {
-        $this->disableSingleView = $disableSingleView;
-    }
-
-    /**
-     * Returns the boolean state of disableSingleView
-     *
-     * @return boolean
-     */
-    public function isDisableSingleView()
-    {
-        return $this->disableSingleView;
-    }
-
-    /**
-     * Returns the boolean state of disableSingleView
-     *
-     * @return boolean
-     */
-    public function getDisableSingleView()
-    {
-        return $this->disableSingleView;
-    }
-
-    /**
-     * Adds a Product
-     *
-     * @param Product $subProduct
-     * @return void
-     */
-    public function addSubProduct(Product $subProduct)
-    {
-        $this->subProducts->attach($subProduct);
-    }
-
-    /**
-     * Removes a Product
-     *
-     * @param Product $subProductToRemove The Product to be removed
-     * @return void
-     */
-    public function removeSubProduct(Product $subProductToRemove)
-    {
-        $this->subProducts->detach($subProductToRemove);
-    }
-
-    /**
-     * Returns the subProducts
-     *
-     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product> $subProducts
-     */
-    public function getSubProducts(): ObjectStorage
-    {
-        return $this->subProducts;
-    }
-
-    /**
-     * Sets the subProducts
-     *
-     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\Product> $subProducts
-     * @return void
-     */
-    public function setSubProducts(ObjectStorage $subProducts)
-    {
-        $this->subProducts = $subProducts;
-    }
-
-
-    /**
-     * Get alternative title
-     *
-     * @return \string
+     * @return string
      */
     public function getAlternativeTitle(): string
     {
@@ -886,41 +332,17 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Set alternative title
-     *
-     * @param \string $alternativeTitle
-     * @return void
+     * @param string $alternativeTitle
+     * @return Product
      */
-    public function setAlternativeTitle(string $alternativeTitle)
+    public function setAlternativeTitle(string $alternativeTitle): Product
     {
         $this->alternativeTitle = $alternativeTitle;
+        return $this;
     }
 
     /**
-     * Get path segment
-     *
-     * @return \string
-     */
-    public function getPathSegment(): string
-    {
-        return $this->pathSegment;
-    }
-
-    /**
-     * Set path segment
-     *
-     * @param \string $pathSegment
-     * @return void
-     */
-    public function setPathSegment(string $pathSegment)
-    {
-        $this->pathSegment = $pathSegment;
-    }
-
-    /**
-     * Get keywords
-     *
-     * @return \string
+     * @return string
      */
     public function getKeywords(): string
     {
@@ -928,19 +350,16 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Set keywords
-     *
-     * @param \string $keywords keywords
-     * @return void
+     * @param string $keywords
+     * @return Product
      */
-    public function setKeywords(string $keywords)
+    public function setKeywords(string $keywords): Product
     {
         $this->keywords = $keywords;
+        return $this;
     }
 
     /**
-     * Get metaDescription
-     *
      * @return string
      */
     public function getMetaDescription(): string
@@ -949,406 +368,107 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Set metaDescription
-     *
-     * @param string $metaDescription metaDescription
-     * @return void
+     * @param string $metaDescription
+     * @return Product
      */
-    public function setMetaDescription(string $metaDescription)
+    public function setMetaDescription(string $metaDescription): Product
     {
         $this->metaDescription = $metaDescription;
+        return $this;
     }
 
     /**
-     * Sorted images
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+     * @return bool
      */
-    public function getImagesSorted(): ObjectStorage
-    {
-        $images = clone $this->getImages();
-
-        if ($images->count() > 1 && ($mainImage = $this->getMainImage())) {
-            $sortedImages = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-
-            /** @var Image $image */
-            foreach ($images as $image) {
-                if ($image->getUid() === $mainImage->getUid()) {
-                    $sortedImages->attach($image);
-                    $images->detach($image);
-                }
-            }
-
-            $sortedImages->addAll($images);
-
-            return $sortedImages;
-        }
-
-        return $images;
-    }
-
-    /**
-     * Adds a FalLink
-     *
-     * @param FileReference $falLink
-     * @return void
-     */
-    public function addFalLink(FileReference $falLink)
-    {
-        $this->falLinks->attach($falLink);
-    }
-
-    /**
-     * Removes a FalLinks
-     *
-     * @param FileReference $falLink The FalLink to be removed
-     * @return void
-     */
-    public function removeFalLink(FileReference $falLink)
-    {
-        $this->falLinks->detach($falLink);
-    }
-
-    /**
-     * Returns the falLinks
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $falLinks
-     */
-    public function getFalLinks(): ObjectStorage
-    {
-        return $this->falLinks;
-    }
-
-    /**
-     * Sets the falLinks
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $falLinks
-     * @return void
-     */
-    public function setFalLinks(ObjectStorage $falLinks)
-    {
-        $this->falLinks = $falLinks;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSerializedAttributesValues(): string
-    {
-        return $this->serializedAttributesValues;
-    }
-
-    /**
-     * @param string $serializedAttributesValues
-     */
-    public function setSerializedAttributesValues(string $serializedAttributesValues)
-    {
-        $this->serializedAttributesValues = $serializedAttributesValues;
-    }
-
-
-    /**
-     * Get creation date
-     *
-     * @return int
-     */
-    public function getCrdate(): int
-    {
-        return $this->crdate;
-    }
-
-    /**
-     * Set Creation Date
-     *
-     * @param int $crdate crdate
-     * @return void
-     */
-    public function setCrdate(int $crdate)
-    {
-        $this->crdate = $crdate;
-    }
-
-    /**
-     * Get Tstamp
-     *
-     * @return int
-     */
-    public function getTstamp(): int
-    {
-        return $this->tstamp;
-    }
-
-    /**
-     * Set tstamp
-     *
-     * @param int $tstamp tstamp
-     * @return void
-     */
-    public function setTstamp(int $tstamp)
-    {
-        $this->tstamp = $tstamp;
-    }
-
-    /**
-     * Get Hidden
-     *
-     * @return boolean
-     */
-    public function getHidden(): bool
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * Set Hidden
-     *
-     * @param boolean $hidden
-     * @return void
-     */
-    public function setHidden(bool $hidden)
-    {
-        $this->hidden = $hidden;
-    }
-
-    /**
-     * Get Deleted
-     *
-     * @return boolean
-     */
-    public function getDeleted()
+    public function isDeleted(): bool
     {
         return $this->deleted;
     }
 
     /**
-     * Set Deleted
-     *
-     * @param boolean $deleted
-     * @return void
+     * @param bool $deleted
+     * @return Product
      */
-    public function setDeleted($deleted)
+    public function setDeleted(bool $deleted): Product
     {
         $this->deleted = $deleted;
+        return $this;
     }
 
     /**
-     * Get attributesDescription
-     *
-     * @return string
+     * @return DateTime
      */
-    public function getAttributesDescription(): string
+    public function getCrdate(): DateTime
     {
-        return $this->attributesDescription;
+        return $this->crdate;
     }
 
     /**
-     * Set attributesDescription
-     *
-     * @param string $attributesDescription attributesDescription
-     * @return void
+     * @param DateTime $crdate
+     * @return Product
      */
-    public function setAttributesDescription(string $attributesDescription)
+    public function setCrdate(DateTime $crdate): Product
     {
-        $this->attributesDescription = $attributesDescription;
+        $this->crdate = $crdate;
+        return $this;
     }
 
     /**
-     * Adds an asset
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $asset
-     * @return void
+     * @return DateTime
      */
-    public function addAsset(\TYPO3\CMS\Extbase\Domain\Model\FileReference $asset)
+    public function getTstamp(): DateTime
     {
-        $this->assets->attach($asset);
+        return $this->tstamp;
     }
 
     /**
-     * Removes an asset
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $asset The asset to be removed
-     * @return void
+     * @param DateTime $tstamp
+     * @return Product
      */
-    public function removeAsset(\TYPO3\CMS\Extbase\Domain\Model\FileReference $asset)
+    public function setTstamp(DateTime $tstamp): Product
     {
-        $this->assets->detach($asset);
+        $this->tstamp = $tstamp;
+        return $this;
     }
 
     /**
-     * Returns the assets
-     *
-     * @return ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $assets
+     * @return ObjectStorage
      */
-    public function getAssets(): ObjectStorage
+    public function getRelatedProducts(): ObjectStorage
     {
-        return $this->assets;
+        return $this->relatedProducts;
     }
 
     /**
-     * Sets the assets
-     *
-     * @param ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $assets
-     * @return void
+     * @param ObjectStorage $relatedProducts
+     * @return Product
      */
-    public function setAssets(ObjectStorage $assets)
+    public function setRelatedProducts(ObjectStorage $relatedProducts): Product
     {
-        $this->assets = $assets;
+        $this->relatedProducts = $relatedProducts;
+        return $this;
     }
 
     /**
-     * Returns the additionalInformation
-     *
-     * @return \string $additionalInformation
+     * @return ObjectStorage
      */
-    public function getAdditionalInformation(): string
+    public function getSubProducts(): ObjectStorage
     {
-        return $this->additionalInformation;
+        return $this->subProducts;
     }
 
     /**
-     * Sets the additionalInformation
-     *
-     * @param \string $additionalInformation
-     * @return void
+     * @param ObjectStorage $subProducts
+     * @return Product
      */
-    public function setAdditionalInformation(string $additionalInformation)
+    public function setSubProducts(ObjectStorage $subProducts): Product
     {
-        $this->additionalInformation = $additionalInformation;
+        $this->subProducts = $subProducts;
+        return $this;
     }
 
     /**
-     * Returns the teaser
-     *
-     * @return \string $teaser
-     */
-    public function getTeaser(): string
-    {
-        return $this->teaser;
-    }
-
-    /**
-     * Sets the teaser
-     *
-     * @param \string $teaser
-     * @return void
-     */
-    public function setTeaser(string $teaser)
-    {
-        $this->teaser = $teaser;
-    }
-
-    /**
-     * Returns the usp
-     *
-     * @return \string $usp
-     */
-    public function getUsp(): string
-    {
-        return $this->usp;
-    }
-
-    /**
-     * Returns the usp as list (f.ex. to use as bullets)
-     *
-     * @return \array $usp
-     */
-    public function getUspAsList(): array
-    {
-        return explode("\n", $this->usp);
-    }
-
-    /**
-     * Sets the usp
-     *
-     * @param \string $usp
-     * @return void
-     */
-    public function setUsp(string $usp)
-    {
-        $this->usp = $usp;
-    }
-
-    /**
-     * Returns launched date
-     *
-     * @return \DateTime|NULL the launched date
-     */
-    public function getLaunched()
-    {
-        return $this->launched;
-    }
-
-    /**
-     * Sets launched date
-     *
-     * @param \DateTime|NULL $launched the launched date
-     */
-    public function setLaunched(\DateTime $launched = null)
-    {
-        $this->launched = $launched;
-    }
-
-    /**
-     * Returns discontinued date
-     *
-     * @return \DateTime|NULL the discontinued date
-     */
-    public function getDiscontinued()
-    {
-        return $this->discontinued;
-    }
-
-    /**
-     * Sets discontinued date
-     *
-     * @param \DateTime|NULL $discontinued the discontinued date
-     */
-    public function setDiscontinued(\DateTime $discontinued = null)
-    {
-        $this->discontinued = $discontinued;
-    }
-
-    /**
-     * Returns true if product is considered as discontinued
-     *
-     * @return bool
-     */
-    public function getIsDiscontinued(): bool
-    {
-        $isDiscontinued = false;
-        if (!empty($this->getDiscontinued())) {
-            $today = new \DateTime('00:00');
-            $isDiscontinued = $this->getDiscontinued()->format('U') <= $today->format('U');
-        }
-        return $isDiscontinued;
-    }
-
-    /**
-     * Adds a accessory
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Product $accessory
-     * @return void
-     */
-    public function addAccessory(Product $accessory)
-    {
-        $this->accessories->attach($accessory);
-    }
-
-    /**
-     * Removes a accessory
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Product $accessory The accessory to be removed
-     * @return void
-     */
-    public function removeAccessory(Product $accessory)
-    {
-        $this->accessories->detach($accessory);
-    }
-
-    /**
-     * Returns the accessories
-     *
-     * @return ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product> $accessories
+     * @return ObjectStorage
      */
     public function getAccessories(): ObjectStorage
     {
@@ -1356,268 +476,125 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Sets the accessories
-     *
-     * @param ObjectStorage <\Pixelant\PxaProductManager\Domain\Model\Product> $accessories
-     * @return void
+     * @param ObjectStorage $accessories
+     * @return Product
      */
-    public function setAccessories(ObjectStorage $accessories)
+    public function setAccessories(ObjectStorage $accessories): Product
     {
         $this->accessories = $accessories;
+        return $this;
     }
 
     /**
-     * Get custom sorting
-     *
-     * @return int
+     * @return ObjectStorage
      */
-    public function getCustomSorting(): int
+    public function getImages(): ObjectStorage
     {
-        return $this->customSorting;
+        return $this->images;
     }
 
     /**
-     * Set custom sorting
-     *
-     * @param int $customSorting Custom sorting
-     * @return void
+     * @param ObjectStorage $images
+     * @return Product
      */
-    public function setCustomSorting(int $customSorting)
+    public function setImages(ObjectStorage $images): Product
     {
-        $this->customSorting = $customSorting;
+        $this->images = $images;
+        return $this;
     }
 
     /**
-     * @return float
+     * @return ObjectStorage
      */
-    public function getTax(): float
+    public function getAttributeFiles(): ObjectStorage
     {
-        return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+        return $this->attributeFiles;
     }
 
     /**
-     * @return string
+     * @param ObjectStorage $attributeFiles
+     * @return Product
      */
-    public function getFormatTax(): string
+    public function setAttributeFiles(ObjectStorage $attributeFiles): Product
     {
-        return ProductUtility::formatPrice($this->getTax());
+        $this->attributeFiles = $attributeFiles;
+        return $this;
     }
 
     /**
-     * Returns true if product is considered as new
-     * based on product launched date and setup ts launched.daysAsNew
-     *
-     * @return bool
+     * @return ObjectStorage
      */
-    public function getIsNew(): bool
+    public function getLinks(): ObjectStorage
     {
-        $isNew = false;
-        if (!empty($this->getLaunched())) {
-            $dateInterval = ConfigurationUtility::getSettingsByPath('launched/dateIntervalAsNew', $this->getPid());
-            if (!empty($dateInterval)) {
-                try {
-                    $newUntil = clone $this->getLaunched();
-                    $newUntil->add(new \DateInterval((string)$dateInterval));
-                    $isNew = $newUntil->format('U') > time();
-                } catch (\Exception $e) {
-                    // TODO: Log invalid interval_spec
-                }
-            }
-        }
-        return $isNew;
+        return $this->links;
     }
 
     /**
-     * Gets additional classes
-     *
-     * @param string $prefix If prefix should be added to all additional classes
-     * @return string
+     * @param ObjectStorage $links
+     * @return Product
      */
-    public function getAdditionalClasses(string $prefix = ''): string
+    public function setLinks(ObjectStorage $links): Product
     {
-        $additionalClasses = [];
-        $pid = $this->getPid();
-
-        // check if additional category classes are set in plugin ts setup
-        // this way we can add custom classes for products based on its categories in templates
-        $categoriesAdditionalClasses = ConfigurationUtility::getSettingsByPath('additionalClasses/categories', $pid);
-        if (is_array($categoriesAdditionalClasses) && count($categoriesAdditionalClasses) > 0) {
-            foreach ($this->getCategories() as $category) {
-                $className = $categoriesAdditionalClasses[$category->getUid()];
-                if (!empty($className)) {
-                    $additionalClasses[] = $className;
-                }
-            }
-        }
-
-        // check if product is considered new, then add class
-        // based on ts setup additionalClasses.launched.isNew
-        if ($this->getIsNew()) {
-            $isNewClass = ConfigurationUtility::getSettingsByPath('additionalClasses/launched/isNewClass', $pid);
-            if (!empty($isNewClass)) {
-                $additionalClasses[] = $isNewClass;
-            }
-        }
-
-        // check if product is considered discontinued, then add class
-        // based on ts setup additionalClasses.discontinued.isDiscontinuedClass
-        if ($this->getIsDiscontinued()) {
-            $isDiscontinuedClass = ConfigurationUtility::getSettingsByPath(
-                'additionalClasses/discontinued/isDiscontinuedClass',
-                $pid
-            );
-            if (!empty($isDiscontinuedClass)) {
-                $additionalClasses[] = $isDiscontinuedClass;
-            }
-        }
-
-        if (is_array($additionalClasses) && count($additionalClasses) > 0) {
-            return implode($prefix . ' ', $additionalClasses);
-        } else {
-            return '';
-        }
+        $this->links = $links;
+        return $this;
     }
 
     /**
-     * @return float
+     * @return ObjectStorage
      */
-    public function getTaxRateRecursively(): float
+    public function getFalLinks(): ObjectStorage
     {
-        // If tax rate is set on product level - return it
-        // or it was set from category tax
-        if (!empty($this->taxRate)) {
-            return $this->taxRate;
-        }
-
-        // Else get the tax rate from categories
-        $taxRate = 0;
-
-        $categoriesTree = ProductUtility::getProductCategoriesParentsTree($this->getUid());
-        /** @var Category $category */
-        foreach ($categoriesTree as $category) {
-            $taxRate = $category->getTaxRate();
-            if ($taxRate > 0) {
-                $this->taxRate = $taxRate; // Save value for future calls
-                break;
-            }
-        }
-
-        return $taxRate;
+        return $this->falLinks;
     }
 
     /**
-     * This method will return attribute by identifier
-     * Fluid usage
-     * {product.attribute.identifier.value}
-     *
-     * @param string $identifier
-     * @return array|Attribute Array of all attributes with identifier or attribute object or null
+     * @param ObjectStorage $falLinks
+     * @return Product
      */
-    public function getAttribute(string $identifier = '')
+    public function setFalLinks(ObjectStorage $falLinks): Product
     {
-        // Init attributes if empty
-        if ($this->attributes === null) {
-            $this->initializeAttributes();
-        }
-
-        if (empty($identifier)) {
-            return $this->attributesIdentifiersArray;
-        } elseif (isset($this->attributesIdentifiersArray[$identifier])) {
-            return $this->attributesIdentifiersArray[$identifier];
-        }
-
-        return null;
+        $this->falLinks = $falLinks;
+        return $this;
     }
 
     /**
-     * Get image for different views
-     *
-     * @param string $propertyName
-     * @return null|object|Image
+     * @return ObjectStorage
      */
-    protected function getImageFor($propertyName)
+    public function getAssets(): ObjectStorage
     {
-        if ($this->images->count()) {
-            /** @var Image $image */
-            foreach ($this->images as $image) {
-                if (ObjectAccess::isPropertyGettable($image, $propertyName)
-                    && ObjectAccess::getProperty($image, $propertyName) === true
-                ) {
-                    return $image;
-                }
-            }
-
-            // use any if no result
-            $this->images->rewind();
-            return $this->images->current();
-        }
-
-        return null;
+        return $this->assets;
     }
 
     /**
-     * Initialize attributes
+     * @param ObjectStorage $assets
+     * @return Product
      */
-    protected function initializeAttributes()
+    public function setAssets(ObjectStorage $assets): Product
     {
-        $this->attributes = new ObjectStorage();
+        $this->assets = $assets;
+        return $this;
+    }
 
-        /** @var AttributeHolderUtility $attributeHolder */
-        $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-        $attributeHolder->start($this->getUid());
+    /**
+     * @return ObjectStorage
+     */
+    public function getAttributeValues(): ObjectStorage
+    {
+        return $this->attributeValues;
+    }
 
-        $this->attributesGroupedBySets = $attributeHolder->getAttributeSets();
+    /**
+     * @param ObjectStorage $attributeValues
+     * @return Product
+     */
+    public function setAttributeValues(ObjectStorage $attributeValues): Product
+    {
+        $this->attributeValues = $attributeValues;
+        return $this;
+    }
 
-        $attributesValues = (array)unserialize($this->getSerializedAttributesValues());
+    public function getAttributes()
+    {
 
-        /** @var Attribute $attribute */
-        foreach ($attributeHolder->getAttributes() as $attribute) {
-            $id = $attribute->getUid();
-
-            if ($attribute->isFalType()) {
-                $falFiles = [];
-                /** @var AttributeFalFile $falReference */
-                foreach ($this->attributeFiles->toArray() as $falReference) {
-                    if ($falReference->getAttribute() === $id) {
-                        $falFiles[] = $falReference;
-                    }
-                }
-
-                $attribute->setValue($falFiles);
-            } elseif (array_key_exists($id, $attributesValues)) {
-                $value = $attributesValues[$id];
-
-                switch ($attribute->getType()) {
-                    case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
-                    case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
-                        $options = [];
-
-                        /** @var Option $option */
-                        foreach ($attribute->getOptions() as $option) {
-                            if (GeneralUtility::inList($value, $option->getUid())) {
-                                $options[] = $option;
-                            }
-                        }
-
-                        $attribute->setValue($options);
-                        break;
-                    case Attribute::ATTRIBUTE_TYPE_DATETIME:
-                        if ($value) {
-                            try {
-                                $value = new \DateTime($value);
-                            } catch (\Exception $exception) {
-                                $value = '';
-                            }
-                        }
-                        $attribute->setValue($value);
-                        break;
-                    default:
-                        $attribute->setValue($value);
-                }
-            }
-
-            $this->attributes->attach($attribute);
-            $this->attributesIdentifiersArray[$attribute->getIdentifier() ?: $attribute->getUid()] = $attribute;
-        }
     }
 }

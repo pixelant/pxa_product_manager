@@ -26,125 +26,20 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 /**
- *
- *
  * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Image extends \TYPO3\CMS\Extbase\Domain\Model\FileReference
+class Image extends AbstractFileReference
 {
-
-    /**
-     * Obsolete when foreign_selector is supported by ExtBase persistence layer
-     *
-     * @var integer
-     */
-    protected $uidLocal;
-
-    /**
-     * @var boolean
-     */
-    protected $useInListing;
-
-    /**
-     * @var boolean
-     */
-    protected $mainImage;
-
-    /**
-     * @var string
-     */
-    protected $title;
-
-    /**
-     * @var string
-     */
-    protected $description;
-
-    /**
-     * Set File uid
-     *
-     * @param integer $fileUid
-     * @return void
-     */
-    public function setFileUid(int $fileUid)
-    {
-        $this->uidLocal = $fileUid;
-    }
-
-    /**
-     * Get File UID
-     *
-     * @return int
-     */
-    public function getFileUid(): int
-    {
-        return $this->uidLocal;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUseInListing(): bool
-    {
-        return $this->useInListing;
-    }
-
-    /**
-     * @param bool $useInListing
-     */
-    public function setUseInListing(bool $useInListing)
-    {
-        $this->useInListing = $useInListing;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMainImage(): bool
-    {
-        return $this->mainImage;
-    }
-
-    /**
-     * @param bool $mainImage
-     */
-    public function setMainImage(bool $mainImage)
-    {
-        $this->mainImage = $mainImage;
-    }
-
-    /**
-     * Set title
-     *
-     * @param string $title
-     * @return void
-     */
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-    }
-
     /**
      * Get title
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title ?: $this->getOriginalResource()->getTitle();
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return void
-     */
-    public function setDescription(string $description)
-    {
-        $this->description = $description;
     }
 
     /**
@@ -152,7 +47,7 @@ class Image extends \TYPO3\CMS\Extbase\Domain\Model\FileReference
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description ?: $this->getOriginalResource()->getDescription();
     }

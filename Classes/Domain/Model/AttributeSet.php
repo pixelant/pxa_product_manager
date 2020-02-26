@@ -2,6 +2,9 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -32,22 +35,17 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class AttributeSet extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class AttributeSet extends AbstractEntity
 {
-
     /**
-     * name
-     *
      * @var string
      */
-    protected $name;
+    protected string $name = '';
 
     /**
-     * attributes
-     *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Attribute>
      */
-    protected $attributes;
+    protected ObjectStorage $attributes;
 
     /**
      * __construct
@@ -56,6 +54,15 @@ class AttributeSet extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function __construct()
     {
         //Do not remove the next line: It would break the functionality
+        $this->initStorageObjects();
+    }
+
+    /**
+     * Extbase container doesn't call constructor,
+     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     */
+    public function initializeObject()
+    {
         $this->initStorageObjects();
     }
 
@@ -77,10 +84,10 @@ class AttributeSet extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a Attribute
      *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Attribute $attribute
+     * @param Attribute $attribute
      * @return void
      */
-    public function addAttribute(\Pixelant\PxaProductManager\Domain\Model\Attribute $attribute)
+    public function addAttribute(Attribute $attribute)
     {
         $this->attributes->attach($attribute);
     }
@@ -88,55 +95,47 @@ class AttributeSet extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a Attribute
      *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Attribute $attributeToRemove The Attribute to be removed
+     * @param Attribute $attributeToRemove The Attribute to be removed
      * @return void
      */
-    public function removeAttribute(\Pixelant\PxaProductManager\Domain\Model\Attribute $attributeToRemove)
+    public function removeAttribute(Attribute $attributeToRemove)
     {
         $this->attributes->detach($attributeToRemove);
     }
 
-    // @codingStandardsIgnoreStart
     /**
-     * Returns the attributes
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Attribute> $attributes
+     * @return string
      */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * Sets the attributes
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Attribute> $attributes
-     * @return void
-     */
-    public function setAttributes(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $attributes)
-    {
-        $this->attributes = $attributes;
-    }
-    // @codingStandardsIgnoreEnd
-
-    /**
-     * Returns the name
-     *
-     * @return \string $name
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * Sets the name
-     *
-     * @param \string $name
-     * @return void
+     * @param string $name
+     * @return AttributeSet
      */
-    public function setName($name)
+    public function setName(string $name): AttributeSet
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getAttributes(): ObjectStorage
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param ObjectStorage $attributes
+     * @return AttributeSet
+     */
+    public function setAttributes(ObjectStorage $attributes): AttributeSet
+    {
+        $this->attributes = $attributes;
+        return $this;
     }
 }

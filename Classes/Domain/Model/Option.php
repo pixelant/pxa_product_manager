@@ -37,16 +37,12 @@ class Option extends AbstractEntity
 {
 
     /**
-     * value
-     *
-     * @var \string
+     * @var string
      */
-    protected $value;
+    protected string $value = '';
 
     /**
-     * Returns the value
-     *
-     * @return \string $value
+     * @return string
      */
     public function getValue(): string
     {
@@ -54,13 +50,12 @@ class Option extends AbstractEntity
     }
 
     /**
-     * Sets the value
-     *
-     * @param \string $value
-     * @return void
+     * @param string $value
+     * @return Option
      */
-    public function setValue(string $value)
+    public function setValue(string $value): Option
     {
         $this->value = $value;
+        return $this;
     }
 }

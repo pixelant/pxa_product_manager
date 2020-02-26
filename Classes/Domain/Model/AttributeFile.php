@@ -3,20 +3,17 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-use TYPO3\CMS\Extbase\Domain\Model\FileReference;
-
 /**
- * Class AttributeFalFile
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-class AttributeFalFile extends FileReference
+class AttributeFile extends AbstractFileReference
 {
     /**
      * Attribute uid if belongs to attribute
      *
      * @var int
      */
-    protected $attribute = 0;
+    protected int $attribute = 0;
 
     /**
      * @return int
@@ -28,9 +25,11 @@ class AttributeFalFile extends FileReference
 
     /**
      * @param int $attribute
+     * @return AttributeFile
      */
-    public function setAttribute(int $attribute)
+    public function setAttribute(int $attribute): AttributeFile
     {
         $this->attribute = $attribute;
+        return $this;
     }
 }

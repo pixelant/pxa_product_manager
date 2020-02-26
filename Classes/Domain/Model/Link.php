@@ -24,6 +24,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
@@ -36,31 +37,22 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 class Link extends AbstractEntity
 {
     /**
-     * name
-     *
      * @var string
      */
-    protected $name;
+    protected string $name = '';
 
     /**
-     * link
-     *
      * @var string
      */
-    protected $link;
+    protected string $link = '';
 
     /**
-     * description
-     *
      * @var string
-     *
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
-     * Returns the name
-     *
-     * @return string $name
+     * @return string
      */
     public function getName(): string
     {
@@ -68,20 +60,17 @@ class Link extends AbstractEntity
     }
 
     /**
-     * Sets the name
-     *
      * @param string $name
-     * @return void
+     * @return Link
      */
-    public function setName(string $name)
+    public function setName(string $name): Link
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
-     * Returns the link
-     *
-     * @return string link
+     * @return string
      */
     public function getLink(): string
     {
@@ -89,19 +78,17 @@ class Link extends AbstractEntity
     }
 
     /**
-     * Sets the link
-     *
      * @param string $link
+     * @return Link
      */
-    public function setLink(string $link)
+    public function setLink(string $link): Link
     {
         $this->link = $link;
+        return $this;
     }
 
     /**
-     * Returns the description
-     *
-     * @return string $description
+     * @return string
      */
     public function getDescription(): string
     {
@@ -109,13 +96,12 @@ class Link extends AbstractEntity
     }
 
     /**
-     * Sets the description
-     *
      * @param string $description
-     * @return void
+     * @return Link
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): Link
     {
         $this->description = $description;
+        return $this;
     }
 }

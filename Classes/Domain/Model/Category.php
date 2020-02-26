@@ -3,6 +3,7 @@
 namespace Pixelant\PxaProductManager\Domain\Model;
 
 use TYPO3\CMS\Extbase\Domain\Model\Category as CategoryExtbase;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /***************************************************************
@@ -37,34 +38,26 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Category extends CategoryExtbase
 {
-
     /**
-     * parent
-     *
-     * @var \Pixelant\PxaProductManager\Domain\Model\Category|NULL
+     * @var \Pixelant\PxaProductManager\Domain\Model\Category
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $parent;
+    protected $parent = null;
 
     /**
-     * @var \string
+     * @var string
      */
-    protected $alternativeTitle = '';
+    protected string $alternativeTitle = '';
 
     /**
-     * @var \string
+     * @var string
      */
-    protected $pathSegment = '';
+    protected string $keywords = '';
 
     /**
-     * @var \string
+     * @var string
      */
-    protected $keywords = '';
-
-    /**
-     * @var \string
-     */
-    protected $metaDescription = '';
+    protected string $metaDescription = '';
 
     /**
      * Image
@@ -72,17 +65,17 @@ class Category extends CategoryExtbase
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $image;
+    protected ?FileReference $image = null;
 
     /**
      * @var boolean
      */
-    protected $hidden;
+    protected bool $hidden = false;
 
     /**
      * @var boolean
      */
-    protected $deleted;
+    protected bool $deleted = false;
 
     /**
      * Attribute sets
@@ -90,7 +83,7 @@ class Category extends CategoryExtbase
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $attributeSets;
+    protected ObjectStorage $attributeSets;
 
     /**
      * Banner Image
@@ -98,55 +91,38 @@ class Category extends CategoryExtbase
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $bannerImage;
+    protected ?FileReference $bannerImage = null;
 
     /**
-     * taxRate
-     *
      * @var float $taxRate
      */
-    protected $taxRate = 0.00;
-
-    /**
-     * @var \string
-     */
-    protected $cardViewTemplate = '';
-
-    /**
-     * @var \string
-     */
-    protected $singleViewTemplate = '';
+    protected float $taxRate = 0.00;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $subCategories;
-
-    /**
-     * @var string
-     */
-    protected $slug = '';
+    protected ObjectStorage $subCategories;
 
     /**
      * @var int
      */
-    protected $contentPage = 0;
+    protected int $contentPage = 0;
 
     /**
      * @var int
      */
-    protected $contentColPos = 0;
+    protected int $contentColPos = 0;
 
     /**
      * @var bool
      */
-    protected $navHide = false;
+    protected bool $hiddenInNavigation = false;
 
     /**
      * @var bool
      */
-    protected $hideProducts = false;
+    protected bool $hideProducts = false;
 
     /**
      * __construct
@@ -154,6 +130,15 @@ class Category extends CategoryExtbase
     public function __construct()
     {
         //Do not remove the next line: It would break the functionality
+        $this->initStorageObjects();
+    }
+
+    /**
+     * Extbase container doesn't call constructor,
+     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     */
+    public function initializeObject()
+    {
         $this->initStorageObjects();
     }
 
@@ -174,30 +159,7 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * getImage alias
-     *
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * setImage alias
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
-     * @return void
-     */
-    public function setImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $image)
-    {
-        $this->image = $image;
-    }
-
-    /**
-     * Get alternative title
-     *
-     * @return \string
+     * @return string
      */
     public function getAlternativeTitle(): string
     {
@@ -205,41 +167,17 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * Set alternative title
-     *
-     * @param \string $alternativeTitle
-     * @return void
+     * @param string $alternativeTitle
+     * @return Category
      */
-    public function setAlternativeTitle(string $alternativeTitle)
+    public function setAlternativeTitle(string $alternativeTitle): Category
     {
         $this->alternativeTitle = $alternativeTitle;
+        return $this;
     }
 
     /**
-     * Get path segment
-     *
-     * @return \string
-     */
-    public function getPathSegment(): string
-    {
-        return $this->pathSegment;
-    }
-
-    /**
-     * Set path segment
-     *
-     * @param \string $pathSegment
-     * @return void
-     */
-    public function setPathSegment(string $pathSegment)
-    {
-        $this->pathSegment = $pathSegment;
-    }
-
-    /**
-     * Get keywords
-     *
-     * @return \string
+     * @return string
      */
     public function getKeywords(): string
     {
@@ -247,19 +185,16 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * Set keywords
-     *
-     * @param \string $keywords keywords
-     * @return void
+     * @param string $keywords
+     * @return Category
      */
-    public function setKeywords(string $keywords)
+    public function setKeywords(string $keywords): Category
     {
         $this->keywords = $keywords;
+        return $this;
     }
 
     /**
-     * Get metaDescription
-     *
      * @return string
      */
     public function getMetaDescription(): string
@@ -268,128 +203,107 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * Set metaDescription
-     *
-     * @param string $metaDescription metaDescription
-     * @return void
+     * @param string $metaDescription
+     * @return Category
      */
-    public function setMetaDescription(string $metaDescription)
+    public function setMetaDescription(string $metaDescription): Category
     {
         $this->metaDescription = $metaDescription;
+        return $this;
     }
 
     /**
-     * Get Hidden
-     *
-     * @return boolean
+     * @return FileReference|null
      */
-    public function getHidden(): bool
+    public function getImage(): ?FileReference
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param FileReference|null $image
+     * @return Category
+     */
+    public function setImage(?FileReference $image): Category
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden(): bool
     {
         return $this->hidden;
     }
 
     /**
-     * Set Hidden
-     *
-     * @param boolean $hidden
-     * @return void
+     * @param bool $hidden
+     * @return Category
      */
-    public function setHidden(bool $hidden)
+    public function setHidden(bool $hidden): Category
     {
         $this->hidden = $hidden;
+        return $this;
     }
 
     /**
-     * Get Deleted
-     *
-     * @return boolean
+     * @return bool
      */
-    public function getDeleted(): bool
+    public function isDeleted(): bool
     {
         return $this->deleted;
     }
 
     /**
-     * Set Deleted
-     *
-     * @param boolean $deleted
-     * @return void
+     * @param bool $deleted
+     * @return Category
      */
-    public function setDeleted(bool $deleted)
+    public function setDeleted(bool $deleted): Category
     {
         $this->deleted = $deleted;
+        return $this;
     }
 
     /**
-     * Returns the Attributes
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
+     * @return ObjectStorage
      */
     public function getAttributeSets(): ObjectStorage
     {
         return $this->attributeSets;
     }
 
-    // @codingStandardsIgnoreStart
     /**
-     * Sets the Attributes
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet> $attributeSets
-     * @return void
+     * @param ObjectStorage $attributeSets
+     * @return Category
      */
-    // @codingStandardsIgnoreEnd
-    public function setAttributeSets(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $attributeSets)
+    public function setAttributeSets(ObjectStorage $attributeSets): Category
     {
         $this->attributeSets = $attributeSets;
+        return $this;
     }
 
     /**
-     * Adds a pxapmAttribute
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\AttributeSet $attributeSet
-     * @return void
+     * @return FileReference|null
      */
-    public function addAttributeSet(\Pixelant\PxaProductManager\Domain\Model\AttributeSet $attributeSet)
-    {
-        $this->attributeSets->attach($attributeSet);
-    }
-
-    /**
-     * Removes a AttributeSet
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\AttributeSet $attributeSet
-     * @return void
-     */
-    public function removeAttributeSet(\Pixelant\PxaProductManager\Domain\Model\AttributeSet $attributeSet)
-    {
-        $this->attributeSets->detach($attributeSet);
-    }
-
-    /**
-     * getBannerImage
-     *
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     */
-    public function getBannerImage()
+    public function getBannerImage(): ?FileReference
     {
         return $this->bannerImage;
     }
 
     /**
-     * setBannerImage
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $bannerImage
-     * @return void
+     * @param FileReference|null $bannerImage
+     * @return Category
      */
-    public function setBannerImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $bannerImage)
+    public function setBannerImage(?FileReference $bannerImage): Category
     {
         $this->bannerImage = $bannerImage;
+        return $this;
     }
 
     /**
-     * Returns the pxaPmTaxRate
-     *
-     * @return float $pxaPmTaxRate
+     * @return float
      */
     public function getTaxRate(): float
     {
@@ -397,88 +311,31 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * Sets the taxRate
-     *
      * @param float $taxRate
-     * @return void
+     * @return Category
      */
-    public function setTaxRate(float $taxRate)
+    public function setTaxRate(float $taxRate): Category
     {
         $this->taxRate = $taxRate;
+        return $this;
     }
 
     /**
-     * Get CardViewTemplate
-     *
-     * @return \string
+     * @return ObjectStorage
      */
-    public function getCardViewTemplate(): string
-    {
-        return $this->cardViewTemplate;
-    }
-
-    /**
-     * Set CardViewTemplate
-     *
-     * @param \string $cardViewTemplate CardViewTemplate
-     * @return void
-     */
-    public function setCardViewTemplate(string $cardViewTemplate)
-    {
-        $this->cardViewTemplate = $cardViewTemplate;
-    }
-
-    /**
-     * Get SingleViewTemplate
-     *
-     * @return \string
-     */
-    public function getSingleViewTemplate(): string
-    {
-        return $this->singleViewTemplate;
-    }
-
-    /**
-     * Set SingleViewTemplate
-     *
-     * @param \string $singleViewTemplate SingleViewTemplate
-     * @return void
-     */
-    public function setSingleViewTemplate(string $singleViewTemplate)
-    {
-        $this->singleViewTemplate = $singleViewTemplate;
-    }
-
-    /**
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
-     */
-    public function getSubCategories()
+    public function getSubCategories(): ObjectStorage
     {
         return $this->subCategories;
     }
 
     /**
-     * @param ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category> $subCategories
+     * @param ObjectStorage $subCategories
+     * @return Category
      */
-    public function setSubCategories(ObjectStorage $subCategories)
+    public function setSubCategories(ObjectStorage $subCategories): Category
     {
         $this->subCategories = $subCategories;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     */
-    public function setSlug(string $slug)
-    {
-        $this->slug = $slug;
+        return $this;
     }
 
     /**
@@ -491,10 +348,12 @@ class Category extends CategoryExtbase
 
     /**
      * @param int $contentPage
+     * @return Category
      */
-    public function setContentPage(int $contentPage): void
+    public function setContentPage(int $contentPage): Category
     {
         $this->contentPage = $contentPage;
+        return $this;
     }
 
     /**
@@ -507,26 +366,30 @@ class Category extends CategoryExtbase
 
     /**
      * @param int $contentColPos
+     * @return Category
      */
-    public function setContentColPos(int $contentColPos): void
+    public function setContentColPos(int $contentColPos): Category
     {
         $this->contentColPos = $contentColPos;
+        return $this;
     }
 
     /**
      * @return bool
      */
-    public function isNavHide(): bool
+    public function isHiddenInNavigation(): bool
     {
-        return $this->navHide;
+        return $this->hiddenInNavigation;
     }
 
     /**
-     * @param bool $navHide
+     * @param bool $hiddenInNavigation
+     * @return Category
      */
-    public function setNavHide(bool $navHide): void
+    public function setHiddenInNavigation(bool $hiddenInNavigation): Category
     {
-        $this->navHide = $navHide;
+        $this->hiddenInNavigation = $hiddenInNavigation;
+        return $this;
     }
 
     /**
@@ -539,9 +402,11 @@ class Category extends CategoryExtbase
 
     /**
      * @param bool $hideProducts
+     * @return Category
      */
-    public function setHideProducts(bool $hideProducts): void
+    public function setHideProducts(bool $hideProducts): Category
     {
         $this->hideProducts = $hideProducts;
+        return $this;
     }
 }

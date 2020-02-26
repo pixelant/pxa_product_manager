@@ -24,6 +24,8 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
@@ -33,19 +35,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class Attribute extends AbstractEntity
 {
-
-    /**
-     * Prefix for TCA fields
-     */
-    const TCA_ATTRIBUTE_PREFIX = 'tx_pxaproductmanager_attribute_';
-
-    /**
-     * Additional prefix for files and images
-     */
-    const TCA_ATTRIBUTE_FILE_PREFIX = 'attribute_file_';
-
     /**
      * Attributes types
      */
@@ -61,98 +52,74 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     const ATTRIBUTE_TYPE_FILE = 10;
 
     /**
-     * name
-     *
-     * @var \string
+     * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
-     * type
-     *
-     * @var \integer
+     * @var integer
      */
-    protected $type = 0;
+    protected int $type = 0;
 
     /**
-     * required
-     *
      * @var boolean
      */
-    protected $required = false;
+    protected bool $required = false;
 
     /**
-     * showInAttributeListing
-     *
      * @var boolean
      */
-    protected $showInAttributeListing = false;
+    protected bool $showInAttributeListing = false;
 
     /**
-     * showInCompare
-     *
      * @var boolean
      */
-    protected $showInCompare = false;
+    protected bool $showInCompare = false;
 
     /**
-     * identifier
-     *
-     * @var \string
+     * @var string
      */
-    protected $identifier = '';
+    protected string $identifier = '';
 
     /**
-     * options
-     *
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option>
      */
-    protected $options;
+    protected ObjectStorage $options;
 
     /**
      * Label for checked checkbox
      *
      * @var string
      */
-    protected $labelChecked = '';
+    protected string $labelChecked = '';
 
     /**
      * Label for un-checked checkbox
      *
      * @var string
      */
-    protected $labelUnchecked = '';
+    protected string $labelUnchecked = '';
 
     /**
      * Default value for TCA
      *
      * @var string
      */
-    protected $defaultValue = '';
+    protected string $defaultValue = '';
 
     /**
      * Value for current product
      *
-     * @var string|array
+     * @var mixed
      */
     protected $value;
 
     /**
-     * label
-     *
-     * @var \string
+     * @var string
      */
-    protected $label = '';
-
-    /**
-     * Icon
-     *
-     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     */
-    protected $icon;
+    protected string $label = '';
 
     /**
      * __construct
@@ -161,6 +128,15 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function __construct()
     {
         //Do not remove the next line: It would break the functionality
+        $this->initStorageObjects();
+    }
+
+    /**
+     * Extbase container doesn't call constructor,
+     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     */
+    public function initializeObject()
+    {
         $this->initStorageObjects();
     }
 
@@ -180,9 +156,7 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Returns the name
-     *
-     * @return \string $name
+     * @return string
      */
     public function getName(): string
     {
@@ -190,20 +164,17 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Sets the name
-     *
-     * @param \string $name
-     * @return void
+     * @param string $name
+     * @return Attribute
      */
-    public function setName(string $name)
+    public function setName(string $name): Attribute
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
-     * Returns the type
-     *
-     * @return \integer $type
+     * @return int
      */
     public function getType(): int
     {
@@ -211,83 +182,71 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Sets the type
-     *
-     * @param \integer $type
-     * @return void
+     * @param int $type
+     * @return Attribute
      */
-    public function setType(int $type)
+    public function setType(int $type): Attribute
     {
         $this->type = $type;
+        return $this;
     }
 
     /**
-     * Returns the required
-     *
-     * @return boolean $required
+     * @return bool
      */
-    public function getRequired(): bool
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
     /**
-     * Sets the required
-     *
-     * @param boolean $required
-     * @return void
+     * @param bool $required
+     * @return Attribute
      */
-    public function setRequired(bool $required)
+    public function setRequired(bool $required): Attribute
     {
         $this->required = $required;
+        return $this;
     }
 
     /**
-     * Returns the boolean state of required
-     *
-     * @return boolean
+     * @return bool
      */
-    public function isRequired(): bool
-    {
-        return $this->getRequired();
-    }
-
-    /**
-     * Returns the showInAttributeListing
-     *
-     * @return boolean $showInAttributeListing
-     */
-    public function getShowInAttributeListing(): bool
+    public function isShowInAttributeListing(): bool
     {
         return $this->showInAttributeListing;
     }
 
     /**
-     * Sets the showInAttributeListing
-     *
-     * @param boolean $showInAttributeListing
-     * @return void
+     * @param bool $showInAttributeListing
+     * @return Attribute
      */
-    public function setShowInAttributeListing(bool $showInAttributeListing)
+    public function setShowInAttributeListing(bool $showInAttributeListing): Attribute
     {
         $this->showInAttributeListing = $showInAttributeListing;
+        return $this;
     }
 
     /**
-     * Returns the boolean state of showInAttributeListing
-     *
-     * @return boolean
+     * @return bool
      */
-    public function isShowInAttributeListing(): bool
+    public function isShowInCompare(): bool
     {
-        return $this->getShowInAttributeListing();
+        return $this->showInCompare;
     }
 
     /**
-     * Returns the identifier
-     *
-     * @param bool $strict
-     * @return \string $identifier
+     * @param bool $showInCompare
+     * @return Attribute
+     */
+    public function setShowInCompare(bool $showInCompare): Attribute
+    {
+        $this->showInCompare = $showInCompare;
+        return $this;
+    }
+
+    /**
+     * @return string
      */
     public function getIdentifier(): string
     {
@@ -295,42 +254,17 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Sets the identifier
-     *
-     * @param \string $identifier
-     * @return void
+     * @param string $identifier
+     * @return Attribute
      */
-    public function setIdentifier(string $identifier)
+    public function setIdentifier(string $identifier): Attribute
     {
         $this->identifier = $identifier;
+        return $this;
     }
 
     /**
-     * Adds a Option
-     *
-     * @param Option $option
-     * @return void
-     */
-    public function addOption(Option $option)
-    {
-        $this->options->attach($option);
-    }
-
-    /**
-     * Removes a Option
-     *
-     * @param Option $optionToRemove The Option to be removed
-     * @return void
-     */
-    public function removeOption(Option $optionToRemove)
-    {
-        $this->options->detach($optionToRemove);
-    }
-
-    /**
-     * Returns the options
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option> $options
+     * @return ObjectStorage
      */
     public function getOptions(): ObjectStorage
     {
@@ -338,67 +272,13 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Sets the options
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Option> $options
-     * @return void
+     * @param ObjectStorage $options
+     * @return Attribute
      */
-    public function setOptions(ObjectStorage $options)
+    public function setOptions(ObjectStorage $options): Attribute
     {
         $this->options = $options;
-    }
-
-    /**
-     * Returns the showInCompare
-     *
-     * @return boolean $showInCompare
-     */
-    public function getShowInCompare(): bool
-    {
-        return $this->showInCompare;
-    }
-
-    /**
-     * Sets the showInCompare
-     *
-     * @param boolean $showInCompare
-     * @return void
-     */
-    public function setShowInCompare(bool $showInCompare)
-    {
-        $this->showInCompare = $showInCompare;
-    }
-
-    /**
-     * Returns the boolean state of showInCompare
-     *
-     * @return boolean
-     */
-    public function isShowInCompare(): bool
-    {
-        return $this->getShowInCompare();
-    }
-
-
-    /**
-     * Returns the defaultValue
-     *
-     * @return \string $defaultValue
-     */
-    public function getDefaultValue(): string
-    {
-        return $this->defaultValue;
-    }
-
-    /**
-     * Sets the defaultValue
-     *
-     * @param \string $defaultValue
-     * @return void
-     */
-    public function setDefaultValue(string $defaultValue)
-    {
-        $this->defaultValue = $defaultValue;
+        return $this;
     }
 
     /**
@@ -411,10 +291,12 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 
     /**
      * @param string $labelChecked
+     * @return Attribute
      */
-    public function setLabelChecked(string $labelChecked)
+    public function setLabelChecked(string $labelChecked): Attribute
     {
         $this->labelChecked = $labelChecked;
+        return $this;
     }
 
     /**
@@ -427,14 +309,34 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 
     /**
      * @param string $labelUnchecked
+     * @return Attribute
      */
-    public function setLabelUnchecked(string $labelUnchecked)
+    public function setLabelUnchecked(string $labelUnchecked): Attribute
     {
         $this->labelUnchecked = $labelUnchecked;
+        return $this;
     }
 
     /**
-     * @return string|array
+     * @return string
+     */
+    public function getDefaultValue(): string
+    {
+        return $this->defaultValue;
+    }
+
+    /**
+     * @param string $defaultValue
+     * @return Attribute
+     */
+    public function setDefaultValue(string $defaultValue): Attribute
+    {
+        $this->defaultValue = $defaultValue;
+        return $this;
+    }
+
+    /**
+     * @return mixed
      */
     public function getValue()
     {
@@ -442,17 +344,17 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * @param $value
+     * @param mixed $value
+     * @return Attribute
      */
     public function setValue($value)
     {
         $this->value = $value;
+        return $this;
     }
 
     /**
-     * Returns the label
-     *
-     * @return \string $label
+     * @return string
      */
     public function getLabel(): string
     {
@@ -460,40 +362,18 @@ class Attribute extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Sets the label
-     *
-     * @param \string $label
-     * @return void
+     * @param string $label
+     * @return Attribute
      */
-    public function setLabel(string $label)
+    public function setLabel(string $label): Attribute
     {
         $this->label = $label;
-    }
-
-    /**
-     * Sets the icon value
-     *
-     * @api
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $icon
-     */
-    public function setIcon(\TYPO3\CMS\Extbase\Domain\Model\FileReference $icon)
-    {
-        $this->icon = $icon;
-    }
-
-    /**
-     * Gets the icon value
-     *
-     * @api
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     */
-    public function getIcon()
-    {
-        return $this->icon;
+        return $this;
     }
 
     /**
      * Check if attribute type is FAL file
+     *
      * @return bool
      */
     public function isFalType(): bool

@@ -2,6 +2,8 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -32,34 +34,44 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class AttributeValue extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class AttributeValue extends AbstractEntity
 {
 
     /**
-     * product
-     *
      * @var \Pixelant\PxaProductManager\Domain\Model\Product
      */
-    protected $product;
+    protected ?Product $product = null;
 
     /**
-     * value
-     *
-     * @var \string
+     * @var string
      */
-    protected $value = '';
+    protected string $value = '';
 
     /**
-     * attribute
-     *
      * @var \Pixelant\PxaProductManager\Domain\Model\Attribute
      */
-    protected $attribute;
+    protected ?Attribute $attribute = null;
 
     /**
-     * Returns the value
-     *
-     * @return \string $value
+     * @return Product|null
+     */
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param Product|null $product
+     * @return AttributeValue
+     */
+    public function setProduct(?Product $product): AttributeValue
+    {
+        $this->product = $product;
+        return $this;
+    }
+
+    /**
+     * @return string
      */
     public function getValue(): string
     {
@@ -67,55 +79,30 @@ class AttributeValue extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Sets the value
-     *
-     * @param \string $value
-     * @return void
+     * @param string $value
+     * @return AttributeValue
      */
-    public function setValue(string $value)
+    public function setValue(string $value): AttributeValue
     {
         $this->value = $value;
+        return $this;
     }
 
     /**
-     * Returns the attribute
-     *
-     * @return Attribute $attribute
+     * @return Attribute|null
      */
-    public function getAttribute(): Attribute
+    public function getAttribute(): ?Attribute
     {
         return $this->attribute;
     }
 
     /**
-     * Sets the attribute
-     *
-     * @param Attribute $attribute
-     * @return void
+     * @param Attribute|null $attribute
+     * @return AttributeValue
      */
-    public function setAttribute(Attribute $attribute)
+    public function setAttribute(?Attribute $attribute): AttributeValue
     {
         $this->attribute = $attribute;
-    }
-
-    /**
-     * Returns the product
-     *
-     * @return Product $product
-     */
-    public function getProduct(): Product
-    {
-        return $this->product;
-    }
-
-    /**
-     * Sets the product
-     *
-     * @param Product $product
-     * @return void
-     */
-    public function setProduct(Product $product)
-    {
-        $this->product = $product;
+        return $this;
     }
 }
