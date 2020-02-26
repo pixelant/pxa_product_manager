@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  * Class TCAUtility
  * @package Pixelant\PxaProductManager\Utility
  */
-class TCAUtility
+class TcaUtility
 {
     /**
      * Field name of sys_file_reference and products TCA where

@@ -4,7 +4,7 @@ namespace Pixelant\PxaProductManager\Hook;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\MainUtility;
-use Pixelant\PxaProductManager\Utility\TCAUtility;
+use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -44,7 +44,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class TceMain
+class AttributesValuesUpdate
 {
     /**
      * @param $fieldArray
@@ -55,6 +55,7 @@ class TceMain
     // @codingStandardsIgnoreStart
     public function processDatamap_preProcessFieldArray(&$fieldArray, $table, $id, /** @noinspection PhpUnusedParameterInspection */ $reference)
     {// @codingStandardsIgnoreEnd
+        return;
         if ($table === 'tx_pxaproductmanager_domain_model_product'
             && MathUtility::canBeInterpretedAsInteger($id)
         ) {
@@ -62,18 +63,18 @@ class TceMain
             $files = [];
 
             foreach ($fieldArray as $fieldName => $value) {
-                if (TCAUtility::isAttributeField($fieldName)) {
-                    $attributeId = TCAUtility::determinateAttributeUidFromFieldName($fieldName);
+                if (TcaUtility::isAttributeField($fieldName)) {
+                    $attributeId = TcaUtility::determinateAttributeUidFromFieldName($fieldName);
                     $productData[$attributeId] = $value;
                     unset($fieldArray[$fieldName]);
-                } elseif (TCAUtility::isFalAttributeField($fieldName)) {
+                } elseif (TcaUtility::isFalAttributeField($fieldName)) {
                     $files[] = $value;
                     unset($fieldArray[$fieldName]);
                 }
             }
 
             if (!empty($files)) {
-                $fieldArray[TCAUtility::ATTRIBUTE_FAL_FIELD_NAME] = implode(',', $files);
+                $fieldArray[TcaUtility::ATTRIBUTE_FAL_FIELD_NAME] = implode(',', $files);
             }
 
             if (!empty($productData)) {
@@ -232,38 +233,5 @@ class TceMain
         }
 
         return $pid ?? 1;
-    }
-
-    /**
-     * Set custom sorting for product
-     *
-     * @param $status
-     * @param $table
-     * @param $id
-     * @param $fieldArray
-     * @param $pObj
-     */
-    // @codingStandardsIgnoreStart
-    public function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj)
-    {// @codingStandardsIgnoreEnd
-        if ($table == 'tx_pxaproductmanager_domain_model_product') {
-            /** @var ProductRepository $productRepository */
-            $productRepository = MainUtility::getObjectManager()->get(ProductRepository::class);
-
-            /** @var Product $product */
-            $product = $productRepository->findByIdentifier($id);
-
-            if ($product) {
-                $product->setCustomSorting(ProductUtility::getCalculatedCustomSorting($product));
-
-                if ($product->_isDirty()) {
-                    $productRepository->update($product);
-
-                    /** @var PersistenceManager $persistenceManager */
-                    $persistenceManager = MainUtility::getObjectManager()->get(PersistenceManager::class);
-                    $persistenceManager->persistAll();
-                }
-            }
-        }
     }
 }

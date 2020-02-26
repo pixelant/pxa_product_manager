@@ -8,6 +8,14 @@ defined('TYPO3_MODE') || die;
         'priority' => 30,
         'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
     ];
+
+    // Add attributes fields to Product edit form
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\ProductEditFormManipulation::class] = [
+        'depends' => [
+            \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class,
+            \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class
+        ]
+    ];
 })();
 
 /*call_user_func(

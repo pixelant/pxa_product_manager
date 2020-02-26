@@ -20,7 +20,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
     fal_links         int(11) unsigned DEFAULT '0'    NOT NULL,
     assets            int(11) unsigned DEFAULT '0'    NOT NULL,
     attribute_values  int(11) unsigned DEFAULT '0'    NOT NULL,
-    attributes_sets   int(11) unsigned DEFAULT '0'    NOT NULL,
+    attribute_sets   int(11) unsigned DEFAULT '0'    NOT NULL,
 
     alternative_title varchar(255)     DEFAULT ''     NOT NULL,
     keywords          text,

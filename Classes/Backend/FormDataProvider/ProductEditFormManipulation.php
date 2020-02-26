@@ -5,40 +5,47 @@ namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
-use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
-use Pixelant\PxaProductManager\Utility\AttributeHolderUtility;
-use Pixelant\PxaProductManager\Utility\TCAUtility;
+use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
+use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
+use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Messaging\FlashMessage;
-use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
 /**
  * Form data provider hook, add TCA on a fly
  *
  * @package Pixelant\PxaProductManager\Backend\FormDataProvider
  */
-class ProductEditFormInitialize implements FormDataProviderInterface
+class ProductEditFormManipulation implements FormDataProviderInterface
 {
-    use TranslateBeTrait;
+    use CanTranslateInBackend;
+
+    const ATTRIBUTE_FIELD_PREFIX = 'tx_pxaproductmanager_attribute_';
 
     /**
-     * Hold static configuration for attributes fields
-     *
-     * @var array
+     * @var DataMapper
      */
-    protected $attributeTCAConfiguration = [];
+    protected DataMapper $dataMapper;
 
     /**
-     * Initialize some vars
+     * @var BackendFlashMessage
      */
-    public function __construct()
+    protected BackendFlashMessage $flashMessage;
+
+    /**
+     * @param BackendFlashMessage $flashMessage
+     */
+    public function __construct(BackendFlashMessage $flashMessage = null)
     {
-        $this->attributeTCAConfiguration = TCAUtility::getDefaultAttributesTCAConfiguration();
+        $this->flashMessage = $flashMessage ?? GeneralUtility::makeInstance(BackendFlashMessage::class);
     }
+
 
     /**
      * @param array $result
@@ -49,15 +56,21 @@ class ProductEditFormInitialize implements FormDataProviderInterface
         if ($result['tableName'] !== 'tx_pxaproductmanager_domain_model_product') {
             return $result;
         }
+        return $result;
 
         $isNew = StringUtility::beginsWith($result['databaseRow']['uid'], 'NEW');
 
         if (!$isNew) {
-            /** @var AttributeHolderUtility $attributeHolder */
-            $attributeHolder = GeneralUtility::makeInstance(AttributeHolderUtility::class);
-            $attributeHolder->start((int)$result['databaseRow']['uid']);
+            $this->init();
 
-            if ($attributeHolder->getAttributes()->count()) {
+            $row = $result['databaseRow'];
+            $product = $this->dataMapper->map(Product::class, [$row])[0];
+
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($product,'Debug',16);
+            var_dump($product->getName());
+            die;
+
+            if (0) {
                 $this->populateTCA($attributeHolder->getAttributeSets()->toArray(), $result['processedTca']);
                 $this->simulateDataValues($attributeHolder->getAttributes()->toArray(), $result['databaseRow']);
 
@@ -86,6 +99,14 @@ class ProductEditFormInitialize implements FormDataProviderInterface
     }
 
     /**
+     * Init
+     */
+    protected function init()
+    {
+        $this->dataMapper = GeneralUtility::makeInstance(ObjectManager::class)->get(DataMapper::class);
+    }
+
+    /**
      * Add attributes configuration to TCA
      *
      * @param array $attributesSets
@@ -104,7 +125,7 @@ class ProductEditFormInitialize implements FormDataProviderInterface
                 $attributeUid = $attribute->getUid();
 
                 // @codingStandardsIgnoreStart
-                $field = TCAUtility::getAttributeTCAFieldName($attributeUid, $attributeType); // Unique for each field
+                $field = TcaUtility::getAttributeTCAFieldName($attributeUid, $attributeType); // Unique for each field
                 // @codingStandardsIgnoreEnd
                 // Get TCA for attribute type
                 if ($attribute->isFalType()) {
@@ -118,7 +139,7 @@ class ProductEditFormInitialize implements FormDataProviderInterface
                         $label = '';
                     }
 
-                    $tcaConfigurationField = TCAUtility::getFalFieldTCAConfiguration(
+                    $tcaConfigurationField = TcaUtility::getFalFieldTCAConfiguration(
                         $field,
                         $attributeUid,
                         $attribute->getName(),
@@ -245,7 +266,7 @@ class ProductEditFormInitialize implements FormDataProviderInterface
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
-            $field = TCAUtility::getAttributeTCAFieldName($attribute->getUid());
+            $field = TcaUtility::getAttributeTCAFieldName($attribute->getUid());
 
             if (array_key_exists($attribute->getUid(), $attributeUidToValue)) {
                 switch ($attribute->getType()) {
@@ -283,7 +304,7 @@ class ProductEditFormInitialize implements FormDataProviderInterface
         }
 
         foreach ($attributeUidToValues as $attributeUid => $attributeValue) {
-            $field = TCAUtility::getAttributeTCAFieldName($attributeUid);
+            $field = TcaUtility::getAttributeTCAFieldName($attributeUid);
             $diffRow[$field] = $attributeValue;
             $defaultLanguageRow[$field] = $attributeValue;
         }
@@ -294,20 +315,11 @@ class ProductEditFormInitialize implements FormDataProviderInterface
      *
      * @param string $label
      */
-    protected function showNotificationMessage(string $label)
+    protected function showNotificationMessage(string $label): void
     {
-        /** @var FlashMessage $flashMessage */
-        $flashMessage = GeneralUtility::makeInstance(
-            FlashMessage::class,
+        $this->flashMessage->flash(
             $this->translate($label),
-            $this->translate('tca.notification_title'),
-            FlashMessage::INFO,
-            true
+            $this->translate('tca.notification_title')
         );
-
-        $flashMessageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier(
-            'core.template.flashMessages'
-        );
-        $flashMessageQueue->enqueue($flashMessage);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\UserFunction;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Utility\TCAUtility;
+use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -62,7 +62,7 @@ class SolrIndexSingleAttributeValue
                     $fileCollector = GeneralUtility::makeInstance(FileCollector::class);
                     $fileCollector->addFilesFromRelation(
                         'tx_pxaproductmanager_domain_model_product',
-                        TCAUtility::ATTRIBUTE_FAL_FIELD_NAME,
+                        TcaUtility::ATTRIBUTE_FAL_FIELD_NAME,
                         $this->cObj->data
                     );
                     /** @var FileReference[] $allAttributeFiles */

@@ -27,6 +27,8 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 use DateTime;
+use Pixelant\PxaProductManager\Domain\Collection\Collection;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -102,6 +104,12 @@ class Product extends AbstractEntity
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
+     */
+    protected ObjectStorage $categories;
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
     protected ObjectStorage $relatedProducts;
@@ -159,6 +167,20 @@ class Product extends AbstractEntity
     protected ObjectStorage $attributeValues;
 
     /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
+     */
+    protected ObjectStorage $attributesSets;
+
+    /**
+     * Merged attributes. Product + categories
+     *
+     * @var array|null
+     */
+    protected ?array $allAttributesSets = null;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -186,6 +208,7 @@ class Product extends AbstractEntity
      */
     protected function initStorageObjects()
     {
+        $this->categories = new ObjectStorage();
         $this->relatedProducts = new ObjectStorage();
         $this->subProducts = new ObjectStorage();
         $this->accessories = new ObjectStorage();
@@ -195,6 +218,7 @@ class Product extends AbstractEntity
         $this->falLinks = new ObjectStorage();
         $this->assets = new ObjectStorage();
         $this->attributeValues = new ObjectStorage();
+        $this->attributesSets = new ObjectStorage();
     }
 
     /**
@@ -434,6 +458,24 @@ class Product extends AbstractEntity
     /**
      * @return ObjectStorage
      */
+    public function getCategories(): ObjectStorage
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param ObjectStorage $categories
+     * @return Product
+     */
+    public function setCategories(ObjectStorage $categories): Product
+    {
+        $this->categories = $categories;
+        return $this;
+    }
+
+    /**
+     * @return ObjectStorage
+     */
     public function getRelatedProducts(): ObjectStorage
     {
         return $this->relatedProducts;
@@ -593,8 +635,50 @@ class Product extends AbstractEntity
         return $this;
     }
 
-    public function getAttributes()
+    /**
+     * @return ObjectStorage
+     */
+    public function getAttributesSets(): ObjectStorage
     {
+        return $this->attributesSets;
+    }
 
+    /**
+     * @param AttributeSet $attributeSet
+     * @return Product
+     */
+    public function addAttributesSet(AttributeSet $attributeSet): Product
+    {
+        $this->attributesSets->attach($attributeSet);
+        return $this;
+    }
+
+    /**
+     * @param ObjectStorage $attributesSets
+     * @return Product
+     */
+    public function setAttributesSets(ObjectStorage $attributesSets): Product
+    {
+        $this->attributesSets = $attributesSets;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllAttributesSets(): array
+    {
+        if ($this->allAttributesSets === null) {
+            $attributesSets = GeneralUtility::makeInstance(Collection::class, $this->attributesSets);
+            $categoriesAttributeSets = GeneralUtility::makeInstance(Collection::class, $this->categories)
+                ->pluck('attributesSets')
+                ->shiftLevel();
+
+            $this->allAttributesSets = array_values(
+                $attributesSets->unionUniqueProperty($categoriesAttributeSets, 'uid')->toArray()
+            );
+        }
+
+        return $this->allAttributesSets;
     }
 }

@@ -35,7 +35,8 @@
   "autoload-dev": {
     "psr-4": {
       "Pixelant\\PxaProductManager\\Tests\\": "Tests/"
-    }
+    },
+    "files": ["Tests/utilities/functions.php"]
   },
   "config": {
     "vendor-dir": ".Build/vendor",

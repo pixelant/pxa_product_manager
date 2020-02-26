@@ -83,7 +83,7 @@ class Category extends CategoryExtbase
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected ObjectStorage $attributeSets;
+    protected ObjectStorage $attributesSets;
 
     /**
      * Banner Image
@@ -154,7 +154,7 @@ class Category extends CategoryExtbase
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
          */
-        $this->attributeSets = new ObjectStorage();
+        $this->attributesSets = new ObjectStorage();
         $this->subCategories = new ObjectStorage();
     }
 
@@ -269,18 +269,30 @@ class Category extends CategoryExtbase
     /**
      * @return ObjectStorage
      */
-    public function getAttributeSets(): ObjectStorage
+    public function getAttributesSets(): ObjectStorage
     {
-        return $this->attributeSets;
+        return $this->attributesSets;
     }
 
     /**
-     * @param ObjectStorage $attributeSets
+     * Add attribute set
+     *
+     * @param AttributeSet $attributeSet
      * @return Category
      */
-    public function setAttributeSets(ObjectStorage $attributeSets): Category
+    public function addAttributeSet(AttributeSet $attributeSet): Category
     {
-        $this->attributeSets = $attributeSets;
+        $this->attributesSets->attach($attributeSet);
+        return $this;
+    }
+
+    /**
+     * @param ObjectStorage $attributesSets
+     * @return Category
+     */
+    public function setAttributesSets(ObjectStorage $attributesSets): Category
+    {
+        $this->attributesSets = $attributesSets;
         return $this;
     }
 

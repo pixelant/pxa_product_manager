@@ -48,6 +48,12 @@ class AttributeSet extends AbstractEntity
     protected ObjectStorage $attributes;
 
     /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
+     */
+    protected ObjectStorage $categories;
+
+    /**
      * __construct
      *
      */
@@ -78,7 +84,8 @@ class AttributeSet extends AbstractEntity
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
          */
-        $this->attributes = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->attributes = new ObjectStorage();
+        $this->categories = new ObjectStorage();
     }
 
     /**

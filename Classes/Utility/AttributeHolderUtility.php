@@ -80,7 +80,7 @@ class AttributeHolderUtility
         /** @var Category $category */
         foreach ($categories as $category) {
             /** @var AttributeSet $attributesSet */
-            foreach ($category->getAttributeSets() as $attributesSet) {
+            foreach ($category->getAttributesSets() as $attributesSet) {
                 if (in_array($attributesSet->getUid(), $uniqueAttributeSetsList, true)) {
                     continue;
                 } else {
