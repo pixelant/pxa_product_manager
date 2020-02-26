@@ -82,12 +82,13 @@ return (function () {
                 ]
             ],
             'categories' => [
-                'label' => $ll . '.categories',
+                'label' => $ll . 'categories',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'sys_category',
-                    'foreign_table_where' => 'AND sys_category.sys_language_uid <= 0',
+                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause() .
+                        ' AND sys_category.sys_language_uid <= 0',
                     'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
                     'MM_match_fields' => [
                         'tablenames' => 'sys_category',
