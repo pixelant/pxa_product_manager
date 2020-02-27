@@ -56,7 +56,6 @@ class ProductEditFormManipulation implements FormDataProviderInterface
         if ($result['tableName'] !== 'tx_pxaproductmanager_domain_model_product') {
             return $result;
         }
-        return $result;
 
         $isNew = StringUtility::beginsWith($result['databaseRow']['uid'], 'NEW');
 
@@ -65,10 +64,6 @@ class ProductEditFormManipulation implements FormDataProviderInterface
 
             $row = $result['databaseRow'];
             $product = $this->dataMapper->map(Product::class, [$row])[0];
-
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($product,'Debug',16);
-            var_dump($product->getName());
-            die;
 
             if (0) {
                 $this->populateTCA($attributeHolder->getAttributeSets()->toArray(), $result['processedTca']);
