@@ -1,6 +1,25 @@
 <?php
 
-function createDomainInstanceWithProperties(string $className, $properties, callable $callback = null): \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+function uidsArray($objects)
+{
+    return array_map(fn($object) => $object->getUid(), $objects);
+}
+
+function makeMultipleDomainsInstances(string $className, int $to, int $from = 1)
+{
+    if ($to < $from) {
+        $to = $from;
+    }
+
+    $objects = [];
+    for ($i = $from; $i <= $to; $i++) {
+        $objects[] = makeDomainInstanceWithProperties($className, $i);
+    }
+
+    return $objects;
+}
+
+function makeDomainInstanceWithProperties(string $className, $properties, callable $callback = null): \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     /** @var \TYPO3\CMS\Extbase\DomainObject\AbstractEntity $entity */
     $entity = new $className;

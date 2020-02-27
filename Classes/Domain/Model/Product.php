@@ -28,7 +28,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 
 use DateTime;
 use Pixelant\PxaProductManager\Domain\Collection\Collection;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility as GU;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -37,6 +37,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Product extends AbstractEntity
 {
+    use AbleCacheProperties;
+
     /**
      * @var string
      */
@@ -172,13 +174,6 @@ class Product extends AbstractEntity
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
      */
     protected ObjectStorage $attributesSets;
-
-    /**
-     * Merged attributes. Product + categories
-     *
-     * @var array|null
-     */
-    protected ?array $allAttributesSets = null;
 
     /**
      * __construct
@@ -664,21 +659,51 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Return all attribute set.
+     * It fetch every attribute set of every category from parents tree
+     * + product own attributes sets
+     *
      * @return array
      */
     public function getAllAttributesSets(): array
     {
-        if ($this->allAttributesSets === null) {
-            $attributesSets = GeneralUtility::makeInstance(Collection::class, $this->attributesSets);
-            $categoriesAttributeSets = GeneralUtility::makeInstance(Collection::class, $this->categories)
+        return $this->getCachedProperty(__METHOD__, function () {
+            $attributesSets = $this->collection($this->attributesSets);
+
+            $categoriesAttributeSets = $this->collection($this->getCategoriesWithParents())
                 ->pluck('attributesSets')
                 ->shiftLevel();
 
-            $this->allAttributesSets = array_values(
+            return array_values(
                 $attributesSets->unionUniqueProperty($categoriesAttributeSets, 'uid')->toArray()
             );
-        }
+        });
+    }
 
-        return $this->allAttributesSets;
+    /**
+     * Get all products categories including parents
+     *
+     * @return array
+     */
+    public function getCategoriesWithParents(): array
+    {
+        // Fetch all parents and merge
+        $all = array_merge(...array_map(
+            fn(Category $category) => $category->getParentsRootLine(),
+            $this->categories->toArray()
+        ));
+
+        return $this->collection($all)->unique()->toArray();
+    }
+
+    /**
+     * Shortcut for collection instance
+     *
+     * @param $items
+     * @return Collection
+     */
+    protected function collection($items): Collection
+    {
+        return GU::makeInstance(Collection::class, $items);
     }
 }

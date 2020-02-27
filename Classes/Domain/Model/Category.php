@@ -38,6 +38,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Category extends CategoryExtbase
 {
+    use AbleCacheProperties;
+
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Category
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -420,5 +422,37 @@ class Category extends CategoryExtbase
     {
         $this->hideProducts = $hideProducts;
         return $this;
+    }
+
+    /**
+     * Return parents root line up till to root category
+     * From bottom to up. Current first
+     *
+     * @return array
+     */
+    public function getParentsRootLine(): array
+    {
+        return $this->getCachedProperty(__METHOD__, function () {
+            $rootLine = [];
+            $category = $this;
+
+            do {
+                $rootLine[] = $category;
+                $category = $category->getParent();
+            } while ($category !== null && !in_array($category, $rootLine, true));
+
+            return $rootLine;
+        });
+    }
+
+    /**
+     * Return parents root line up till to root category
+     * Root category first, current last
+     *
+     * @return array
+     */
+    public function getParentsRootLineReverse(): array
+    {
+        return array_reverse($this->getParentsRootLine());
     }
 }

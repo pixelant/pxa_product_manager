@@ -63,7 +63,7 @@ class CollectionTest extends UnitTestCase
     {
         $items = [
             ['uid' => 1, 'title' => 'test me'],
-            createDomainInstanceWithProperties(Category::class, ['uid' => 123, 'title' => 'Im category']),
+            makeDomainInstanceWithProperties(Category::class, ['uid' => 123, 'title' => 'Im category']),
         ];
 
         $collection = new Collection($items);
@@ -78,8 +78,8 @@ class CollectionTest extends UnitTestCase
     public function pluckExtractValuesByPropertyFromObjectStorage()
     {
         $items = createObjectStorageWithObjects(
-            createDomainInstanceWithProperties(Category::class, 88),
-            createDomainInstanceWithProperties(Category::class, 99),
+            makeDomainInstanceWithProperties(Category::class, 88),
+            makeDomainInstanceWithProperties(Category::class, 99),
         );
 
         $collection = new Collection($items);
@@ -94,10 +94,10 @@ class CollectionTest extends UnitTestCase
     public function unionUniquePropertyWillAddOnlyUniqueItems()
     {
         $item1 = ['uid' => 1, 'title' => 'I\'m title'];
-        $category1 = createDomainInstanceWithProperties(Category::class, ['uid' => 123, 'title' => 'Im category']);
+        $category1 = makeDomainInstanceWithProperties(Category::class, ['uid' => 123, 'title' => 'Im category']);
 
         $item23 = ['uid' => 23, 'title' => 'Test title'];
-        $category445 = createDomainInstanceWithProperties(Category::class, ['uid' => 445, 'title' => 'In collection']);
+        $category445 = makeDomainInstanceWithProperties(Category::class, ['uid' => 445, 'title' => 'In collection']);
 
         $items = [
             $item1,
@@ -143,9 +143,9 @@ class CollectionTest extends UnitTestCase
      */
     public function shiftLevelWillRemoveFirstLevelOfObjectStorage()
     {
-        $item1 = createDomainInstanceWithProperties(Category::class, 1);
-        $item2 = createDomainInstanceWithProperties(Category::class, 2);
-        $item3 = createDomainInstanceWithProperties(Category::class, 3);
+        $item1 = makeDomainInstanceWithProperties(Category::class, 1);
+        $item2 = makeDomainInstanceWithProperties(Category::class, 2);
+        $item3 = makeDomainInstanceWithProperties(Category::class, 3);
 
         $items = [
             createObjectStorageWithObjects($item2, $item3),
@@ -158,11 +158,25 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals($expect, array_values($collection->shiftLevel()->toArray()));
     }
 
+    /**
+     * @test
+     */
+    public function uniqueWillReturnArrayOfUniqueValues()
+    {
+        list($item1, $item2, $item3) = makeMultipleDomainsInstances(Category::class, 3);
+        $items = [$item1, $item2, $item3, $item2, $item3];
+
+        $expect = [$item1, $item2, $item3];
+        $collection = new Collection($items);
+
+        $this->assertEquals($expect, $collection->unique()->toArray());
+    }
+
     public function toArrayReturnIterableToArrayDataProvider()
     {
         $items = [
-            createDomainInstanceWithProperties(Category::class, 1),
-            createDomainInstanceWithProperties(Category::class, 2),
+            makeDomainInstanceWithProperties(Category::class, 1),
+            makeDomainInstanceWithProperties(Category::class, 2),
         ];
 
         return [

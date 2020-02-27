@@ -22,13 +22,6 @@ class Collection implements Arrayable
      */
     public function __construct($collection)
     {
-        if (!is_iterable($collection) && !($collection instanceof Arrayable)) {
-            throw new \InvalidArgumentException(
-                sprintf('Collection accept only iterable argument as collection, but "%s" given', gettype($collection)),
-                1582719546879
-            );
-        }
-
         $this->collection = $this->iterableToArray($collection);
     }
 
@@ -91,6 +84,25 @@ class Collection implements Arrayable
     }
 
     /**
+     * Return collection of unique items
+     *
+     * @return Collection
+     */
+    public function unique(): Collection
+    {
+        $unique = [];
+
+        return new static(array_filter($this->collection, function ($item) use (&$unique) {
+            if (!in_array($item, $unique, true)) {
+                $unique[] = $item;
+                return true;
+            }
+
+            return false;
+        }));
+    }
+
+    /**
      * To array
      *
      * @return array
@@ -108,6 +120,13 @@ class Collection implements Arrayable
      */
     protected function iterableToArray($items): array
     {
+        if (!is_iterable($items) && !($items instanceof Arrayable)) {
+            throw new \InvalidArgumentException(
+                sprintf('Collection accept only iterable argument as collection, but "%s" given', gettype($items)),
+                1582719546879
+            );
+        }
+
         if ($items instanceof Traversable) {
             return iterator_to_array($items);
         } elseif ($items instanceof Arrayable) {
