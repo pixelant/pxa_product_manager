@@ -3,6 +3,7 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
+    $falAttributesField = \Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility::class;
 
     return [
         'ctrl' => [
@@ -310,11 +311,11 @@ return (function () {
                     $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
                 ),
             ],
-            'attribute_files' => [
+            $falAttributesField => [
                 'exclude' => false,
-                'label' => '',
+                'label' => $falAttributesField,
                 'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                    'attribute_files',
+                    $falAttributesField,
                     [
                         'appearance' => [
                             'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference'

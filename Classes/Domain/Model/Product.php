@@ -138,7 +138,7 @@ class Product extends AbstractEntity
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeFile>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      */
-    protected ObjectStorage $attributeFiles;
+    protected ObjectStorage $attributesFiles;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -208,7 +208,7 @@ class Product extends AbstractEntity
         $this->subProducts = new ObjectStorage();
         $this->accessories = new ObjectStorage();
         $this->images = new ObjectStorage();
-        $this->attributeFiles = new ObjectStorage();
+        $this->attributesFiles = new ObjectStorage();
         $this->links = new ObjectStorage();
         $this->falLinks = new ObjectStorage();
         $this->assets = new ObjectStorage();
@@ -543,18 +543,18 @@ class Product extends AbstractEntity
     /**
      * @return ObjectStorage
      */
-    public function getAttributeFiles(): ObjectStorage
+    public function getAttributesFiles(): ObjectStorage
     {
-        return $this->attributeFiles;
+        return $this->attributesFiles;
     }
 
     /**
-     * @param ObjectStorage $attributeFiles
+     * @param ObjectStorage $attributesFiles
      * @return Product
      */
-    public function setAttributeFiles(ObjectStorage $attributeFiles): Product
+    public function setAttributesFiles(ObjectStorage $attributesFiles): Product
     {
-        $this->attributeFiles = $attributeFiles;
+        $this->attributesFiles = $attributesFiles;
         return $this;
     }
 
