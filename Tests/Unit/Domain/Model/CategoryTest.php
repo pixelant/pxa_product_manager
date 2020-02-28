@@ -32,7 +32,7 @@ class CategoryTest extends UnitTestCase
 
         // Vise versa
         $expect = [100, 5, 4, 3, 2, 1];
-        $result = array_map(fn($cat) => $cat->getUid(), $this->subject->getParentsRootLine());
+        $result = entitiesToUidsArray($this->subject->getParentsRootLine());
 
         // Compare  UIDs, because object won't be same
         $this->assertEquals($expect, $result);
@@ -49,7 +49,7 @@ class CategoryTest extends UnitTestCase
         $this->subject->_setProperty('uid', 100);
 
         $expect = [1, 2, 3, 4, 5, 100];
-        $result = array_map(fn($cat) => $cat->getUid(), $this->subject->getParentsRootLineReverse());
+        $result = entitiesToUidsArray($this->subject->getParentsRootLineReverse());
 
         // Compare  UIDs, because object won't be same
         $this->assertEquals($expect, $result);
@@ -81,7 +81,7 @@ class CategoryTest extends UnitTestCase
         $this->assertEquals($expect, $result);
     }
 
-    public function rootLineLastCategory()
+    protected function rootLineLastCategory()
     {
         $rootLine = createMultipleEntities(Category::class, 5);
 
