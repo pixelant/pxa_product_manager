@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
+use Pixelant\PxaProductManager\Backend\Provider\AttributesConfiguration\ConfigurationProviderFactory;
+use Pixelant\PxaProductManager\Backend\Provider\AttributesConfiguration\ProviderInterface;
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
+use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -24,9 +26,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
  */
 class ProductEditFormManipulation implements FormDataProviderInterface
 {
-    use CanTranslateInBackend;
-
-    const ATTRIBUTE_FIELD_PREFIX = 'tx_pxaproductmanager_attribute_';
+    use CanTranslateInBackend, CanCreateCollection;
 
     /**
      * @var DataMapper
@@ -57,17 +57,17 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             return $result;
         }
 
-        $isNew = StringUtility::beginsWith($result['databaseRow']['uid'], 'NEW');
+        $row = $result['databaseRow'];
+        $isNew = StringUtility::beginsWith($row['uid'], 'NEW');
 
         if (!$isNew) {
             $this->init();
 
-            $row = $result['databaseRow'];
-            $product = $this->dataMapper->map(Product::class, [$row])[0];
+            $product = $this->rawRowToProduct($row);
 
-            if (0) {
-                $this->populateTCA($attributeHolder->getAttributeSets()->toArray(), $result['processedTca']);
-                $this->simulateDataValues($attributeHolder->getAttributes()->toArray(), $result['databaseRow']);
+            if (!empty($product->getAllAttributesSets())) {
+                $this->populateTCA($product->getAllAttributesSets(), $result['processedTca']);
+                $this->simulateDataValues($product->getAllAttributesSets(), $result['databaseRow']);
 
                 if (is_array($result['defaultLanguageDiffRow'])) {
                     $diffKey = sprintf(
@@ -102,143 +102,75 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
+     * DB row to model
+     *
+     * @param array $row
+     * @return Product
+     */
+    protected function rawRowToProduct(array $row): Product
+    {
+        return $this->dataMapper->map(Product::class, [$row])[0];
+    }
+
+    /**
+     * Configuration provider to given attribute
+     *
+     * @param Attribute $attribute
+     * @return ProviderInterface
+     */
+    protected function getConfigurationProvider(Attribute $attribute): ProviderInterface
+    {
+        return ConfigurationProviderFactory::create($attribute);
+    }
+
+    /**
      * Add attributes configuration to TCA
      *
      * @param array $attributesSets
      * @param array &$tca
      */
-    protected function populateTCA(array $attributesSets, array &$tca)
+    protected function populateTCA(array $attributesSets, array &$tca): void
     {
-        $productAttributes = [];
+        $dynamicAttributesSets = [];
 
+        // Generate TCA
         /** @var AttributeSet $attributesSet */
         foreach ($attributesSets as $attributesSet) {
-            // Populate TCA
+            $setFields = [];
+
             /** @var Attribute $attribute */
             foreach ($attributesSet->getAttributes() as $attribute) {
-                $attributeType = $attribute->getType();
-                $attributeUid = $attribute->getUid();
+                $attributeTCA = $this->getConfigurationProvider($attribute)->get();
+                $field = AttributeTcaNamingUtility::translateAttributeToTcaFieldName($attribute);
 
-                // @codingStandardsIgnoreStart
-                $field = TcaUtility::getAttributeTCAFieldName($attributeUid, $attributeType); // Unique for each field
-                // @codingStandardsIgnoreEnd
-                // Get TCA for attribute type
-                if ($attribute->isFalType()) {
-                    if ($attributeType === Attribute::ATTRIBUTE_TYPE_IMAGE) {
-                        $allowedFileTypes = $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'];
-                        // @codingStandardsIgnoreStart
-                        $label = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference';
-                        // @codingStandardsIgnoreEnd
-                    } else {
-                        $allowedFileTypes = '';
-                        $label = '';
-                    }
-
-                    $tcaConfigurationField = TcaUtility::getFalFieldTCAConfiguration(
-                        $field,
-                        $attributeUid,
-                        $attribute->getName(),
-                        $label,
-                        $allowedFileTypes
-                    );
-                } else {
-                    $tcaConfigurationField = $this->attributeTCAConfiguration[$attributeType];
-                }
-                $tca['columns'][$field] = $tcaConfigurationField;
+                $tca['columns'][$field] = $attributeTCA;
 
                 // Add it also to global array
                 // @codingStandardsIgnoreStart
-                $GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns'][$field] = $tcaConfigurationField;
+                $GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns'][$field] = $attributeTCA;
                 // @codingStandardsIgnoreEnd
 
-                // Make changes to the default TCA according to the attribute object
-                $tca['columns'][$field]['label'] = $attribute->getName();
-
-                // Set default value
-                if ($defaultValue = $attribute->getDefaultValue()) {
-                    $tca['columns'][$field]['config']['default'] = $defaultValue;
-                }
-
-                if ($attribute->getRequired()) {
-                    switch ($attributeType) {
-                        case Attribute::ATTRIBUTE_TYPE_LINK:
-                        case Attribute::ATTRIBUTE_TYPE_IMAGE:
-                        case Attribute::ATTRIBUTE_TYPE_FILE:
-                        case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
-                            $tca['columns'][$field]['config']['minitems'] = 1;
-                            break;
-                        default:
-                            $tca['columns'][$field]['config']['eval'] = $tca['columns'][$field]['config']['eval']
-                                ? $tca['columns'][$field]['config']['eval'] . ', required'
-                                : 'required';
-                    }
-                }
-
-                // Additional TCA modifications depending on Attribute Type
-                switch ($attributeType) {
-                    case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
-                    case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
-                        /** @var QueryBuilder $queryBuilder */
-                        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-                            'tx_pxaproductmanager_domain_model_option'
-                        );
-
-                        $statement = $queryBuilder
-                            ->select('uid', 'value')
-                            ->from('tx_pxaproductmanager_domain_model_option')
-                            ->where(
-                                $queryBuilder->expr()->eq(
-                                    'attribute',
-                                    $queryBuilder->createNamedParameter($attributeUid)
-                                )
-                            )
-                            ->execute();
-
-                        $options = [];
-                        while ($row = $statement->fetch()) {
-                            $options[] = [$row['value'], $row['uid']];
-                        }
-
-                        // @codingStandardsIgnoreStart
-                        if (empty($options)) {
-                            $tca['columns'][$field]['label'] .= ' (This attribute has no options. Please configure the attribute and add some options to it.)';
-                        }
-                        // @codingStandardsIgnoreEnd
-                        $tca['columns'][$field]['config']['items'] = $options;
-                        // Add it also to global array
-                        // @codingStandardsIgnoreStart
-                        $GLOBALS['TCA']['tx_pxaproductmanager_domain_model_product']['columns'][$field]['config']['items'] = $options;
-                        // @codingStandardsIgnoreEnd
-                        break;
-                    default:
-                        break;
-                }
-
-                // Array with all additional attributes
-                $productAttributes[$attributesSet->getUid()]['fields'][] = $field;
+                // Add attribute field to set
+                $setFields[] = $field;
             }
 
-            $productAttributes[$attributesSet->getUid()]['label'] = $attributesSet->getName();
+            // Add fields set to rest
+            if (!empty($setFields)) {
+                $dynamicAttributesSets[$attributesSet->getUid()] = [
+                    'label' => $attributesSet->getName(),
+                    'fields' => $setFields,
+                ];
+            }
         }
 
-        if (!empty($productAttributes)) {
-            $productAttributesShow = '';
-            // @codingStandardsIgnoreStart
-            $defaultLabel = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:tx_pxaproductmanager_domain_model_product.tab.attributes';
-            // @codingStandardsIgnoreEnd
-            foreach ($productAttributes as $productAttribute) {
-                if (!empty($productAttribute['fields'])) {
-                    $fieldsList = implode(', ', $productAttribute['fields']);
-                    $tca['interface']['showRecordFieldList'] .= ', ' . $fieldsList;
-                    $productAttributesShow .= ',--div--;' . ($productAttribute['label'] ?: $defaultLabel) . ',';
-                    $productAttributesShow .= $fieldsList;
-                }
-            }
+        // Add dynamic fields to products TCA
+        if (!empty($dynamicAttributesSets)) {
+            $tabsTCA = $this->dynamicTabsTca($dynamicAttributesSets);
 
             foreach ($tca['types'] as &$type) {
                 $type = str_replace(
                     ',--palette--;;paletteAttributes',
-                    $productAttributesShow,
+                    $tabsTCA,
                     $type
                 );
             }
@@ -246,18 +178,35 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
+     * Generate TCA tabs string with dynamic attributes
+     *
+     * @param array $dynamicAttributesSets
+     * @return string
+     */
+    protected function dynamicTabsTca(array $dynamicAttributesSets): string
+    {
+        $tcaTabsString = '';
+
+        foreach ($dynamicAttributesSets as $dynamicAttributesSet) {
+            $tcaTabsString .= sprintf(
+                ',--div--;%s, %s',
+                $dynamicAttributesSet['label'],
+                implode(', ', $dynamicAttributesSet['fields'])
+            );
+        }
+
+        return $tcaTabsString;
+    }
+
+    /**
      * Simulate DB data for attributes
      *
-     * @param array $attributes
+     * @param Product $product
      * @param array $dbRow
      */
-    protected function simulateDataValues(array $attributes, array &$dbRow)
+    protected function simulateDataValues(Product $product, array &$dbRow): void
     {
-        $attributeUidToValue = [];
-
-        if (!empty($dbRow['serialized_attributes_values'])) {
-            $attributeUidToValue = unserialize($dbRow['serialized_attributes_values']);
-        }
+        $attributes = $this->collection($attributesSets)->pluck('attributes')->shiftLevel()->toArray();
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {

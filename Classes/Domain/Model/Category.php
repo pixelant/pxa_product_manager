@@ -428,11 +428,11 @@ class Category extends CategoryExtbase
      * Return parents root line up till to root category
      * From bottom to up. Current first
      *
-     * @return array
+     * @return Category[]
      */
     public function getParentsRootLine(): array
     {
-        return $this->getCachedProperty(__METHOD__, function () {
+        return $this->getCachedProperty('parentsRootLine', function () {
             $rootLine = [];
             $category = $this;
 
@@ -449,7 +449,7 @@ class Category extends CategoryExtbase
      * Return parents root line up till to root category
      * Root category first, current last
      *
-     * @return array
+     * @return Category[]
      */
     public function getParentsRootLineReverse(): array
     {

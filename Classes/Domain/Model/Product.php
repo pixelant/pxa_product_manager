@@ -27,8 +27,8 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 use DateTime;
-use Pixelant\PxaProductManager\Domain\Collection\Collection;
-use TYPO3\CMS\Core\Utility\GeneralUtility as GU;
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
+use Pixelant\PxaProductManager\Domain\Service\AttributesValuesMapper;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -37,7 +37,12 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Product extends AbstractEntity
 {
-    use AbleCacheProperties;
+    use AbleCacheProperties, CanCreateCollection;
+
+    /**
+     * @var AttributesValuesMapper
+     */
+    protected AttributesValuesMapper $attributesValuesMapper;
 
     /**
      * @var string
@@ -191,6 +196,14 @@ class Product extends AbstractEntity
     public function initializeObject()
     {
         $this->initStorageObjects();
+    }
+
+    /**
+     * @param AttributesValuesMapper $attributesValuesMapper
+     */
+    public function injectAttributesValuesMapper(AttributesValuesMapper $attributesValuesMapper)
+    {
+        $this->attributesValuesMapper = $attributesValuesMapper;
     }
 
     /**
@@ -663,11 +676,11 @@ class Product extends AbstractEntity
      * It fetch every attribute set of every category from parents tree
      * + product own attributes sets
      *
-     * @return array
+     * @return AttributeSet[]
      */
     public function getAllAttributesSets(): array
     {
-        return $this->getCachedProperty(__METHOD__, function () {
+        return $this->getCachedProperty('allAttributesSets', function () {
             $attributesSets = $this->collection($this->attributesSets);
 
             $categoriesAttributeSets = $this->collection($this->getCategoriesWithParents())
@@ -683,7 +696,7 @@ class Product extends AbstractEntity
     /**
      * Get all products categories including parents
      *
-     * @return array
+     * @return Category[]
      */
     public function getCategoriesWithParents(): array
     {
@@ -697,13 +710,15 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Shortcut for collection instance
+     * Get array of all product attributes.
+     * It will init attributes values
      *
-     * @param $items
-     * @return Collection
+     * @return Attribute[]
      */
-    protected function collection($items): Collection
+    public function getAttributes(): array
     {
-        return GU::makeInstance(Collection::class, $items);
+        return $this->getCachedProperty('attributes', function () {
+            return $this->attributesValuesMapper->map($this);
+        });
     }
 }

@@ -5,6 +5,8 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Collection;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Arrayable;
 use Pixelant\PxaProductManager\Domain\Collection\Collection;
+use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 
 /**
@@ -91,6 +93,31 @@ class CollectionTest extends UnitTestCase
     /**
      * @test
      */
+    public function pluckWithCallbackWillApplyCallbackFunctionToKeys()
+    {
+        $attribute1 = createEntity(Attribute::class, 5);
+        $attribute2 = createEntity(Attribute::class, 10);
+
+        $attributeValue1 = createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
+        $attributeValue2 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+
+        $items = [
+            $attributeValue1,
+            $attributeValue2,
+        ];
+
+        $expectAttributesUids = [5, 10];
+        $collection = new Collection($items);
+
+        $this->assertEquals(
+            $expectAttributesUids,
+            $collection->pluck('attribute', fn($attribute) => $attribute->getUid())->toArray()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function unionUniquePropertyWillAddOnlyUniqueItems()
     {
         $item1 = ['uid' => 1, 'title' => 'I\'m title'];
@@ -170,6 +197,101 @@ class CollectionTest extends UnitTestCase
         $collection = new Collection($items);
 
         $this->assertEquals($expect, $collection->unique()->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function searchOneByPropertyWillReturnNullIfNothingIsFound()
+    {
+        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        $items = [$item1, $item2, $item3];
+
+        $collection = new Collection($items);
+
+        $this->assertNull($collection->searchOneByProperty('uid', 5));
+    }
+
+    /**
+     * @test
+     */
+    public function searchOneByPropertyWillReturnItemIfFound()
+    {
+        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        $items = [$item1, $item2, $item3];
+
+        $collection = new Collection($items);
+
+        $this->assertSame($item2, $collection->searchOneByProperty('uid', 2));
+    }
+
+    /**
+     * @test
+     */
+    public function searchOneByPropertyWithCallbackWillReturnItemIfFound()
+    {
+        $attribute1 = createEntity(Attribute::class, 10);
+        $attribute2 = createEntity(Attribute::class, 50);
+        $attribute3 = createEntity(Attribute::class, 100);
+
+        $attributeValue1 = createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
+        $attributeValue2 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+        $attributeValue3 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute3]);
+
+        $items = [
+            $attributeValue1,
+            $attributeValue2,
+            $attributeValue3,
+        ];
+
+
+        $collection = new Collection($items);
+
+        $this->assertSame(
+            $attributeValue2,
+            $collection->searchOneByProperty('attribute', 50, fn($attribute) => $attribute->getUid())
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function searchByPropertyWillReturnItems()
+    {
+        $attribute1 = createEntity(Attribute::class, 10);
+        $attribute2 = createEntity(Attribute::class, 50);
+
+        $attributeValue1 = createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
+        $attributeValue2 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+        $attributeValue3 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+
+        $items = [
+            $attributeValue1,
+            $attributeValue2,
+            $attributeValue3,
+        ];
+
+
+        $collection = new Collection($items);
+        $expect = [$attributeValue2, $attributeValue3];
+
+        $this->assertEquals(
+            $expect,
+            $collection->searchByProperty('attribute', 50, fn($attribute) => $attribute->getUid())->toArray()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function firstReturnFirstItemFromCollection()
+    {
+        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        $items = [$item1, $item2, $item3];
+
+        $collection = new Collection($items);
+
+        $this->assertSame($item1, $collection->first());
     }
 
     public function toArrayReturnIterableToArrayDataProvider()

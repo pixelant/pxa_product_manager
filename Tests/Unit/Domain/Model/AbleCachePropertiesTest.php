@@ -29,6 +29,9 @@ class AbleCachePropertiesTest extends UnitTestCase
         $this->assertEquals('value', $this->getCachedProperty('test', function () {}));
     }
 
+    /**
+     * @test
+     */
     public function getCachedPropertyReturnValueOfPropertyProvidedByClosure()
     {
         $value = 'test value';
@@ -36,25 +39,5 @@ class AbleCachePropertiesTest extends UnitTestCase
 
         $this->assertEquals($value, $this->getCachedProperty($key, fn() => $value));
         $this->assertEquals($this->cacheProperties[$key], $value);
-    }
-
-    /**
-     * @test
-     */
-    public function cachePropertyKeyToPropertyReturnKeyIfNotAGetter()
-    {
-        $key = 'property';
-
-        $this->assertEquals($key, $this->cachePropertyKeyToProperty($key));
-    }
-
-    /**
-     * @test
-     */
-    public function cachePropertyKeyToPropertyReturnPropertyFromGetter()
-    {
-        $getter = 'getTestProperty';
-
-        $this->assertEquals('testProperty', $this->cachePropertyKeyToProperty($getter));
     }
 }

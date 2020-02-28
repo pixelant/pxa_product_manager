@@ -43,11 +43,16 @@ class Collection implements Arrayable
      * Get value by given key
      *
      * @param string $property
+     * @param callable|null $callback
      * @return Collection
      */
-    public function pluck(string $property): Collection
+    public function pluck(string $property, callable $callback = null): Collection
     {
         $keys = array_map(fn($item) => ObjectAccess::getProperty($item, $property), $this->collection);
+
+        if ($callback) {
+            $keys = array_map($callback, $keys);
+        }
 
         return new static($keys);
     }
@@ -100,6 +105,58 @@ class Collection implements Arrayable
 
             return false;
         }));
+    }
+
+    /**
+     * Perform search of item by property
+     *
+     * @param string $property
+     * @param mixed $value
+     * @param callable|null $callback Callback that will be applied to property value
+     * @return Collection
+     */
+    public function searchByProperty(string $property, $value, callable $callback = null): Collection
+    {
+        $matchItems = [];
+        foreach ($this->collection as $item) {
+            $propertyValue = ObjectAccess::getProperty($item, $property);
+            if ($callback) {
+                $propertyValue = $callback($propertyValue);
+            }
+
+            if ($propertyValue === $value) {
+                $matchItems[] = $item;
+            }
+        }
+
+        return new static($matchItems);
+    }
+
+    /**
+     * Search by property and return first item
+     * @param string $property
+     * @param $value
+     * @param callable|null $callback
+     * @return  mixed Item if found, otherwise null
+     */
+    public function searchOneByProperty(string $property, $value, callable $callback = null)
+    {
+        return $this->searchByProperty($property, $value, $callback)->first();
+    }
+
+    /**
+     * Return first item from collection
+     *
+     * @return mixed
+     */
+    public function first()
+    {
+        if (empty($this->collection)) {
+            return null;
+        }
+
+        reset($this->collection);
+        return current($this->collection);
     }
 
     /**
