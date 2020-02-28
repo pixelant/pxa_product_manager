@@ -17,7 +17,7 @@ class AttributeTcaNamingUtilityTest extends UnitTestCase
     public function translateAttributeToTcaFieldNameReturnTcaFieldName()
     {
         $uid = 12;
-        $attribute = makeDomainInstanceWithProperties(Attribute::class, $uid);
+        $attribute = createEntity(Attribute::class, $uid);
 
         $expect = 'tx_pxaproductmanager_attribute_12';
 

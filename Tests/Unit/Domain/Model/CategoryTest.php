@@ -60,10 +60,10 @@ class CategoryTest extends UnitTestCase
      */
     public function getParentsRootLineReturnRootLineOfParentsButStopIfLoopFound()
     {
-        $root = makeDomainInstanceWithProperties(Category::class, 99);
-        $subCat1 = makeDomainInstanceWithProperties(Category::class, 1);
-        $subCat2 = makeDomainInstanceWithProperties(Category::class, 2);
-        $subCat3 = makeDomainInstanceWithProperties(Category::class, 3);
+        $root = createEntity(Category::class, 99);
+        $subCat1 = createEntity(Category::class, 1);
+        $subCat2 = createEntity(Category::class, 2);
+        $subCat3 = createEntity(Category::class, 3);
 
         $subCat3->setParent($subCat2);
         $subCat2->setParent($subCat1);
@@ -83,7 +83,7 @@ class CategoryTest extends UnitTestCase
 
     public function rootLineLastCategory()
     {
-        $rootLine = makeMultipleDomainsInstances(Category::class, 5);
+        $rootLine = createMultipleEntities(Category::class, 5);
 
         // Simulate rootline
         $prev = null;

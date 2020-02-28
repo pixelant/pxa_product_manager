@@ -1,11 +1,11 @@
 <?php
 
-function uidsArray($objects)
+function entitiesToUidsArray($objects)
 {
     return array_map(fn($object) => $object->getUid(), $objects);
 }
 
-function makeMultipleDomainsInstances(string $className, int $to, int $from = 1)
+function createMultipleEntities(string $className, int $to, int $from = 1)
 {
     if ($to < $from) {
         $to = $from;
@@ -13,13 +13,13 @@ function makeMultipleDomainsInstances(string $className, int $to, int $from = 1)
 
     $objects = [];
     for ($i = $from; $i <= $to; $i++) {
-        $objects[] = makeDomainInstanceWithProperties($className, $i);
+        $objects[] = createEntity($className, $i);
     }
 
     return $objects;
 }
 
-function makeDomainInstanceWithProperties(string $className, $properties, callable $callback = null): \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+function createEntity(string $className, $properties, callable $callback = null): \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     /** @var \TYPO3\CMS\Extbase\DomainObject\AbstractEntity $entity */
     $entity = new $className;
@@ -40,7 +40,7 @@ function makeDomainInstanceWithProperties(string $className, $properties, callab
     return $entity;
 }
 
-function createObjectStorageWithObjects(...$objects): \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+function createObjectStorage(...$objects): \TYPO3\CMS\Extbase\Persistence\ObjectStorage
 {
     $objectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 
