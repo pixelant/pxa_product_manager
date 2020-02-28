@@ -55,6 +55,7 @@ services:
           XDEBUG_CONFIG=\"remote_port=${PHP_XDEBUG_PORT} remote_enable=1 remote_host=$${DOCKER_HOST}\" \
             vendor/phpunit/phpunit/phpunit -c vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml ${EXTRA_TEST_OPTIONS} ${TEST_FILE};
         fi
+        rm -rf ${ROOT_DIR}/.Build/Web/typo3temp/var/tests
       "
 
   lint:
