@@ -29,6 +29,76 @@ class AttributeTest extends UnitTestCase
         $this->assertEquals($expect, $this->subject->isFalType());
     }
 
+    /**
+     * @test
+     */
+    public function isInputTypeReturnTrueOnInput()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_INPUT);
+
+        $this->assertTrue($this->subject->isInputType());
+    }
+
+    /**
+     * @test
+     */
+    public function isTextAreaReturnTrueOnTextArea()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_TEXT);
+
+        $this->assertTrue($this->subject->isTextArea());
+    }
+
+    /**
+     * @test
+     */
+    public function isTextAreaReturnTrueOnSelectBox()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_DROPDOWN);
+
+        $this->assertTrue($this->subject->isSelectBoxType());
+    }
+
+    /**
+     * @test
+     */
+    public function isInputTypeReturnTrueOnMultipleSelectBox()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_MULTISELECT);
+
+        $this->assertTrue($this->subject->isSelectBoxType());
+    }
+
+    /**
+     * @test
+     */
+    public function isDateTypeReturnTrueOnDateType()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_DATETIME);
+
+        $this->assertTrue($this->subject->isDateType());
+    }
+
+    /**
+     * @test
+     */
+    public function isCheckboxTypeReturnTrueOnCheckbox()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_CHECKBOX);
+
+        $this->assertTrue($this->subject->isCheckboxType());
+    }
+
+    /**
+     * @test
+     */
+    public function isLinkTypeReturnTrueOnLinkType()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_LINK);
+
+        $this->assertTrue($this->subject->isLinkType());
+    }
+
     public function isFalTypeProvider()
     {
         return [

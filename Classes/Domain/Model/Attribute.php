@@ -380,4 +380,69 @@ class Attribute extends AbstractEntity
     {
         return $this->type === self::ATTRIBUTE_TYPE_IMAGE || $this->type === self::ATTRIBUTE_TYPE_FILE;
     }
+
+    /**
+     * If simple input
+     *
+     * @return bool
+     */
+    public function isInputType(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_INPUT;
+    }
+
+    /**
+     * Check if is text area
+     *
+     * @return bool
+     */
+    public function isTextArea(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_TEXT;
+    }
+
+    /**
+     * Date type check
+     *
+     * @return bool
+     */
+    public function isDateType(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_DATETIME;
+    }
+
+    /**
+     * Select box type
+     * @return bool
+     */
+    public function isSelectBoxType(): bool
+    {
+        return in_array(
+            $this->type,
+            [
+                self::ATTRIBUTE_TYPE_MULTISELECT,
+                self::ATTRIBUTE_TYPE_DROPDOWN,
+            ]
+        );
+    }
+
+    /**
+     * Checkbox type
+     *
+     * @return bool
+     */
+    public function isCheckboxType(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_CHECKBOX;
+    }
+
+    /**
+     * Link type
+     *
+     * @return bool
+     */
+    public function isLinkType(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_LINK;
+    }
 }
