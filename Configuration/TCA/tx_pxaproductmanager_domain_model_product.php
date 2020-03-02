@@ -31,7 +31,7 @@ return (function () {
         ],
         'interface' => [
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp,
-            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attribute_values, alternative_title, keywords, meta_description, slug, attributes_sets',
+            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, attributes_sets',
         ],
         'types' => [
             '1' => [
@@ -216,7 +216,7 @@ return (function () {
                     'eval' => 'trim',
                 ]
             ],
-            'attribute_values' => [
+            'attributes_values' => [
                 'exclude' => false,
                 'label' => 'Attribute Values',
                 'config' => [
