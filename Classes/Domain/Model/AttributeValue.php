@@ -36,16 +36,15 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class AttributeValue extends AbstractEntity
 {
+    /**
+     * @var string
+     */
+    protected string $value = '';
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Product
      */
     protected ?Product $product = null;
-
-    /**
-     * @var string
-     */
-    protected string $value = '';
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Attribute
