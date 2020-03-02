@@ -29,12 +29,17 @@ class Collection implements Arrayable
     /**
      * Return array of collection where key is value of given property
      *
-     * @param string $property
+     * @param string $property Name of property
+     * @param callable $callback Callback for keys
      * @return Collection
      */
-    public function mapWithKeysOfProperty(string $property): Collection
+    public function mapWithKeysOfProperty(string $property, callable $callback = null): Collection
     {
         $keys = $this->pluck($property)->toArray();
+
+        if ($callback) {
+            $keys = array_map($callback, $keys);
+        }
 
         return new static(array_combine($keys, $this->collection));
     }
@@ -158,6 +163,17 @@ class Collection implements Arrayable
 
         reset($this->collection);
         return current($this->collection);
+    }
+
+    /**
+     * Filter collection by given callback
+     *
+     * @param callable $callback
+     * @return Collection
+     */
+    public function filter(callable $callback): Collection
+    {
+        return new static(array_filter($this->collection, $callback));
     }
 
     /**
