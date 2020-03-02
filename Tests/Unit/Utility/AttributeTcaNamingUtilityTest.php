@@ -21,6 +21,69 @@ class AttributeTcaNamingUtilityTest extends UnitTestCase
 
         $expect = 'tx_pxaproductmanager_attribute_12';
 
-        $this->assertEquals($expect, AttributeTcaNamingUtility::translateAttributeToTcaFieldName($attribute));
+        $this->assertEquals($expect, AttributeTcaNamingUtility::translateToTcaFieldName($attribute));
+    }
+
+    /**
+     * @test
+     */
+    public function translateFileAttributeToTcaFieldNameReturnTcaFieldNameOfFal()
+    {
+        $uid = 12;
+        $attribute = createEntity(Attribute::class, ['uid' => $uid, 'type' => Attribute::ATTRIBUTE_TYPE_IMAGE]);
+
+        $expect = 'tx_pxaproductmanager_attribute_fal_12';
+
+        $this->assertEquals($expect, AttributeTcaNamingUtility::translateToTcaFieldName($attribute));
+    }
+
+    /**
+     * @test
+     */
+    public function isAttributeFieldNameReturnTrueIfAttributeField()
+    {
+        $field = 'tx_pxaproductmanager_attribute_12';
+
+        $this->assertTrue(AttributeTcaNamingUtility::isAttributeFieldName($field));
+    }
+
+    /**
+     * @test
+     */
+    public function isFileAttributeFieldNameReturnTrueIfFalFieldName()
+    {
+        $field = 'tx_pxaproductmanager_attribute_fal_12';
+
+        $this->assertTrue(AttributeTcaNamingUtility::isFileAttributeFieldName($field));
+    }
+
+    /**
+     * @test
+     */
+    public function isFileAttributeFieldNameReturnFalseIfNotFalFieldName()
+    {
+        $field = 'tx_pxaproductmanager_attribute_12';
+
+        $this->assertFalse(AttributeTcaNamingUtility::isFileAttributeFieldName($field));
+    }
+
+    /**
+     * @test
+     */
+    public function extractIdFromFieldNameExtractIntIdFromTcaFieldName()
+    {
+        $field = 'tx_pxaproductmanager_attribute_12';
+
+        $this->assertEquals(12, AttributeTcaNamingUtility::extractIdFromFieldName($field));
+    }
+
+    /**
+     * @test
+     */
+    public function extractIdFromFalFieldNameExtractIntIdFromTcaFieldName()
+    {
+        $field = 'tx_pxaproductmanager_attribute_fal_1082';
+
+        $this->assertEquals(1082, AttributeTcaNamingUtility::extractIdFromFieldName($field));
     }
 }

@@ -63,7 +63,7 @@ class FalProvider implements ProviderInterface
         string $allowedFileExtensions = '',
         string $disallowedFileExtensions = ''
     ): array {
-        $fieldName = AttributeTcaNamingUtility::translateAttributeToTcaFieldName($this->attribute);
+        $fieldName = AttributeTcaNamingUtility::translateToTcaFieldName($this->attribute);
 
         return [
             'exclude' => false,

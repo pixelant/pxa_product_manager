@@ -8,6 +8,7 @@ use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ProviderInterfac
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
+use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
@@ -64,10 +65,12 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             $this->init();
 
             $product = $this->rawRowToProduct($row);
+            // Save result. This is not cached
+            $attributesSets = $product->_getAllAttributesSets();
 
-            if (!empty($product->getAllAttributesSets())) {
-                $this->populateTCA($product->getAllAttributesSets(), $result['processedTca']);
-                $this->simulateDataValues($product->getAllAttributesSets(), $result['databaseRow']);
+            if (!empty($attributesSets)) {
+                $this->populateTCA($attributesSets, $result['processedTca']);
+                $this->simulateDataValues($product, $attributesSets, $result['databaseRow']);
 
                 if (is_array($result['defaultLanguageDiffRow'])) {
                     $diffKey = sprintf(
@@ -141,7 +144,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             /** @var Attribute $attribute */
             foreach ($attributesSet->getAttributes() as $attribute) {
                 $attributeTCA = $this->getConfigurationProvider($attribute)->get();
-                $field = AttributeTcaNamingUtility::translateAttributeToTcaFieldName($attribute);
+                $field = AttributeTcaNamingUtility::translateToTcaFieldName($attribute);
 
                 $tca['columns'][$field] = $attributeTCA;
 
@@ -202,32 +205,35 @@ class ProductEditFormManipulation implements FormDataProviderInterface
      * Simulate DB data for attributes
      *
      * @param Product $product
+     * @param array $attributesSets
      * @param array $dbRow
      */
-    protected function simulateDataValues(Product $product, array &$dbRow): void
+    protected function simulateDataValues(Product $product, array $attributesSets, array &$dbRow): void
     {
-        $attributes = $this->collection($attributesSets)->pluck('attributes')->shiftLevel()->toArray();
+        // Exclude FAL attributes
+        $attributes = $this->collection($attributesSets)
+            ->pluck('attributes')
+            ->shiftLevel()
+            ->filter(fn(Attribute $attribute) => $attribute->isFalType() === false)
+            ->toArray();
+
+        /** @var AttributeValue[] $values */
+        $values = $this->collection($product->getAttributesValues())
+            ->mapWithKeysOfProperty('attribute', fn(Attribute $valueAttribute) => $valueAttribute->getUid())
+            ->toArray();
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
-            $field = TcaUtility::getAttributeTCAFieldName($attribute->getUid());
+            $field = AttributeTcaNamingUtility::translateToTcaFieldName($attribute);
 
-            if (array_key_exists($attribute->getUid(), $attributeUidToValue)) {
-                switch ($attribute->getType()) {
-                    case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
-                    case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
-                        $dbRow[$field] = GeneralUtility::trimExplode(
-                            ',',
-                            $attributeUidToValue[$attribute->getUid()],
-                            true
-                        );
-                        break;
-                    default:
-                        $dbRow[$field] = $attributeUidToValue[$attribute->getUid()];
-                }
-            } elseif ($attribute->getDefaultValue()
-                && $attribute->getType() !== Attribute::ATTRIBUTE_TYPE_MULTISELECT
-            ) {
+            if (array_key_exists($attribute->getUid(), $values)) {
+                /** @var AttributeValue $value */
+                $value = $values[$attribute->getUid()];
+
+                $dbRow[$field] = $attribute->isSelectBoxType()
+                    ? GeneralUtility::trimExplode(',', $value->getValue(), true)
+                    : $value->getValue();
+            } elseif (!$attribute->isSelectBoxType()) {
                 $dbRow[$field] = $attribute->getDefaultValue();
             }
         }
@@ -241,6 +247,9 @@ class ProductEditFormManipulation implements FormDataProviderInterface
      */
     protected function setDiffData(array &$diffRow, array &$defaultLanguageRow)
     {
+        // TODO implementation
+        die(__METHOD__);
+
         $attributeUidToValues = [];
 
         if (!empty($diffRow['serialized_attributes_values'])) {

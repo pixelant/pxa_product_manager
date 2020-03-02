@@ -8,6 +8,10 @@ defined('TYPO3_MODE') || die;
         \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface::class,
         \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService::class
     );
+    $extbaseContainer->registerImplementation(
+        \Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface::class,
+        \Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService::class
+    );
 
     // Register field control for identifier attribute
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [

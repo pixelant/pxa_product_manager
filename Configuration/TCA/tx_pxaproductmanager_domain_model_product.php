@@ -3,7 +3,7 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
-    $falAttributesField = \Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility::class;
+    $falAttributesField = \Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility::FAL_DB_FIELD;
 
     return [
         'ctrl' => [
