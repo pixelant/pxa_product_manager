@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Domain\Adapter\Attributes;
+namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
  */
-interface AdapterInterface
+interface MapperInterface
 {
     /**
-     * Adapt attribute value.
+     * Set attribute value.
      * It should fine corresponding attribute value entity,
-     * read DB value and set in given attribute value property
+     * read value and set in given attribute value property
      *
      * @param Product $product
      * @param Attribute $attribute
      */
-    public function adapt(Product $product, Attribute $attribute): void;
+    public function map(Product $product, Attribute $attribute): void;
 }

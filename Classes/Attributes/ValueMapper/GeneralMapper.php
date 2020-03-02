@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Domain\Adapter\Attributes;
+namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * @package Pixelant\PxaProductManager\Domain\Service
+ * General mapper for string values
  */
-class GeneralAdapter extends AbstractAdapter
+class GeneralMapper extends AbstractMapper
 {
     /**
      * @inheritDoc
      */
-    public function adapt(Product $product, Attribute $attribute): void
+    public function map(Product $product, Attribute $attribute): void
     {
         if ($attributeValue = $this->searchAttributeValue($product, $attribute)) {
             $attribute->setValue($attributeValue->getValue());

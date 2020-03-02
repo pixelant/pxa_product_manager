@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Domain\Adapter\Attributes;
+namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
@@ -9,9 +9,9 @@ use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * @package Pixelant\PxaProductManager\Domain\Service
+ * Abstract mapper
  */
-abstract class AbstractAdapter implements AdapterInterface
+abstract class AbstractMapper implements MapperInterface
 {
     use CanCreateCollection;
 

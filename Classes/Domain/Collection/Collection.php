@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Collection;
 
+use InvalidArgumentException;
 use Pixelant\PxaProductManager\Arrayable;
 use Traversable;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
@@ -178,7 +179,7 @@ class Collection implements Arrayable
     protected function iterableToArray($items): array
     {
         if (!is_iterable($items) && !($items instanceof Arrayable)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Collection accept only iterable argument as collection, but "%s" given', gettype($items)),
                 1582719546879
             );

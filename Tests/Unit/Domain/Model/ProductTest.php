@@ -4,7 +4,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Domain\Service\AttributesValuesMapper;
+use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService;
 
 /**
  * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
@@ -28,7 +28,7 @@ class ProductTest extends UnitTestCase
      */
     public function getAttributesWillFillValues()
     {
-        $am = $this->prophesize(AttributesValuesMapper::class);
+        $am = $this->prophesize(MapperService::class);
         $am->map($this->subject)->shouldBeCalled();
 
         $this->subject->injectAttributesValuesMapper($am->reveal());

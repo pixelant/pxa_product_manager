@@ -2,6 +2,13 @@
 defined('TYPO3_MODE') || die;
 
 (function () {
+    // Extbase
+    $extbaseContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\Container\Container::class);
+    $extbaseContainer->registerImplementation(
+        \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface::class,
+        \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService::class
+    );
+
     // Register field control for identifier attribute
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
         'nodeName' => 'attributeIdentifierControl',

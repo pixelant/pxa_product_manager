@@ -1,9 +1,9 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Tests\Unit\Adapter\Attributes;
+namespace Pixelant\PxaProductManager\Tests\Unit\Adapter\Attributes\ValueMapper;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Domain\Adapter\Attributes\GeneralAdapter;
+use Pixelant\PxaProductManager\Attributes\ValueMapper\GeneralMapper;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
@@ -12,7 +12,7 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 /**
  * @package Pixelant\PxaProductManager\Tests\Unit\Adapter\Attributes
  */
-class GeneralAdapterTest extends UnitTestCase
+class GeneralMapperTest extends UnitTestCase
 {
     protected $subject;
 
@@ -20,7 +20,7 @@ class GeneralAdapterTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->subject = new GeneralAdapter();
+        $this->subject = new GeneralMapper();
     }
 
     /**
@@ -60,7 +60,7 @@ class GeneralAdapterTest extends UnitTestCase
     /**
      * @test
      */
-    public function adaptWillSetValueOfAttributeValueForAttribute()
+    public function mapWillSetValueOfAttributeValueForAttribute()
     {
         $attributeValue = $this->prophesize(AttributeValue::class);
         $attributeValue->getValue()->shouldBeCalled()->willReturn('testvalue');
@@ -68,10 +68,10 @@ class GeneralAdapterTest extends UnitTestCase
         $attribute = createEntity(Attribute::class, 1);
         $product = createEntity(Product::class, 1);
 
-        $adapter = $this->createPartialMock(GeneralAdapter::class, ['searchAttributeValue']);
+        $adapter = $this->createPartialMock(GeneralMapper::class, ['searchAttributeValue']);
         $adapter->expects($this->once())->method('searchAttributeValue')->willReturn($attributeValue->reveal());
 
-        $adapter->adapt($product, $attribute);
+        $adapter->map($product, $attribute);
 
         $this->assertEquals('testvalue', $attribute->getValue());
     }

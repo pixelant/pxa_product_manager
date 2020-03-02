@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Domain\Service;
+namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 
-use Pixelant\PxaProductManager\Domain\Adapter\Attributes\AdapterFactory;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
@@ -12,9 +11,23 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
  *
  * @package Pixelant\PxaProductManager\Domain\Service
  */
-class AttributesValuesMapper
+class MapperService implements MapperServiceInterface
 {
     use CanCreateCollection;
+
+    /**
+     * @var MapperFactory
+     */
+    protected MapperFactory $factory;
+
+    /**
+     * @param MapperFactory $factory
+     */
+    public function __construct(MapperFactory $factory)
+    {
+        $this->factory = $factory;
+    }
+
 
     /**
      * Take product, fill all attributes with values and return processed attributes
@@ -30,7 +43,7 @@ class AttributesValuesMapper
             ->toArray();
 
         foreach ($attributes as $attribute) {
-            AdapterFactory::factory($attribute)->adapt($product, $attribute);
+            $this->factory->create($attribute)->map($product, $attribute);
         }
 
         return $attributes;

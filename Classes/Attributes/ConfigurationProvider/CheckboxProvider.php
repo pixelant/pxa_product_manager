@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Backend\Provider\AttributesConfiguration;
+namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
 /**
  * Checkbox configuration

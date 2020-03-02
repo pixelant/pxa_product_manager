@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
-use Pixelant\PxaProductManager\Backend\Provider\AttributesConfiguration\ConfigurationProviderFactory;
-use Pixelant\PxaProductManager\Backend\Provider\AttributesConfiguration\ProviderInterface;
+use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory;
+use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ProviderInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;

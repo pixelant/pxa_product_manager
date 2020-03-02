@@ -1,9 +1,9 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Tests\Unit\Backend\Provider\AttributesConfiguration;
+namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Backend\Provider\AttributesConfiguration\AbstractProvider;
+use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\AbstractProvider;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 
 /**
