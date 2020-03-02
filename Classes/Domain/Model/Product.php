@@ -27,8 +27,8 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  ***************************************************************/
 
 use DateTime;
+use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
-use Pixelant\PxaProductManager\Domain\Service\AttributesValuesMapper;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -40,9 +40,9 @@ class Product extends AbstractEntity
     use AbleCacheProperties, CanCreateCollection;
 
     /**
-     * @var AttributesValuesMapper
+     * @var MapperServiceInterface
      */
-    protected AttributesValuesMapper $attributesValuesMapper;
+    protected MapperServiceInterface $attributesValuesMapper;
 
     /**
      * @var string
@@ -171,7 +171,7 @@ class Product extends AbstractEntity
      * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeValue>
      */
-    protected ObjectStorage $attributeValues;
+    protected ObjectStorage $attributesValues;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -199,9 +199,9 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @param AttributesValuesMapper $attributesValuesMapper
+     * @param MapperServiceInterface $attributesValuesMapper
      */
-    public function injectAttributesValuesMapper(AttributesValuesMapper $attributesValuesMapper)
+    public function injectAttributesValuesMapper(MapperServiceInterface $attributesValuesMapper)
     {
         $this->attributesValuesMapper = $attributesValuesMapper;
     }
@@ -225,7 +225,7 @@ class Product extends AbstractEntity
         $this->links = new ObjectStorage();
         $this->falLinks = new ObjectStorage();
         $this->assets = new ObjectStorage();
-        $this->attributeValues = new ObjectStorage();
+        $this->attributesValues = new ObjectStorage();
         $this->attributesSets = new ObjectStorage();
     }
 
@@ -628,25 +628,27 @@ class Product extends AbstractEntity
     /**
      * @return ObjectStorage
      */
-    public function getAttributeValues(): ObjectStorage
+    public function getAttributesValues(): ObjectStorage
     {
-        return $this->attributeValues;
+        return $this->attributesValues;
     }
 
     /**
-     * @param ObjectStorage $attributeValues
+     * @param ObjectStorage $attributesValues
      * @return Product
      */
-    public function setAttributeValues(ObjectStorage $attributeValues): Product
+    public function setAttributesValues(ObjectStorage $attributesValues): Product
     {
-        $this->attributeValues = $attributeValues;
+        $this->attributesValues = $attributesValues;
         return $this;
     }
 
     /**
+     * Return attributes set that were assigned to only this products
+     *
      * @return ObjectStorage
      */
-    public function getAttributesSets(): ObjectStorage
+    public function getOwnAttributesSets(): ObjectStorage
     {
         return $this->attributesSets;
     }
@@ -672,25 +674,36 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return all attribute set.
-     * It fetch every attribute set of every category from parents tree
-     * + product own attributes sets
+     * Will return all attributes sets of all categories rootline.
+     * Init attribute values at same time
      *
      * @return AttributeSet[]
      */
-    public function getAllAttributesSets(): array
+    public function getAttributesSets(): array
     {
-        return $this->getCachedProperty('allAttributesSets', function () {
-            $attributesSets = $this->collection($this->attributesSets);
-
-            $categoriesAttributeSets = $this->collection($this->getCategoriesWithParents())
-                ->pluck('attributesSets')
-                ->shiftLevel();
-
-            return array_values(
-                $attributesSets->unionUniqueProperty($categoriesAttributeSets, 'uid')->toArray()
-            );
+        return $this->getCachedProperty('attributesSets', function () {
+            return $this->attributesValuesMapper->map($this);
         });
+    }
+
+    /**
+     * Get array of all product attributes.
+     * It will init attributes values
+     *
+     * @return Attribute[]
+     */
+    public function getAttributes(): array
+    {
+        // This will cache result and map attributes values
+        $attributesSets = $this->getAttributesSets();
+
+        $attributes = $this->collection($attributesSets)
+            ->pluck('attributes')
+            ->shiftLevel()
+            ->toArray();
+
+        // Reset keys
+        return array_values($attributes);
     }
 
     /**
@@ -710,15 +723,24 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Get array of all product attributes.
-     * It will init attributes values
+     * Return all attributes sets.
+     * It fetch every attribute set of every category from parents tree
+     * + product own attributes sets
      *
-     * @return Attribute[]
+     * @return AttributeSet[]
+     * @internal Use in BE in order to get all attributes for edit form rendering. Do not use on FE
+     * @see getAttributes
      */
-    public function getAttributes(): array
+    public function _getAllAttributesSets(): array
     {
-        return $this->getCachedProperty('attributes', function () {
-            return $this->attributesValuesMapper->map($this);
-        });
+        $attributesSets = $this->collection($this->getOwnAttributesSets());
+
+        $categoriesAttributeSets = $this->collection($this->getCategoriesWithParents())
+            ->pluck('attributesSets')
+            ->shiftLevel();
+
+        return array_values(
+            $attributesSets->unionUniqueProperty($categoriesAttributeSets, 'uid')->toArray()
+        );
     }
 }
