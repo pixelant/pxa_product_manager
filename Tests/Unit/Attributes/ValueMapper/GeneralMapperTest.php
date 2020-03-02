@@ -49,7 +49,7 @@ class GeneralMapperTest extends UnitTestCase
 
         /** @var Product $product */
         $product = createEntity(Product::class, 1);
-        $product->setAttributeValues(createObjectStorage($attributeValue1, $attributeValue2, $attributeValue3));
+        $product->setAttributesValues(createObjectStorage($attributeValue1, $attributeValue2, $attributeValue3));
 
         $this->assertSame(
             $attributeValue3,

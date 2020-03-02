@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+
+	<tx_pxaproductmanager_domain_model_attributevalue>
+		<uid>10</uid>
+		<pid>1</pid>
+		<product>10</product>
+		<attribute>100</attribute>
+		<value>passed</value>
+	</tx_pxaproductmanager_domain_model_attributevalue>
+
+	<tx_pxaproductmanager_domain_model_attributevalue>
+		<uid>20</uid>
+		<pid>1</pid>
+		<product>10</product>
+		<attribute>101</attribute>
+		<value>missing</value>
+	</tx_pxaproductmanager_domain_model_attributevalue>
+
+</dataset>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Tests\Functional;
+namespace Pixelant\PxaProductManager\Tests\Functional\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
@@ -38,7 +38,7 @@ class ProductTest extends FunctionalTestCase
 
         $product = $this->repository->findByUid(10);
 
-        $allAttributesSets = $product->getAllAttributesSets();
+        $allAttributesSets = $product->_getAllAttributesSets();
 
         $expectAttributesSetsUids = [4, 1, 2, 3, 5];
         $this->assertEquals($expectAttributesSetsUids, entitiesToUidsArray($allAttributesSets));

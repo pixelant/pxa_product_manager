@@ -49,6 +49,31 @@ class CollectionTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function canMapCollectionWithKeysFromPropertyValueWithCallbackFunction()
+    {
+        $item1 = [
+            'prop' => createEntity(Category::class, 22),
+            'name' => 'test',
+        ];
+        $item2 = [
+            'prop' => createEntity(Category::class, 33),
+            'name' => 'name test',
+        ];
+        $collectionArray = [
+            $item1,
+            $item2,
+        ];
+
+        $expect = [22 => $item1, 33 => $item2];
+
+        $collection = new Collection($collectionArray);
+
+        $this->assertEquals($expect, $collection->mapWithKeysOfProperty('prop', fn($collectionKey) => $collectionKey->getUid())->toArray());
+    }
+
+    /**
+     * @test
      * @dataProvider toArrayReturnIterableToArrayDataProvider
      */
     public function toArrayReturnIterableToArray($items, $expect)
@@ -292,6 +317,19 @@ class CollectionTest extends UnitTestCase
         $collection = new Collection($items);
 
         $this->assertSame($item1, $collection->first());
+    }
+
+    /**
+     * @test
+     */
+    public function filterFilterItems()
+    {
+        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        $items = [$item1, $item2, $item3];
+
+        $collection = new Collection($items);
+
+        $this->assertEquals([$item1], $collection->filter(fn($filterItem) => $filterItem->getUid() === 1)->toArray());
     }
 
     public function toArrayReturnIterableToArrayDataProvider()
