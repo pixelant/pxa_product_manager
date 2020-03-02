@@ -25,12 +25,9 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Extbase\Persistence\Repository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * Class AttributeValueRepository
@@ -39,120 +36,70 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 class AttributeValueRepository extends Repository
 {
     /**
-     * Help to find in row with list of values (2,3,4) and value 3
+     * Find raw attribute value
      *
-     * @param QueryInterface $query
-     * @param $field
-     * @param $value
-     * @return \TYPO3\CMS\Extbase\Persistence\Generic\Qom\OrInterface
+     * @param int $productUid
+     * @param int $attributeUid
+     * @return array|null
      */
-    protected function createInRowQuery(QueryInterface $query, $field, $value)
+    public function findRawByProductAndAttribute(int $productUid, int $attributeUid): ?array
     {
-        return $query->logicalOr([
-            $query->like($field, $value . ',%'),
-            $query->like($field, '%,' . $value . ',%'),
-            $query->like($field, '%,' . $value),
-            $query->equals($field, $value)
-        ]);
-    }
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
 
-    /**
-     * Find attribute value by attribute and its value
-     *
-     * @param $attribute
-     * @param array $values
-     * @param string $filterConjunction
-     * @param bool $rawResult
-     * @return QueryResultInterface|array
-     */
-    public function findAttributeValuesByAttributeAndValues(
-        $attribute,
-        array $values,
-        string $filterConjunction = 'or',
-        $rawResult = false
-    ) {
-        $query = $this->createQuery();
-
-        $query
-            ->getQuerySettings()
-            ->setRespectStoragePage(false);
-
-        $valuesConstraints = [];
-        foreach ($values as $value) {
-            $valuesConstraints[] = $this->createInRowQuery($query, 'value', $value);
-        }
-
-        $query->matching(
-            $query->logicalAnd([
-                $query->equals('attribute', $attribute),
-                $filterConjunction === 'and'
-                    ? $query->logicalAnd($valuesConstraints)
-                    : $query->logicalOr($valuesConstraints)
-            ])
-        );
-
-        return $query->execute($rawResult);
-    }
-
-    /**
-     * Find attribute values by their attribute and option values (higher or lower)
-     *
-     * @param $attribute
-     * @param int $minValue
-     * @param int $maxValue
-     * @return QueryResultInterface|array
-     */
-    public function findAttributeValuesByAttributeAndMinMaxOptionValues(
-        int $attribute,
-        int $minValue = null,
-        int $maxValue = null
-    ) {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            'tx_pxaproductmanager_domain_model_attributevalue'
-        );
-
-        $constraints[] = $queryBuilder->expr()->eq(
-            'tx_pxaproductmanager_domain_model_attributevalue.attribute',
-            $queryBuilder->createNamedParameter($attribute, \PDO::PARAM_INT)
-        );
-
-        if ($minValue !== null) {
-            $constraints[] = $queryBuilder->expr()->gte(
-                'option.value',
-                $queryBuilder->createNamedParameter($minValue, \PDO::PARAM_INT)
-            );
-        }
-
-        if ($maxValue !== null) {
-            $constraints[] = $queryBuilder->expr()->lte(
-                'option.value',
-                $queryBuilder->createNamedParameter($maxValue, \PDO::PARAM_INT)
-            );
-        }
-
-        $result = $queryBuilder
-            ->select('tx_pxaproductmanager_domain_model_attributevalue.uid')
+        $row = $queryBuilder
+            ->select('*')
             ->from('tx_pxaproductmanager_domain_model_attributevalue')
-            ->join(
-                'tx_pxaproductmanager_domain_model_attributevalue',
-                'tx_pxaproductmanager_domain_model_option',
-                'option',
-                // ugly fix for "IN". but using just "IN" doesn't work
-                /**
-                 * @TODO find nice way for this query
-                 */
-                sprintf(
-                    'CONCAT(\',\', %s, \',\') LIKE CONCAT(\'%%,\', %s, \',%%\')',
-                    $queryBuilder->quoteIdentifier('tx_pxaproductmanager_domain_model_attributevalue.value'),
-                    $queryBuilder->quoteIdentifier('option.uid')
-                )
+            ->where(
+                $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productUid, \PDO::PARAM_INT)),
+                $queryBuilder->expr()->eq('attribute', $queryBuilder->createNamedParameter($attributeUid, \PDO::PARAM_INT))
             )
-            ->where(...$constraints)
-            ->groupBy('tx_pxaproductmanager_domain_model_attributevalue.uid')
+            ->setMaxResults(1)
             ->execute()
-            ->fetchAll();
+            ->fetch();
 
-        return $result;
+        return is_array($row) ? $row : null;
+    }
+
+    /**
+     * Update value field by uid
+     *
+     * @param int $uid
+     * @param $value
+     */
+    public function updateValue(int $uid, $value): void
+    {
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxaproductmanager_domain_model_attributevalue')
+            ->update(
+                'tx_pxaproductmanager_domain_model_attributevalue',
+                ['value' => $value],
+                ['uid' => $uid]
+            );
+    }
+
+    /**
+     * Create with value for product and attribute
+     *
+     * @param int $product
+     * @param int $attribute
+     * @param $value
+     * @return int Uid of created value
+     */
+    public function createWithValue(int $product, int $attribute, $value): int
+    {
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxaproductmanager_domain_model_attributevalue');
+
+        $connection->insert(
+            'tx_pxaproductmanager_domain_model_attributevalue',
+            [
+                'product' => $product,
+                'attribute' => $attribute,
+                'value' => $value,
+            ]
+        );
+
+        return (int)$connection->lastInsertId('tx_pxaproductmanager_domain_model_attributevalue');
     }
 }
