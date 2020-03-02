@@ -30,14 +30,29 @@ class MapperService implements MapperServiceInterface
 
 
     /**
-     * Take product, fill all attributes with values and return processed attributes
+     * Take product, fill all attributes with values and return attributes sets
      *
      * @param Product $product
      * @return array
      */
     public function map(Product $product): array
     {
-        $attributes = $this->collection($product->getAllAttributesSets())
+        $attributesSets = $product->_getAllAttributesSets();
+
+        $this->process($product, $attributesSets);
+
+        return $attributesSets;
+    }
+
+    /**
+     * Process all attributes
+     *
+     * @param Product $product
+     * @param array $attributesSets
+     */
+    protected function process(Product $product, array $attributesSets): void
+    {
+        $attributes = $this->collection($attributesSets)
             ->pluck('attributes')
             ->shiftLevel()
             ->toArray();
@@ -45,7 +60,5 @@ class MapperService implements MapperServiceInterface
         foreach ($attributes as $attribute) {
             $this->factory->create($attribute)->map($product, $attribute);
         }
-
-        return $attributes;
     }
 }

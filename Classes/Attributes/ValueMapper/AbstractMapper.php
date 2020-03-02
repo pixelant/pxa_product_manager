@@ -24,7 +24,7 @@ abstract class AbstractMapper implements MapperInterface
      */
     protected function searchAttributeValue(Product $product, Attribute $attribute): ?AttributeValue
     {
-        return $this->collection($product->getAttributeValues())
+        return $this->collection($product->getAttributesValues())
             ->searchOneByProperty(
                 'attribute',
                 $attribute->getUid(),
