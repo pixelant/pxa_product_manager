@@ -43,8 +43,8 @@ class AbstractProviderTest extends UnitTestCase
 
         $this->assertEquals(
             $testConf + ['label' => 'Attribute'],
-            $this->callInaccessibleMethod($this->subject, 'getAttributeConfiguration'),
-            );
+            $this->callInaccessibleMethod($this->subject, 'getAttributeConfiguration')
+        );
     }
 
     /**

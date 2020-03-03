@@ -3,6 +3,7 @@
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\Product;
@@ -85,5 +86,21 @@ class ProductTest extends UnitTestCase
         $this->subject->setAttributesSets($sets);
 
         $this->assertSame($sets, $this->subject->getOwnAttributesSets());
+    }
+
+    /**
+     * @test
+     */
+    public function productCanUpdateAttributeValue()
+    {
+        $attribute = createEntity(Attribute::class, 1);
+        $newValue = 'new value';
+
+        $updater = $this->prophesize(ValueUpdaterService::class);
+        $updater->update($this->subject, $attribute, $newValue)->shouldBeCalled();
+
+        $this->subject->injectUpdaterInterface($updater->reveal());
+
+        $this->subject->updateAttributeValue($attribute, $newValue);
     }
 }

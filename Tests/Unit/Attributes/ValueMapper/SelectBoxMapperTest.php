@@ -1,9 +1,8 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Tests\Unit\Adapter\Attributes\ValueMapper;
+namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ValueMapper;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Attributes\ValueMapper\GeneralMapper;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\SelectBoxMapper;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;

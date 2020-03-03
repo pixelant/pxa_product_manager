@@ -1,6 +1,6 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Tests\Unit\Adapter\Attributes\ValueMapper;
+namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ValueMapper;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\DateTimeMapper;
