@@ -33,6 +33,35 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 class Image extends AbstractFileReference
 {
     /**
+     * Types
+     */
+    const LISTING_IMAGE = 2;
+    const MAIN_IMAGE = 1;
+
+    /**
+     * @var int
+     */
+    protected int $type = 0;
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     * @return Image
+     */
+    public function setType(int $type): Image
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
      * Get title
      *
      * @return string

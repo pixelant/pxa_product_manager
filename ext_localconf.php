@@ -13,6 +13,19 @@ defined('TYPO3_MODE') || die;
         \Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService::class
     );
 
+    // Configure plugin
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'Pi1',
+        [
+            'Product' => 'list, show,',
+        ],
+        // non-cacheable actions
+        [
+        ]
+    );
+
+
     // Register field control for identifier attribute
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
         'nodeName' => 'attributeIdentifierControl',
@@ -32,7 +45,7 @@ defined('TYPO3_MODE') || die;
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['pxa_product_manager'] =
         \Pixelant\PxaProductManager\Hook\FlexFormDataStructureHook::class;
 
-    // Register default plugin actions with flexform settigns
+    // Register default plugin actions with flexform settings
     \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Pixelant\PxaProductManager\Configuration\Flexform\Registry::class)->registerDefaultActions();
 
     // Register hook to show plugin flexform settings preview

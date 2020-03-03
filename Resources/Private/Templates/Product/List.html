@@ -14,18 +14,19 @@
                     <f:if condition="{treeData.subItems}">
                         <div class="products-navigation">
                             <div class="list-group">
-                                <f:render partial="Navigation/Menu" arguments="{items: treeData.subItems, level: '{treeData.level}'}"/>
+                                <f:render partial="Navigation/Menu"
+                                          arguments="{items: treeData.subItems, level: '{treeData.level}'}" />
                             </div>
                         </div>
                     </f:if>
                 </div>
                 <div class="col-md-9">
-                    <f:render section="productWrapper" arguments="{_all}"/>
+                    <f:render section="productWrapper" arguments="{_all}" />
                 </div>
             </f:then>
             <f:else>
                 <div class="col-md-12">
-                    <f:render section="productWrapper" arguments="{_all}"/>
+                    <f:render section="productWrapper" arguments="{_all}" />
                 </div>
             </f:else>
         </f:if>
@@ -35,14 +36,15 @@
 <f:section name="productWrapper">
     <div class="products-wrapper">
 
-        <!--Category title-->
-        <f:if condition="{category.title}">
+        <f:if condition="{category}">
             <div class="products-header">
                 <h1>{category.title}</h1>
                 <f:format.html>{category.description}</f:format.html>
+
                 <f:if condition="{category.contentPage}">
                     <div>
-                        <f:cObject typoscriptObjectPath="lib.dynamicContent" data="{pageUid: category.contentPage, colPos: category.contentColPos}" />
+                        <f:cObject typoscriptObjectPath="lib.dynamicContent"
+                                   data="{pageUid: category.contentPage, colPos: category.contentColPos}" />
                     </div>
                 </f:if>
             </div>
@@ -50,37 +52,37 @@
 
         <div class="items-list row">
 
-            <!--Show categories-->
-            <f:if condition="{subCategories}">
-                <f:for each="{subCategories}" as="subCategory">
-                    <f:render section="item" arguments="{image: subCategory.image, title: subCategory.title, category: subCategory}" />
-                </f:for>
-            </f:if>
+            <f:for as="subCategory" each="{category.subCategories}">
+                <f:render section="card" arguments="{image: subCategory.image, title: subCategory.title}" />
+            </f:for>
 
-            <!-- Show products -->
-            <f:if condition="!{category.hideProducts} && ({subCategories->f:count()} == 0 || {settings.showCategoriesWithProducts})">
-                <f:if condition="{products}">
-                    <f:then>
-                        <f:for each="{products}" as="product">
-                            <f:render section="item" arguments="{product:product, image: product.thumbnail, category: category}" />
-                        </f:for>
-                    </f:then>
-                    <f:else>
-                        <f:if condition="{subCategories->f:count()} == 0">
-                            <div class="no-products-found">
-                                <f:translate key="fe.no_products_found"/>
-                            </div>
-                        </f:if>
-                    </f:else>
-                </f:if>
+
+            <f:if condition="!{category.hideProducts}">
+                <f:for as="product" each="{products}">
+                    <f:render section="card"
+                              arguments="{image: product.listImage, title: product.name, teaser: product.teaser}" />
+                </f:for>
             </f:if>
 
         </div>
     </div>
 </f:section>
-<f:section name="item">
-    <div class="col-md-4 col-sm-6">
-        <f:render partial="Product/Card" arguments="{_all}" />
+
+<f:section name="card">
+    <div class="card" style="width: 18rem;">
+        <f:if condition="{image}">
+            <f:image image="{image}"
+                     maxHeight="{settings.listView.images.maxHeight}"
+                     maxWidth="{settings.listView.images.maxWidth}"
+                     class="card-img-top"
+                     alt="{title}"
+                     title="{title}" />
+        </f:if>
+        <div class="card-body">
+            <h5 class="card-title">{title}</h5>
+            <p class="card-text">{teaser -> f:format.raw()}</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
     </div>
 </f:section>
 </html>

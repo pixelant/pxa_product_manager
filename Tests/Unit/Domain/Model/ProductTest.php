@@ -6,6 +6,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
+use Pixelant\PxaProductManager\Domain\Model\Image;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService;
 
@@ -102,5 +103,33 @@ class ProductTest extends UnitTestCase
         $this->subject->injectUpdaterInterface($updater->reveal());
 
         $this->subject->updateAttributeValue($attribute, $newValue);
+    }
+
+    /**
+     * @test
+     */
+    public function getImageByPropertyReturnMatchedImage()
+    {
+        $image1 = createEntity(Image::class, ['uid' => 1]);
+        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
+
+        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+
+        $this->assertSame($image2, $this->subject->getMainImage());
+    }
+
+    /**
+     * @test
+     */
+    public function getImageByPropertyReturnFirstImageIfNoMatches()
+    {
+        $image1 = createEntity(Image::class, ['uid' => 1, 'type' => 0]);
+        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = createEntity(Image::class, ['uid' => 3]);
+
+        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+
+        $this->assertSame($image1, $this->subject->getListImage());
     }
 }

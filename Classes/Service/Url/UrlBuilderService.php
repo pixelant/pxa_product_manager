@@ -5,8 +5,6 @@ namespace Pixelant\PxaProductManager\Service\Link;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Traits\SignalSlot\DispatcherTrait;
-use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\Connection;
@@ -19,10 +17,8 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
  * Class LinkBuilderService
  * @package Pixelant\PxaProductManager\Service\Link
  */
-class LinkBuilderService
+class UrlBuilderService implements UrlBuilderServiceInterface
 {
-    use DispatcherTrait;
-
     /**
      * Link constants
      */
@@ -30,44 +26,23 @@ class LinkBuilderService
     const NAMESPACES = 'tx_pxaproductmanager_pi1';
 
     /**
-     * Cache category arguments
-     *
-     * @var array
-     */
-    protected static $cacheCategories = [];
-
-    /**
      * @var TypoScriptFrontendController
      */
-    protected $typoScriptFrontendController = null;
+    protected TypoScriptFrontendController $tsfe;
 
     /**
-     * Language uid
-     *
      * @var int
      */
-    protected $languageUid = 0;
+    protected int $languageUid = 0;
 
     /**
      * Initialize
      *
-     * @param int|null $languageUid Provide language to generate urls
      * @param TypoScriptFrontendController|null $typoScriptFrontendController
-     * @throws \TYPO3\CMS\Core\Context\Exception\AspectNotFoundException
      */
-    public function __construct(
-        int $languageUid = null,
-        TypoScriptFrontendController $typoScriptFrontendController = null
-    ) {
-        if ($languageUid !== null) {
-            $this->languageUid = $languageUid;
-        } elseif ($this->isFrontendRequestType()) {
-            /** @var LanguageAspect $languageAspect */
-            $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
-            $this->languageUid = $languageAspect->getId();
-        }
-
-        $this->typoScriptFrontendController = $typoScriptFrontendController;
+    public function __construct(TypoScriptFrontendController $typoScriptFrontendController = null)
+    {
+        $this->tsfe = $typoScriptFrontendController;
     }
 
     /**
@@ -200,7 +175,7 @@ class LinkBuilderService
         /** @var ContentObjectRenderer $contentObjectRenderer */
         $contentObjectRenderer = GeneralUtility::makeInstance(
             ContentObjectRenderer::class,
-            $this->typoScriptFrontendController
+            $this->tsfe
         );
         return $contentObjectRenderer->typolink_URL($confLink);
     }
@@ -208,68 +183,24 @@ class LinkBuilderService
     /**
      * Get category tree arguments
      *
-     * @param int $categoryUid
+     * @param Category|null $category
      * @return array
      */
-    protected function getCategoriesArguments(int $categoryUid): array
+    protected function getCategoriesArguments(?Category $category): array
     {
-        if ($categoryUid <= 0) {
+        if ($category === null) {
             return [];
-        }
-
-        if (isset(static::$cacheCategories[$categoryUid])) {
-            return static::$cacheCategories[$categoryUid];
-        }
-
-        $i = 0;
-        $categories = [$categoryUid];
-
-        // Get parent
-        $parentUid = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('sys_category')
-            ->select(
-                ['parent'],
-                'sys_category',
-                ['uid' => $categoryUid]
-            )
-            ->fetchColumn(0);
-
-        // Recursive get all parents UIDs
-        // But exclude root category and make sure that parents doesn't repeat
-        while ($parentUid) {
-            $i++;
-            if ($i > 50) {
-                throw new \RuntimeException('Rich maximum recursive level', 1555924319262);
-            }
-
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getQueryBuilderForTable('sys_category');
-            $expr = $queryBuilder->expr();
-
-            $parentRow = $queryBuilder
-                ->select('uid', 'parent', 'pxapm_nav_hide')
-                ->from('sys_category')
-                ->where(
-                    $expr->eq('uid', $queryBuilder->createNamedParameter($parentUid, \PDO::PARAM_INT)),
-                    $expr->neq('parent', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
-                    $expr->notIn('uid', $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY))
-                )
-                ->execute()
-                ->fetch();
-            // Save result
-            $parentUid = is_array($parentRow) ? $parentRow['parent'] : 0;
-            if ($parentUid !== 0 && !$parentRow['pxapm_nav_hide']) {
-                $categories[] = $parentRow['uid'];
-            }
         }
 
         $arguments = [];
         $i = 0;
-        foreach (array_reverse($categories) as $category) {
+        $treeLine = $category->getParentsRootLineReverse();
+        $lastCategory = array_pop($treeLine);
+
+        foreach ($treeLine as $categoryItem) {
             $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i++] = $category;
         }
-
-        static::$cacheCategories[$categoryUid] = $arguments;
+        $arguments['category'] = $lastCategory;
 
         return $arguments;
     }

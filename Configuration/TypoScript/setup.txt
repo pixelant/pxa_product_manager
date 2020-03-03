@@ -63,6 +63,8 @@ plugin.tx_pxaproductmanager {
         }
 
         listView {
+            limit = 20
+
             images {
                 maxWidth = {$plugin.tx_pxaproductmanager.settings.listView.images.maxWidth}
                 maxHeight = {$plugin.tx_pxaproductmanager.settings.listView.images.maxHeight}
@@ -86,6 +88,10 @@ plugin.tx_pxaproductmanager {
         demand {
             orderByAllowed = name,tstamp,crdate,categories,categories.sorting,sorting
             allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy,filtersConjunction
+
+            objects {
+                productDemand =
+            }
         }
 
         attributes {

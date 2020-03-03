@@ -32,7 +32,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
  * Class Demand
  * @package Pixelant\PxaProductManager\Domain\Model
  */
-class Demand implements DemandInterface
+class ProductDemand implements DemandInterface
 {
     /**
      * Array of PIDs storage
@@ -58,12 +58,12 @@ class Demand implements DemandInterface
     /**
      * @var string
      */
-    protected ?string $orderBy = null;
+    protected string $orderBy = '';
 
     /**
      * @var string
      */
-    protected ?string $orderDirection = null;
+    protected string $orderDirection = '';
 
     /**
      * Fields that are allowed to oder by
@@ -97,9 +97,9 @@ class Demand implements DemandInterface
 
     /**
      * @param array|null $storagePid
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setStoragePid(?array $storagePid): Demand
+    public function setStoragePid(?array $storagePid): ProductDemand
     {
         $this->storagePid = $storagePid;
         return $this;
@@ -115,9 +115,9 @@ class Demand implements DemandInterface
 
     /**
      * @param int $limit
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setLimit(int $limit): Demand
+    public function setLimit(int $limit): ProductDemand
     {
         $this->limit = $limit;
         return $this;
@@ -133,9 +133,9 @@ class Demand implements DemandInterface
 
     /**
      * @param int $offSet
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setOffSet(int $offSet): Demand
+    public function setOffSet(int $offSet): ProductDemand
     {
         $this->offSet = $offSet;
         return $this;
@@ -151,9 +151,9 @@ class Demand implements DemandInterface
 
     /**
      * @param string $orderBy
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setOrderBy(string $orderBy): Demand
+    public function setOrderBy(string $orderBy): ProductDemand
     {
         $this->orderBy = $orderBy;
         return $this;
@@ -169,9 +169,9 @@ class Demand implements DemandInterface
 
     /**
      * @param string $orderDirection
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setOrderDirection(string $orderDirection): Demand
+    public function setOrderDirection(string $orderDirection): ProductDemand
     {
         $this->orderDirection = $orderDirection;
         return $this;
@@ -187,9 +187,9 @@ class Demand implements DemandInterface
 
     /**
      * @param string $orderByAllowed
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setOrderByAllowed(string $orderByAllowed): Demand
+    public function setOrderByAllowed(string $orderByAllowed): ProductDemand
     {
         $this->orderByAllowed = $orderByAllowed;
         return $this;
@@ -205,9 +205,9 @@ class Demand implements DemandInterface
 
     /**
      * @param array $categories
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setCategories(array $categories): Demand
+    public function setCategories(array $categories): ProductDemand
     {
         $this->categories = $categories;
         return $this;
@@ -223,9 +223,9 @@ class Demand implements DemandInterface
 
     /**
      * @param string $categoryConjunction
-     * @return Demand
+     * @return ProductDemand
      */
-    public function setCategoryConjunction(string $categoryConjunction): Demand
+    public function setCategoryConjunction(string $categoryConjunction): ProductDemand
     {
         $this->categoryConjunction = $categoryConjunction;
         return $this;

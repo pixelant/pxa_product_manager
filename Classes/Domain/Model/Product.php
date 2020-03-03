@@ -748,6 +748,26 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Return listing image if found
+     *
+     * @return Image|null
+     */
+    public function getListImage(): ?Image
+    {
+        return $this->findImageByType(Image::LISTING_IMAGE);
+    }
+
+    /**
+     * Return main image if found
+     *
+     * @return Image|null
+     */
+    public function getMainImage(): ?Image
+    {
+        return $this->findImageByType(Image::MAIN_IMAGE);
+    }
+
+    /**
      * Return all attributes sets.
      * It fetch every attribute set of every category from parents tree
      * + product own attributes sets
@@ -767,5 +787,18 @@ class Product extends AbstractEntity
         return array_values(
             $attributesSets->unionUniqueProperty($categoriesAttributeSets, 'uid')->toArray()
         );
+    }
+
+    /**
+     * Find image by type
+     *
+     * @return Image|null
+     */
+    protected function findImageByType(int $type): ?Image
+    {
+        $images = $this->collection($this->images);
+        $matchImage = $images->searchByProperty('type', $type)->first();
+
+        return $matchImage ?? $images->first();
     }
 }

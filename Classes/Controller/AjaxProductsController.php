@@ -25,7 +25,7 @@ namespace Pixelant\PxaProductManager\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
@@ -56,10 +56,10 @@ class AjaxProductsController extends ProductController
     /**
      * Ajax lazy loading
      *
-     * @param Demand $demand
+     * @param ProductDemand $demand
      * @return string Json formatted string
      */
-    public function ajaxLazyListAction(Demand $demand)
+    public function ajaxLazyListAction(ProductDemand $demand)
     {
         if ($this->settings['orderByAllowed']) {
             $demand->setOrderByAllowed($this->settings['orderByAllowed']);

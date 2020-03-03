@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Seo\XmlSitemap;
 
-use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
+use Pixelant\PxaProductManager\Service\Link\UrlBuilderService;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -197,10 +197,10 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     }
 
     /**
-     * @return LinkBuilderService
+     * @return UrlBuilderService
      */
-    protected function getLinkBuilderService(): LinkBuilderService
+    protected function getLinkBuilderService(): UrlBuilderService
     {
-        return GeneralUtility::makeInstance(LinkBuilderService::class);
+        return GeneralUtility::makeInstance(UrlBuilderService::class);
     }
 }

@@ -26,7 +26,7 @@ namespace Pixelant\PxaProductManager\LinkHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
+use Pixelant\PxaProductManager\Service\Link\UrlBuilderService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
@@ -102,12 +102,12 @@ class ProductLinkBuilder extends AbstractTypolinkBuilder
     /**
      * Get link builder
      *
-     * @return LinkBuilderService
+     * @return UrlBuilderService
      */
-    protected function getLinkBuilder(): LinkBuilderService
+    protected function getLinkBuilder(): UrlBuilderService
     {
         return GeneralUtility::makeInstance(
-            LinkBuilderService::class,
+            UrlBuilderService::class,
             null, // Detect language automatically
             $this->getTypoScriptFrontendController() // Pass give TypoScriptFrontendController
         );

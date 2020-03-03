@@ -26,7 +26,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
@@ -34,6 +34,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -47,13 +48,33 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class ProductRepository extends AbstractDemandRepository
 {
-
     /**
      * @inheritDoc
      */
     protected function createConstraints(QueryInterface $query, DemandInterface $demand): array
     {
-        die(__METHOD__);
-        // TODO: Implement createConstraints() method.
+        $constraints = [];
+        if (!empty($demand->getCategories())) {
+            $constraints['categories'] = $this->categoriesConstraint($query, $demand);
+        }
+
+        return $constraints;
+    }
+
+    /**
+     * Create categories contraint
+     *
+     * @param QueryInterface $query
+     * @param DemandInterface|ProductDemand $demand
+     * @return ConstraintInterface
+     */
+    protected function categoriesConstraint(QueryInterface $query, DemandInterface $demand): ConstraintInterface
+    {
+        $constraints = [];
+        foreach ($demand->getCategories() as $category) {
+            $constraints[] = $query->contains('categories', $category);
+        }
+
+        return $this->createConstraintFromConstraintsArray($query, $constraints, $demand->getCategoryConjunction());
     }
 }

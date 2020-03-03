@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\UserFunction;
 
-use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
+use Pixelant\PxaProductManager\Service\Link\UrlBuilderService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
@@ -40,10 +40,10 @@ class SolrProductLink
      * Get link builder
      *
      * @param int $languageUid
-     * @return LinkBuilderService
+     * @return UrlBuilderService
      */
-    public function getLinkBuilder(int $languageUid): LinkBuilderService
+    public function getLinkBuilder(int $languageUid): UrlBuilderService
     {
-        return GeneralUtility::makeInstance(LinkBuilderService::class, $languageUid);
+        return GeneralUtility::makeInstance(UrlBuilderService::class, $languageUid);
     }
 }

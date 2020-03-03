@@ -5,13 +5,13 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
+use Pixelant\PxaProductManager\Service\Link\UrlBuilderService;
 use Pixelant\PxaProductManager\Service\Mail\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
@@ -58,14 +58,14 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 class ProductControlle1r extends AbstractController
 {
     /**
-     * @var LinkBuilderService
+     * @var UrlBuilderService
      */
     protected $linkBuilderService = null;
 
     /**
-     * @param LinkBuilderService $builderService
+     * @param UrlBuilderService $builderService
      */
-    public function injectLinkBuilderService(LinkBuilderService $builderService)
+    public function injectLinkBuilderService(UrlBuilderService $builderService)
     {
         $this->linkBuilderService = $builderService;
     }
@@ -823,7 +823,7 @@ class ProductControlle1r extends AbstractController
      *
      * @param array $settings
      * @param string $class
-     * @return Demand
+     * @return ProductDemand
      */
     protected function createDemandFromSettings(
         array $settings,
@@ -832,11 +832,11 @@ class ProductControlle1r extends AbstractController
         $class = $class ??
             (!empty($settings['demandClass'])
                 ? $settings['demandClass']
-                : 'Pixelant\\PxaProductManager\\Domain\\Model\\DTO\\Demand');
+                : 'Pixelant\\PxaProductManager\\Domain\\Model\\DTO\\ProductDemand');
 
-        /** @var Demand $demand */
+        /** @var ProductDemand $demand */
         $demand = GeneralUtility::makeInstance($class);
-        if (!$demand instanceof Demand) {
+        if (!$demand instanceof ProductDemand) {
             throw new \UnexpectedValueException(
                 sprintf(
                 // @codingStandardsIgnoreStart
@@ -886,10 +886,10 @@ class ProductControlle1r extends AbstractController
     /**
      * Count results for demand
      *
-     * @param Demand $demand
+     * @param ProductDemand $demand
      * @return int
      */
-    protected function countDemanded(Demand $demand)
+    protected function countDemanded(ProductDemand $demand)
     {
         // Count all products
         // reset limit

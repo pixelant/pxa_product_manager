@@ -30,7 +30,7 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
-use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
+use Pixelant\PxaProductManager\Service\Link\UrlBuilderService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -59,7 +59,7 @@ class BreadcrumbsBuilder
     protected $categoryRepository;
 
     /**
-     * @var LinkBuilderService
+     * @var UrlBuilderService
      */
     protected $linkBuilder = null;
 
@@ -73,7 +73,7 @@ class BreadcrumbsBuilder
 
         $this->productRepository = $objectManager->get(ProductRepository::class);
         $this->categoryRepository = $objectManager->get(CategoryRepository::class);
-        $this->linkBuilder = GeneralUtility::makeInstance(LinkBuilderService::class);
+        $this->linkBuilder = GeneralUtility::makeInstance(UrlBuilderService::class);
     }
 
     /**
@@ -92,7 +92,7 @@ class BreadcrumbsBuilder
 
         if (is_array($arguments)) {
             foreach ($arguments as $argument => $value) {
-                if (StringUtility::beginsWith($argument, LinkBuilderService::CATEGORY_ARGUMENT_START_WITH)) {
+                if (StringUtility::beginsWith($argument, UrlBuilderService::CATEGORY_ARGUMENT_START_WITH)) {
                     /** @var Category $category */
                     $value = (int)$value;
                     $category = $this->categoryRepository->findByUid($value);
@@ -146,12 +146,12 @@ class BreadcrumbsBuilder
         $i = 0;
         foreach ($breadcrumbs as $breadcrumb) {
             if ($breadcrumb['uid']) {
-                $parameters[LinkBuilderService::CATEGORY_ARGUMENT_START_WITH . $i++] = $breadcrumb['uid'];
+                $parameters[UrlBuilderService::CATEGORY_ARGUMENT_START_WITH . $i++] = $breadcrumb['uid'];
             }
         }
 
         // now add actual parameter
-        $key = $isProduct ? 'product' : LinkBuilderService::CATEGORY_ARGUMENT_START_WITH . $i;
+        $key = $isProduct ? 'product' : UrlBuilderService::CATEGORY_ARGUMENT_START_WITH . $i;
         $parameters[$key] = $value;
 
         return $this->linkBuilder->buildForArguments((int)MainUtility::getTSFE()->id, $parameters);

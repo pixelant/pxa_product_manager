@@ -27,7 +27,7 @@ namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\DTO\Demand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\FiltersAvailableOptions;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
@@ -246,10 +246,10 @@ class AbstractController extends ActionController
     /**
      * Create object with available filters options
      *
-     * @param Demand $demand
+     * @param ProductDemand $demand
      * @return FiltersAvailableOptions
      */
-    protected function createFiltersAvailableOptions(Demand $demand): FiltersAvailableOptions
+    protected function createFiltersAvailableOptions(ProductDemand $demand): FiltersAvailableOptions
     {
         $filtersDemand = clone $demand;
         $filtersDemand->setLimit(0);
