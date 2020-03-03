@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
 /***************************************************************
@@ -23,7 +24,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
@@ -36,12 +37,4 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 class AttributeRepository extends Repository
 {
 
-    /**
-     * defaultOrderings
-     *
-     * @var array
-     */
-    protected $defaultOrderings = [
-        'sorting' => QueryInterface::ORDER_ASCENDING,
-    ];
 }

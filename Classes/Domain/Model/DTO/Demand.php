@@ -37,62 +37,47 @@ class Demand implements DemandInterface
     /**
      * Array of PIDs storage
      *
-     * @var array
+     * @var array|null
      */
-    protected $storagePid = [];
+    protected ?array $storagePid = null;
 
     /**
      * Limit query result
      *
      * @var int
      */
-    protected $limit = 0;
+    protected int $limit = 0;
 
     /**
      * Offset query result
      *
      * @var int
      */
-    protected $offSet = 0;
+    protected int $offSet = 0;
 
     /**
      * @var string
      */
-    protected $orderBy = 'name';
+    protected ?string $orderBy = null;
 
     /**
      * @var string
      */
-    protected $orderDirection = QueryInterface::ORDER_DESCENDING;
+    protected ?string $orderDirection = null;
 
     /**
      * Fields that are allowed to oder by
      *
      * @var string
      */
-    protected $orderByAllowed = '';
+    protected string $orderByAllowed = '';
 
     /**
      * Array of uids
      *
      * @var array
      */
-    protected $categories = [];
-
-    /**
-     * Array of uids
-     *
-     * @var array
-     */
-    protected $filters = [];
-
-    /**
-     * Filters conjunction
-     * could be 'or'
-     *
-     * @var string
-     */
-    protected $filtersConjunction = 'and';
+    protected array $categories = [];
 
     /**
      * Category conjunction
@@ -100,29 +85,24 @@ class Demand implements DemandInterface
      *
      * @var string
      */
-    protected $categoryConjunction = 'or';
+    protected string $categoryConjunction = 'or';
 
     /**
-     * Include discontinued products
-     *
-     * @var bool
+     * @return array|null
      */
-    protected $includeDiscontinued = false;
-
-    /**
-     * @return array
-     */
-    public function getCategories(): array
+    public function getStoragePid(): ?array
     {
-        return $this->categories;
+        return $this->storagePid;
     }
 
     /**
-     * @param array $categories
+     * @param array|null $storagePid
+     * @return Demand
      */
-    public function setCategories(array $categories)
+    public function setStoragePid(?array $storagePid): Demand
     {
-        $this->categories = array_map('intval', $categories);
+        $this->storagePid = $storagePid;
+        return $this;
     }
 
     /**
@@ -135,10 +115,12 @@ class Demand implements DemandInterface
 
     /**
      * @param int $limit
+     * @return Demand
      */
-    public function setLimit(int $limit)
+    public function setLimit(int $limit): Demand
     {
         $this->limit = $limit;
+        return $this;
     }
 
     /**
@@ -151,66 +133,12 @@ class Demand implements DemandInterface
 
     /**
      * @param int $offSet
+     * @return Demand
      */
-    public function setOffSet(int $offSet)
+    public function setOffSet(int $offSet): Demand
     {
         $this->offSet = $offSet;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCategoryConjunction(): string
-    {
-        return $this->categoryConjunction;
-    }
-
-    /**
-     * @param string $categoryConjunction
-     */
-    public function setCategoryConjunction(string $categoryConjunction)
-    {
-        $this->categoryConjunction = $categoryConjunction;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFilters(): array
-    {
-        return $this->filters;
-    }
-
-    /**
-     * @param array $filters
-     */
-    public function setFilters(array $filters)
-    {
-        $this->filters = $filters;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFiltersConjunction(): string
-    {
-        return $this->filtersConjunction;
-    }
-
-    /**
-     * @param string $filtersConjunction
-     */
-    public function setFiltersConjunction(string $filtersConjunction)
-    {
-        $this->filtersConjunction = $filtersConjunction;
-    }
-
-    /**
-     * @param array $filter
-     */
-    public function addFilter(array $filter)
-    {
-        $this->filters[] = $filter;
+        return $this;
     }
 
     /**
@@ -223,10 +151,12 @@ class Demand implements DemandInterface
 
     /**
      * @param string $orderBy
+     * @return Demand
      */
-    public function setOrderBy(string $orderBy)
+    public function setOrderBy(string $orderBy): Demand
     {
         $this->orderBy = $orderBy;
+        return $this;
     }
 
     /**
@@ -239,10 +169,12 @@ class Demand implements DemandInterface
 
     /**
      * @param string $orderDirection
+     * @return Demand
      */
-    public function setOrderDirection(string $orderDirection)
+    public function setOrderDirection(string $orderDirection): Demand
     {
         $this->orderDirection = $orderDirection;
+        return $this;
     }
 
     /**
@@ -255,41 +187,47 @@ class Demand implements DemandInterface
 
     /**
      * @param string $orderByAllowed
+     * @return Demand
      */
-    public function setOrderByAllowed(string $orderByAllowed)
+    public function setOrderByAllowed(string $orderByAllowed): Demand
     {
         $this->orderByAllowed = $orderByAllowed;
+        return $this;
     }
 
     /**
      * @return array
      */
-    public function getStoragePid(): array
+    public function getCategories(): array
     {
-        return $this->storagePid;
+        return $this->categories;
     }
 
     /**
-     * @param array $storagePid
+     * @param array $categories
+     * @return Demand
      */
-    public function setStoragePid(array $storagePid)
+    public function setCategories(array $categories): Demand
     {
-        $this->storagePid = $storagePid;
+        $this->categories = $categories;
+        return $this;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function getIncludeDiscontinued(): bool
+    public function getCategoryConjunction(): string
     {
-        return $this->includeDiscontinued;
+        return $this->categoryConjunction;
     }
 
     /**
-     * @param bool $includeDiscontinued
+     * @param string $categoryConjunction
+     * @return Demand
      */
-    public function setIncludeDiscontinued(bool $includeDiscontinued)
+    public function setCategoryConjunction(string $categoryConjunction): Demand
     {
-        $this->includeDiscontinued = $includeDiscontinued;
+        $this->categoryConjunction = $categoryConjunction;
+        return $this;
     }
 }

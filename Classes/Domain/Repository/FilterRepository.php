@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
 /***************************************************************
@@ -26,6 +27,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
@@ -37,7 +39,7 @@ class FilterRepository extends Repository
      * Uids array
      *
      * @param array $uids
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return array|QueryResultInterface
      */
     public function findByUidList(array $uids)
     {

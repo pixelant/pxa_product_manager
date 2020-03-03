@@ -32,6 +32,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use UnexpectedValueException;
 
 /**
  * Class AbstractDemandRepository
@@ -41,20 +42,11 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
 {
     /**
      * @param DemandInterface $demand
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return QueryResultInterface
      */
     public function findDemanded(DemandInterface $demand): QueryResultInterface
     {
         return $this->createDemandQuery($demand)->execute();
-    }
-
-    /**
-     * @param DemandInterface $demand
-     * @return array
-     */
-    public function findDemandedRaw(DemandInterface $demand): array
-    {
-        return $this->createDemandQuery($demand)->execute(true);
     }
 
     /**
@@ -139,7 +131,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
         string $conjunction
     ): ConstraintInterface {
         if (empty($constraints)) {
-            throw new \UnexpectedValueException('Constraints array could not be empty', 1501051836879);
+            throw new UnexpectedValueException('Constraints array could not be empty', 1501051836879);
         }
 
         if (count($constraints) === 1) {
