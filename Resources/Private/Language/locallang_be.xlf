@@ -18,6 +18,200 @@
 				<source>Sync with "Name" field</source>
 			</trans-unit>
 			<!--TCA notifications:END-->
+
+			<!--FlexForm:START-->
+			<trans-unit id="flexform.sheet_title">
+				<source>General settings</source>
+			</trans-unit>
+
+			<!--FlexForm:Plugin modes:START-->
+			<trans-unit id="flexform.mode">
+				<source>Plugin mode</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.select_mode">
+				<source>Select mode</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.product_controller">
+				<source>Products</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.product_list">
+				<source>List view with navigation</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.product_custom_products_list">
+				<source>Custom products list view</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.product_show">
+				<source>Single view</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.product_wish_list">
+				<source>Wish list (Order form)</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.product_compare_view">
+				<source>Compare view</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.product_lazy_list">
+				<source>Lazy list</source>
+			</trans-unit>
+			<!--FlexForm:Plugin modes:END-->
+
+			<!--FlexForm:List:START-->
+			<trans-unit id="flexform.list.entry_navigation_category">
+				<source>Entry category</source>
+			</trans-unit>
+			<!--FlexForm:List:END-->
+
+			<!--FlexForm:PIDS:START-->
+			<trans-unit id="flexform.pids.single_view_pid">
+				<source>Single view page. Overrides Typoscript default page.</source>
+			</trans-unit>
+			<trans-unit id="flexform.pids.list_view_pid">
+				<source>List view page</source>
+			</trans-unit>
+			<!--FlexForm:PIDS:END-->
+
+			<!--FlexForm:Navigation:START-->
+			<trans-unit id="flexform.navigation_title">
+				<source>Navigation</source>
+			</trans-unit>
+			<trans-unit id="flexform.navigation.hide_on_detail_view">
+				<source>Hide navigation when switch to detail product view</source>
+			</trans-unit>
+			<trans-unit id="flexform.navigation.hide_categories_without_products">
+				<source>Hide categories without products</source>
+			</trans-unit>
+			<trans-unit id="flexform.navigation.expand_all">
+				<source>Expand all categories</source>
+			</trans-unit>
+			<!--FlexForm:Navigation:END-->
+
+			<!--FlexForm:LazyList:END-->
+			<trans-unit id="flexform.lazy_list.entry_categories">
+				<source>Entry categories</source>
+			</trans-unit>
+			<trans-unit id="flexform.lazy_list.categories_conjunction_mode">
+				<source>Categories conjunction mode</source>
+			</trans-unit>
+			<trans-unit id="flexform.categories_mode_and">
+				<source>Products must contain all selected categories</source>
+			</trans-unit>
+			<trans-unit id="flexform.categories_mode_or">
+				<source>Products must contain at least one of the selected categories</source>
+			</trans-unit>
+			<trans-unit id="flexform.lazy_list.exclude_categories">
+				<source>Exclude product categories</source>
+			</trans-unit>
+			<trans-unit id="flexform.lazy_list.limit">
+				<source>Limit</source>
+			</trans-unit>
+			<!--Filters-->
+			<trans-unit id="flexform.filtering_sheet__title">
+				<source>Filtering</source>
+			</trans-unit>
+			<trans-unit id="flexform.filtering.filters">
+				<source>Filters</source>
+			</trans-unit>
+			<trans-unit id="flexform.filtering.hide_filter_options_no_result">
+				<source>Hide filtering options without result</source>
+			</trans-unit>
+			<trans-unit id="flexform.filtering.conjunction">
+				<source>Conjunction between filters</source>
+			</trans-unit>
+			<trans-unit id="flexform.filtering.conjunction_and">
+				<source>AND</source>
+			</trans-unit>
+			<trans-unit id="flexform.filtering.conjunction_or">
+				<source>OR</source>
+			</trans-unit>
+			<!--FlexForm:LazyList:END-->
+
+			<!--FlexForm:ProductOrdering:START-->
+			<trans-unit id="flexform.product_orderings">
+				<source>Product ordering</source>
+			</trans-unit>
+			<trans-unit id="flexform.product_orderings.order_by">
+				<source>Sort by</source>
+			</trans-unit>
+			<trans-unit id="flexform.product_orderings.order_direction">
+				<source>Sort direction</source>
+			</trans-unit>
+			<!--FlexForm:ProductOrdering:END-->
+
+			<!--FlexForm:CategoriesOrdering:START-->
+			<trans-unit id="flexform.categories_orderings">
+				<source>Categories ordering</source>
+			</trans-unit>
+			<trans-unit id="flexform.categories_orderings.order_by">
+				<source>Sort by</source>
+			</trans-unit>
+			<trans-unit id="flexform.categories_orderings.order_direction">
+				<source>Sort direction</source>
+			</trans-unit>
+			<!--FlexForm:CategoriesOrdering:END-->
+
+			<!--FlexForm:Sorting:START-->
+			<trans-unit id="flexform.sort_direction_asc">
+				<source>Ascending</source>
+			</trans-unit>
+			<trans-unit id="flexform.sort_direction_desc">
+				<source>Descending</source>
+			</trans-unit>
+			<trans-unit id="flexform.sortby_name">
+				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="flexform.sortby_tstamp">
+				<source>Last updated</source>
+			</trans-unit>
+			<trans-unit id="flexform.sortby_crdate">
+				<source>Creation date</source>
+			</trans-unit>
+			<trans-unit id="flexform.sortby_categories">
+				<source>Category</source>
+			</trans-unit>
+			<trans-unit id="flexform.sortby_title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="flexform.sortby_sorting">
+				<source>Default sorting</source>
+			</trans-unit>
+			<!--FlexForm:Sorting:END-->
+
+
+			<!--FlexForm:SingleView:START-->
+			<trans-unit id="flexform.single_view_title">
+				<source>Single view</source>
+			</trans-unit>
+			<trans-unit id="flexform.single_view.show_latest_visited_products">
+				<source>Show latest visited products</source>
+			</trans-unit>
+			<!--FlexForm:SingleView:END-->
+
+			<!--FlexForm:WishList:START-->
+			<trans-unit id="flexform.wish_list.enable_order_function">
+				<source>Enable order function</source>
+			</trans-unit>
+			<!--FlexForm:WishList:END-->
+
+			<!--FlexForm:CustomProductsList:START-->
+			<trans-unit id="flexform.custom_products_list.mode">
+				<source>Custom products list mode</source>
+			</trans-unit>
+			<trans-unit id="flexform.custom_products_list.mode.products">
+				<source>Defined by products list</source>
+			</trans-unit>
+			<trans-unit id="flexform.custom_products_list.mode.category">
+				<source>Defined by categories</source>
+			</trans-unit>
+			<trans-unit id="flexform.custom_products_list.products">
+				<source>Select products</source>
+			</trans-unit>
+			<trans-unit id="flexform.custom_products_list.categories">
+				<source>Select categories</source>
+			</trans-unit>
+			<trans-unit id="flexform.custom_products_list.limit">
+				<source>Limit</source>
+			</trans-unit>
+			<!--FlexForm:CustomProductsList:END-->
+			<!--FlexForm:END-->
 		</body>
 	</file>
 </xliff>

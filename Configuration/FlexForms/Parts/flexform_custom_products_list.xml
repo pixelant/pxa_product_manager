@@ -1,0 +1,88 @@
+<T3DataStructure>
+	<sheets>
+		<sDEF>
+			<ROOT>
+				<el>
+					<settings.customProductsList.limit>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.limit</label>
+							<config>
+								<type>input</type>
+								<size>5</size>
+								<eval>int</eval>
+							</config>
+						</TCEforms>
+					</settings.customProductsList.limit>
+
+					<settings.customProductsList.mode>
+						<TCEforms>
+							<onChange>reload</onChange>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode</label>
+							<config>
+								<type>select</type>
+								<renderType>selectSingle</renderType>
+								<items type="array">
+									<numIndex index="0" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode.products</numIndex>
+										<numIndex index="1">products</numIndex>
+									</numIndex>
+									<numIndex index="1" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode.category</numIndex>
+										<numIndex index="1">category</numIndex>
+									</numIndex>
+								</items>
+							</config>
+						</TCEforms>
+					</settings.customProductsList.mode>
+
+					<settings.customProductsList.products>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.products</label>
+							<displayCond>FIELD:sDEF.settings.customProductsList.mode:=:products</displayCond>
+							<config>
+								<type>group</type>
+								<internal_type>db</internal_type>
+								<allowed>tx_pxaproductmanager_domain_model_product</allowed>
+								<size>10</size>
+								<minitems>0</minitems>
+								<maxitems>50</maxitems>
+								<show_thumbs>1</show_thumbs>
+								<wizards>
+									<suggest>
+										<type>suggest</type>
+									</suggest>
+								</wizards>
+							</config>
+						</TCEforms>
+					</settings.customProductsList.products>
+
+					<settings.customProductsList.categories>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.categories</label>
+							<displayCond>FIELD:sDEF.settings.customProductsList.mode:=:category</displayCond>
+							<config>
+								<type>select</type>
+								<renderMode>tree</renderMode>
+								<renderType>selectTree</renderType>
+								<treeConfig>
+									<parentField>parent</parentField>
+									<appearance>
+										<maxLevels>99</maxLevels>
+										<expandAll>TRUE</expandAll>
+										<showHeader>TRUE</showHeader>
+									</appearance>
+								</treeConfig>
+								<foreign_table>sys_category</foreign_table>
+								<foreign_table_where> AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0) ORDER BY sys_category.sorting</foreign_table_where>
+								<size>10</size>
+								<autoSizeMax>20</autoSizeMax>
+								<minitems>0</minitems>
+								<maxitems>99</maxitems>
+							</config>
+						</TCEforms>
+					</settings.customProductsList.categories>
+				</el>
+			</ROOT>
+		</sDEF>
+	</sheets>
+</T3DataStructure>

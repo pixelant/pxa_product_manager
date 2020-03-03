@@ -27,6 +27,13 @@ defined('TYPO3_MODE') || die;
             \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class
         ]
     ];
+
+    // Modify data structure of flexform. Hook will dynamically load flexform parts for selected action
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['pxa_product_manager'] =
+        \Pixelant\PxaProductManager\Hook\FlexFormDataStructureHook::class;
+
+    // Register default plugin actions with flexform settigns
+    \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Pixelant\PxaProductManager\Configuration\Flexform\Registry::class)->registerDefaultActions();
 })();
 
 /*call_user_func(

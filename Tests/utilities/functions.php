@@ -50,3 +50,12 @@ function createObjectStorage(...$objects): \TYPO3\CMS\Extbase\Persistence\Object
 
     return $objectStorage;
 }
+
+function getProtectedVarValue($object, $property)
+{
+    $reflector = new ReflectionClass($object);
+    $property = $reflector->getProperty($property);
+    $property->setAccessible(true);
+
+    return $property->getValue($object);
+}

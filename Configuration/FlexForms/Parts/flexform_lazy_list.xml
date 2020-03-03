@@ -1,0 +1,147 @@
+<T3DataStructure>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <el>
+                    <settings.lazyList.limit>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lazy_list.limit</label>
+                            <config>
+                                <type>input</type>
+                                <size>5</size>
+                                <eval>int</eval>
+                            </config>
+                        </TCEforms>
+                    </settings.lazyList.limit>
+
+                    <settings.lazyList.categoriesConjunctionMode>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lazy_list.categories_conjunction_mode</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.categories_mode_and</numIndex>
+                                        <numIndex index="1">and</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.categories_mode_or</numIndex>
+                                        <numIndex index="1">or</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.lazyList.categoriesConjunctionMode>
+
+                    <settings.lazyList.entryCategories>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lazy_list.entry_categories</label>
+                            <config>
+                                <type>select</type>
+                                <renderMode>tree</renderMode>
+                                <renderType>selectTree</renderType>
+                                <treeConfig>
+                                    <parentField>parent</parentField>
+                                    <appearance>
+                                        <maxLevels>99</maxLevels>
+                                        <expandAll>TRUE</expandAll>
+                                        <showHeader>TRUE</showHeader>
+                                    </appearance>
+                                </treeConfig>
+                                <foreign_table>sys_category</foreign_table>
+                                <foreign_table_where>AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent= 0) ORDER BY sys_category.sorting</foreign_table_where>
+                                <size>10</size>
+                                <autoSizeMax>20</autoSizeMax>
+                                <minitems>1</minitems>
+                                <maxitems>1</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.lazyList.entryCategories>
+
+                    <settings.lazyList.excludeCategories>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lazy_list.exclude_categories</label>
+                            <config>
+                                <type>select</type>
+                                <renderMode>tree</renderMode>
+                                <renderType>selectTree</renderType>
+                                <treeConfig>
+                                    <parentField>parent</parentField>
+                                    <appearance>
+                                        <maxLevels>99</maxLevels>
+                                        <expandAll>TRUE</expandAll>
+                                        <showHeader>TRUE</showHeader>
+                                    </appearance>
+                                </treeConfig>
+                                <foreign_table>sys_category</foreign_table>
+                                <foreign_table_where> AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0) ORDER BY sys_category.sorting</foreign_table_where>
+                                <size>10</size>
+                                <autoSizeMax>20</autoSizeMax>
+                                <minitems>0</minitems>
+                                <maxitems>99</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.lazyList.excludeCategories>
+                </el>
+            </ROOT>
+        </sDEF>
+
+        <filtering>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filtering_sheet__title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.filtering.hideFilterOptionsNoResult>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filtering.hide_filter_options_no_result</label>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                                <renderType>checkboxToggle</renderType>
+                            </config>
+                        </TCEforms>
+                    </settings.filtering.hideFilterOptionsNoResult>
+
+                    <settings.filtering.conjunction>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filtering.conjunction</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filtering.conjunction_and</numIndex>
+                                        <numIndex index="1">and</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filtering.conjunction_or</numIndex>
+                                        <numIndex index="1">or</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.filtering.conjunction>
+
+                    <settings.filtering.filters>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.filtering.filters</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectMultipleSideBySide</renderType>
+                                <foreign_table>tx_pxaproductmanager_domain_model_filter</foreign_table>
+                                <foreign_table_where> AND (tx_pxaproductmanager_domain_model_filter.sys_language_uid = 0 OR tx_pxaproductmanager_domain_model_filter.l10n_parent = 0) ORDER BY tx_pxaproductmanager_domain_model_filter.sorting</foreign_table_where>
+                                <size>10</size>
+                                <minitems>1</minitems>
+                                <autoSizeMax>20</autoSizeMax>
+                                <maxitems>9999</maxitems>
+                            </config>
+                        </TCEforms>
+                    </settings.filtering.filters>
+                </el>
+            </ROOT>
+        </filtering>
+    </sheets>
+</T3DataStructure>
