@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 
 use DateTime;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
+use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -43,6 +44,11 @@ class Product extends AbstractEntity
      * @var MapperServiceInterface
      */
     protected MapperServiceInterface $attributesValuesMapper;
+
+    /**
+     * @var UpdaterInterface
+     */
+    protected UpdaterInterface $attributeValueUpdater;
 
     /**
      * @var string
@@ -204,6 +210,14 @@ class Product extends AbstractEntity
     public function injectAttributesValuesMapper(MapperServiceInterface $attributesValuesMapper)
     {
         $this->attributesValuesMapper = $attributesValuesMapper;
+    }
+
+    /**
+     * @param UpdaterInterface $updaterInterface
+     */
+    public function injectUpdaterInterface(UpdaterInterface $updaterInterface)
+    {
+        $this->attributeValueUpdater = $updaterInterface;
     }
 
     /**
@@ -720,6 +734,17 @@ class Product extends AbstractEntity
         ));
 
         return $this->collection($all)->unique()->toArray();
+    }
+
+    /**
+     * Will update attribute value record with new value for given attribute
+     *
+     * @param Attribute $attribute
+     * @param $value
+     */
+    public function updateAttributeValue(Attribute $attribute, $value): void
+    {
+        $this->attributeValueUpdater->update($this, $attribute, $value);
     }
 
     /**
