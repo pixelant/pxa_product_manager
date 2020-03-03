@@ -41,41 +41,40 @@ plugin.tx_pxaproductmanager {
     }
 
     settings {
-        # pid
-        pagePid = {$plugin.tx_pxaproductmanager.settings.pagePid}
-        excludeCategoriesFromUrl = {$plugin.tx_pxaproductmanager.settings.excludeCategoriesFromUrl}
+        # Pids
+        pids {
+            singleViewPid = {$plugin.tx_pxaproductmanager.settings.pids.singleViewPid}
+            wishListPid = {$plugin.tx_pxaproductmanager.settings.pids.wishListPid}
+        }
 
-        # general settings
-        latestVisitedProductsLimit = {$plugin.tx_pxaproductmanager.settings.latestVisitedProductsLimit}
-        showCategoriesWithProducts = {$plugin.tx_pxaproductmanager.settings.showCategoriesWithProducts}
-        doNotShowEmptyCategoriesInNavigation = {$plugin.tx_pxaproductmanager.settings.doNotShowEmptyCategoriesInNavigation}
-        disableProductCanonicalUrl = {$plugin.tx_pxaproductmanager.settings.disableProductCanonicalUrl}
-        showHiddenRecords = {$plugin.tx_pxaproductmanager.settings.showHiddenRecords}
-        showInSingleView = {$plugin.tx_pxaproductmanager.settings.showInSingleView}
-        showPricesInTemplate = {$plugin.tx_pxaproductmanager.settings.showPricesInTemplate}
-        metaDescriptionMaxLength = {$plugin.tx_pxaproductmanager.settings.metaDescriptionMaxLength}
+        # Seo settings
+        seo {
+            metaDescriptionMaxLength = {$plugin.tx_pxaproductmanager.settings.seo.metaDescriptionMaxLength}
+        }
 
-        lazyLoading {
-            loadMoreType = {$plugin.tx_pxaproductmanager.settings.lazyLoading.loadMoreType}
+        # Single view settings
+        singleView {
+            latestVisitedLimit = {$plugin.tx_pxaproductmanager.settings.singleView.latestVisitedLimit}
 
-            pageType = 201701
+            images {
+                mainMaxWidth = {$plugin.tx_pxaproductmanager.settings.singleView.images.mainMaxWidth}
+                mainMaxHeight = {$plugin.tx_pxaproductmanager.settings.singleView.images.mainMaxHeight}
+            }
+        }
+
+        listView {
+            images {
+                maxWidth = {$plugin.tx_pxaproductmanager.settings.listView.images.maxWidth}
+                maxHeight = {$plugin.tx_pxaproductmanager.settings.listView.images.maxHeight}
+            }
         }
 
         wishList {
-            enable = {$plugin.tx_pxaproductmanager.settings.wishList.enable}
-            limit = {$plugin.tx_pxaproductmanager.settings.wishList.limit}
-            pagePid = {$plugin.tx_pxaproductmanager.settings.wishList.pagePid}
-            cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/like.svg
-            buttonIcon = EXT:pxa_product_manager/Resources/Public/Icons/like_combine.png
-            pageType = 201702
-            showTaxInfo = {$plugin.tx_pxaproductmanager.settings.wishList.showTaxInfo}
-            checkoutSystem = {$plugin.tx_pxaproductmanager.settings.wishList.checkoutSystem}
-            enableFlyToCartAnimation = {$plugin.tx_pxaproductmanager.settings.wishList.enableFlyToCartAnimation}
+            limitItems = {$plugin.tx_pxaproductmanager.settings.wishList.limitItems}
 
-            # Order emails
-            orderForm {
-                adminEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailAdmin.html
-                userEmailTemplatePath = EXT:pxa_product_manager/Resources/Private/Templates/Mails/OrderEmailUser.html
+            images {
+                maxWidth = {$plugin.tx_pxaproductmanager.settings.wishList.images.maxWidth}
+                maxHeight = {$plugin.tx_pxaproductmanager.settings.wishList.images.maxHeight}
             }
         }
 
@@ -84,261 +83,15 @@ plugin.tx_pxaproductmanager {
             senderEmail = {$plugin.tx_pxaproductmanager.settings.email.senderEmail}
         }
 
-        compareList {
-            enable = {$plugin.tx_pxaproductmanager.settings.compareList.enable}
-            pagePid = {$plugin.tx_pxaproductmanager.settings.compareList.pagePid}
-            cartIcon = EXT:pxa_product_manager/Resources/Public/Icons/Svg/balance.svg
-            buttonIcon < .cartIcon
-            pageType = 201702
-            enableFlyToCartAnimation = {$plugin.tx_pxaproductmanager.settings.compareList.enableFlyToCartAnimation}
-        }
-
-        additionalClasses {
-            categories {
-                # can be used to add additional classes to products in templates
-                # uidOfClass = className(s)
-            }
-
-            launched {
-                isNewClass = product-new
-            }
-
-            discontinued {
-                isDiscontinuedClass = product-discontinued
-            }
-        }
-
-        customSorting {
-            # if enabled parses pointsAsNew + configured categories to assign a value into custom_sorting
-            enable = 0
-            points {
-                new = 50
-                categories {
-                    # categoryId = points
-                    # xx = xxx
-                }
-            }
-        }
-
-        launched {
-            # uses DateInterval interval_spec f.ex P14D or P1Y to calculate if product should be considered as a new product
-            # if not set, no calculation will occur
-            dateIntervalAsNew =
-        }
-
         demand {
-            allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy,includeDiscontinued,filtersConjunction
+            orderByAllowed = name,tstamp,crdate,categories,categories.sorting,sorting
+            allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy,filtersConjunction
         }
-
-        orderByAllowed = name,tstamp,crdate,categories,categories.sorting,custom_sorting,sorting
 
         attributes {
-            includeSkuInAttributeListing = {$plugin.tx_pxaproductmanager.settings.attributes.includeSkuInAttributeListing}
+            # Don't compare images and link
+            ignoreAttributeTypesInCompareView = 6,7
             dateFormat = {$plugin.tx_pxaproductmanager.settings.attributes.dateFormat}
-            divideAttributesBySets = {$plugin.tx_pxaproductmanager.settings.attributes.divideAttributesBySets}
-            iconMaxSize = {$plugin.tx_pxaproductmanager.settings.attributes.iconMaxSize}
-            iconClasses = {$plugin.tx_pxaproductmanager.settings.attributes.iconClasses}
-        }
-
-        # gallery
-        images {
-            pathNoImage = EXT:pxa_product_manager/Resources/Public/Images/noimage.png
-
-            singleView {
-                mainMaxWidth = {$plugin.tx_pxaproductmanager.settings.images.singleView.mainMaxWidth}
-                mainMaxHeight = {$plugin.tx_pxaproductmanager.settings.images.singleView.mainMaxHeight}
-                attributeMaxWidth = {$plugin.tx_pxaproductmanager.settings.images.singleView.attributeMaxWidth}
-                showNavigationButtons = {$plugin.tx_pxaproductmanager.settings.images.singleView.showNavigationButtons}
-            }
-
-            listView {
-                maxWidth = {$plugin.tx_pxaproductmanager.settings.images.listView.maxWidth}
-                maxHeight = {$plugin.tx_pxaproductmanager.settings.images.listView.maxHeight}
-            }
-
-            compareView {
-                maxWidth = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxWidth}
-                maxHeight = {$plugin.tx_pxaproductmanager.settings.images.compareView.maxHeight}
-            }
-
-            orderView {
-                maxWidth = {$plugin.tx_pxaproductmanager.settings.images.orderView.maxWidth}
-                maxHeight = {$plugin.tx_pxaproductmanager.settings.images.orderView.maxHeight}
-            }
-        }
-
-        # comma list of labels available through ProductManager.Main.translate
-        translateJsLabels {
-            #1 = fe.js.no_options_found
-        }
-
-        # don't compare images and links
-        ignoreAttributeTypesInCompareView = 6,7
-    }
-
-    _LOCAL_LANG {
-        default {
-            # Default pricing format
-            # |decimals|dec_point|thousands_sep|
-            priceFormat = |2|.| |
-        }
-
-        sv {
-            priceFormat = |2|,| |
         }
     }
 }
-
-# BE module
-module.tx_pxaproductmanager {
-    settings {
-        listOrders {
-            itemsPerPage = 10
-            # Title of order in BE module view. Support fluid. Accessible variable {order}
-            title = {order.orderFields.name.value}, {order.orderFields.email.value}
-            dateFormat = %d/%m/%Y
-
-            tabs {
-                list {
-                    0 = active
-                    1 = complete
-                    2 = archive
-                }
-
-                defaultActive = active
-            }
-        }
-    }
-
-    view {
-        widget {
-            Pixelant\PxaProductManager\ViewHelpers\Widget\PaginateViewHelper {
-                templateRootPath = EXT:pxa_product_manager/Resources/Private/Backend/Templates/
-            }
-        }
-    }
-
-    _LOCAL_LANG < plugin.tx_pxaproductmanager._LOCAL_LANG
-}
-
-# include scripts
-page {
-    includeJSFooterlibs {
-        pxa_pm_select2 = EXT:pxa_product_manager/Resources/Public/JavaScript/select2/dist/js/select2.min.js
-        pxa_pm_sprintf = EXT:pxa_product_manager/Resources/Public/JavaScript/sprintf/sprintf.min.js
-        pxaPmSettings = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Settings.js
-        pxaPmLazyLoading = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.LazyLoading.js
-        pxaPmFiltering = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Filtering.js
-        pxaPmWishList = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.WishList.js
-        pxaPmCompareList = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.CompareList.js
-        pxaPmMessanger = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Messanger.js
-    }
-
-    includeJSFooter {
-        pxaPmMain = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.js
-    }
-
-    includeCSS {
-        select2 = EXT:pxa_product_manager/Resources/Public/JavaScript/select2/dist/css/select2.min.css
-    }
-}
-
-[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}]
-    page {
-        includeCSS {
-            pxa_product_manager = EXT:pxa_product_manager/Resources/Public/Css/product_manager.css
-        }
-    }
-[end]
-
-[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}] && [request.getQueryParams()['tx_pxaproductmanager_pi1']['product'] > 0]
-    # add stuff for gallery
-    page {
-        includeCSS {
-            jquerytosrus = EXT:pxa_product_manager/Resources/Public/Css/jquery.tosrus/jquery.tosrus.all.css
-            product_manager_lightbox = EXT:pxa_product_manager/Resources/Public/Css/product_manager_lightbox.css
-        }
-
-        includeJSFooterlibs {
-            jquerytosrus01 = EXT:pxa_product_manager/Resources/Public/JavaScript/jquery.tosrus/hammer.min.js
-            jquerytosrus02 = EXT:pxa_product_manager/Resources/Public/JavaScript/jquery.tosrus/jquery.tosrus.all.min.js
-        }
-
-        includeJSFooter {
-            pxapmLightbox = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.Lightbox.js
-        }
-    }
-[end]
-
-# Ajax loading
-PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING = PAGE
-PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING {
-    typeNum = 201701
-
-    config {
-        disableAllHeaderCode = 1
-        admPanel = 0
-        debug = 0
-    }
-
-    10 = USER_INT
-    10 {
-        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
-        extensionName = PxaProductManager
-        pluginName = Pi1
-        vendorName = Pixelant
-
-        settings =< plugin.tx_pxaproductmanager.settings
-        persistence =< plugin.tx_pxaproductmanager.persistence
-        view =< plugin.tx_pxaproductmanager.view
-        features {
-            requireCHashArgumentForActionArguments = 0
-        }
-
-        switchableControllerActions {
-            AjaxProducts {
-                1 = ajaxLazyList
-            }
-        }
-    }
-}
-
-PXA_PRODUCT_MANAGER_WISH_LIST < PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING
-PXA_PRODUCT_MANAGER_WISH_LIST {
-    typeNum = 201702
-
-    10.switchableControllerActions.AjaxProducts >
-
-    10 {
-        switchableControllerActions {
-            AjaxJson {
-                1 = toggleWishList
-                2 = toggleCompareList
-                3 = loadCompareList
-                4 = emptyCompareList
-                5 = loadWishList
-            }
-        }
-    }
-}
-
-PXA_PRODUCT_MANAGER_LATEST_VISITED < PXA_PRODUCT_MANAGER_AJAX_LAZY_LOADING
-PXA_PRODUCT_MANAGER_LATEST_VISITED {
-    typeNum = 201703
-
-    10.switchableControllerActions >
-
-    10 {
-        switchableControllerActions {
-            AjaxProducts {
-                1 = latestVisited
-            }
-            AjaxJson {
-                1 = addLatestVisitedProduct
-            }
-        }
-    }
-}
-
-# Includes
-<INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Library/" extensions="ts">
