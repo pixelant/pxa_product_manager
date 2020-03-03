@@ -19,6 +19,33 @@
 			</trans-unit>
 			<!--TCA notifications:END-->
 
+			<!--Extension info hook:START-->
+			<trans-unit id="be.extension_info.all">
+				<source>All</source>
+			</trans-unit>
+			<trans-unit id="be.extension_info.reach limit">
+				<source>...(and %d more)</source>
+			</trans-unit>
+			<trans-unit id="be.extension_info.none">
+				<source>none</source>
+			</trans-unit>
+			<trans-unit id="be.extension_info.checkbox_yes">
+				<source>Yes</source>
+			</trans-unit>
+			<trans-unit id="be.extension_info.checkbox_no">
+				<source>No</source>
+			</trans-unit>
+			<trans-unit id="be.extension_info.name">
+				<source>Product manager</source>
+			</trans-unit>
+			<trans-unit id="be.extension_info.mode.not_configured">
+				<source>Not configured</source>
+			</trans-unit>
+			<trans-unit id="be.extension_info.no_title">
+				<source>[NO TITLE]</source>
+			</trans-unit>
+			<!--Extension info hook:END-->
+
 			<!--FlexForm:START-->
 			<trans-unit id="flexform.sheet_title">
 				<source>General settings</source>
@@ -62,7 +89,7 @@
 
 			<!--FlexForm:PIDS:START-->
 			<trans-unit id="flexform.pids.single_view_pid">
-				<source>Single view page. Overrides Typoscript default page.</source>
+				<source>Single view page. Overrides Typoscript default page</source>
 			</trans-unit>
 			<trans-unit id="flexform.pids.list_view_pid">
 				<source>List view page</source>
@@ -171,7 +198,7 @@
 				<source>Title</source>
 			</trans-unit>
 			<trans-unit id="flexform.sortby_sorting">
-				<source>Default sorting</source>
+				<source>Sorting</source>
 			</trans-unit>
 			<!--FlexForm:Sorting:END-->
 

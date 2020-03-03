@@ -17,8 +17,11 @@ trait CanTranslateInBackend
      */
     protected function translate(string $key, array $arguments = []): string
     {
-        $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:';
-        $label = $GLOBALS['LANG']->sL($ll . $key) ?? '';
+        if (strpos($key, 'LLL:') !== 0) {
+            $key = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:' . $key;
+        }
+
+        $label = $GLOBALS['LANG']->sL($key) ?? '';
 
         if (!empty($arguments)) {
             $label = vsprintf($label, $arguments);

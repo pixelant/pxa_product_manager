@@ -19,6 +19,27 @@ class StructureLoader
     public static $defaultFlexform = 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_common.xml';
 
     /**
+     * Merge default flexform with action specific
+     *
+     * @param array $dataStructure
+     * @param array|null $actionConfiguration
+     * @return array
+     */
+    public function defaultWithActionStructure(array $dataStructure, ?array $actionConfiguration): array
+    {
+        // Add default config
+        $dataStructure = $this->loadDefaultDataStructure($dataStructure);
+
+        // Load action structure
+        $dataStructure = $this->loadActionDataStructure(
+            $dataStructure,
+            $actionConfiguration
+        );
+
+        return $dataStructure;
+    }
+
+    /**
      * Load all actions default data structure
      *
      * @param array $dataStructure

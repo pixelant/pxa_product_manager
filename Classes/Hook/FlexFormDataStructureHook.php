@@ -65,7 +65,6 @@ class FlexFormDataStructureHook implements SingletonInterface
         $this->loader = $loader ?? GeneralUtility::makeInstance(StructureLoader::class);
     }
 
-
     /**
      * Save last selected action
      *
@@ -104,18 +103,10 @@ class FlexFormDataStructureHook implements SingletonInterface
     {
         if ($identifier['dataStructureKey'] === $this->identifier) {
             // Add action
-            $dataStructure = $this->addSwitchableControllerActions($dataStructure);
-
-            if (!empty($this->getLastSelectedAction())) {
-                // Add default conf
-                $dataStructure = $this->loader->loadDefaultDataStructure($dataStructure);
-
-                // Load action structure
-                $dataStructure = $this->loader->loadActionDataStructure(
-                    $dataStructure,
-                    $this->registry->getSwitchableControllerActionConfiguration($this->lastSelectedAction)
-                );
-            }
+            $dataStructure = $this->loader->defaultWithActionStructure(
+                $dataStructure,
+                $this->registry->getSwitchableControllerActionConfiguration($this->lastSelectedAction)
+            );
         }
 
         return $dataStructure;

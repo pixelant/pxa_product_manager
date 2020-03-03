@@ -3,26 +3,15 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Hook;
 
-/**
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
- */
-
-use Pixelant\PxaProductManager\Traits\TranslateBeTrait;
-use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use Pixelant\PxaProductManager\Configuration\Flexform\Registry;
+use Pixelant\PxaProductManager\Configuration\Flexform\StructureLoader;
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
+use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -33,14 +22,35 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageLayoutView
 {
-    use TranslateBeTrait;
+    use CanTranslateInBackend, CanCreateCollection;
 
     /**
      * HR tag
      *
      * @var string
      */
-    protected static $hrMarkup = '<hr style="margin: 5px 0;background: #ccc">';
+    protected static string $hrMarkup = '<hr style="margin: 5px 0;background: #ccc">';
+
+    /**
+     * @var StructureLoader
+     */
+    protected StructureLoader $loader;
+
+    /**
+     * @var Registry
+     */
+    protected Registry $registry;
+
+    /**
+     * @param StructureLoader $loader
+     * @param Registry $registry
+     */
+    public function __construct(StructureLoader $loader = null, Registry $registry = null)
+    {
+        $this->loader = $loader ?? GeneralUtility::makeInstance(StructureLoader::class);
+        $this->registry = $registry ?? GeneralUtility::makeInstance(Registry::class);
+    }
+
 
     /**
      * Returns information about this extension's pi1 plugin
@@ -48,7 +58,7 @@ class PageLayoutView
      * @param array $params Parameters to the hook
      * @return string Information about pi1 plugin
      */
-    public function getExtensionSummary(array $params)
+    public function getExtensionSummary(array $params): string
     {
         $result = sprintf(
             '<strong>%s</strong><br>',
@@ -58,50 +68,21 @@ class PageLayoutView
         $additionalInfo = '';
 
         if ($params['row']['list_type'] == 'pxaproductmanager_pi1') {
-            $flexFormService = $this->getFlexFormService();
-            $flexFormSettings = $flexFormService->convertFlexFormContentToArray($params['row']['pi_flexform']);
+            $flexFormSettings = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray($params['row']['pi_flexform']);
 
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
             if (!empty($switchableControllerActions)) {
-                list($action) = GeneralUtility::trimExplode(';', $switchableControllerActions);
+                $fieldsGroups = $this->getFlexformGroupedFields($switchableControllerActions);
 
-                // translate the first action into its translation
-                $actionTranslationKey = str_replace(
-                    '->',
-                    '_',
-                    GeneralUtility::camelCaseToLowerCaseUnderscored($action)
-                );
-                $actionTranslation = $this->translate('flexform.mode.' . $actionTranslationKey);
+                foreach ($fieldsGroups as $fieldsGroup) {
+                    $additionalInfo .= '<b>' . $this->translate($fieldsGroup['label']) . '</b><br>';
 
-                $additionalInfo .= $actionTranslation;
-                if (is_array($flexFormSettings['settings'])) {
-                    switch ($action) {
-                        case 'Product->list':
-                            $additionalInfo .= $this->getListModeInfo($flexFormSettings['settings']);
-                            break;
-                        case 'Product->groupedList':
-                            $additionalInfo .= $this->getGroupedListModeInfo($flexFormSettings['settings']);
-                            break;
-                        case 'Product->show':
-                            $additionalInfo .= $this->getSingleViewModeInfo($flexFormSettings['settings']);
-                            break;
-                        case 'Product->lazyList':
-                            $additionalInfo .= $this->getLazyListModeInfo($flexFormSettings['settings']);
-                            break;
-                        case 'Navigation->show':
-                            $additionalInfo .= $this->getNavigationModeInfo($flexFormSettings['settings']);
-                            break;
-                        case 'Product->wishList':
-                            $additionalInfo .= $this->getWishListInfo($flexFormSettings['settings']);
-                            break;
-                        case 'Product->comparePreView':
-                        case 'Product->compareView':
-                            $additionalInfo .= $this->getCompareInfo($flexFormSettings['settings']);
-                            break;
-                        case 'Product->customProductsList':
-                            $additionalInfo .= $this->getCustomProductsListInfo($flexFormSettings['settings']);
-                            break;
+                    // Get value for each field
+                    foreach ($fieldsGroup['el'] as $fieldName => $fieldConfiguration) {
+                        $additionalInfo .= $this->getFieldInformation($fieldName, $fieldConfiguration, $flexFormSettings);
                     }
+
+                    $additionalInfo .= static::$hrMarkup;
                 }
             } else {
                 $additionalInfo .= $this->translate('be.extension_info.mode.not_configured');
@@ -112,616 +93,120 @@ class PageLayoutView
     }
 
     /**
-     * Get info about filters
+     * Parse single field information
      *
-     * @param string $filters
+     * @param string $name
+     * @param array $config
+     * @param array $values
      * @return string
      */
-    protected function getFiltersInfo(string $filters): string
+    protected function getFieldInformation(string $name, array $config, array $values): string
     {
-        $filters = GeneralUtility::intExplode(',', $filters, true);
-        $info = '<b>' . $this->translate('flexform.filters') . '</b>:';
+        $info = '<b>' . $this->translate($config['label']) . '</b>: %s<br>';
 
-        if (!empty($filters)) {
-            $filtersInfo = '';
-            /** @var QueryBuilder $queryBuilder */
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-                'tx_pxaproductmanager_domain_model_filter'
-            );
-            $statement = $queryBuilder
-                ->select('uid', 'name')
-                ->from('tx_pxaproductmanager_domain_model_filter')
-                ->where(
-                    $queryBuilder->expr()->in(
-                        'uid',
-                        $queryBuilder->createNamedParameter($filters, Connection::PARAM_INT_ARRAY)
-                    )
-                )
-                ->execute();
-            while ($filter = $statement->fetch()) {
-                $filtersInfo .= ', ' . ($filter['name'] ?: $this->translate('be.extension_info.no_title'));
-            }
+        try {
+            $value = ArrayUtility::getValueByPath($values, $name, '.');
+        } catch (MissingArrayPathException $exception) {
+            return sprintf($info, $this->translate('be.extension_info.none'));
+        }
+        $config = $config['config'];
 
-            $filtersInfo = ltrim($filtersInfo, ',');
+        switch ($config['type']) {
+            case 'group':
+                $value = $this->getValueFromDB($config['allowed'], (int)$value);
+                break;
+            case 'check':
+                $value = $this->getCheckboxValue((bool)$value);
+                break;
+            case 'select':
+                $value = $this->getSelectBoxValue($config, $value);
+                break;
+            default:
+                $value = "Unsupported type '{$config['type']}'";
         }
 
-        if (!isset($filtersInfo)) {
-            $filtersInfo = ' ' . $this->translate('be.extension_info.none');
-        }
-
-        return $info . $filtersInfo . '<br>';
+        return sprintf($info, $value ?: $this->translate('be.extension_info.none'));
     }
 
     /**
-     * Get html preview for NavigationMode mode
+     * Parse value for select box
      *
-     * @param $settings
+     * @param array $config
+     * @param $value
      * @return string
      */
-    public function getNavigationModeInfo(array $settings): string
+    protected function getSelectBoxValue(array $config, $value): string
     {
-        $info = '<br>';
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
-        $info .= $this->getCategoriesInfo(
-            $this->translate('flexform.navigation_category'),
-            $settings['category'] ?? ''
-        );
-
-        $info .= $this->getCategoriesInfo(
-            $this->translate('flexform.exclude_categories'),
-            $settings['excludeCategories'] ?? ''
-        );
-
-        $info .= $this->menuGeneraInfo($settings);
-
-        $info .= $this->getCategoriesOrderingsInfo($settings);
-
-        return $info;
-    }
-
-    /**
-     * Information about navigation options
-     *
-     * @param array $settings
-     * @return string
-     */
-    protected function menuGeneraInfo(array $settings): string
-    {
-        $info = sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.navigation_expand_all'),
-            $this->translate('be.extension_info.checkbox_' .
-                ($settings['navigationExpandAll'] ? 'yes' : 'no'))
-        );
-
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.navigation_hide_categories_without_products'),
-            $this->translate('be.extension_info.checkbox_' .
-                ($settings['navigationHideCategoriesWithoutProducts'] ? 'yes' : 'no'))
-        );
-
-        return $info;
-    }
-
-    /**
-     * Get html preview for LazyList mode
-     *
-     * @param $settings
-     * @return string
-     */
-    public function getLazyListModeInfo(array $settings): string
-    {
-        $info = '<br>';
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
-
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.limit'),
-            (int)$settings['limit'] ?: $this->translate('flexform.no_limit')
-        );
-        $info .= $this->getProductOrderingInfo($settings);
-        $info .= self::$hrMarkup;
-
-        $info .= $this->getCategoriesInfo(
-            $this->translate('flexform.allowed_categories'),
-            $settings['allowedCategories'] ?? ''
-        );
-        $info .= $this->getCategoriesInfo(
-            $this->translate('flexform.exclude_categories'),
-            $settings['excludeCategories'] ?? ''
-        );
-        $info .= self::$hrMarkup;
-
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.hide_filter_options_no_result'),
-            $this->translate('be.extension_info.checkbox_' .
-                ($settings['hideFilterOptionsNoResult'] ? 'yes' : 'no'))
-        );
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.filters_conjunction'),
-            $this->translate('flexform.filters_conjunction_' . $settings['filtersConjunction'] ?: 'and')
-        );
-        $info .= $this->getFiltersInfo($settings['filters'] ?? '');
-
-
-        return $info;
-    }
-
-    /**
-     * Get html preview for single view mode
-     *
-     * @param $settings
-     * @return string
-     */
-    public function getSingleViewModeInfo(array $settings): string
-    {
-        $info = '<br>';
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
-        $checkboxes = [
-            'showLatestVisitedProducts',
-            'enableMessageInsteadOfPage404',
-            'showGalleryPagination',
-            'showGoBackButton'
-        ];
-
-        foreach ($checkboxes as $checkbox) {
-            $checkboxLoweCase = GeneralUtility::camelCaseToLowerCaseUnderscored($checkbox);
-
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.' . $checkboxLoweCase),
-                $this->translate('be.extension_info.checkbox_' .
-                    ($settings[$checkbox] ? 'yes' : 'no'))
-            );
-        }
-
-        return $info;
-    }
-
-    /**
-     * Get html preview for LazyList mode
-     *
-     * @param $settings
-     * @return string
-     */
-    public function getGroupedListModeInfo(array $settings): string
-    {
-        $info = '<br>';
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
-
-        $info .= $this->getProductOrderingInfo($settings);
-        $info .= self::$hrMarkup;
-
-        $info .= $this->getCategoriesInfo(
-            $this->translate('flexform.allowed_categories'),
-            $settings['category'] ?? ''
-        );
-        $info .= $this->getCategoriesInfo(
-            $this->translate('flexform.exclude_categories'),
-            $settings['excludeCategories'] ?? ''
-        );
-
-        $info .= self::$hrMarkup;
-        $checkboxes = [
-            'showLatestVisitedProducts',
-            'enableMessageInsteadOfPage404',
-            'showGalleryPagination',
-            'showGoBackButton'
-        ];
-
-        foreach ($checkboxes as $checkbox) {
-            if ($checkbox === 'hr') {
-                $info .= self::$hrMarkup;
-                continue;
-            }
-            $checkboxLowerCase = GeneralUtility::camelCaseToLowerCaseUnderscored($checkbox);
-
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.' . $checkboxLowerCase),
-                $this->translate('be.extension_info.checkbox_' .
-                    ($settings[$checkbox] ? 'yes' : 'no'))
-            );
-        }
-
-        $info .= $this->getCategoriesOrderingsInfo($settings);
-
-        return $info;
-    }
-
-    /**
-     * Get html preview for list mode
-     *
-     * @param $settings
-     * @return string
-     */
-    protected function getListModeInfo(array $settings): string
-    {
-        $info = '<br>';
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
-        $info .= $this->getCategoriesInfo(
-            $this->translate('flexform.navigation_category'),
-            $settings['category'] ?? ''
-        );
-
-        $info .= $this->getProductOrderingInfo($settings);
-        $info .= self::$hrMarkup;
-
-        $checkboxes = [
-            'showNavigationListView',
-            'hideNavigationListViewOnDetailMode',
-            'navigationExpandAll',
-            'navigationHideCategoriesWithoutProducts',
-            'hr',
-            'showLatestVisitedProducts',
-            'enableMessageInsteadOfPage404',
-            'showGalleryPagination',
-            'showGoBackButton'
-        ];
-
-        foreach ($checkboxes as $checkbox) {
-            if ($checkbox === 'hr') {
-                $info .= self::$hrMarkup;
-                continue;
-            }
-            $checkboxLowerCase = GeneralUtility::camelCaseToLowerCaseUnderscored($checkbox);
-
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.' . $checkboxLowerCase),
-                $this->translate('be.extension_info.checkbox_' .
-                    ($settings[$checkbox] ? 'yes' : 'no'))
-            );
-        }
-
-        if ((int)$settings['showNavigationListView'] === 1) {
-            $info .= $this->getCategoriesOrderingsInfo($settings);
-        }
-
-        return $info;
-    }
-
-    /**
-     * Ordering info for categories
-     *
-     * @param array $settings
-     * @return string
-     */
-    protected function getCategoriesOrderingsInfo(array $settings): string
-    {
-        $info = self::$hrMarkup;
-
-        $info .= '<b>' . $this->translate('flexform.categories_sorting') . '</b><br>';
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.product_sortby'),
-            $this->translate('flexform.sortby_' . $settings['orderCategoriesBy'])
-        );
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.product_sort_direction'),
-            $this->translate('flexform.sort_direction_' . $settings['orderCategoriesDirection'])
-        );
-
-        return $info;
-    }
-
-    /**
-     * Information about products order
-     *
-     * @param array $settings
-     * @return string
-     */
-    protected function getProductOrderingInfo(array $settings): string
-    {
-        $info = sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.product_sortby'),
-            $this->translate('flexform.sortby_' . $settings['orderProductBy'])
-        );
-
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.product_sort_direction'),
-            $this->translate(
-                $settings['orderProductDirection'] === 'desc'
-                    ? 'flexform.sort_direction_desc'
-                    : 'flexform.sort_direction_asc'
-            )
-        );
-
-        return $info;
-    }
-
-    /**
-     * Summary info for page
-     *
-     * @param int $pageUid
-     * @return string
-     */
-    protected function getPagePidInfo(int $pageUid): string
-    {
-        // Set the pagePid using the flexform -> typoscript -> 0 priority
-        $pageUid = $pageUid ?: ConfigurationUtility::getSettingsByPath('pagePid', (int)GeneralUtility::_GP('id'));
-        $pageUid = (int)$pageUid;
-
-        if ($pageUid) {
-            $pageRecord = BackendUtility::getRecord(
-                'pages',
-                $pageUid,
-                'title'
-            );
-
-            if ($pageRecord !== null) {
-                return sprintf(
-                    '<b>%s</b>: %s (Uid: %d)<br>',
-                    $this->translate('be.extension_info.page_pid'),
-                    $pageRecord['title'],
-                    $pageUid
-                );
+        if (!empty($config['foreign_table'])) {
+            $value = $this->getValueFromDB($config['foreign_table'], ...GeneralUtility::intExplode(',', $value));
+        } elseif (!empty($config['items'])) {
+            // Search select item and use it label
+            $item = $this->collection($config['items'])->searchByProperty('1', $value)->first();
+            if (is_array($item)) {
+                $value = $this->translate($item[0]);
             }
         }
 
-        return '';
+        return (string)$value;
     }
 
     /**
-     * Summary info for categories
+     * Value for checkbox
      *
-     * @param string $title
-     * @param string $categories
+     * @param bool $value
      * @return string
      */
-    protected function getCategoriesInfo(string $title, string $categories): string
+    protected function getCheckboxValue(bool $value): string
     {
-        $categories = GeneralUtility::intExplode(',', $categories, true);
-        $info = '<b>' . $title . '</b>:';
-
-        if (!empty($categories)) {
-            $categoriesInfo = '';
-            /** @var QueryBuilder $queryBuilder */
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-                'sys_category'
-            );
-            $statement = $queryBuilder
-                ->select('uid', 'title')
-                ->from('sys_category')
-                ->where(
-                    $queryBuilder->expr()->in(
-                        'uid',
-                        $queryBuilder->createNamedParameter($categories, Connection::PARAM_INT_ARRAY)
-                    )
-                )
-                ->execute();
-            while ($category = $statement->fetch()) {
-                $categoriesInfo .= ', ' . $category['title'];
-            }
-
-            $categoriesInfo = ltrim($categoriesInfo, ',');
-        }
-
-        if (!isset($categoriesInfo)) {
-            $categoriesInfo = ' ' . $this->translate('be.extension_info.none');
-        }
-
-        return $info . $categoriesInfo . '<br>';
+        return $this->translate('be.extension_info.checkbox_' . ($value ? 'yes' : 'no'));
     }
 
     /**
-     * Info for compare list
+     * Get value from DB for group or selectbox
      *
-     * @param array $settings
+     * @param string $table
+     * @param array $uids
      * @return string
      */
-    protected function getCompareInfo(array $settings): string
+    protected function getValueFromDB(string $table, ...$uids): string
     {
-        $info = '<br>';
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
+        $titleField = $GLOBALS['TCA'][$table]['ctrl']['label'];
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll();
 
-        $comparePage = (int)$settings['compareViewPid'];
-        if ($comparePage) {
-            $pageRecord = BackendUtility::getRecord(
-                'pages',
-                $comparePage,
-                'title'
-            );
+        $rows = $queryBuilder
+            ->select($titleField)
+            ->from($table)
+            ->where($queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($uids, Connection::PARAM_INT_ARRAY)))
+            ->execute()
+            ->fetchAll(\PDO::FETCH_COLUMN);
 
-            if ($pageRecord !== null) {
-                $info .= sprintf(
-                    '<b>%s</b>: %s<br>',
-                    $this->translate('be.extension_info.compare_pid'),
-                    $pageRecord['title']
-                );
-            }
-        }
-
-        return $info;
+        return is_array($rows) ? implode(', ', $rows) : '';
     }
 
     /**
-     * Info for wish list
+     * Read flexform structure and return its fields grouped by sheets
      *
-     * @param array $settings
-     * @return string
+     * @param string $action
+     * @return array
      */
-    protected function getWishListInfo(array $settings): string
+    protected function getFlexformGroupedFields(string $action)
     {
-        $info = '<br>';
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
-
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.enable_order_function'),
-            $this->translate('be.extension_info.checkbox_' .
-                ($settings['enableOrderFunction'] ? 'yes' : 'no'))
+        // Load action data structure
+        $dataStructure = $this->loader->defaultWithActionStructure(
+            [],
+            $this->registry->getSwitchableControllerActionConfiguration($action)
         );
 
-        if ($settings['enableOrderFunction']) {
-            if ($orderFormConfigurationUid = (int)$settings['orderFormConfiguration']) {
-                $orderConfiguration = BackendUtility::getRecord(
-                    'tx_pxaproductmanager_domain_model_orderconfiguration',
-                    $orderFormConfigurationUid,
-                    'name'
-                );
-                $info .= sprintf(
-                    '<b>%s</b>: %s<br>',
-                    $this->translate('flexform.order_form_configuration'),
-                    $orderConfiguration['name']
-                );
-            }
-
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.order_form_require_login'),
-                $this->translate('be.extension_info.checkbox_' .
-                    ($settings['orderFormRequireLogin'] ? 'yes' : 'no'))
-            );
+        $fields = [];
+        foreach ($dataStructure['sheets'] as $sheetName => $sheet) {
+            $fields[$sheetName] = [
+                'label' => $sheet['ROOT']['TCEforms']['sheetTitle']
+                    ?? 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sheet_title',
+                'el' => array_map(fn(array $fieldConfig) => $fieldConfig['TCEforms'], $sheet['ROOT']['el'])
+            ];
         }
 
-        return $info;
-    }
-
-    /**
-     * Get short info about typolink
-     *
-     * @param string $typoLink
-     * @return string
-     */
-    protected function getLinkInfo(string $typoLink): string
-    {
-        if (empty($typoLink)) {
-            return $this->translate('be.extension_info.none');
-        }
-
-        if (GeneralUtility::isFirstPartOfStr($typoLink, 't3://page?uid=')) {
-            $pageUid = (int)substr($typoLink, 14);
-            $pageRecord = BackendUtility::readPageAccess($pageUid, '1=1');
-            // Is this a real page
-            if ($pageRecord['uid']) {
-                return $pageRecord['_thePathFull'] . '[' . $pageRecord['uid'] . ']';
-            }
-        }
-
-        return $typoLink;
-    }
-
-    /**
-     * @param array $settings
-     * @return string
-     */
-    protected function getCustomProductsListInfo(array $settings): string
-    {
-        $info = '<br>';
-
-        // Pid
-        $info .= $this->getPagePidInfo((int)$settings['pagePid']);
-
-        // Mode
-        $info .= sprintf(
-            '<b>%s</b>: %s<br>',
-            $this->translate('flexform.custom_products_list.mode'),
-            $this->translate($settings['customProductsList']['mode'] === 'products' ?
-                'flexform.custom_products_list.mode.products' : 'flexform.custom_products_list.mode.category')
-        );
-
-        if ($settings['customProductsList']['mode'] === 'category') {
-            // Product categories
-            $info .= $this->getCategoriesInfo(
-                $this->translate('flexform.custom_products_list.products_categories'),
-                $settings['customProductsList']['productsCategories'] ?? ''
-            );
-
-            // Selected products from categories selection
-            $info .= $this->getProductsInfo(
-                $this->translate('flexform.custom_products_list.products_to_show_within_categories'),
-                $settings['customProductsList']['productsToShowWithinCategories'] ?? '',
-                'be.extension_info.all'
-            );
-
-            // Limit
-            $info .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->translate('flexform.limit'),
-                (int)$settings['limit'] ?: $this->translate('flexform.no_limit')
-            );
-        }
-
-        // Selected products
-        if ($settings['customProductsList']['mode'] === 'products') {
-            $info .= $this->getProductsInfo(
-                $this->translate('flexform.custom_products_list.products_to_show'),
-                $settings['customProductsList']['productsToShow'] ?? ''
-            );
-        }
-
-        return $info;
-    }
-
-    /**
-     * Summary info for products
-     *
-     * @param string $title
-     * @param string $products
-     * @param string $emptyLabel Label when no products provided
-     * @param int $limit Max products output
-     * @return string
-     */
-    protected function getProductsInfo(
-        string $title,
-        string $products,
-        string $emptyLabel = 'be.extension_info.none',
-        int $limit = 10
-    ): string {
-        $info = '<b>' . $title . '</b>:';
-
-        if (!empty($products)) {
-            $products = GeneralUtility::intExplode(',', $products, true);
-            $productsInfo = '';
-            /** @var QueryBuilder $queryBuilder */
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-                'tx_pxaproductmanager_domain_model_product'
-            );
-            $statement = $queryBuilder
-                ->select('uid', 'name')
-                ->from('tx_pxaproductmanager_domain_model_product')
-                ->where(
-                    $queryBuilder->expr()->in(
-                        'uid',
-                        $queryBuilder->createNamedParameter($products, Connection::PARAM_INT_ARRAY)
-                    )
-                );
-
-            $appendInfo = '';
-            if (count($products) > $limit) {
-                $appendInfo .= $this->translate('be.extension_info.reach limit', [count($products) - $limit]);
-                $statement->setMaxResults($limit);
-            }
-            $statement = $statement->execute();
-
-            while ($product = $statement->fetch()) {
-                $productsInfo .= ', ' . $product['name'];
-            }
-
-            $productsInfo = ltrim($productsInfo, ',') . $appendInfo;
-        }
-
-        if (!isset($productsInfo)) {
-            $productsInfo = ' ' . $this->translate($emptyLabel);
-        }
-
-        return $info . $productsInfo . '<br>';
-    }
-
-    /**
-     * Get flexform service
-     *
-     * @return object|FlexFormService
-     */
-    protected function getFlexFormService()
-    {
-        return GeneralUtility::makeInstance(FlexFormService::class);
+        return $fields;
     }
 }

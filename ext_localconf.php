@@ -34,6 +34,10 @@ defined('TYPO3_MODE') || die;
 
     // Register default plugin actions with flexform settigns
     \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Pixelant\PxaProductManager\Configuration\Flexform\Registry::class)->registerDefaultActions();
+
+    // Register hook to show plugin flexform settings preview
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['pxaproductmanager_pi1']['pxa_product_manager'] =
+        \Pixelant\PxaProductManager\Hook\PageLayoutView::class . '->getExtensionSummary';
 })();
 
 /*call_user_func(
