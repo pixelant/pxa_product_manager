@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Utility;
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -28,224 +31,12 @@ namespace Pixelant\PxaProductManager\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
-
 /**
  * Class TCAUtility
  * @package Pixelant\PxaProductManager\Utility
  */
 class TcaUtility
 {
-    /**
-     * Field name of sys_file_reference and products TCA where
-     * attribute files are saved
-     */
-    const ATTRIBUTE_FAL_FIELD_NAME = 'attribute_files';
-
-    /**
-     * Return TCA configuration of different types of attributes
-     *
-     * @return array
-     */
-    public static function getDefaultAttributesTCAConfiguration(): array
-    {
-        return [
-            Attribute::ATTRIBUTE_TYPE_INPUT => [
-                'exclude' => 0,
-                'label' => '',
-                'config' => [
-                    'type' => 'input',
-                    'size' => 30,
-                    'eval' => 'trim',
-                ]
-            ],
-
-            Attribute::ATTRIBUTE_TYPE_TEXT => [
-                'exclude' => 0,
-                'label' => '',
-                'config' => [
-                    'type' => 'text',
-                    'cols' => '48',
-                    'rows' => '8',
-                    'eval' => 'trim'
-                ]
-            ],
-
-            Attribute::ATTRIBUTE_TYPE_CHECKBOX => [
-                'exclude' => 0,
-                'label' => '',
-                'config' => [
-                    'type' => 'check',
-                    'items' => []
-                ]
-            ],
-
-            Attribute::ATTRIBUTE_TYPE_DROPDOWN => [
-                'exclude' => 0,
-                'label' => '',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'items' => [],
-                    'size' => 1,
-                    'maxitems' => 1
-                ]
-            ],
-
-            Attribute::ATTRIBUTE_TYPE_MULTISELECT => [
-                'exclude' => 0,
-                'label' => '',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
-                    'items' => [],
-                    'size' => 10,
-                    'maxitems' => 99,
-                    'multiple' => 0,
-                ]
-            ],
-
-            Attribute::ATTRIBUTE_TYPE_DATETIME => [
-                'exclude' => 0,
-                'label' => '',
-                'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
-                    'eval' => 'datetime'
-                ]
-            ],
-
-            Attribute::ATTRIBUTE_TYPE_LINK => [
-                'exclude' => 0,
-                'config' => [
-                    'type' => 'input',
-                    'size' => '30',
-                    'max' => '256',
-                    'eval' => 'trim',
-                    'renderType' => 'inputLink',
-                    'softref' => 'typolink'
-                ],
-            ],
-
-            Attribute::ATTRIBUTE_TYPE_LABEL => [
-                'exclude' => 0,
-                'label' => '',
-                'config' => [
-                    'type' => 'input',
-                    'size' => 30,
-                    'eval' => 'trim',
-                ]
-            ]
-        ];
-    }
-
-    /**
-     * Fal dynamic configuration
-     *
-     * @param string $field
-     * @param int $uid
-     * @param string $name
-     * @param string $addNewLabel
-     * @param string $allowedFileExtensions
-     * @param string $disallowedFileExtensions
-     * @return array
-     */
-    public static function getFalFieldTCAConfiguration(
-        string $field,
-        int $uid,
-        string $name,
-        string $addNewLabel = '',
-        string $allowedFileExtensions = '',
-        string $disallowedFileExtensions = ''
-    ): array {
-        if ($addNewLabel === '') {
-            $addNewLabel = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference';
-        }
-
-        return [
-            'exclude' => 0,
-            'label' => '',
-            // @codingStandardsIgnoreStart
-            'config' => ExtensionManagementUtility::getFileFieldTCAConfig(
-                $field,
-                [
-                    'appearance' => [
-                        'createNewRelationLinkTitle' => $addNewLabel,
-                        'showPossibleLocalizationRecords' => false,
-                        'showRemovedLocalizationRecords' => true,
-                        'showAllLocalizationLink' => false,
-                        'showSynchronizationLink' => false,
-                        'collapseAll' => true
-                    ],
-                    'foreign_match_fields' => [
-                        'fieldname' => self::ATTRIBUTE_FAL_FIELD_NAME,
-                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
-                        'table_local' => 'sys_file',
-                        'pxa_attribute' => $uid
-                    ],
-                    'overrideChildTca' => [
-                        'columns' => [
-                            'pxa_attribute' => [
-                                'config' => [
-                                    'items' => [
-                                        [
-                                            $name,
-                                            $uid
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        'types' => [
-                            '0' => [
-                                'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPaletteAttribute,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                            ],
-                            File::FILETYPE_TEXT => [
-                                'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPaletteAttribute,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                            ],
-                            File::FILETYPE_IMAGE => [
-                                'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPaletteAttribute,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                            ],
-                            File::FILETYPE_AUDIO => [
-                                'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPaletteAttribute,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                            ],
-                            File::FILETYPE_VIDEO => [
-                                'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPaletteAttribute,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                            ],
-                            File::FILETYPE_APPLICATION => [
-                                'showitem' => '
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPaletteAttribute,
-                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                            ]
-                        ]
-                    ]
-                ],
-                $allowedFileExtensions,
-                $disallowedFileExtensions
-            )
-            // @codingStandardsIgnoreEnd
-        ];
-    }
-
     /**
      * Table where for accessories
      *
@@ -300,6 +91,7 @@ class TcaUtility
 
     /**
      * TCA where clause for categories
+     *
      * @return string
      */
     public static function getCategoriesTCAWhereClause(): string
@@ -308,70 +100,6 @@ class TcaUtility
             'categoriesRestriction',
             'sys_category'
         );
-    }
-
-    /**
-     * Generate name for attribute TCA fields
-     *
-     * @param int $attributeUid
-     * @param int|null $attributeType
-     * @return string
-     */
-    public static function getAttributeTCAFieldName(int $attributeUid, int $attributeType = null): string
-    {
-        $fieldName = Attribute::TCA_ATTRIBUTE_PREFIX . $attributeUid;
-
-        if ($attributeType !== null
-            && ($attributeType === Attribute::ATTRIBUTE_TYPE_IMAGE || $attributeType === Attribute::ATTRIBUTE_TYPE_FILE)
-        ) {
-            $fieldName = Attribute::TCA_ATTRIBUTE_FILE_PREFIX . $fieldName;
-        }
-
-        return $fieldName;
-    }
-
-    /**
-     * Check if TCA field is attribute field
-     *
-     * @param string $fieldName
-     * @return bool
-     */
-    public static function isAttributeField(string $fieldName): bool
-    {
-        return StringUtility::beginsWith($fieldName, ATTRIBUTE::TCA_ATTRIBUTE_PREFIX);
-    }
-
-    /**
-     * Get attribute uid from TCA field name
-     *
-     * @param string $fieldName
-     * @return int
-     */
-    public static function determinateAttributeUidFromFieldName(string $fieldName): int
-    {
-        return (int)str_replace(ATTRIBUTE::TCA_ATTRIBUTE_PREFIX, '', $fieldName);
-    }
-
-    /**
-     * Check if TCA field is FAL attribute field
-     *
-     * @param string $fieldName
-     * @return bool
-     */
-    public static function isFalAttributeField(string $fieldName): bool
-    {
-        return StringUtility::beginsWith($fieldName, ATTRIBUTE::TCA_ATTRIBUTE_FILE_PREFIX);
-    }
-
-    /**
-     * Get attribute uid from TCA field name
-     *
-     * @param string $fieldName
-     * @return int
-     */
-    public static function determinateFalAttributeUidFromFieldName(string $fieldName): int
-    {
-        return (int)str_replace(Attribute::TCA_ATTRIBUTE_FILE_PREFIX . ATTRIBUTE::TCA_ATTRIBUTE_PREFIX, '', $fieldName);
     }
 
     /**
@@ -386,8 +114,8 @@ class TcaUtility
         // we will use current_pid as default to keep backward compatibility
         $foreignTableWhere = 'AND ' . $table . '.pid = ###CURRENT_PID###';
 
-        // check and override by typoscript setting
-        $restrictionSetting = ConfigurationUtility::getExtManagerConfigurationByPath($setting);
+        // Check and override by typoscript setting
+        $restrictionSetting = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('pxa_product_manager', $setting);
         if ($restrictionSetting) {
             switch ($restrictionSetting) {
                 case 'current_pid':
