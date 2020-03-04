@@ -26,10 +26,10 @@
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_crdate</numIndex>
                                         <numIndex index="1">crdate</numIndex>
                                     </numIndex>
-                                    <numIndex index="3" type="array">
+                                    <!--<numIndex index="3" type="array">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_categories</numIndex>
                                         <numIndex index="1">categories</numIndex>
-                                    </numIndex>
+                                    </numIndex>-->
                                     <numIndex index="4" type="array">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_sorting</numIndex>
                                         <numIndex index="1">sorting</numIndex>

@@ -88,7 +88,7 @@ plugin.tx_pxaproductmanager {
         }
 
         demand {
-            orderByAllowed = name,tstamp,crdate,categories,categories.sorting,sorting
+            orderByAllowed = name,tstamp,crdate,sorting
             allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy,filtersConjunction
 
             objects {
