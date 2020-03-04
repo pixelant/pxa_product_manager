@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
+use Pixelant\PxaProductManager\Domain\Model\DTO\Factory\CategoryDemandFactory;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Factory\ProductDemandFactory;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
@@ -55,11 +56,16 @@ class ProductController extends ActionController
             );
         }
 
+        $subCategories = $this->categoryRepository->findDemanded(
+            $this->createDemand(CategoryDemandFactory::class, $this->settings)
+                ->setParent($category)
+                ->setOnlyVisibleInNavigation(true)
+        );
         $products = $this->productRepository->findDemanded(
-            $this->createDemandObject($this->settings + ['categories' => [$category]])
+            $this->createDemand(ProductDemandFactory::class, $this->settings)->setCategories([$category])
         );
 
-        $this->view->assignMultiple(compact('category', 'products'));
+        $this->view->assignMultiple(compact('category', 'subCategories', 'products'));
     }
 
     /**
@@ -74,16 +80,14 @@ class ProductController extends ActionController
     }
 
     /**
-     * Create product demand
+     * Create category demand
      *
+     * @param string $factory
      * @param array $settings
      * @return DemandInterface
      */
-    protected function createDemandObject(array $settings): DemandInterface
+    protected function createDemand(string $factory, array $settings): DemandInterface
     {
-        return $this->objectManager->get(ProductDemandFactory::class)->buildFromSettings(
-            $settings,
-            $settings['demand']['objects']['productDemand']
-        );
+        return $this->objectManager->get($factory)->buildFromSettings($settings);
     }
 }

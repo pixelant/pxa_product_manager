@@ -108,6 +108,12 @@ class Category extends CategoryExtbase
     protected ObjectStorage $subCategories;
 
     /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected ObjectStorage $products;
+
+    /**
      * @var int
      */
     protected int $contentPage = 0;
@@ -159,6 +165,7 @@ class Category extends CategoryExtbase
          */
         $this->attributesSets = new ObjectStorage();
         $this->subCategories = new ObjectStorage();
+        $this->products = new ObjectStorage();
     }
 
     /**

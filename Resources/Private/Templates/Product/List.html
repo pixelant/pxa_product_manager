@@ -50,9 +50,9 @@
             </div>
         </f:if>
 
-        <f:if condition="{category.subCategories}">
+        <f:if condition="{subCategories}">
             <div class="row">
-                <f:for as="subCategory" each="{category.subCategories}">
+                <f:for as="subCategory" each="{subCategories}">
                     <div class="col-md-3">
                         <div class="item-title"><h4>{subCategory.title}</h4></div>
 

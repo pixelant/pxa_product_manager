@@ -12,6 +12,40 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
  */
 class ProductDemandFactoryTest extends UnitTestCase
 {
+    protected $subject;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->subject = new ProductDemandFactory();
+    }
+
+    /**
+     * @test
+     */
+    public function classNameReturnClassNameFromSettings()
+    {
+        $settings = [
+            'demand' => [
+                'objects' => ['productDemand' => 'productDemandObject']
+            ]
+        ];
+
+        $this->assertEquals('productDemandObject', $this->callInaccessibleMethod($this->subject, 'className', $settings));
+    }
+
+    /**
+     * @test
+     */
+    public function classNameReturnOwnClassName()
+    {
+        $settings = [
+        ];
+
+        $this->assertEquals(ProductDemand::class, $this->callInaccessibleMethod($this->subject, 'className', $settings));
+    }
+
     /**
      * @test
      */

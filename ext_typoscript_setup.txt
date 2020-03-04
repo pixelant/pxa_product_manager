@@ -27,6 +27,7 @@ config.tx_extbase {
                     tableName = sys_category
 
                     columns {
+                        pxapm_products.mapOnProperty = products
                         pxapm_attributes_sets.mapOnProperty = attributesSets
                         pxapm_description.mapOnProperty = description
                         pxapm_image.mapOnProperty = image

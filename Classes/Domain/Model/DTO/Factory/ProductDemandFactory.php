@@ -5,55 +5,34 @@ namespace Pixelant\PxaProductManager\Domain\Model\DTO\Factory;
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * @package Pixelant\PxaProductManager\Domain\Model\DTO\Factory
  */
-class ProductDemandFactory
+class ProductDemandFactory extends AbstractFactory
 {
     /**
-     * @var Dispatcher
+     * @inheritDoc
      */
-    protected Dispatcher $dispatcher;
-
-    /**
-     * @param Dispatcher $dispatcher
-     */
-    public function injectDispatcher(Dispatcher $dispatcher)
+    protected function className(array $settings): string
     {
-        $this->dispatcher = $dispatcher;
+        return !empty($settings['demand']['objects']['productDemand'])
+            ? $settings['demand']['objects']['productDemand']
+            : ProductDemand::class;
     }
 
     /**
-     * Create product demand from settings
+     * Product demand specific
      *
-     * @param array $settings
-     * @param string $className
-     * @return DemandInterface
+     * @inheritDoc
      */
-    public function buildFromSettings(array $settings, string $className = null): DemandInterface
+    protected function demandSpecial(DemandInterface $demand, array $settings): void
     {
-        $className = !empty($className) && class_exists($className) ? $className : ProductDemand::class;
-
-        /** @var ProductDemand $demand */
-        $demand = GeneralUtility::makeInstance($className);
-
-        if (!empty($settings['limit'])) {
-            $demand->setLimit((int)$settings['limit']);
-        }
-        if (!empty($settings['offSet'])) {
-            $demand->setOffSet((int)$settings['offSet']);
-        }
         if (!empty($settings['productOrderings']['orderBy'])) {
             $demand->setOrderBy($settings['productOrderings']['orderBy']);
         }
         if (!empty($settings['productOrderings']['orderDirection'])) {
             $demand->setOrderDirection($settings['productOrderings']['orderDirection']);
-        }
-        if (!empty($settings['demand']['orderByAllowed'])) {
-            $demand->setOrderByAllowed($settings['demand']['orderByAllowed']);
         }
         if (!empty($settings['categories'])) {
             $demand->setCategories($settings['categories']);
@@ -61,9 +40,5 @@ class ProductDemandFactory
         if (!empty($settings['categoryConjunction'])) {
             $demand->setCategoryConjunction($settings['categoryConjunction']);
         }
-
-        $this->dispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
-
-        return $demand;
     }
 }

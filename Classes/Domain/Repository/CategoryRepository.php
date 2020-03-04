@@ -26,10 +26,13 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
+use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
+use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -40,7 +43,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRepository
+class CategoryRepository extends AbstractDemandRepository
 {
     /**
      * Default orderings
@@ -50,4 +53,37 @@ class CategoryRepository extends \TYPO3\CMS\Extbase\Domain\Repository\CategoryRe
     protected $defaultOrderings = [
         'sorting' => QueryInterface::ORDER_ASCENDING,
     ];
+
+    /**
+     * Initializes the repository.
+     */
+    public function initializeObject()
+    {
+        /** @var Typo3QuerySettings $querySettings */
+        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        $querySettings->setRespectStoragePage(false);
+        $this->setDefaultQuerySettings($querySettings);
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param DemandInterface|CategoryDemand $demand
+     * @return array
+     */
+    protected function createConstraints(QueryInterface $query, DemandInterface $demand): array
+    {
+        $constraints = [];
+        if ($demand->isOnlyVisibleInNavigation()) {
+            $constraints['onlyVisibleInNav'] = $query->equals('hiddenInNavigation', false);
+        }
+        if ($demand->getParent()) {
+            $constraints['parent'] = $query->equals('parent', $demand->getParent());
+        }
+        if ($demand->isHideCategoriesWithoutProducts()) {
+            $constraints['hasProducts'] = $query->greaterThan('products.uid', 0);
+        }
+
+        return $constraints;
+        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($demand, 'Debug', 16);$
+    }
 }

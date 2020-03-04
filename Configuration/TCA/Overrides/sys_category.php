@@ -127,6 +127,20 @@ defined('TYPO3_MODE') || die;
                 ]
             ]
         ],
+        'pxapm_products' => [
+            'label' => 'Products list',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
+                'MM' => 'sys_category_record_mm',
+                'MM_match_fields' => [
+                    'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                    'fieldname' => 'categories',
+                ],
+                'maxitems' => 9999,
+            ]
+        ],
         'pxapm_attributes_sets' => [
             'exclude' => 0,
             'label' => $ll . 'sys_category.pxapm_attributes_sets',

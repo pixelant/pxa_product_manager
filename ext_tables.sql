@@ -116,6 +116,7 @@ CREATE TABLE sys_category
     pxapm_keywords             text,
     pxapm_meta_description     text,
     pxapm_subcategories        int(11) unsigned     DEFAULT '0'    NOT NULL,
+    pxapm_products        int(11) unsigned     DEFAULT '0'    NOT NULL,
     pxapm_attributes_sets      int(11) unsigned     DEFAULT '0'    NOT NULL,
     pxapm_description          text,
     pxapm_banner_image         int(11) unsigned     DEFAULT '0'    NOT NULL,
