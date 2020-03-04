@@ -25,7 +25,7 @@ class CategoryTest extends UnitTestCase
      */
     public function getParentsRootLineReturnRootLineOfParents()
     {
-        $lastCategory = $this->rootLineLastCategory();
+        $lastCategory = createCategoriesRootLineAndReturnLastCategory();
 
         $this->subject->setParent($lastCategory);
         $this->subject->_setProperty('uid', 100);
@@ -43,7 +43,7 @@ class CategoryTest extends UnitTestCase
      */
     public function getParentsRootLineReverseReturnReversedRootLine()
     {
-        $lastCategory = $this->rootLineLastCategory();
+        $lastCategory = createCategoriesRootLineAndReturnLastCategory();
 
         $this->subject->setParent($lastCategory);
         $this->subject->_setProperty('uid', 100);
@@ -81,19 +81,29 @@ class CategoryTest extends UnitTestCase
         $this->assertEquals($expect, $result);
     }
 
-    protected function rootLineLastCategory()
+    /**
+     * @test
+     */
+    public function getNavigationRootLineReturnCategoriesForUrl()
     {
-        $rootLine = createMultipleEntities(Category::class, 5);
+        $lastCategory = createCategoriesRootLineAndReturnLastCategory();
+        $lastCategory->setHiddenInNavigation(true);
 
-        // Simulate rootline
-        $prev = null;
-        foreach ($rootLine as $category) {
-            if ($prev !== null) {
-                $category->setParent($prev);
-            }
-            $prev = $category;
-        }
+        $this->subject->setParent($lastCategory);
+        $this->subject->_setProperty('uid', 100);
 
-        return $prev;
+        // Current subject as last,
+        // exclude last category from given rootline
+        $expect = [
+            1,
+            2,
+            3,
+            4,
+            $this->subject->getUid()
+        ];
+
+        $result = array_map(fn($cat) => $cat->getUid(), $this->subject->getNavigationRootLine());
+
+        $this->assertEquals($expect, array_values($result));
     }
 }

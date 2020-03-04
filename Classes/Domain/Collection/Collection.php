@@ -177,6 +177,21 @@ class Collection implements Arrayable
     }
 
     /**
+     * Add item to the beginning of collection
+     *
+     * @param mixed ...$items
+     * @return Collection
+     */
+    public function unshift(...$items): Collection
+    {
+        $collection = $this->collection;
+
+        array_unshift($collection, ...$items);
+
+        return new static($collection);
+    }
+
+    /**
      * To array
      *
      * @return array

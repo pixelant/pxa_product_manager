@@ -1,108 +1,55 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
-<f:layout name="Default"/>
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
 
 <f:section name="main">
-    <f:if condition="{product.disableSingleView}">
-        <f:then>
-            <div class="alert alert-danger">
-                <f:translate key="fe.single_view_disabled"/>
-            </div>
-        </f:then>
-        <f:else>
-            <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
+    <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
 
-            <div class="row">
-                <f:if condition="{treeData}">
-                    <f:then>
-                        <div class="col-md-3">
-                            <f:if condition="{treeData.subItems}">
-                                <div class="products-navigation">
-                                    <div class="list-group">
-                                        <f:render partial="Navigation/Menu" arguments="{items: treeData.subItems, level: '{treeData.level}'}"/>
-                                    </div>
-                                </div>
-                            </f:if>
-                        </div>
-                        <div class="col-md-9">
-                            <f:render section="singleView" arguments="{_all}"/>
-                        </div>
-                    </f:then>
-                    <f:else>
-                        <div class="col-md-12">
-                            <f:render section="singleView" arguments="{_all}"/>
-                        </div>
-                    </f:else>
-                </f:if>
-            </div>
-        </f:else>
-    </f:if>
-</f:section>
-
-<f:section name="singleView">
-    <div class="single-product-wrapper {product.additionalClasses}" data-gallery-mode="{settings.images.singleView.showNavigationButtons}">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-12 product-name product-header">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <h1>{product.name}</h1>
-                                <f:if condition="{ppm:isPricingEnabled()} && {product.price}">
-                                    <h5>
-                                        <f:translate key="fe.price" />:
-                                        <f:translate key="fe.price_currency_format" arguments="{0: product.formatPrice}" />
-                                        <f:if condition="{settings.wishList.showTaxInfo}">
-                                    <span class="tax-price">
-                                        (
-                                            <f:translate key="fe.tax" />:
-                                            <f:translate key="fe.price_currency_format" arguments="{0: product.formatTax}" />
-                                        )
-                                    </span>
-                                        </f:if>
-                                    </h5>
-                                </f:if>
+    <div class="row">
+        <f:if condition="{treeData}">
+            <f:then>
+                <div class="col-md-3">
+                    <f:if condition="{treeData.subItems}">
+                        <div class="products-navigation">
+                            <div class="list-group">
+                                <f:render partial="Navigation/Menu"
+                                          arguments="{items: treeData.subItems, level: '{treeData.level}'}" />
                             </div>
-                            <div class="col-sm-6">
-                                <div class="header-buttons">
-                                    <f:if condition="{settings.showGoBackButton}">
-                                        <button type="button"
-                                                class="btn btn-default back-button product-header-btn"
-                                                onclick="window.history.back();">
-                                            <f:translate key="fe.go_back" />
-                                        </button>
-                                    </f:if>
-                                    <f:for each="{additionalButtons}" as="button">
-                                        <a href="{button.link}" class="btn btn-default product-header-btn {button.classes}">
-                                            {button.name}
-                                        </a>
-                                    </f:for>
-                                    <f:if condition="{settings.showInSingleView}">
-                                        <f:if condition="{settings.wishList.enable} || {settings.compareList.enable}">
-                                            <div class="item-options-bar">
-                                                <f:if condition="{settings.wishList.enable}">
-                                                    <f:render partial="Product/OptionsBar/WishListButtonSingleView" arguments="{uid: product.uid}"/>
-                                                </f:if>
-                                                <f:if condition="{settings.compareList.enable}">
-                                                    <f:render partial="Product/OptionsBar/CompareListButtonSingleView" arguments="{uid: product.uid}"/>
-                                                </f:if>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </f:if>
-                                    </f:if>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <f:if condition="{product.teaser}">
-                        <div class="col-md-12 product-teaser">
-                            <f:format.html>{product.teaser}</f:format.html>
                         </div>
                     </f:if>
                 </div>
+                <div class="col-md-9">
+                    <f:render section="singleView" arguments="{_all}" />
+                </div>
+            </f:then>
+            <f:else>
+                <div class="col-md-12">
+                    <f:render section="singleView" arguments="{_all}" />
+                </div>
+            </f:else>
+        </f:if>
+    </div>
+</f:section>
+
+<f:section name="singleView">
+    <div class="single-product-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h1>{product.name}</h1>
+
+                        <f:if condition="{product.price}">
+                            <h5>{product.price}</h5>
+                        </f:if>
+                    </div>
+                </div>
+
+                <f:if condition="{product.teaser}">
+                    <div class="product-teaser">
+                        <f:format.html>{product.teaser}</f:format.html>
+                    </div>
+                </f:if>
 
                 <div class="row">
                     <div class="col-md-8">
@@ -111,138 +58,67 @@
                                 <f:format.html>{product.description}</f:format.html>
                             </f:if>
 
-                            <f:if condition="{product.additionalInformation}">
-                                <f:format.html>{product.additionalInformation}</f:format.html>
-                            </f:if>
-
-                            <f:comment><!-- USP --></f:comment>
                             <f:if condition="{product.usp}">
-                                <f:render partial="Product/Usp"
-                                          arguments="{product: product, headerTranslationIndex: 'fe.usp'}"/>
+                                <p class="usp">{product.usp -> f:format.nl2br()}</p>
                             </f:if>
                         </div>
                     </div>
 
                     <div class="col-md-4">
-                        <div class="single-product-gallery">
-                            <div class="single-product-gallery__items">
-                                <f:alias map="{sizes: settings.images.singleView}">
-                                    <f:for each="{product.imagesSorted}" as="image" iteration="i">
-                                        <a href="{f:uri.image(image: image, maxWidth:'1920', maxHeight:'1080')}">
-                                            <f:image
-                                                    maxWidth="{sizes.mainMaxWidth}"
-                                                    maxHeight="{sizes.mainMaxHeight}"
-                                                    image="{image}"
-                                                    alt="{image.title}"
-                                                    data="{description: image.description, fly-image: '{f:if(condition: i.isFirst, then: product.uid, else: 0)}'}"/>
-                                        </a>
-                                    </f:for>
-                                </f:alias>
-                                <f:variable name="videos" value="0" />
-                                <f:if condition="{product.assets}">
-                                    <f:alias map="{sizes: settings.images.singleView}">
-                                        <f:for each="{product.assets}" as="file">
-                                            <f:if condition="{file.originalResource.type} == 4">
-                                                <f:then>
-                                                    <f:variable name="videos" value="1" />
-                                                </f:then>
-                                                <f:else>
-                                                    <a href="{f:uri.image(image: file, maxWidth:'1920', maxHeight:'1080')}">
-                                                        <f:media
-                                                                width="{sizes.mainMaxWidth}m"
-                                                                height="{sizes.mainMaxHeight}m"
-                                                                file="{file}"
-                                                                alt="{file.alternative}"
-                                                                title="{file.title}"
-                                                                data="{description: file.description}"/>
-                                                    </a>
-                                                </f:else>
-                                            </f:if>
-                                        </f:for>
-                                    </f:alias>
-                                </f:if>
-                            </div>
-                            <f:if condition="{settings.showGalleryPagination}">
-                                <div class="single-product-gallery__pagination"></div>
-                            </f:if>
+                        <f:if condition="{product.images}">
+                            <f:image image="{product.mainImage}"
+                                     class="img-rounded"
+                                     maxWidth="{settings.singleView.images.mainMaxWidth}"
+                                     maxHeight="{settings.singleView.images.mainMaxHeight}"
+                                     alt="{product.name}"
+                                     title="{product.name}" />
 
-                            <f:if condition="{videos}">
-                                <div class="single-product-gallery__assets">
-                                    <f:alias map="{sizes: settings.images.singleView}">
-                                        <f:for each="{product.assets}" as="file">
-                                            <f:if condition="{file.originalResource.type} == 4">
-                                                <div align="center" class="embed-responsive embed-responsive-16by9">
-                                                    <f:media
-                                                            width="{sizes.mainMaxWidth}"
-                                                            height="{sizes.mainMaxHeight}"
-                                                            file="{file}"
-                                                            alt="{file.alternative}"
-                                                            data="{description: file.description}"
-                                                            title="{file.title}" />
-                                                </div>
-                                            </f:if>
+                            <div class="row">
+                                <div class="gallery">
+                                    <f:alias map="{s: settings.singleView.images}">
+
+                                        <f:for as="image" each="{product.galleryImages}" iteration="iterator">
+                                            <div class="col-md-3">
+                                                <a href="{f:uri.image(image: image, maxWidth: s.mainMaxWidth, maxHeight: s.mainMaxHeight)}" class="lightbox">
+                                                    <f:image image="{image}"
+                                                             width="40c"
+                                                             height="40c"
+                                                             class="img-thumbnail"
+                                                             alt="{image.alternative}"
+                                                             title="{image.title}" />
+                                                </a>
+                                            </div>
                                         </f:for>
+
                                     </f:alias>
                                 </div>
-                                <f:if condition="{settings.showGalleryPagination}">
-                                    <div align="center" class="single-product-gallery-assets__pagination"></div>
-                                </f:if>
-                            </f:if>
-
-                        </div>
+                            </div>
+                        </f:if>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-{f:if(condition: '{product.links -> f:count()} || {product.falLinks -> f:count()}', then: '8', else: '12')}">
+                    <div class="col-md-{f:if(condition: '{product.links} || {product.falLinks}', then: '8', else: '12')}">
                         <div class="single-product-table">
                             <f:render partial="Product/AttributeListing"
-                                      arguments="{product: product}"/>
+                                      arguments="{product: product}" />
                         </div>
-
-                        <f:comment><!-- Launched and discontinued --></f:comment>
-                        <f:if condition="{product.launched} || {product.discontinued}">
-                            <div class="product-status">
-                                <h3><f:translate key="fe.product_status"/></h3>
-                                <table class="table">
-                                    <tbody>
-                                    <f:if condition="{product.launched}">
-                                        <tr>
-                                            <th><f:translate key="fe.launched"/></th>
-                                            <td><f:format.date format="Y-m-d">{product.launched}</f:format.date></td>
-                                        </tr>
-                                    </f:if>
-                                    <f:if condition="{product.discontinued}">
-                                        <tr class="{f:if(condition: product.isDiscontinued, then: 'product-discontinued')}">
-                                            <th>
-                                                <f:if condition="{product.isDiscontinued}">
-                                                    <f:then><f:translate key="fe.is_discontinued"/></f:then>
-                                                    <f:else><f:translate key="fe.will_be_discontinued"/></f:else>
-                                                </f:if>
-                                            </th>
-                                            <td><f:format.date format="Y-m-d">{product.discontinued}</f:format.date></td>
-                                        </tr>
-                                    </f:if>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </f:if>
-
                     </div>
-                    <f:if condition="{product.links -> f:count()} || {product.falLinks -> f:count()}">
+
+                    <f:if condition="{product.links} || {product.falLinks}">
                         <div class="col-md-4">
                             <div class="single-product-gallery__links">
                                 <h3 class="single-product-related-title">
-                                    <f:translate key="fe.related_links"/>
+                                    <f:translate key="fe.related_links" />
                                 </h3>
                                 <ul>
                                     <f:if condition="{product.links}">
-                                        <f:render partial="Product/Links" arguments="{links: product.links}"/>
+                                        <f:render partial="Product/Links" arguments="{links: product.links}" />
                                     </f:if>
 
                                     <f:if condition="{product.falLinks}">
                                         <f:render partial="Product/FileLinks"
-                                                  arguments="{files: product.falLinks}"/>
+                                                  arguments="{files: product.falLinks}" />
                                     </f:if>
                                 </ul>
                             </div>
@@ -252,47 +128,25 @@
             </div>
         </div>
 
-        <f:comment><!-- Related products --></f:comment>
         <f:if condition="{product.relatedProducts}">
             <f:render partial="Product/Related"
-                      arguments="{relatedProducts: product.relatedProducts, headerTranslationIndex: 'fe.related_products'}"/>
+                      arguments="{relatedProducts: product.relatedProducts, headerLabel: 'fe.related_products'}" />
         </f:if>
 
-        <f:comment><!-- Sub products --></f:comment>
         <f:if condition="{product.subProducts}">
             <f:render partial="Product/Related"
-                      arguments="{relatedProducts: product.subProducts, headerTranslationIndex: 'fe.sub_products'}"/>
+                      arguments="{relatedProducts: product.subProducts, headerLabel: 'fe.sub_products'}" />
         </f:if>
 
-        <f:comment><!-- Accessories --></f:comment>
         <f:if condition="{product.accessories}">
-            <f:render partial="Product/Accessories"
-                      arguments="{accessories: product.accessories, headerTranslationIndex: 'fe.accessories'}"/>
+            <f:render partial="Product/Related"
+                      arguments="{relatedProducts: product.accessories, headerLabel: 'fe.accessories'}" />
         </f:if>
 
-        <f:comment><!-- Lates products --></f:comment>
-        <f:if condition="{settings.showLatestVisitedProducts}">
-            <div class="row">
-                <div class="single-product-related">
-                    <div class="col-md-12">
-                        <h3>
-                            <f:translate key="fe.latest_visited_products"/>
-                        </h3>
-                    </div>
-                    <div class="pm-latest-visited">
-                        <div class="text-center">
-                            <f:render partial="Product/Loader" arguments="{class: 'big'}"/>
-                        </div>
-                        <!--Place holder for latest visit product-->
-                    </div>
-                </div>
-            </div>
-        </f:if>
-
-        <f:if condition="{settings.showGoBackButton}">
-            <button type="button" class="btn btn-default back-button" onclick="window.history.back();">
+        <f:if condition="{settings.pids.listViewPid}">
+            <f:link.page class="btn btn-default back-button">
                 <f:translate key="fe.go_back" />
-            </button>
+            </f:link.page>
         </f:if>
     </div>
 </f:section>

@@ -53,4 +53,21 @@ class ImageTest extends UnitTestCase
 
         $this->assertEquals($description, $this->subject->getDescription());
     }
+
+    /**
+     * @test
+     */
+    public function getAlternativeWithEmptyAlternativeReturnAlternativeOfOriginalResource()
+    {
+        $value = 'test';
+
+        $this->inject($this->subject, 'alternative', '');
+
+        $fileReference = $this->prophesize(FileReference::class);
+        $fileReference->getAlternative()->shouldBeCalled()->willReturn($value);
+
+        $this->subject->expects($this->once())->method('getOriginalResource')->willReturn($fileReference->reveal());
+
+        $this->assertEquals($value, $this->subject->getAlternative());
+    }
 }

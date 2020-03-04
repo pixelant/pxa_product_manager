@@ -6,7 +6,7 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Factory\ProductDemandFactory;
-use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
+use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -55,13 +55,22 @@ class ProductController extends ActionController
             );
         }
 
-        /** @var ProductDemand $demand */
-        $demand = $this->createDemandObject($this->settings);
-        $demand->setCategories([$category]);
-
-        $products = $this->productRepository->findDemanded($demand);
+        $products = $this->productRepository->findDemanded(
+            $this->createDemandObject($this->settings + ['categories' => [$category]])
+        );
 
         $this->view->assignMultiple(compact('category', 'products'));
+    }
+
+    /**
+     * Show product
+     *
+     * @param Product $product
+     * @param Category|null $category
+     */
+    public function showAction(Product $product, Category $category = null)
+    {
+        $this->view->assignMultiple(compact('product', 'category'));
     }
 
     /**

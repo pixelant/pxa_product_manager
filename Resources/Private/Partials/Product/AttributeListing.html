@@ -5,7 +5,7 @@
     </h3>
 
     <table class="table">
-        <f:if condition="{settings.attributes.includeSkuInAttributeListing} && {product.sku}">
+        <f:if condition="{product.sku}">
             <tr>
                 <th>
                     <f:translate key="fe.sku"/>
@@ -16,67 +16,17 @@
             </tr>
         </f:if>
 
-        <f:if condition="{settings.attributes.divideAttributesBySets}">
-            <f:then>
-                <f:for each="{product.attributesGroupedBySets}" as="attributesGroupedBySet">
-                    <tr>
-                        <th>
-                            {attributesGroupedBySet.name}
-                        </th>
-                        <td></td>
-                    </tr>
-                    <f:render section="attributes" arguments="{attributes: attributesGroupedBySet.attributes}"/>
-                </f:for>
-            </f:then>
-            <f:else>
-                <f:render section="attributes" arguments="{attributes: product.attributes}"/>
-            </f:else>
-        </f:if>
+        <f:for each="{product.listingAttributes}" as="attribute">
+            <tr>
+                <th>
+                    <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
+                </th>
+                <td>
+                    <f:render partial="Product/Attribute/Type{attribute.type}"
+                              arguments="{attribute: attribute}"/>
+                </td>
+            </tr>
+        </f:for>
     </table>
-
-    <f:if condition="{product.attributesDescription}">
-        <div class="attributes-description">
-            <f:format.html>{product.attributesDescription}</f:format.html>
-        </div>
-    </f:if>
-
 </f:if>
-
-<f:section name="attributes">
-    <f:for each="{attributes}" as="attribute">
-        <f:if condition="{attribute.showInAttributeListing}">
-            <f:comment>Label need to output only value</f:comment>
-            <f:switch expression="{attribute.type}">
-                <f:case value="8">
-                    <f:if condition="{attribute.value}">
-                        <tr>
-                            <td colspan="2">
-                                <h4>{attribute.value}</h4>
-                            </td>
-                        </tr>
-                    </f:if>
-                </f:case>
-                <f:defaultCase>
-                    <tr>
-                        <th>
-                            <f:if condition="{attribute.icon}">
-                                <f:image maxWidth="{settings.attributes.iconMaxSize}"
-                                         maxHeight="{settings.attributes.iconMaxSize}"
-                                         image="{attribute.icon}"
-                                         class="{settings.attributes.iconClasses}"
-                                         title="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"
-                                         alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
-                            </f:if>
-                            <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
-                        </th>
-                        <td>
-                            <f:render partial="Product/Attribute/Type{attribute.type}"
-                                      arguments="{attribute: attribute}"/>
-                        </td>
-                    </tr>
-                </f:defaultCase>
-            </f:switch>
-        </f:if>
-    </f:for>
-</f:section>
 </html>

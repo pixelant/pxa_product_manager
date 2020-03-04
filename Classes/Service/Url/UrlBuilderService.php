@@ -1,14 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Service\Link;
+namespace Pixelant\PxaProductManager\Service\Url;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\LanguageAspect;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
@@ -31,9 +27,11 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     protected TypoScriptFrontendController $tsfe;
 
     /**
-     * @var int
+     * Flag if should force absolute url
+     *
+     * @var bool
      */
-    protected int $languageUid = 0;
+    protected bool $absolute = false;
 
     /**
      * Initialize
@@ -42,180 +40,119 @@ class UrlBuilderService implements UrlBuilderServiceInterface
      */
     public function __construct(TypoScriptFrontendController $typoScriptFrontendController = null)
     {
-        $this->tsfe = $typoScriptFrontendController;
+        $this->tsfe = $typoScriptFrontendController ?? $GLOBALS['TSFE'];
     }
 
     /**
-     * Get product single view link
-     *
-     * @param int $pageUid Page Uid
-     * @param int|Product $product Product object or UID
-     * @param int|Category $category Category object or UID to override first product category
-     * @param bool $excludeCategories Exclude categories from product single view url
-     * @param bool $absolute Absolute link
-     * @return string
-     */
-    public function buildForProduct(
-        int $pageUid,
-        $product,
-        $category = null,
-        bool $excludeCategories = false,
-        bool $absolute = false
-    ): string {
-        $arguments = [];
-        $productUid = is_object($product) ? $product->getUid() : (int)$product;
-        if (!$excludeCategories) {
-            $categoryUid = $this->getProductCategoryUid($product, $category);
-            $arguments = $this->getCategoriesArguments($categoryUid);
-        }
-        $arguments['product'] = $productUid;
-
-        return $this->buildUri($pageUid, 'show', $arguments, $absolute);
-    }
-
-    /**
-     * Get link for category list view
-     *
-     * @param int $pageUid Page Uid
-     * @param int|Category $category Category object or UID to generate url for list view
-     * @param bool $absolute Absolute link
-     * @return string
-     */
-    public function buildForCategory(
-        int $pageUid,
-        $category,
-        bool $absolute = false
-    ): string {
-        $categoryUid = is_object($category) ? $category->getUid() : (int)$category;
-        $arguments = $this->getCategoriesArguments($categoryUid);
-
-        return $this->buildUri($pageUid, 'list', $arguments, $absolute);
-    }
-
-    /**
-     * Build link for given arguments (For example from breadcrumbs)
+     * URL for product and category
      *
      * @param int $pageUid
-     * @param array $arguments
+     * @param Category $category
+     * @param Product|null $product
      * @return string
      */
-    public function buildForArguments(int $pageUid, array $arguments): string
+    public function url(int $pageUid, Category $category, Product $product = null): string
     {
-        $action = isset($arguments['product']) ? 'show' : 'list';
-
-        return $this->buildUri($pageUid, $action, $arguments);
+        $params = $this->createParams($category, $product);
+        return $this->buildUri($pageUid, $params);
     }
 
     /**
-     * @param int $languageUid
+     * URL only with product parameter
+     *
+     * @param int $pageUid
+     * @param Product $product
+     * @return string
      */
-    public function setLanguageUid(int $languageUid): void
+    public function productUrl(int $pageUid, Product $product): string
     {
-        $this->languageUid = $languageUid;
+        $category = null;
+        $params = $this->createParams($category, $product);
+
+        return $this->buildUri($pageUid, $params);
     }
 
     /**
-     * @param int|Product $product
-     * @param int|Category $category
-     * @return int
+     * @param bool $absolute
      */
-    protected function getProductCategoryUid($product, $category): int
+    public function absolute(bool $absolute): void
     {
-        if (is_object($category)) {
-            return $category->getUid();
-        }
+        $this->absolute = true;
+    }
+
+    /**
+     * Generate parameters for URL
+     *
+     * @param Category|null $category
+     * @param Product|null $product
+     * @return array
+     */
+    protected function createParams(?Category $category, ?Product $product): array
+    {
+        $params = [
+            'controller' => 'Product',
+            'action' => 'list',
+        ];
         if ($category !== null) {
-            return (int)$category;
+            $params += $this->getCategoriesArguments($category);
         }
-        if (is_object($product)) {
-            $productCat = $product->getFirstCategory();
-            return $productCat !== null ? $productCat->getUid() : 0;
-        }
-
-        $categories = ProductUtility::getProductCategoriesUids(intval($product));
-        if (count($categories) > 0) {
-            return $categories[0];
+        if ($product !== null) {
+            $params['product'] = $product->getUid();
+            $params['action'] = 'show';
         }
 
-        return 0;
+        return $params;
     }
 
     /**
      * Generate link
      *
      * @param int $pageUid
-     * @param string $action
-     * @param array $arguments
-     * @param bool $absolute
+     * @param array $params
      * @return string
      */
-    protected function buildUri(int $pageUid, string $action, array $arguments, bool $absolute = false): string
+    protected function buildUri(int $pageUid, array $params): string
     {
-        $arguments['action'] = $action;
-        $arguments['controller'] = 'Product';
-
         $parameters = GeneralUtility::implodeArrayForUrl(
             static::NAMESPACES,
-            $arguments
+            $params
         );
 
-        $confLink = [
+        $typolink = [
             'parameter' => $pageUid,
-            'language' => $this->languageUid,
             'useCacheHash' => true,
             'additionalParams' => $parameters,
-            'forceAbsoluteUrl' => $absolute
+            'forceAbsoluteUrl' => $this->absolute
         ];
-
-        $signalArguments = [
-            'conf' => &$confLink
-        ];
-        $this->emitSignal(__CLASS__, 'beforeBuildUri', $signalArguments);
 
         /** @var ContentObjectRenderer $contentObjectRenderer */
         $contentObjectRenderer = GeneralUtility::makeInstance(
             ContentObjectRenderer::class,
             $this->tsfe
         );
-        return $contentObjectRenderer->typolink_URL($confLink);
+
+        return $contentObjectRenderer->typolink_URL($typolink);
     }
 
     /**
      * Get category tree arguments
      *
-     * @param Category|null $category
+     * @param Category $category
      * @return array
      */
-    protected function getCategoriesArguments(?Category $category): array
+    protected function getCategoriesArguments(Category $category): array
     {
-        if ($category === null) {
-            return [];
-        }
-
         $arguments = [];
         $i = 0;
-        $treeLine = $category->getParentsRootLineReverse();
+        $treeLine = $category->getNavigationRootLine();
+        // Last category doesn't have prefix
         $lastCategory = array_pop($treeLine);
 
         foreach ($treeLine as $categoryItem) {
-            $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i++] = $category;
+            $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i++] = $categoryItem->getUid();
         }
-        $arguments['category'] = $lastCategory;
+        $arguments['category'] = $lastCategory->getUid();
 
         return $arguments;
-    }
-
-    /**
-     * Check if FE request
-     *
-     * @return bool
-     */
-    protected function isFrontendRequestType(): bool
-    {
-        if (!defined('TYPO3_REQUESTTYPE')) {
-            return false;
-        }
-
-        return (bool)(TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_FE);
     }
 }

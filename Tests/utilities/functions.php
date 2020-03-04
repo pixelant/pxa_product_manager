@@ -1,5 +1,21 @@
 <?php
 
+function createCategoriesRootLineAndReturnLastCategory(): \Pixelant\PxaProductManager\Domain\Model\Category
+{
+    $rootLine = createMultipleEntities(\Pixelant\PxaProductManager\Domain\Model\Category::class, 5);
+
+    // Simulate rootline
+    $prev = null;
+    foreach ($rootLine as $category) {
+        if ($prev !== null) {
+            $category->setParent($prev);
+        }
+        $prev = $category;
+    }
+
+    return $prev;
+}
+
 function entitiesToUidsArray($objects)
 {
     return array_map(fn($object) => $object->getUid(), $objects);

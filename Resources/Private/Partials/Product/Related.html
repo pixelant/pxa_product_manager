@@ -4,34 +4,26 @@
     <div class="single-product-related">
         <div class="col-md-12">
             <h3>
-                <f:translate key="{headerTranslationIndex}"/>
+                <f:translate key="{headerLabel}" />
             </h3>
         </div>
-        <f:for each="{relatedProducts}" as="p">
+
+        <f:for each="{relatedProducts}" as="product">
             <div class="col-md-3">
-                <f:if condition="{product.disableSingleView}">
-                    <f:then>
-                        <f:render section="product" arguments="{product: p}"/>
-                    </f:then>
-                    <f:else>
-                        <ppm:link.link pageUid="{settings.pagePid}" product="{p}">
-                            <f:render section="product" arguments="{product: p}"/>
-                        </ppm:link.link>
-                    </f:else>
-                </f:if>
+                <ppm:link page="{settings.pids.singleViewPid}" category="{product.firstCategory}" product="{product}">
+                    <div class="item">
+                        <f:render partial="Product/ListImage"
+                                  arguments="{image: product.thumbnail, title: product.name}" />
+
+                        <div class="item-body">
+                            <div class="item-title">
+                                <h4>{product.name}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </ppm:link>
             </div>
         </f:for>
     </div>
 </div>
-
-<f:section name="product">
-    <div class="item">
-        <f:render partial="Product/ListImage" arguments="{image: product.thumbnail, title: product.name}"/>
-        <div class="item-body">
-            <div class="item-title">
-                <h4>{product.name}</h4>
-            </div>
-        </div>
-    </div>
-</f:section>
 </html>

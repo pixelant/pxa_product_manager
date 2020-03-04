@@ -68,7 +68,7 @@ class Image extends AbstractFileReference
      */
     public function getTitle(): string
     {
-        return $this->title ?: $this->getOriginalResource()->getTitle();
+        return $this->title ?: $this->getOriginalResource()->getTitle() ?? '';
     }
 
     /**
@@ -78,6 +78,16 @@ class Image extends AbstractFileReference
      */
     public function getDescription(): string
     {
-        return $this->description ?: $this->getOriginalResource()->getDescription();
+        return $this->description ?: $this->getOriginalResource()->getDescription() ?? '';
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getAlternative(): string
+    {
+        return $this->alternative ?: $this->getOriginalResource()->getAlternative() ?? '';
     }
 }

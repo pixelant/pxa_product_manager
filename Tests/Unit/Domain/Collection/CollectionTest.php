@@ -332,6 +332,25 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals([$item1], $collection->filter(fn($filterItem) => $filterItem->getUid() === 1)->toArray());
     }
 
+    /**
+     * @test
+     */
+    public function unshiftAddItemsToBeginningOfCollection()
+    {
+        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        $items = [$item1, $item2, $item3];
+
+        $item10 = createEntity(Category::class, 10);
+        $item20 = createEntity(Category::class, 20);
+        $add = [$item10, $item20];
+
+        $collection = new Collection($items);
+
+        $expect = [$item10, $item20, $item1, $item2, $item3];
+
+        $this->assertEquals($expect, $collection->unshift(...$add)->toArray());
+    }
+
     public function toArrayReturnIterableToArrayDataProvider()
     {
         $items = [

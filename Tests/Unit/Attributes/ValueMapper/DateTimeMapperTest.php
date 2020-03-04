@@ -11,7 +11,7 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 /**
  * @package Pixelant\PxaProductManager\Tests\Unit\Adapter\Attributes\ValueMapper
  */
-class SelectBoxMapperTest extends UnitTestCase
+class DateTimeMapperTest extends UnitTestCase
 {
     /**
      * @test
@@ -40,7 +40,7 @@ class SelectBoxMapperTest extends UnitTestCase
         $mapper = $this->createPartialMock(DateTimeMapper::class, ['searchAttributeValue']);
 
         $attributeValue = $this->prophesize(AttributeValue::class);
-        $attributeValue->getValue()->shouldBeCalled()->willReturn('');
+        $attributeValue->getValue()->shouldBeCalled()->willReturn('invalid');
 
         $attribute = createEntity(Attribute::class, 1);
         $product = createEntity(Product::class, 1);
@@ -48,6 +48,6 @@ class SelectBoxMapperTest extends UnitTestCase
         $mapper->expects($this->once())->method('searchAttributeValue')->willReturn($attributeValue->reveal());
         $mapper->map($product, $attribute);
 
-        $this->assertNull(\DateTime::class, $attribute->getValue());
+        $this->assertNull($attribute->getValue());
     }
 }

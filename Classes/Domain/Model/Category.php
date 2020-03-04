@@ -2,6 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use TYPO3\CMS\Extbase\Domain\Model\Category as CategoryExtbase;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -38,7 +39,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Category extends CategoryExtbase
 {
-    use AbleCacheProperties;
+    use AbleCacheProperties, CanCreateCollection;
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Category
@@ -454,5 +455,18 @@ class Category extends CategoryExtbase
     public function getParentsRootLineReverse(): array
     {
         return array_reverse($this->getParentsRootLine());
+    }
+
+    /**
+     * Get root line from root category down to current, exclude hidden in navigation
+     *
+     * @return array
+     */
+    public function getNavigationRootLine(): array
+    {
+        return $this
+            ->collection($this->getParentsRootLineReverse())
+            ->filter(fn(Category $category) => !$category->isHiddenInNavigation())
+            ->toArray();
     }
 }

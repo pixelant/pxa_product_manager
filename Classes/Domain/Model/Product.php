@@ -486,6 +486,22 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Return first product category
+     *
+     * @return Category|null
+     */
+    public function getFirstCategory(): ?Category
+    {
+        if ($this->categories->count() > 0) {
+            $this->categories->rewind();
+
+            return $this->categories->current();
+        }
+
+        return null;
+    }
+
+    /**
      * @param ObjectStorage $categories
      * @return Product
      */
@@ -701,8 +717,8 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Get array of all product attributes.
-     * It will init attributes values
+     * Get array of all product attributes where key is UID or identifier.
+     * It will init attributes values.
      *
      * @return Attribute[]
      */
@@ -716,8 +732,24 @@ class Product extends AbstractEntity
             ->shiftLevel()
             ->toArray();
 
-        // Reset keys
-        return array_values($attributes);
+        $keys = array_map(
+            fn(Attribute $attribute) => $attribute->getIdentifier() ?: $attribute->getUid(),
+            $attributes
+        );
+
+        return array_combine($keys, $attributes);
+    }
+
+    /**
+     * Return attributes that are visible in listing only
+     *
+     * @return array
+     */
+    public function getListingAttributes(): array
+    {
+        return $this->collection($this->getAttributes())
+            ->filter(fn(Attribute $attribute) => $attribute->isShowInAttributeListing())
+            ->toArray();
     }
 
     /**
@@ -765,6 +797,26 @@ class Product extends AbstractEntity
     public function getMainImage(): ?Image
     {
         return $this->findImageByType(Image::MAIN_IMAGE);
+    }
+
+    /**
+     * Return images where main image is on first place
+     *
+     * @return array
+     */
+    public function getGalleryImages(): array
+    {
+        $mainImage = $this->getMainImage();
+        if ($mainImage !== null) {
+            $sorted = $this->collection($this->images)
+                ->filter(fn(Image $image) => $image !== $mainImage)
+                ->unshift($mainImage)
+                ->toArray();
+
+            return array_values($sorted);
+        }
+
+        return $this->images->toArray();
     }
 
     /**

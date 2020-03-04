@@ -41,6 +41,8 @@ plugin.tx_pxaproductmanager {
     }
 
     settings {
+        noImagePath = EXT:pxa_product_manager/Resources/Public/Images/noimage.png
+
         # Pids
         pids {
             singleViewPid = {$plugin.tx_pxaproductmanager.settings.pids.singleViewPid}
@@ -101,3 +103,5 @@ plugin.tx_pxaproductmanager {
         }
     }
 }
+
+page.includeCSS.product_manager_basic = EXT:pxa_product_manager/Resources/Public/Css/product_manager_basic.css
