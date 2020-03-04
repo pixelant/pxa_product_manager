@@ -110,6 +110,7 @@ defined('TYPO3_MODE') || die;
                 'type' => 'inline',
                 'foreign_table' => 'sys_category',
                 'foreign_field' => 'parent',
+                'foreign_sortby' => 'sorting',
                 'maxitems' => 9999,
                 'behaviour' => [],
                 'appearance' => [
