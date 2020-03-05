@@ -62,7 +62,10 @@
 				<source>Products</source>
 			</trans-unit>
 			<trans-unit id="flexform.mode.product_list">
-				<source>List view with navigation</source>
+				<source>List view</source>
+			</trans-unit>
+			<trans-unit id="flexform.mode.category_list">
+			    <source>Categories menu</source>
 			</trans-unit>
 			<trans-unit id="flexform.mode.product_custom_products_list">
 				<source>Custom products list view</source>
@@ -99,9 +102,6 @@
 			<!--FlexForm:Navigation:START-->
 			<trans-unit id="flexform.navigation_title">
 				<source>Navigation</source>
-			</trans-unit>
-			<trans-unit id="flexform.navigation.hide_on_detail_view">
-				<source>Hide navigation when switch to detail product view</source>
 			</trans-unit>
 			<trans-unit id="flexform.navigation.hide_categories_without_products">
 				<source>Hide categories without products</source>

@@ -122,9 +122,10 @@ class FlexFormDataStructureHook implements SingletonInterface
 
     /**
      * Return last selected action. If ajax request read value from DB
-     * @return string
+     *
+     * @return string|null
      */
-    protected function getLastSelectedAction(): string
+    protected function getLastSelectedAction(): ?string
     {
         // If this is ajax request '/ajax/record/tree/fetchData' then 'getDataStructureIdentifierPostProcess' wasn't called.
         // Need to read value of latest selected action from DB

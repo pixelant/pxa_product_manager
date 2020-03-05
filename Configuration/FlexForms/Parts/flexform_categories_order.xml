@@ -1,0 +1,53 @@
+<T3DataStructure>
+    <sheets>
+        <categoriesOrderings>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.categories_orderings</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.categoriesOrderings.orderBy>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.categories_orderings.order_by</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_sorting</numIndex>
+                                        <numIndex index="1">sorting</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_title</numIndex>
+                                        <numIndex index="1">title</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.categoriesOrderings.orderBy>
+
+                    <settings.categoriesOrderings.orderDirection>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.categories_orderings.order_direction</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <items type="array">
+                                    <numIndex index="0" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_asc</numIndex>
+                                        <numIndex index="1">asc</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1" type="array">
+                                        <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_desc</numIndex>
+                                        <numIndex index="1">desc</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.categoriesOrderings.orderDirection>
+                </el>
+            </ROOT>
+        </categoriesOrderings>
+    </sheets>
+</T3DataStructure>

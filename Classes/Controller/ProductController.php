@@ -50,22 +50,21 @@ class ProductController extends ActionController
      */
     public function listAction(Category $category = null)
     {
-        if ($category === null) {
-            $category = $this->categoryRepository->findByUid(
-                (int)$this->settings['list']['entryNavigationCategory']
-            );
-        }
+        $entryCategoryUid = (int)$this->settings['list']['entryNavigationCategory'];
+        $category = $category ?? $this->categoryRepository->findByUid($entryCategoryUid);
 
-        $subCategories = $this->categoryRepository->findDemanded(
-            $this->createDemand(CategoryDemandFactory::class, $this->settings)
-                ->setParent($category)
-                ->setOnlyVisibleInNavigation(true)
-        );
-        $products = $this->productRepository->findDemanded(
-            $this->createDemand(ProductDemandFactory::class, $this->settings)->setCategories([$category])
-        );
+        $categoryDemand = $this->createDemand(CategoryDemandFactory::class, $this->settings);
+        $categoryDemand
+            ->setParent($category)
+            ->setOnlyVisibleInNavigation(true);
 
-        $this->view->assignMultiple(compact('category', 'subCategories', 'products'));
+        $productDemand = $this->createDemand(ProductDemandFactory::class, $this->settings)->setCategories([$category]);
+
+        $this->view->assignMultiple([
+            'category' => $category,
+            'subCategories' => $this->categoryRepository->findDemanded($categoryDemand),
+            'products' => $this->productRepository->findDemanded($productDemand),
+        ]);
     }
 
     /**

@@ -1,5 +1,5 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:layout name="Default" />
 
 <f:section name="main">
@@ -143,10 +143,10 @@
                       arguments="{relatedProducts: product.accessories, headerLabel: 'fe.accessories'}" />
         </f:if>
 
-        <f:if condition="{settings.pids.listViewPid}">
-            <f:link.page class="btn btn-default back-button">
+        <f:if condition="{settings.pids.listViewPid} && {category}">
+            <pxa:link page="{settings.pids.listViewPid}" category="{category}">
                 <f:translate key="fe.go_back" />
-            </f:link.page>
+            </pxa:link>
         </f:if>
     </div>
 </f:section>

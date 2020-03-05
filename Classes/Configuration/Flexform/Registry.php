@@ -16,14 +16,30 @@ class Registry
      */
     protected array $defaultSwitchableActions = [
         [
+            'action' => 'Category->list',
+            'label' => 'flexform.mode.category_list',
+            'flexforms' => [
+                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_list.xml',
+                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_navigation.xml',
+                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_categories_order.xml',
+            ],
+            'excludeFields' => [
+                'settings.pids.singleViewPid',
+            ],
+        ],
+        [
             'action' => 'Product->list;Product->show',
             'label' => 'flexform.mode.product_list',
             'flexforms' => [
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_list.xml',
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_products_orderings.xml',
+                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_categories_order.xml',
+                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_navigation.xml',
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_show.xml',
             ],
-            'excludeFields' => [],
+            'excludeFields' => [
+                'settings.navigation.expandAll',
+            ],
         ],
         [
             'action' => 'Product->show',

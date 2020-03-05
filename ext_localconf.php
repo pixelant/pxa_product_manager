@@ -19,6 +19,7 @@ defined('TYPO3_MODE') || die;
         'Pi1',
         [
             'Product' => 'list, show,',
+            'Category' => 'list',
         ],
         // non-cacheable actions
         [

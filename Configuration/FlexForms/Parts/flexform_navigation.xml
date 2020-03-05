@@ -1,0 +1,38 @@
+<T3DataStructure>
+    <sheets>
+
+        <navigation>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation_title</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+
+                    <settings.navigation.expandAll>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation.expand_all</label>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                                <renderType>checkboxToggle</renderType>
+                            </config>
+                        </TCEforms>
+                    </settings.navigation.expandAll>
+
+                    <settings.navigation.hideCategoriesWithoutProducts>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.navigation.hide_categories_without_products</label>
+                            <config>
+                                <type>check</type>
+                                <default>0</default>
+                                <renderType>checkboxToggle</renderType>
+                            </config>
+                        </TCEforms>
+                    </settings.navigation.hideCategoriesWithoutProducts>
+                </el>
+            </ROOT>
+        </navigation>
+
+    </sheets>
+</T3DataStructure>
