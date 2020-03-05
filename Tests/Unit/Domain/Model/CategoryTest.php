@@ -106,4 +106,24 @@ class CategoryTest extends UnitTestCase
 
         $this->assertEquals($expect, array_values($result));
     }
+
+    /**
+     * @test
+     */
+    public function getNavigationTitleReturnAlternativeTitleIfExist()
+    {
+        $this->subject->setAlternativeTitle('title');
+
+        $this->assertEquals('title', $this->subject->getNavigationTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function getNavigationTitleReturnNameIfNoAlternativeTitle()
+    {
+        $this->subject->setTitle('title');
+
+        $this->assertEquals('title', $this->subject->getNavigationTitle());
+    }
 }

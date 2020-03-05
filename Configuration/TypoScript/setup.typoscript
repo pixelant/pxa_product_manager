@@ -106,3 +106,5 @@ plugin.tx_pxaproductmanager {
 }
 
 page.includeCSS.product_manager_basic = EXT:pxa_product_manager/Resources/Public/Css/product_manager_basic.css
+
+<INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Library/" extensions="typoscript">

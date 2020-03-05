@@ -1,0 +1,23 @@
+lib.pxaProductManager {
+    breadcrumbs = COA
+    breadcrumbs {
+        10 = HMENU
+        10 {
+            special = userfunction
+            special {
+                userFunc = Pixelant\PxaProductManager\UserFunction\Breadcrumbs->build
+            }
+
+            1 = TMENU
+            1 {
+                NO = 1
+                NO.wrapItemAndSub = <li>|</li>
+
+                CUR = 1
+                CUR.doNotLinkIt = 1
+            }
+        }
+
+        wrap = <div class="breadcrumbs"><ol class="breadcrumbs__list">|</ol></div>
+    }
+}

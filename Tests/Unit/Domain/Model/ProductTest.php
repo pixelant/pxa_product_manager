@@ -180,4 +180,24 @@ class ProductTest extends UnitTestCase
 
         $this->assertEquals([3 => $attr3], $subject->getListingAttributes());
     }
+
+    /**
+     * @test
+     */
+    public function getNavigationTitleReturnAlternativeTitleIfExist()
+    {
+        $this->subject->setAlternativeTitle('title');
+
+        $this->assertEquals('title', $this->subject->getNavigationTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function getNavigationTitleReturnNameIfNoAlternativeTitle()
+    {
+        $this->subject->setName('name');
+
+        $this->assertEquals('name', $this->subject->getNavigationTitle());
+    }
 }

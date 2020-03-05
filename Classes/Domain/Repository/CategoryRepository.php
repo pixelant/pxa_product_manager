@@ -66,6 +66,22 @@ class CategoryRepository extends AbstractDemandRepository
     }
 
     /**
+     * Find by given uids array
+     *
+     * @param array $uids
+     * @return QueryResultInterface
+     */
+    public function findByUids(array $uids): QueryResultInterface
+    {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->in('uid', $uids)
+        );
+
+        return $query->execute();
+    }
+
+    /**
      * @param QueryInterface $query
      * @param DemandInterface|CategoryDemand $demand
      * @return array
@@ -84,6 +100,5 @@ class CategoryRepository extends AbstractDemandRepository
         }
 
         return $constraints;
-        //\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($demand, 'Debug', 16);$
     }
 }

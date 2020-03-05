@@ -177,6 +177,16 @@ class Category extends CategoryExtbase
     }
 
     /**
+     * Get navigation title
+     *
+     * @return string
+     */
+    public function getNavigationTitle(): string
+    {
+        return $this->alternativeTitle ?: $this->title;
+    }
+
+    /**
      * @param string $alternativeTitle
      * @return Category
      */

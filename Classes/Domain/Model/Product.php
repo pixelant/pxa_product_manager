@@ -820,6 +820,16 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Get navigation title
+     *
+     * @return string
+     */
+    public function getNavigationTitle(): string
+    {
+        return $this->alternativeTitle ?: $this->name;
+    }
+
+    /**
      * Return all attributes sets.
      * It fetch every attribute set of every category from parents tree
      * + product own attributes sets
