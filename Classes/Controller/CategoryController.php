@@ -3,33 +3,53 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller;
 
-use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
-use Pixelant\PxaProductManager\Domain\Model\DTO\Factory\CategoryDemandFactory;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Service\NavigationService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /**
  * Categories controller
  */
-class CategoryController extends ActionController
+class CategoryController extends AbstractController
 {
+    /**
+     * @var CategoryRepository
+     */
+    protected CategoryRepository $categoryRepository;
+
+    /**
+     * @param CategoryRepository $categoryRepository
+     */
+    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
 
     /**
      * List navigation
-     *
-     * @param Category|null $category
      */
-    public function listAction(Category $category = null)
+    public function listAction()
     {
-        $this->view->assign('items', $this->navigationService->build($category, $this->settings));
+        $this->view->assign('items', $this->getNavigationService()->getItems());
     }
 
+    /**
+     * Create navigation service
+     *
+     * @return NavigationService
+     */
     protected function getNavigationService(): NavigationService
     {
-        $service = GeneralUtility::makeInstance(NavigationService::class);
-        if ($this->settings[''])
+        $demand = $this->createCategoriesDemand($this->settings);
+
+        $service = $this->objectManager->get(
+            NavigationService::class,
+            $this->categoryRepository->findByUid((int)$this->settings['list']['entryNavigationCategory']),
+            $demand
+        );
+        if (!empty($this->settings['navigation']['expandAll'])) {
+            $service->setExpandAll((bool)$this->settings['navigation']['expandAll']);
+        }
+
+        return $service;
     }
 }

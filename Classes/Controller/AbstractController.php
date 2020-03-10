@@ -131,6 +131,6 @@ abstract class AbstractController extends ActionController
             $value = null;
         }
 
-        return $value ?? $default;
+        return $value ?: $default;
     }
 }

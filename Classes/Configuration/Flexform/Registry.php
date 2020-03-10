@@ -23,9 +23,7 @@ class Registry
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_navigation.xml',
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_categories_order.xml',
             ],
-            'excludeFields' => [
-                'settings.pids.singleViewPid',
-            ],
+            'excludeFields' => [],
         ],
         [
             'action' => 'Product->list;Product->show',
