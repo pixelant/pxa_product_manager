@@ -16,7 +16,7 @@ class StructureLoader
      *
      * @var string
      */
-    public static $defaultFlexform = 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_common.xml';
+    public static string $defaultFlexform = 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_common.xml';
 
     /**
      * Merge default flexform with action specific

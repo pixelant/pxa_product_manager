@@ -115,7 +115,8 @@ class TcaUtility
         $foreignTableWhere = 'AND ' . $table . '.pid = ###CURRENT_PID###';
 
         // Check and override by typoscript setting
-        $restrictionSetting = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('pxa_product_manager', $setting);
+        $restrictionSetting = GeneralUtility::makeInstance(ExtensionConfiguration::class)
+            ->get('pxa_product_manager', $setting);
         if ($restrictionSetting) {
             switch ($restrictionSetting) {
                 case 'current_pid':

@@ -68,7 +68,9 @@ class PageLayoutView
         $additionalInfo = '';
 
         if ($params['row']['list_type'] == 'pxaproductmanager_pi1') {
-            $flexFormSettings = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray($params['row']['pi_flexform']);
+            $flexFormSettings = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray(
+                $params['row']['pi_flexform']
+            );
 
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
             if (!empty($switchableControllerActions)) {
@@ -79,7 +81,11 @@ class PageLayoutView
 
                     // Get value for each field
                     foreach ($fieldsGroup['el'] as $fieldName => $fieldConfiguration) {
-                        $additionalInfo .= $this->getFieldInformation($fieldName, $fieldConfiguration, $flexFormSettings);
+                        $additionalInfo .= $this->getFieldInformation(
+                            $fieldName,
+                            $fieldConfiguration,
+                            $flexFormSettings
+                        );
                     }
 
                     $additionalInfo .= static::$hrMarkup;
@@ -177,7 +183,10 @@ class PageLayoutView
         $rows = $queryBuilder
             ->select($titleField)
             ->from($table)
-            ->where($queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($uids, Connection::PARAM_INT_ARRAY)))
+            ->where($queryBuilder->expr()->in(
+                'uid',
+                $queryBuilder->createNamedParameter($uids, Connection::PARAM_INT_ARRAY)
+            ))
             ->execute()
             ->fetchAll(\PDO::FETCH_COLUMN);
 
