@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Seo\XmlSitemap;
 
-use Pixelant\PxaProductManager\Service\Link\UrlBuilderService;
+use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
+use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Seo\XmlSitemap\AbstractXmlSitemapDataProvider;
 
@@ -19,25 +20,28 @@ use TYPO3\CMS\Seo\XmlSitemap\AbstractXmlSitemapDataProvider;
 class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
 {
     /**
-     * Products table
-     *
-     * @var string
+     * @var ProductRepository
      */
-    protected $table = 'tx_pxaproductmanager_domain_model_product';
+    protected ProductRepository $repository;
+
+    /**
+     * @var UrlBuilderServiceInterface
+     */
+    protected UrlBuilderServiceInterface $urlBuilder;
 
     /**
      * Exclude categories from url
      *
      * @var bool
      */
-    protected $excludeCategories = false;
+    protected bool $excludeCategories = false;
 
     /**
      * Target url page ID
      *
      * @var int
      */
-    protected $pageId = null;
+    protected int $pageId = 0;
 
     /**
      * @param ServerRequestInterface $request
@@ -45,12 +49,24 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
      * @param array $config
      * @param ContentObjectRenderer|null $cObj
      */
-    public function __construct(ServerRequestInterface $request, string $key, array $config = [], ContentObjectRenderer $cObj = null)
-    {
+    public function __construct(
+        ServerRequestInterface $request,
+        string $key,
+        array $config = [],
+        ContentObjectRenderer $cObj = null
+    ) {
         parent::__construct($request, $key, $config, $cObj);
 
         $this->excludeCategories = boolval($config['url']['excludeCategories'] ?? false);
-        $this->pageId = intval($config['url']['pageId'] ?? $GLOBALS['TSFE']->id);
+        $this->pageId = intval($config['url']['pageId'] ?? 0);
+
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
+        $this->repository = $objectManager->get(ProductRepository::class);
+
+        $this->urlBuilder = $objectManager->get(UrlBuilderServiceInterface::class);
+        $this->urlBuilder->absolute(true);
+
 
         $this->generateItems();
     }
@@ -60,104 +76,40 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
      */
     protected function generateItems()
     {
-        list($pids, $lastModifiedField, $sortField) = $this->getConfigFields();
+        $demand = $this->createDemand();
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable($this->table);
+        $limit = 1000;
+        $offset = 0;
+        do {
+            $demand->setLimit($limit);
+            $demand->setOffSet($offset);
 
-        $constraints = [];
+            $products = $this->repository->findDemanded($demand);
 
-        // Site language
-        $this->addLanguageConstraint($constraints, $queryBuilder);
+            /** @var Product $product */
+            foreach ($products as $product) {
+                $this->items[] = [
+                    'product' => $product,
+                    'lastMod' => $product->getTstamp()->getTimestamp(),
+                ];
+            }
 
-        // Storage
-        $this->addPidsConstraint($pids, $constraints, $queryBuilder);
-
-        // Additional where
-        $this->addAdditionalWhereConstraint($constraints);
-
-        // Do query
-        $queryBuilder->select('*')
-            ->from($this->table);
-
-        if (!empty($constraints)) {
-            $queryBuilder->where(
-                ...$constraints
-            );
-        }
-
-        $rows = $queryBuilder->orderBy($sortField)
-            ->execute()
-            ->fetchAll();
-
-        foreach ($rows as $row) {
-            $this->items[] = [
-                'data' => $row,
-                'lastMod' => (int)$row[$lastModifiedField]
-            ];
-        }
+            // Increase offset
+            $offset += $limit;
+        } while ($products->count());
     }
 
     /**
-     * Build product item URL
+     * Storage pids
      *
-     * @param array $data
      * @return array
      */
-    protected function defineUrl(array $data): array
+    protected function getStorage(): array
     {
-        $linkService = $this->getLinkBuilderService();
-        $url = $linkService->buildForProduct($this->pageId, $data['data']['uid'], null, $this->excludeCategories, true);
+        $pids = GeneralUtility::intExplode(',', $this->config['pid'] ?? [], true);
 
-        if (!empty($url)) {
-            $data['loc'] = $url;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Additional where
-     *
-     * @param array $constraints
-     */
-    protected function addAdditionalWhereConstraint(array &$constraints): void
-    {
-        if (!empty($this->config['additionalWhere'])) {
-            $constraints[] = $this->config['additionalWhere'];
-        }
-    }
-
-    /**
-     * Language field constraint
-     *
-     * @param array $constraints
-     * @param QueryBuilder $queryBuilder
-     */
-    protected function addLanguageConstraint(array &$constraints, QueryBuilder $queryBuilder): void
-    {
-        if (!empty($GLOBALS['TCA'][$this->table]['ctrl']['languageField'])) {
-            $constraints[] = $queryBuilder->expr()->in(
-                $GLOBALS['TCA'][$this->table]['ctrl']['languageField'],
-                [
-                    -1, // All languages
-                    $this->getLanguageId()  // Current language
-                ]
-            );
-        }
-    }
-
-    /**
-     * Add storage constraint
-     *
-     * @param array $pids
-     * @param array $constraints
-     * @param QueryBuilder $queryBuilder
-     */
-    protected function addPidsConstraint(array $pids, array &$constraints, QueryBuilder $queryBuilder): void
-    {
         if (!empty($pids)) {
-            $recursiveLevel = intval($this->config['recursive'] ?? 0);
+            $recursiveLevel = (int)($this->config['recursive'] ?? 0);
             if ($recursiveLevel) {
                 $newList = [];
                 foreach ($pids as $pid) {
@@ -168,39 +120,40 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
                 }
                 $pids = array_merge($pids, $newList);
             }
-
-            $constraints[] = $queryBuilder->expr()->in('pid', $pids);
         }
+
+        return $pids;
     }
 
     /**
-     * Return configuration fields
+     * Build product item URL
      *
+     * @param array $data
      * @return array
      */
-    protected function getConfigFields(): array
+    protected function defineUrl(array $data): array
     {
-        return [
-            GeneralUtility::intExplode(',', $this->config['pid'] ?? '', true),
-            $this->config['lastModifiedField'] ?? 'tstamp',
-            $this->config['sortField'] ?? 'sorting'
-        ];
+        /** @var Product $product */
+        $product = $data['product'];
+
+        $data['loc'] = $this->urlBuilder->url(
+            $this->pageId,
+            $product->getFirstCategory(),
+            $product
+        );
+
+        return $data;
     }
 
     /**
-     * @return int
+     * @return ProductDemand
      */
-    protected function getLanguageId(): int
+    protected function createDemand(): ProductDemand
     {
-        $context = GeneralUtility::makeInstance(Context::class);
-        return (int)$context->getPropertyFromAspect('language', 'id');
-    }
-
-    /**
-     * @return UrlBuilderService
-     */
-    protected function getLinkBuilderService(): UrlBuilderService
-    {
-        return GeneralUtility::makeInstance(UrlBuilderService::class);
+        return GeneralUtility::makeInstance(ProductDemand::class)
+            ->setStoragePid($this->getStorage())
+            ->setOrderBy('tstamp')
+            ->setOrderByAllowed('tstamp')
+            ->setOrderDirection('desc');
     }
 }
