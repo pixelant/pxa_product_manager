@@ -8,6 +8,7 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\Factory\CategoryDemandFactory;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Service\NavigationService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 /**
@@ -15,18 +16,6 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 class CategoryController extends ActionController
 {
-    /**
-     * @var NavigationService
-     */
-    protected NavigationService $navigationService;
-
-    /**
-     * @param NavigationService $navigationService
-     */
-    public function injectNavigationService(NavigationService $navigationService)
-    {
-        $this->navigationService = $navigationService;
-    }
 
     /**
      * List navigation
@@ -36,5 +25,11 @@ class CategoryController extends ActionController
     public function listAction(Category $category = null)
     {
         $this->view->assign('items', $this->navigationService->build($category, $this->settings));
+    }
+
+    protected function getNavigationService(): NavigationService
+    {
+        $service = GeneralUtility::makeInstance(NavigationService::class);
+        if ($this->settings[''])
     }
 }

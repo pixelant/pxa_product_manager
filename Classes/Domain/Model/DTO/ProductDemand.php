@@ -35,7 +35,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 class ProductDemand extends AbstractDemand
 {
     /**
-     * Array of uids
+     * Array of uids or objects
      *
      * @var array
      */

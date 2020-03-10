@@ -21,16 +21,6 @@ class NavigationService
     protected CategoryRepository $categoryRepository;
 
     /**
-     * @var CategoryDemandFactory
-     */
-    protected CategoryDemandFactory $demandFactory;
-
-    /**
-     * @var Category|null
-     */
-    protected ?Category $activeCategory;
-
-    /**
      * @var int
      */
     protected int $rootCategoryUid;

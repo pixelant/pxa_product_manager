@@ -11,9 +11,9 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 class CategoryDemand extends AbstractDemand
 {
     /**
-     * @var Category
+     * @var Category|int
      */
-    protected ?Category $parent = null;
+    protected $parent = null;
 
     /**
      * Show only enabled in navigation
@@ -38,10 +38,10 @@ class CategoryDemand extends AbstractDemand
     }
 
     /**
-     * @param Category|null $parent
+     * @param Category|int $parent
      * @return CategoryDemand
      */
-    public function setParent(?Category $parent): CategoryDemand
+    public function setParent($parent): CategoryDemand
     {
         $this->parent = $parent;
         return $this;
