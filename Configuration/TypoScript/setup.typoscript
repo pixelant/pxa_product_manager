@@ -65,7 +65,7 @@ plugin.tx_pxaproductmanager {
         }
 
         listView {
-            limit = 4
+            limit = 20
 
             images {
                 maxWidth = {$plugin.tx_pxaproductmanager.settings.listView.images.maxWidth}

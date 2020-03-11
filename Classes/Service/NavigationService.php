@@ -170,7 +170,7 @@ class NavigationService
                 );
             }
 
-            if ($iterator > 10) {
+            if ($iterator > 99) {
                 throw new \Exception('Reach maximum deep level while generate navigation', 1583844508799);
             }
         }
