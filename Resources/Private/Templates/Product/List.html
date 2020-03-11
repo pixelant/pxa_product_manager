@@ -43,25 +43,36 @@
 
                 <f:if condition="!{category.hideProducts}">
                     <div class="row">
-                        <f:widget.paginate as="paginatedProducts" objects="{products}" configuration="{itemsPerPage: settings.listView.limit, addQueryStringMethod: 'GET'}">
-                            <f:for as="product" each="{paginatedProducts}">
-                                <div class="col-md-3">
-                                    <pxa:link page="{settings.pids.singleViewPid}" category="{category}" product="{product}">
-                                        <div class="item">
-                                            <f:render partial="Product/ListImage" arguments="{image: product.listImage, title: product.name}" />
-
-                                            <div class="item-body">
-                                                <div class="item-title"><h4>{product.name}</h4></div>
-                                            </div>
-                                        </div>
-                                    </pxa:link>
-                                </div>
-                            </f:for>
-                        </f:widget.paginate>
+                        <f:if condition="{products -> f:count()} > {settings.listView.limit}">
+                            <f:then>
+                                <f:widget.paginate as="paginatedProducts" objects="{products}" configuration="{itemsPerPage: settings.listView.limit, addQueryStringMethod: 'GET'}">
+                                    <f:render section="products" arguments="{products: paginatedProducts}" />
+                                </f:widget.paginate>
+                            </f:then>
+                            <f:else>
+                                <f:render section="products" arguments="{products: products}" />
+                            </f:else>
+                        </f:if>
                     </div>
                 </f:if>
             </div>
         </div>
     </div>
+</f:section>
+
+<f:section name="products">
+    <f:for as="product" each="{products}">
+        <div class="col-md-3">
+            <pxa:link page="{settings.pids.singleViewPid}" category="{category}" product="{product}">
+                <div class="item">
+                    <f:render partial="Product/ListImage" arguments="{image: product.listImage, title: product.name}" />
+
+                    <div class="item-body">
+                        <div class="item-title"><h4>{product.name}</h4></div>
+                    </div>
+                </div>
+            </pxa:link>
+        </div>
+    </f:for>
 </f:section>
 </html>
