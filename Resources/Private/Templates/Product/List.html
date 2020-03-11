@@ -8,83 +8,60 @@
     <f:render partial="SEO/CategoryTitleMetaTags" arguments="{category: category}" />
 
     <div class="row">
-        <f:if condition="{treeData}">
-            <f:then>
-                <div class="col-md-3">
-                    <f:if condition="{treeData.subItems}">
-                        <div class="products-navigation">
-                            <div class="list-group">
-                                <f:render partial="Navigation/Menu"
-                                          arguments="{items: treeData.subItems, level: '{treeData.level}'}" />
+        <div class="col-md-12">
+            <div class="products-wrapper">
+
+                <f:if condition="{category}">
+                    <div class="products-header">
+                        <h1>{category.title}</h1>
+                        <f:format.html>{category.description}</f:format.html>
+
+                        <f:if condition="{category.contentPage}">
+                            <div>
+                                <f:cObject typoscriptObjectPath="lib.dynamicContent"
+                                           data="{pageUid: category.contentPage, colPos: category.contentColPos}" />
                             </div>
-                        </div>
-                    </f:if>
-                </div>
-                <div class="col-md-9">
-                    <f:render section="productWrapper" arguments="{_all}" />
-                </div>
-            </f:then>
-            <f:else>
-                <div class="col-md-12">
-                    <f:render section="productWrapper" arguments="{_all}" />
-                </div>
-            </f:else>
-        </f:if>
-    </div>
-</f:section>
+                        </f:if>
+                    </div>
+                </f:if>
 
-<f:section name="productWrapper">
-    <div class="products-wrapper">
+                <f:if condition="{subCategories}">
+                    <div class="row">
+                        <f:for as="subCategory" each="{subCategories}">
+                            <div class="col-md-3">
+                                <div class="item-title"><h4>{subCategory.title}</h4></div>
 
-        <f:if condition="{category}">
-            <div class="products-header">
-                <h1>{category.title}</h1>
-                <f:format.html>{category.description}</f:format.html>
+                                <pxa:link page="{settings.pids.singleViewPid}" category="{subCategory}">
+                                    <div class="item">
+                                        <f:render partial="Product/ListImage" arguments="{image: subCategory.image, title: subCategory.title}" />
+                                    </div>
+                                </pxa:link>
+                            </div>
+                        </f:for>
+                    </div>
+                </f:if>
 
-                <f:if condition="{category.contentPage}">
-                    <div>
-                        <f:cObject typoscriptObjectPath="lib.dynamicContent"
-                                   data="{pageUid: category.contentPage, colPos: category.contentColPos}" />
+                <f:if condition="!{category.hideProducts}">
+                    <div class="row">
+                        <f:widget.paginate as="paginatedProducts" objects="{products}" configuration="{itemsPerPage: settings.listView.limit, addQueryStringMethod: 'GET'}">
+                            <f:for as="product" each="{paginatedProducts}">
+                                <div class="col-md-3">
+                                    <pxa:link page="{settings.pids.singleViewPid}" category="{category}" product="{product}">
+                                        <div class="item">
+                                            <f:render partial="Product/ListImage" arguments="{image: product.listImage, title: product.name}" />
+
+                                            <div class="item-body">
+                                                <div class="item-title"><h4>{product.name}</h4></div>
+                                            </div>
+                                        </div>
+                                    </pxa:link>
+                                </div>
+                            </f:for>
+                        </f:widget.paginate>
                     </div>
                 </f:if>
             </div>
-        </f:if>
-
-        <f:if condition="{subCategories}">
-            <div class="row">
-                <f:for as="subCategory" each="{subCategories}">
-                    <div class="col-md-3">
-                        <div class="item-title"><h4>{subCategory.title}</h4></div>
-
-                        <pxa:link page="{settings.pids.singleViewPid}" category="{subCategory}">
-                            <div class="item">
-                                <f:render partial="Product/ListImage" arguments="{image: subCategory.image, title: subCategory.title}" />
-                            </div>
-                        </pxa:link>
-                    </div>
-                </f:for>
-            </div>
-        </f:if>
-
-        <f:if condition="!{category.hideProducts}">
-            <div class="row">
-                <f:widget.paginate as="paginatedProducts" objects="{products}" configuration="{itemsPerPage: settings.listView.limit, addQueryStringMethod: 'GET'}">
-                    <f:for as="product" each="{paginatedProducts}">
-                        <div class="col-md-3">
-                            <pxa:link page="{settings.pids.singleViewPid}" category="{category}" product="{product}">
-                                <div class="item">
-                                    <f:render partial="Product/ListImage" arguments="{image: product.listImage, title: product.name}" />
-
-                                    <div class="item-body">
-                                        <div class="item-title"><h4>{product.name}</h4></div>
-                                    </div>
-                                </div>
-                            </pxa:link>
-                        </div>
-                    </f:for>
-                </f:widget.paginate>
-            </div>
-        </f:if>
+        </div>
     </div>
 </f:section>
 </html>

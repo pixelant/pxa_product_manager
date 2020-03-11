@@ -29,21 +29,21 @@ namespace Pixelant\PxaProductManager\LinkHandler;
  * Class CKEditorProductLinkHandler
  * @package Pixelant\PxaProductManager\LinkHandler
  */
-class CKEditorProductLinkHandler extends AbstractCKEditorLinkHandler
+class ProductLinkHandler extends AbstractLinkHandler
 {
     /**
      * Init var name
      */
-    protected function initLinkPartName()
+    protected function linkName(): string
     {
-        $this->linkPartName = 'product';
+        return 'product';
     }
 
     /**
      * Init table
      */
-    protected function initTableName()
+    protected function tableName(): string
     {
-        $this->tableName = 'tx_pxaproductmanager_domain_model_product';
+        return 'tx_pxaproductmanager_domain_model_product';
     }
 }

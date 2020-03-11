@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Hook;
 
-use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
-use Pixelant\PxaProductManager\Service\BackendUriService;
-use Pixelant\PxaProductManager\Service\TemplateService;
-use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Controller\PageLayoutController;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class PageHookRelatedCategories
@@ -17,50 +16,95 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class PageHookRelatedCategories
 {
+
     /**
      * @param array $params
      * @param PageLayoutController $pageLayoutController
      * @return string
-     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    public function render(array $params, PageLayoutController $pageLayoutController)
+    public function render(array $params, PageLayoutController $pageLayoutController): string
     {
-        /** @var CategoryRepository $categoriesRepository */
-        $categoriesRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(CategoryRepository::class);
-        $categories = $categoriesRepository->findByRelatedToContentPage($pageLayoutController->id);
+        $categories = $this->findCategoriesByContentPage((int)$pageLayoutController->id);
 
-        if (!$categories) {
+        if (empty($categories)) {
             return '';
         }
 
-        /** @var BackendUriService $backendUriService */
-        $backendUriService = GeneralUtility::makeInstance(BackendUriService::class);
-
-        $data = [];
-
+        $categoriesData = [];
         foreach ($categories as $category) {
-            $uri = $backendUriService->buildUri('record_edit', [
-                "edit[sys_category][{$category['uid']}]" => 'edit',
-                'returnUrl' => \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI')
-            ]);
-
-            $data[] = [
-                'uri' => $uri,
+            $categoriesData[] = [
+                'uri' => $this->editUri($category['uid']),
                 'title' => $category['title']
             ];
         }
 
-        $backendPathsTs = ConfigurationUtility::getTSConfig()['backend'];
+        $view = $this->view();
+        $view->assign('categories', $categoriesData);
 
-        /** @var TemplateService $templateService */
-        $templateService = GeneralUtility::makeInstance(TemplateService::class);
+        return $view->render();
+    }
 
-        $templateService->setTemplateRootPaths($backendPathsTs['templateRootPaths'])
-                        ->setPartialRootPaths($backendPathsTs['partialRootPaths'])
-                        ->setLayoutRootPaths($backendPathsTs['layoutRootPaths']);
+    /**
+     * @return object|StandaloneView
+     */
+    protected function view()
+    {
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(
+            GeneralUtility::getFileAbsFileName(
+                'EXT:pxa_product_manager/Resources/Private/Backend/Templates/PageModule/RelatedCategories.html'
+            )
+        );
 
-        return $templateService->generateStandaloneTemplate('PageModule/RelatedCategories', [
-            'data' => $data
-        ]);
+        return $view;
+    }
+
+    /**
+     * Edit url
+     *
+     * @param int $categoryUid
+     * @return string
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
+    protected function editUri(int $categoryUid): string
+    {
+        /** @var UriBuilder $uriBuilder */
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+
+        return (string)$uriBuilder->buildUriFromRoute(
+            'record_edit',
+            [
+                "edit[sys_category][$categoryUid]" => 'edit',
+                'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
+            ],
+            UriBuilder::ABSOLUTE_URL
+        );
+    }
+
+    /**
+     * Find categories uids of related page
+     *
+     * @param int $page
+     * @return array
+     */
+    protected function findCategoriesByContentPage(int $page): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('sys_category');
+        $queryBuilder->getRestrictions()->removeAll()->add(
+            GeneralUtility::makeInstance(DeletedRestriction::class)
+        );
+
+        return $queryBuilder
+            ->select('uid', 'title')
+            ->from('sys_category')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'pxapm_content_page',
+                    $queryBuilder->createNamedParameter($page, \PDO::PARAM_INT)
+                )
+            )
+            ->execute()
+            ->fetchAll();
     }
 }

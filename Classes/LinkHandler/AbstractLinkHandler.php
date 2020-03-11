@@ -29,7 +29,6 @@ use Pixelant\PxaProductManager\Backend\Tree\BrowserTreeView;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\RecordList\ElementBrowserRecordList;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\BackendWorkspaceRestriction;
@@ -40,23 +39,21 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Recordlist\LinkHandler\AbstractLinkHandler;
+use TYPO3\CMS\Recordlist\LinkHandler\AbstractLinkHandler as Typo3LinkHandler;
 use TYPO3\CMS\Recordlist\LinkHandler\LinkHandlerInterface;
 use TYPO3\CMS\Recordlist\Tree\View\LinkParameterProviderInterface;
 
 /**
  * Link handler for page (and content) links
  */
-// @codingStandardsIgnoreStart
-abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implements LinkHandlerInterface, LinkParameterProviderInterface
-// @codingStandardsIgnoreEnd
+abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandlerInterface, LinkParameterProviderInterface
 {
     /**
      * Parts of the current link
      *
      * @var array
      */
-    protected $linkParts = [];
+    protected array $linkParts = [];
 
     /**
      * We don't support updates since there is no difference to simply set the link again.
@@ -68,26 +65,12 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
     /**
      * @var int
      */
-    protected $expandPage = 0;
+    protected int $expandPage = 0;
 
     /**
      * @var int
      */
-    protected $pid = 0;
-
-    /**
-     * Name of array key inside url parameters
-     *
-     * @var string
-     */
-    protected $linkPartName = '';
-
-    /**
-     * Table name
-     *
-     * @var string
-     */
-    protected $tableName = '';
+    protected int $pid = 0;
 
     /**
      * Constructor
@@ -95,21 +78,14 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
     public function __construct()
     {
         parent::__construct();
-        // remove unsupported link attributes
-        foreach (['target', 'rel', 'params'] as $attribute) {
-            $position = array_search($attribute, $this->linkAttributes, true);
-            if ($position !== false) {
-                unset($this->linkAttributes[$position]);
-            }
-        }
+        // Remove unsupported link attributes
+        $this->linkAttributes = array_filter($this->linkAttributes, function ($attribute) {
+            return !in_array($attribute, ['target', 'rel', 'params']);
+        });
 
         GeneralUtility::makeInstance(PageRenderer::class)->loadRequireJsModule(
             'TYPO3/CMS/PxaProductManager/Backend/LinkHandler'
         );
-
-        // Init variables
-        $this->initLinkPartName();
-        $this->initTableName();
     }
 
     /**
@@ -121,14 +97,14 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
      *
      * @return bool
      */
-    public function canHandleLink(array $linkParts)
+    public function canHandleLink(array $linkParts): bool
     {
-        if (isset($linkParts['url'][$this->linkPartName])) {
+        if (isset($linkParts['url'][$this->linkName()])) {
             $this->linkParts = $linkParts;
 
             $record = BackendUtility::getRecord(
-                $this->tableName,
-                (int)$this->linkParts['url'][$this->linkPartName],
+                $this->tableName(),
+                (int)$this->linkParts['url'][$this->linkName()],
                 'pid'
             );
 
@@ -147,18 +123,15 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
      * Render the link handler
      *
      * @param ServerRequestInterface $request
-     *
      * @return string
      */
-    public function render(ServerRequestInterface $request)
+    public function render(ServerRequestInterface $request): string
     {
         $this->view->setTemplateRootPaths([
             10 => 'EXT:pxa_product_manager/Resources/Private/Backend/Templates/LinkBrowser/'
         ]);
 
-        $this->expandPage = isset($request->getQueryParams()['expandPage'])
-            ? (int)$request->getQueryParams()['expandPage']
-            : 0;
+        $this->expandPage = intval($request->getQueryParams()['expandPage'] ?? 0);
 
         $tsConfig = $GLOBALS['BE_USER']->getTSConfig();
 
@@ -171,7 +144,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
         $pageTree->addField('nav_title');
 
         $this->view->assignMultiple([
-            'tableName' => $this->tableName,
+            'tableName' => $this->tableName(),
             'tree' => $pageTree->getBrowsableTree()
         ]);
 
@@ -185,7 +158,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
      *
      * @return bool Returns TRUE if the given values match the currently selected item
      */
-    public function isCurrentlySelectedItem(array $values)
+    public function isCurrentlySelectedItem(array $values): bool
     {
         $compareToPid = $this->expandPage ?: $this->pid;
 
@@ -197,7 +170,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
      *
      * @return string
      */
-    public function getScriptUrl()
+    public function getScriptUrl(): string
     {
         return $this->linkBrowser->getScriptUrl();
     }
@@ -207,7 +180,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
      *
      * @return string[] Array of parameters which have to be added to URLs
      */
-    public function getUrlParameters(array $values)
+    public function getUrlParameters(array $values): array
     {
         $parameters = [
             'expandPage' => isset($values['pid']) ? (int)$values['pid'] : $this->expandPage
@@ -224,7 +197,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
         return [
             'data-typolink-template' => GeneralUtility::makeInstance(LinkService::class)->asString([
                 'type' => 'pxappm',
-                $this->linkPartName => '###RECORD_UID###'
+                $this->linkName() => '###RECORD_UID###'
             ])
         ];
     }
@@ -238,9 +211,8 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable($this->tableName);
+            ->getQueryBuilderForTable($this->tableName());
 
-        /** @noinspection PhpParamsInspection */
         $queryBuilder->getRestrictions()
             ->removeAll()
             ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
@@ -248,11 +220,11 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
 
         $record = $queryBuilder
             ->select('*')
-            ->from($this->tableName)
+            ->from($this->tableName())
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($this->linkParts['url'][$this->linkPartName], \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($this->linkParts['url'][$this->linkName()], \PDO::PARAM_INT)
                 )
             )
             ->execute()
@@ -260,15 +232,15 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
 
         if ($record) {
             $title = BackendUtility::getRecordTitle(
-                $this->tableName,
+                $this->tableName(),
                 $record,
                 true
             );
 
-            return $title . ' (id = ' . $this->linkParts['url'][$this->linkPartName] . ')';
-        } else {
-            return '';
+            return $title . ' (id = ' . $this->linkParts['url'][$this->linkName()] . ')';
         }
+
+        return '';
     }
 
     /**
@@ -279,7 +251,7 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
     protected function addRecordsOnExpandedPage($pageId)
     {
         // If there is an anchor value (content element reference) in the element reference, then force an ID to expand:
-        if (!$pageId && isset($this->linkParts['url'][$this->linkPartName])) {
+        if (!$pageId && isset($this->linkParts['url'][$this->linkName()])) {
             // Set to the current link page id.
             $pageId = $this->pid;
         }
@@ -312,8 +284,8 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
             $dbList->calcPerms = $this->getBackendUser()->calcPerms($pageInfo);
             $dbList->noControlPanels = true;
             $dbList->clickMenuEnabled = false;
-            $dbList->tableList = $this->tableName;
-            $dbList->hideTranslations = $this->tableName;
+            $dbList->tableList = $this->tableName();
+            $dbList->hideTranslations = $this->tableName();
 
             $dbList->start(
                 $pageId,
@@ -335,16 +307,16 @@ abstract class AbstractCKEditorLinkHandler extends AbstractLinkHandler implement
     }
 
     /**
-     * Init link part name
+     * Prefix of link handler
      *
-     * @return void
+     * @return string
      */
-    abstract protected function initLinkPartName();
+    abstract protected function linkName(): string;
 
     /**
-     * Init table name
+     * Table name of links records
      *
-     * @return void
+     * @return string
      */
-    abstract protected function initTableName();
+    abstract protected function tableName(): string;
 }

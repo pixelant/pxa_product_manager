@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction\TCA;
 
-use Pixelant\PxaProductManager\Service\BackendUriService;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -26,12 +26,8 @@ class CategoryUserFunction
 
         $page = current($PA['row']['pxapm_content_page']);
 
-        /** @var BackendUriService $backendUriService */
-        $backendUriService = GeneralUtility::makeInstance(BackendUriService::class);
-
-        $uri = $backendUriService->buildUri('web_layout', [
-            'id' => $page['uid']
-        ]);
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $uri = (string)$uriBuilder->buildUriFromRoute('web_layout', ['id' => $page['uid']]);
 
         return sprintf('<a href="%s" class="btn btn-default">%s</a>', $uri, $page['title']);
     }

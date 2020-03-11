@@ -37,15 +37,15 @@ class LinkHandling implements LinkHandlingInterface
      */
     public function asString(array $parameters): string
     {
-        $urn = 't3://pxappm';
+        $link = 't3://pxappm';
 
         if (!empty($parameters['product'])) {
-            $urn .= '?product=' . $parameters['product'];
+            $link .= '?product=' . $parameters['product'];
         } elseif (!empty($parameters['category'])) {
-            $urn .= '?category=' . $parameters['category'];
+            $link .= '?category=' . $parameters['category'];
         }
 
-        return $urn;
+        return $link;
     }
 
     /**

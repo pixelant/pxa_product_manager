@@ -239,6 +239,22 @@
 			</trans-unit>
 			<!--FlexForm:CustomProductsList:END-->
 			<!--FlexForm:END-->
+
+			<!--Link handler:START-->
+			<trans-unit id="be.product_link_handler">
+				<source>Products (PM)</source>
+			</trans-unit>
+			<trans-unit id="be.category_link_handler">
+				<source>Category (PM)</source>
+			</trans-unit>
+			<!--Link handler:END-->
+
+			<trans-unit id="be.page_categories_found">
+				<source>Found connected categories</source>
+			</trans-unit>
+			<trans-unit id="be.page_is_used_for_categories_content">
+				<source>This page is used as a content source in theses categories</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
