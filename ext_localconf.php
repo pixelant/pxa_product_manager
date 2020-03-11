@@ -66,8 +66,23 @@ defined('TYPO3_MODE') || die;
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['linkHandler'][$linkType] = \Pixelant\PxaProductManager\LinkHandler\LinkHandlingFormData::class;
     $GLOBALS['TYPO3_CONF_VARS']['FE']['typolinkBuilder'][$linkType] = \Pixelant\PxaProductManager\Service\TypolinkBuilderService::class;
 
-
     // Draw header hook
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/db_layout.php']['drawHeaderHook']['pxa_product_manager'] =
         \Pixelant\PxaProductManager\Hook\PageHookRelatedCategories::class . '->render';
+
+    // Register icons
+    $icons = [
+        'ext-pxa-product-manager-wizard-icon' => 'package.svg',
+    ];
+    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        \TYPO3\CMS\Core\Imaging\IconRegistry::class
+    );
+
+    foreach ($icons as $identifier => $path) {
+        $iconRegistry->registerIcon(
+            $identifier,
+            \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+            ['source' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/' . $path]
+        );
+    }
 })();

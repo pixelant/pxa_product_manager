@@ -4,6 +4,15 @@
 		  product-name="pxa_product_manager">
 		<header/>
 		<body>
+			<!--New content element wizard labels:START-->
+			<trans-unit id="be.extension.name">
+				<source>Product manager</source>
+			</trans-unit>
+			<trans-unit id="be.extension.description">
+				<source>Product management system</source>
+			</trans-unit>
+			<!--New content element wizard labels:END-->
+
 			<!--TCA notifications:START-->
 			<trans-unit id="tca.notification_title">
 				<source>Info</source>
