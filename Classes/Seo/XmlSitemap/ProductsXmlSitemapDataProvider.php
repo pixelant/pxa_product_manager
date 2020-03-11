@@ -96,7 +96,7 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
 
             // Increase offset
             $offset += $limit;
-        } while ($products->count());
+        } while ($products->count() >= $limit);
     }
 
     /**
