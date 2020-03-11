@@ -48,5 +48,6 @@ config.tx_extbase {
     }
 }
 
-module.tx_pxaproductmanager.persistence.updateReferenceIndex = 1
-plugin.tx_pxaproductmanager.persistence.updateReferenceIndex = 1
+# By default keep it disabled due to its huge effects on performance.
+#module.tx_pxaproductmanager.persistence.updateReferenceIndex = 1
+#plugin.tx_pxaproductmanager.persistence.updateReferenceIndex = 1
