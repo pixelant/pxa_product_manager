@@ -74,6 +74,8 @@ class PageLayoutView
 
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
             if (!empty($switchableControllerActions)) {
+                $additionalInfo .= $this->modeLabel($switchableControllerActions);
+
                 $fieldsGroups = $this->getFlexformGroupedFields($switchableControllerActions);
 
                 foreach ($fieldsGroups as $fieldsGroup) {
@@ -96,6 +98,27 @@ class PageLayoutView
         }
 
         return $result . ($additionalInfo ? '<hr><pre>' . $additionalInfo . '</pre>' : '');
+    }
+
+    /**
+     * Information about plugin mode
+     *
+     * @param string $switchableControllerActions
+     * @return string
+     */
+    protected function modeLabel(string $switchableControllerActions): string
+    {
+        $actions = $this->registry->getAllRegisteredActions();
+        if (isset($actions[$switchableControllerActions])) {
+            return sprintf(
+                '<b>%s</b>: %s<br>%s',
+                $this->translate('flexform.mode'),
+                $this->translate($actions[$switchableControllerActions]['label']),
+                static::$hrMarkup
+            );
+        }
+
+        return '';
     }
 
     /**
