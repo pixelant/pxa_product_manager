@@ -74,7 +74,7 @@ class Breadcrumbs
 
         return array_reverse($this->items);
     }
-    
+
     /**
      * Add product breadcrumbs if exist in arguments
      */
