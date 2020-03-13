@@ -16,11 +16,11 @@ interface UrlBuilderServiceInterface
      * Skip product parameter if only category URL is required
      *
      * @param int $pageUid
-     * @param Category $category
+     * @param Category|null $category
      * @param Product|null $product
      * @return string
      */
-    public function url(int $pageUid, Category $category, Product $product = null): string;
+    public function url(int $pageUid, ?Category $category, Product $product = null): string;
 
     /**
      * Build URL only with product parameter, exclude categories

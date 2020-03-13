@@ -47,11 +47,11 @@ class UrlBuilderService implements UrlBuilderServiceInterface
      * URL for product and category
      *
      * @param int $pageUid
-     * @param Category $category
+     * @param Category|null $category
      * @param Product|null $product
      * @return string
      */
-    public function url(int $pageUid, Category $category, Product $product = null): string
+    public function url(int $pageUid, ?Category $category, Product $product = null): string
     {
         $params = $this->createParams($category, $product);
         return $this->buildUri($pageUid, $params);
