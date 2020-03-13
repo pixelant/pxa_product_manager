@@ -74,7 +74,7 @@ class Breadcrumbs
 
         return array_reverse($this->items);
     }
-
+    
     /**
      * Add product breadcrumbs if exist in arguments
      */
@@ -92,6 +92,7 @@ class Breadcrumbs
         if ($product = $this->productRepository->findByUid($uid)) {
             $this->items[] = [
                 'title' => $product->getNavigationTitle(),
+                'sys_language_uid' => $product->_getProperty('_languageUid'),
                 '_OVERRIDE_HREF' => $this->url($arguments),
                 'ITEM_STATE' => 'CUR'
             ];
@@ -117,6 +118,7 @@ class Breadcrumbs
 
                 $this->items[] = [
                     'title' => $category->getNavigationTitle(),
+                    'sys_language_uid' => $category->_getProperty('_languageUid'),
                     '_OVERRIDE_HREF' => $this->url($this->renameCategoriesArguments($arguments)),
                     'ITEM_STATE' => empty($this->items) ? 'CUR' : 'NO', // Could be current only if last
                 ];
