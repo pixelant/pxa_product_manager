@@ -11,6 +11,7 @@ plugin.tx_solr.index.queue {
             content {
                 field = description
             }
+
             description < .content
 
             abstract = teaser
@@ -32,9 +33,10 @@ plugin.tx_solr.index.queue {
                 userFunc = Pixelant\PxaProductManager\UserFunction\Solr\MainImage->getUrl
             }
 
-           # thumbnail_url_stringS < .image_main_url_stringS
-          #  image_thumbnail_url_stringS.userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexImage->getProductThumbnailImagePublicUrl
-
+            thumbnail_image_stringS = USER
+            thumbnail_image_stringS {
+                userFunc = Pixelant\PxaProductManager\UserFunction\Solr\ThumbnailImage->getUrl
+            }
 
             attribute_values_stringM = SOLR_RELATION
             attribute_values_stringM {
@@ -42,10 +44,10 @@ plugin.tx_solr.index.queue {
                 multiValue = 1
             }
 
-            # index single attribute value example
+            # Index attribute value example
             #attribute_rsk_stringS = USER
             #attribute_rsk_stringS {
-            #    userFunc = Pixelant\PxaProductManager\UserFunction\SolrIndexSingleAttributeValue->getSingleAttributeValue
+            #    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue->value
             #    identifier = rsk
             #}
 

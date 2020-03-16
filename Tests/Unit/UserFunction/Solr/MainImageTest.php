@@ -3,11 +3,8 @@
 namespace Pixelant\PxaProductManager\Tests\Unit\UserFunction\Solr;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Domain\Model\Image;
 use Pixelant\PxaProductManager\UserFunction\Solr\MainImage;
-use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileReference;
-use TYPO3\CMS\Core\Resource\ResourceFactory;
 
 /**
  * @package Pixelant\PxaProductManager\Tests\Unit\UserFunction

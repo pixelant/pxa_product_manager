@@ -47,14 +47,51 @@ class AttributeValueRepository extends Repository
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
 
+        $expr = $queryBuilder->expr();
         $row = $queryBuilder
             ->select('*')
             ->from('tx_pxaproductmanager_domain_model_attributevalue')
             ->where(
-                $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productUid, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('attribute', $queryBuilder->createNamedParameter($attributeUid, \PDO::PARAM_INT))
+                $expr->eq('product', $queryBuilder->createNamedParameter($productUid, \PDO::PARAM_INT)),
+                $expr->eq('attribute', $queryBuilder->createNamedParameter($attributeUid, \PDO::PARAM_INT))
             )
             ->setMaxResults(1)
+            ->execute()
+            ->fetch();
+
+        return is_array($row) ? $row : null;
+    }
+
+
+    /**
+     * Find attribute value using product uid and attribute identifier
+     *
+     * @param int $productUid
+     * @param string $identifier
+     * @return array|null
+     */
+    public function findRawByProductAndAttributeIdentifier(int $productUid, string $identifier): ?array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
+
+        $expr = $queryBuilder->expr();
+        $row = $queryBuilder
+            ->select('attributevalue.*')
+            ->from('tx_pxaproductmanager_domain_model_attributevalue', 'attributevalue')
+            ->join(
+                'attributevalue',
+                'tx_pxaproductmanager_domain_model_attribute',
+                'attribute',
+                $expr->eq('attributevalue.attribute', $queryBuilder->quoteIdentifier('attribute.uid'))
+            )
+            ->where(
+                $expr->eq('attributevalue.product', $queryBuilder->createNamedParameter($productUid, \PDO::PARAM_INT)),
+                $expr->eq(
+                    'attribute.identifier',
+                    $queryBuilder->createNamedParameter($identifier, \PDO::PARAM_STR)
+                )
+            )
             ->execute()
             ->fetch();
 
