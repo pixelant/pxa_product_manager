@@ -258,6 +258,7 @@ call_user_func(function () {
                 'type' => 'group',
                 'internal_type' => 'db',
                 'allowed' => 'pages',
+                'default' => 0,
                 'size' => 1,
                 'max_size' => 1,
             ],
