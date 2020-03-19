@@ -16,4 +16,3 @@ defined('TYPO3_MODE') || die;
         'FILE:EXT:pxa_product_manager/Configuration/FlexForms/flexform_pi1.xml'
     );
 })();
-

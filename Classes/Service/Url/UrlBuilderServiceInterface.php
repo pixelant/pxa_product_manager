@@ -38,5 +38,4 @@ interface UrlBuilderServiceInterface
      * @return void
      */
     public function absolute(bool $absolute): void;
-
 }

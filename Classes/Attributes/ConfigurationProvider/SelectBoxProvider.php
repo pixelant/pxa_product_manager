@@ -26,7 +26,9 @@ class SelectBoxProvider extends AbstractProvider
         }
 
         if (empty($options)) {
+            // @codingStandardsIgnoreStart
             $tca['label'] .= ' (This attribute has no options. Please configure the attribute and add some options to it.)';
+            // @codingStandardsIgnoreEnd
         }
 
         $tca['config']['items'] = $options;

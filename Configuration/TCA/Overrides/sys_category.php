@@ -257,6 +257,8 @@ defined('TYPO3_MODE') || die;
                 'type' => 'group',
                 'internal_type' => 'db',
                 'allowed' => 'pages',
+                'foreign_table' => 'pages',
+                'default' => 0,
                 'size' => 1,
                 'max_size' => 1,
             ],

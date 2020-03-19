@@ -17,3 +17,5 @@ package-lock.json
 
 # TYPO3 9
 /var
+
+/Build/testing-docker/.env

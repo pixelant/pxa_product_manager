@@ -1,51 +1,32 @@
 language: php
 
-dist: trusty
+php:
+  - 7.4
 
-matrix:
-  include:
-    - php: 7.2
-      env: TYPO3_VERSION=^9
-
-addons:
-  apt:
-    packages:
-      - parallel
+sudo: true
 
 cache:
   directories:
     - $HOME/.composer/cache
 
-sudo: false
-
-before_install:
-  - composer self-update
-  - composer --version
-
 before_script:
-  - phpenv config-rm xdebug.ini
-  - composer require typo3/minimal=$TYPO3_VERSION
-  - git checkout composer.json
-  - export TYPO3_PATH_WEB=$PWD/.Build/Web
+  - Build/Scripts/runTests.sh -s composerInstall -p $TRAVIS_PHP_VERSION
 
 script:
-
   - >
     echo;
     echo "Running PHP codesniffer";
-    .Build/bin/phpcs --standard=PSR2 --extensions=php Classes/;
-    .Build/bin/phpcs -n --standard=PSR2 --extensions=php --ignore=*./Tests/*,*./Classes/*,*./.Build/* .;
+    .Build/bin/phpcs -n --standard=PSR2 --extensions=php --ignore=*./Tests/*,*./.Build/* .;
 
   - >
-    echo;
+    echo "Running composer validate"
+    Build/Scripts/runTests.sh -s composerValidate -p $TRAVIS_PHP_VERSION
+  - >
     echo "Running unit tests";
-    .Build/bin/phpunit -c Tests/Build/UnitTests.xml;
-
+    Build/Scripts/runTests.sh -s unit -p $TRAVIS_PHP_VERSION
   - >
-    echo;
+    echo "Running php lint";
+    Build/Scripts/runTests.sh -s lint -p $TRAVIS_PHP_VERSION
+  - >
     echo "Running functional tests";
-    export typo3DatabaseName="typo3";
-    export typo3DatabaseHost="localhost";
-    export typo3DatabaseUsername="root";
-    export typo3DatabasePassword="";
-    .Build/bin/phpunit -c Tests/Build/FunctionalTests.xml;
+    Build/Scripts/runTests.sh -s functional -p $TRAVIS_PHP_VERSION

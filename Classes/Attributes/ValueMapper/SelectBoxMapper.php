@@ -19,10 +19,14 @@ class SelectBoxMapper extends AbstractMapper
     public function map(Product $product, Attribute $attribute): void
     {
         if ($attributeValue = $this->searchAttributeValue($product, $attribute)) {
-            $attribute->setValue(array_values(array_filter(
+            $selectedOptions = array_filter(
                 $attribute->getOptions()->toArray(),
-                fn(Option $option) => GeneralUtility::inList($attributeValue->getValue(), $option->getUid())
-            )));
+                function (Option $option) use ($attributeValue) {
+                    return GeneralUtility::inList($attributeValue->getValue(), $option->getUid());
+                }
+            );
+
+            $attribute->setValue(array_values($selectedOptions));
         }
     }
 }

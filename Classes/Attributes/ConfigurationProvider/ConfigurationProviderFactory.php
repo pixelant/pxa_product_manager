@@ -35,6 +35,9 @@ class ConfigurationProviderFactory
                 return GeneralUtility::makeInstance(FalProvider::class, $attribute);
         }
 
-        throw new \UnexpectedValueException("Attribute with type '{$attribute->getType()}' not supported.", 1568986135545);
+        throw new \UnexpectedValueException(
+            "Attribute with type '{$attribute->getType()}' not supported.",
+            1568986135545
+        );
     }
 }

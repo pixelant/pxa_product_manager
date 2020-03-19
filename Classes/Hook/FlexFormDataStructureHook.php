@@ -57,8 +57,11 @@ class FlexFormDataStructureHook implements SingletonInterface
      * @param Registry $registry
      * @param StructureLoader $loader
      */
-    public function __construct(FlexFormService $service = null, Registry $registry = null, StructureLoader $loader = null)
-    {
+    public function __construct(
+        FlexFormService $service = null,
+        Registry $registry = null,
+        StructureLoader $loader = null
+    ) {
         $this->request = $GLOBALS['TYPO3_REQUEST'];
         $this->service = $service ?? GeneralUtility::makeInstance(FlexFormService::class);
         $this->registry = $registry ?? GeneralUtility::makeInstance(Registry::class);
@@ -84,7 +87,7 @@ class FlexFormDataStructureHook implements SingletonInterface
     ): array {
         if ($identifier['dataStructureKey'] === $this->identifier
             && is_string($row['pi_flexform'])
-            && !empty($row['pi_flexform'])
+            && ! empty($row['pi_flexform'])
         ) {
             $this->setLastActionFromSettings($row);
         }
@@ -105,7 +108,7 @@ class FlexFormDataStructureHook implements SingletonInterface
             // Add action
             $dataStructure = $this->addSwitchableControllerActions($dataStructure);
 
-            if (!empty($this->getLastSelectedAction())) {
+            if (! empty($this->getLastSelectedAction())) {
                 // Add default conf
                 $dataStructure = $this->loader->loadDefaultDataStructure($dataStructure);
 

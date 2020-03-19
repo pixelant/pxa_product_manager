@@ -838,7 +838,8 @@ class Product extends AbstractEntity
      * @internal Use in BE in order to get all attributes for edit form rendering. Do not use on FE
      * @see getAttributes
      */
-    public function _getAllAttributesSets(): array
+    // @codingStandardsIgnoreStart
+    public function _getAllAttributesSets(): array // @codingStandardsIgnoreEnd
     {
         $attributesSets = $this->collection($this->getOwnAttributesSets());
 

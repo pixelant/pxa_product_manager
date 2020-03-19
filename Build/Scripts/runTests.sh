@@ -39,25 +39,16 @@ Successfully tested with docker version 18.06.1-ce and docker-compose 1.21.2.
 
 Usage: $0 [options] [file]
 
-No arguments: Run all unit tests with PHP 7.2
+No arguments: Run all unit tests with PHP 7.4
 
 Options:
     -s <...>
         Specifies which test suite to run
-            - acceptance: backend acceptance tests
             - composerInstall: "composer install", handy if host has no PHP, uses composer cache of users home
             - composerValidate: "composer validate"
             - functional: functional tests
             - lint: PHP linting
             - unit (default): PHP unit tests
-
-    -d <mariadb|mssql|postgres|sqlite>
-        Only with -s functional
-        Specifies on which DBMS tests are performed
-            - mariadb (default): use mariadb
-            - mssql: use mssql microsoft sql server
-            - postgres: use postgres
-            - sqlite: use sqlite
 
     -p <7.4>
         Specifies the PHP minor version to be used
@@ -94,7 +85,7 @@ Options:
 
 Examples:
 
-    # Run unit tests using PHP 7.3
+    # Run unit tests using PHP 7.4
     ./Build/Scripts/runTests.sh -p 7.4
 EOF
 
@@ -202,6 +193,18 @@ fi
 
 # Suite execution
 case ${TEST_SUITE} in
+    composerInstall)
+        setUpDockerComposeDotEnv
+        docker-compose run composer_install
+        SUITE_EXIT_CODE=$?
+        docker-compose down
+        ;;
+    composerValidate)
+        setUpDockerComposeDotEnv
+        docker-compose run composer_validate
+        SUITE_EXIT_CODE=$?
+        docker-compose down
+        ;;
     functional)
         setUpDockerComposeDotEnv
         case ${DBMS} in

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Collection;
 
-
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
