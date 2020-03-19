@@ -113,7 +113,35 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getImageByPropertyReturnMatchedImage()
+    public function findImageByTypeReturnMatchedImage()
+    {
+        $image1 = createEntity(Image::class, ['uid' => 1]);
+        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
+
+        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+
+        $this->assertSame($image2, $this->callInaccessibleMethod($this->subject, 'findImageByType', Image::MAIN_IMAGE));
+    }
+
+    /**
+     * @test
+     */
+    public function findImageByTypeReturnNullIfNoMatchedImage()
+    {
+        $image1 = createEntity(Image::class, ['uid' => 1, 'type' => 0]);
+        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = createEntity(Image::class, ['uid' => 3]);
+
+        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+
+        $this->assertNull($this->callInaccessibleMethod($this->subject, 'findImageByType', Image::LISTING_IMAGE));
+    }
+
+    /**
+     * @test
+     */
+    public function getMainImageReturnMainImage()
     {
         $image1 = createEntity(Image::class, ['uid' => 1]);
         $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
@@ -127,13 +155,53 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getImageByPropertyReturnFirstImageIfNoMatches()
+    public function getMainImageReturnFirstImageIfNotFound()
     {
-        $image1 = createEntity(Image::class, ['uid' => 1, 'type' => 0]);
-        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
-        $image3 = createEntity(Image::class, ['uid' => 3]);
+        $image1 = createEntity(Image::class, ['uid' => 1]);
+        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => 0]);
+        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
 
         $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+
+        $this->assertSame($image1, $this->subject->getMainImage());
+    }
+
+    /**
+     * @test
+     */
+    public function getListImageReturnListImageIfFound()
+    {
+        $image1 = createEntity(Image::class, ['uid' => 1]);
+        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
+
+        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+
+        $this->assertSame($image3, $this->subject->getListImage());
+    }
+
+    /**
+     * @test
+     */
+    public function getListImageReturnMainImageIfNoListingAndMainExistFound()
+    {
+        $image1 = createEntity(Image::class, ['uid' => 1]);
+        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+
+        $this->subject->setImages(createObjectStorage($image1, $image2));
+
+        $this->assertSame($image2, $this->subject->getListImage());
+    }
+
+    /**
+     * @test
+     */
+    public function getListImageReturnFisrtImageIfNoFound()
+    {
+        $image1 = createEntity(Image::class, 1);
+        $image2 = createEntity(Image::class, 2);
+
+        $this->subject->setImages(createObjectStorage($image1, $image2));
 
         $this->assertSame($image1, $this->subject->getListImage());
     }

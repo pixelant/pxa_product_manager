@@ -786,7 +786,9 @@ class Product extends AbstractEntity
      */
     public function getListImage(): ?Image
     {
-        return $this->findImageByType(Image::LISTING_IMAGE);
+        return $this->findImageByType(Image::LISTING_IMAGE)
+            ?? $this->getMainImage()
+            ?? $this->images->current();
     }
 
     /**
@@ -796,7 +798,7 @@ class Product extends AbstractEntity
      */
     public function getMainImage(): ?Image
     {
-        return $this->findImageByType(Image::MAIN_IMAGE);
+        return $this->findImageByType(Image::MAIN_IMAGE) ?? $this->images->current();
     }
 
     /**
@@ -860,8 +862,11 @@ class Product extends AbstractEntity
     protected function findImageByType(int $type): ?Image
     {
         $images = $this->collection($this->images);
-        $matchImage = $images->searchByProperty('type', $type)->first();
+        $image = $images->searchByProperty('type', $type)->first();
 
-        return $matchImage ?? $images->first();
+        // Reset storage
+        $this->images->rewind();
+
+        return $image;
     }
 }
