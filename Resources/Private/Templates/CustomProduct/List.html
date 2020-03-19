@@ -1,0 +1,33 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+<f:section name="main">
+    <f:if condition="{categories}">
+        <f:then>
+            <f:for as="category" each="{categories}">
+                <h4>{category.title}</h4>
+                <f:render section="products" arguments="{products: category.products}" />
+            </f:for>
+        </f:then>
+        <f:else>
+            <f:render section="products" arguments="{products: products}" />
+        </f:else>
+    </f:if>
+</f:section>
+
+<f:section name="products">
+    <f:for as="product" each="{products}">
+        <div class="col-md-3">
+            <pxa:link page="{settings.pids.singleViewPid}" category="{product.firstCategory}" product="{product}">
+                <div class="item">
+                    <f:render partial="Product/ListImage" arguments="{image: product.listImage, title: product.name}" />
+                    <div class="item-body">
+                        <div class="item-title"><h4>{product.name}</h4></div>
+                    </div>
+                </div>
+            </pxa:link>
+        </div>
+    </f:for>
+</f:section>
+</html>

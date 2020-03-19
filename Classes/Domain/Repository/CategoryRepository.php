@@ -45,6 +45,8 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class CategoryRepository extends AbstractDemandRepository
 {
+    use AbleFindByUidList;
+
     /**
      * Default orderings
      *
@@ -63,22 +65,6 @@ class CategoryRepository extends AbstractDemandRepository
         $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
-    }
-
-    /**
-     * Find by given uids array
-     *
-     * @param array $uids
-     * @return QueryResultInterface
-     */
-    public function findByUids(array $uids): QueryResultInterface
-    {
-        $query = $this->createQuery();
-        $query->matching(
-            $query->in('uid', $uids)
-        );
-
-        return $query->execute();
     }
 
     /**

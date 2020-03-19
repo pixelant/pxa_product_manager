@@ -50,7 +50,7 @@ class Registry
             ],
         ],
         [
-            'action' => 'Product->customProductsList;Product->show',
+            'action' => 'CustomProduct->list;Product->show',
             'label' => 'flexform.mode.product_custom_products_list',
             'flexforms' => [
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_custom_products_list.xml',

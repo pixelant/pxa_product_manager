@@ -443,6 +443,24 @@ class Category extends CategoryExtbase
     }
 
     /**
+     * @return ObjectStorage
+     */
+    public function getProducts(): ObjectStorage
+    {
+        return $this->products;
+    }
+
+    /**
+     * @param ObjectStorage $products
+     * @return Category
+     */
+    public function setProducts(ObjectStorage $products): Category
+    {
+        $this->products = $products;
+        return $this;
+    }
+
+    /**
      * Return parents root line up till to root category
      * From bottom to up. Current first
      *

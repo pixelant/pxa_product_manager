@@ -35,29 +35,5 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class FilterRepository extends Repository
 {
-    /**
-     * Uids array
-     *
-     * @param array $uids
-     * @return array|QueryResultInterface
-     */
-    public function findByUidList(array $uids)
-    {
-        if (empty($uids)) {
-            return [];
-        }
-
-        $query = $this->createQuery();
-        // when looking by uid need to disable sys_language to find translated record.
-        $query
-            ->getQuerySettings()
-            ->setRespectStoragePage(false)
-            ->setRespectSysLanguage(false);
-
-        $query->matching(
-            $query->in('uid', $uids)
-        );
-
-        return $query->execute();
-    }
+    use AbleFindByUidList;
 }

@@ -25,19 +25,10 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaProductManager\Domain\Model\Category;
-use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
-use Pixelant\PxaProductManager\Domain\Model\Filter;
-use Pixelant\PxaProductManager\Domain\Model\Product;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
-use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  *
@@ -48,13 +39,15 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class ProductRepository extends AbstractDemandRepository
 {
+    use AbleFindByUidList;
+
     /**
      * @inheritDoc
      */
     protected function createConstraints(QueryInterface $query, DemandInterface $demand): array
     {
         $constraints = [];
-        if (!empty($demand->getCategories())) {
+        if (! empty($demand->getCategories())) {
             $constraints['categories'] = $this->categoriesConstraint($query, $demand);
         }
 

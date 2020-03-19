@@ -53,6 +53,20 @@ class UrlBuilderServiceTest extends UnitTestCase
     /**
      * @test
      */
+    public function getCategoriesArgumentsGenerateEmptyArgumentsFromEmptyNavigationTree()
+    {
+        $rootCategory = createEntity(Category::class, 10);
+        $rootCategory->setHiddenInNavigation(true);
+
+        // expect empty array with one hidden root category
+        $expect = [];
+
+        $this->assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'getCategoriesArguments', $rootCategory));
+    }
+
+    /**
+     * @test
+     */
     public function getCategoriesArgumentsGenerateArgumentsFromRootLine()
     {
         $lastCategory = createCategoriesRootLineAndReturnLastCategory();

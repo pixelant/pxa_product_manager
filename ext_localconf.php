@@ -18,8 +18,9 @@ defined('TYPO3_MODE') || die;
         'Pixelant.pxa_product_manager',
         'Pi1',
         [
-            'Product' => 'list, show,',
+            'Product' => 'list, show',
             'Category' => 'list',
+            'CustomProduct' => 'list',
         ],
         // non-cacheable actions
         [

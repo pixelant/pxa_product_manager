@@ -351,6 +351,41 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals($expect, $collection->unshift(...$add)->toArray());
     }
 
+    /**
+     * @test
+     *
+     * @dataProvider sortList
+     */
+    public function sortByKeysListSortCollectionByGivenList($sortList)
+    {
+        $items = [
+            ['title' => 'last', 'uid' => 10,],
+            ['title' => 'first', 'uid' => 5,],
+            ['title' => 'middle', 'uid' => 7,],
+        ];
+
+        $collection = new Collection($items);
+        $expect = [
+            ['title' => 'first', 'uid' => 5,],
+            ['title' => 'middle', 'uid' => 7,],
+            ['title' => 'last', 'uid' => 10,],
+        ];
+
+        $this->assertEquals($expect, $collection->sortByOrderList($sortList, 'uid')->toArray());
+    }
+
+    public function sortList()
+    {
+        return [
+            'string_list' => [
+                'list' => '5, 7, 10'
+            ],
+            'array_list' => [
+                'list' => ['5', '7', '10']
+            ],
+        ];
+    }
+
     public function toArrayReturnIterableToArrayDataProvider()
     {
         $items = [

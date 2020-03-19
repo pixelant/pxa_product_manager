@@ -144,14 +144,17 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     {
         $arguments = [];
         $i = 0;
-        $treeLine = $category->getNavigationRootLine();
-        // Last category doesn't have prefix
-        $lastCategory = array_pop($treeLine);
 
-        foreach ($treeLine as $categoryItem) {
-            $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i++] = $categoryItem->getUid();
+        // If tree is not empty
+        if ($treeLine = $category->getNavigationRootLine()) {
+            // Last category doesn't have prefix
+            $lastCategory = array_pop($treeLine);
+
+            foreach ($treeLine as $categoryItem) {
+                $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i++] = $categoryItem->getUid();
+            }
+            $arguments['category'] = $lastCategory->getUid();
         }
-        $arguments['category'] = $lastCategory->getUid();
 
         return $arguments;
     }

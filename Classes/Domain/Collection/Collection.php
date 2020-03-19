@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Domain\Collection;
 use InvalidArgumentException;
 use Pixelant\PxaProductManager\Arrayable;
 use Traversable;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 /**
@@ -24,6 +25,37 @@ class Collection implements Arrayable
     public function __construct($collection)
     {
         $this->collection = $this->iterableToArray($collection);
+    }
+
+    /**
+     * Sort collection by given order list by property
+     *
+     * @param $list
+     * @param string $property
+     * @return Collection
+     */
+    public function sortByOrderList($list, string $property): Collection
+    {
+        if (is_string($list)) {
+            $list = GeneralUtility::trimExplode(',', $list, true);
+        }
+        if (! is_array($list)) {
+            throw new \InvalidArgumentException(
+                sprintf('Expect list to be of type string or array, "%s" given', gettype($list)),
+                1584623916077
+            );
+        }
+
+        $sorted = [];
+        foreach ($this->mapWithKeysOfProperty($property)->toArray() as $key => $value) {
+            $ak = array_keys($list, $key);
+            foreach ($ak as $idx) {
+                $sorted[$idx] = $value;
+            }
+        }
+        ksort($sorted, SORT_NUMERIC);
+
+        return new static($sorted);
     }
 
     /**
@@ -46,7 +78,7 @@ class Collection implements Arrayable
 
 
     /**
-     * Get value by given key
+     * Get array of values of given key
      *
      * @param string $property
      * @param callable|null $callback
@@ -104,7 +136,7 @@ class Collection implements Arrayable
         $unique = [];
 
         return new static(array_filter($this->collection, function ($item) use (&$unique) {
-            if (!in_array($item, $unique, true)) {
+            if (! in_array($item, $unique, true)) {
                 $unique[] = $item;
                 return true;
             }
@@ -209,7 +241,7 @@ class Collection implements Arrayable
      */
     protected function iterableToArray($items): array
     {
-        if (!is_iterable($items) && !($items instanceof Arrayable)) {
+        if (! is_iterable($items) && ! ($items instanceof Arrayable)) {
             throw new InvalidArgumentException(
                 sprintf('Collection accept only iterable argument as collection, but "%s" given', gettype($items)),
                 1582719546879
