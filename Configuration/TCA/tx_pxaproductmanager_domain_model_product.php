@@ -496,7 +496,8 @@ return (function () {
                     'assets',
                     [
                         'appearance' => [
-                            'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference'
+                            'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
+                            'collapseAll' => true,
                         ],
                         'behaviour' => [
                             'allowLanguageSynchronization' => true,
@@ -533,9 +534,7 @@ return (function () {
                             --palette--;;filePalette'
                             ]
                         ],
-                        'maxitems' => 1
                     ],
-                    $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
                 ),
             ],
             'teaser' => [
