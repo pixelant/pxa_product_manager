@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service;
 
+use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
-use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -28,6 +28,11 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
     protected ObjectManager $objectManager;
 
     /**
+     * @var SettingsReader
+     */
+    protected SettingsReader $siteConfiguration;
+
+    /**
      * @param ContentObjectRenderer $contentObjectRenderer
      * @param TypoScriptFrontendController|null $typoScriptFrontendController
      */
@@ -36,7 +41,9 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
         TypoScriptFrontendController $typoScriptFrontendController = null
     ) {
         parent::__construct($contentObjectRenderer, $typoScriptFrontendController);
+
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->siteConfiguration = GeneralUtility::makeInstance(SettingsReader::class);
     }
 
 
@@ -106,24 +113,7 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
      */
     protected function getSingleViewPageUid(): int
     {
-        return $this->getPidFromSettings() ?: $this->getPidFromSiteConfiguration() ?: 0;
-    }
-
-    /**
-     * Try to get pid from site config
-     *
-     * @return int
-     */
-    protected function getPidFromSiteConfiguration(): int
-    {
-        $site = isset($GLOBALS['TYPO3_REQUEST'])
-            ? $GLOBALS['TYPO3_REQUEST']->getAttribute('site')
-            : null;
-        if ($site instanceof Site) {
-            return intval($site->getConfiguration()['productSingleViewFallbackPid'] ?? 0);
-        }
-
-        return 0;
+        return intval($this->getPidFromSettings() ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
     }
 
     /**

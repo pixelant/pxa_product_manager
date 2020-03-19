@@ -3,7 +3,7 @@
 		<sDEF>
 			<ROOT>
 				<el>
-					<settings.customProductsList.limit>
+					<settings.limit>
 						<TCEforms>
 							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.limit</label>
 							<config>
@@ -12,7 +12,7 @@
 								<eval>int</eval>
 							</config>
 						</TCEforms>
-					</settings.customProductsList.limit>
+					</settings.limit>
 
 					<settings.customProductsList.mode>
 						<TCEforms>
