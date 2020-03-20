@@ -42,19 +42,19 @@ abstract class AbstractController extends ActionController
         /** @var DemandInterface $demand */
         $demand = GeneralUtility::makeInstance($className);
 
-        if (!empty($settings['limit'])) {
+        if (! empty($settings['limit'])) {
             $demand->setLimit((int)$settings['limit']);
         }
-        if (!empty($settings['offSet'])) {
+        if (! empty($settings['offSet'])) {
             $demand->setOffSet((int)$settings['offSet']);
         }
-        if (!empty($settings['demand']['orderByAllowed'])) {
+        if (! empty($settings['demand']['orderByAllowed'])) {
             $demand->setOrderByAllowed($settings['demand']['orderByAllowed']);
         }
-        if (!empty($settings['orderBy'])) {
+        if (! empty($settings['orderBy'])) {
             $demand->setOrderBy($settings['orderBy']);
         }
-        if (!empty($settings['orderDirection'])) {
+        if (! empty($settings['orderDirection'])) {
             $demand->setOrderDirection($settings['orderDirection']);
         }
 
@@ -74,17 +74,17 @@ abstract class AbstractController extends ActionController
         array $settings,
         string $className = CategoryDemand::class
     ): DemandInterface {
-        $settings = array_merge($settings, $this->settings['categoriesOrderings']);
+        $settings = array_merge($settings, $this->settings['categoriesOrderings'] ?? []);
         $className = $this->readFromSettings('demand.objects.categoryDemand', $className);
 
         $demand = $this->createDemandFromSettings($settings, $className);
-        if (!empty($settings['navigation']['hideCategoriesWithoutProducts'])) {
+        if (! empty($settings['navigation']['hideCategoriesWithoutProducts'])) {
             $demand->setHideCategoriesWithoutProducts((bool)$settings['navigation']['hideCategoriesWithoutProducts']);
         }
-        if (!empty($settings['onlyVisibleInNavigation'])) {
+        if (! empty($settings['onlyVisibleInNavigation'])) {
             $demand->setOnlyVisibleInNavigation((bool)$settings['onlyVisibleInNavigation']);
         }
-        if (!empty($settings['parent'])) {
+        if (! empty($settings['parent'])) {
             $demand->setParent($settings['parent']);
         }
 
@@ -102,14 +102,14 @@ abstract class AbstractController extends ActionController
         array $settings,
         string $className = ProductDemand::class
     ): DemandInterface {
-        $settings = array_merge($settings, $this->settings['productOrderings']);
+        $settings = array_merge($settings, $this->settings['productOrderings'] ?? []);
         $className = $this->readFromSettings('demand.objects.productDemand', $className);
 
         $demand = $this->createDemandFromSettings($settings, $className);
-        if (!empty($settings['categories'])) {
+        if (! empty($settings['categories'])) {
             $demand->setCategories($settings['categories']);
         }
-        if (!empty($settings['categoryConjunction'])) {
+        if (! empty($settings['categoryConjunction'])) {
             $demand->setCategoryConjunction($settings['categoryConjunction']);
         }
 

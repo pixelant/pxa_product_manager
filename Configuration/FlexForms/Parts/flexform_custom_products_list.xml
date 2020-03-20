@@ -6,6 +6,7 @@
 					<settings.limit>
 						<TCEforms>
 							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.limit</label>
+							<displayCond>FIELD:sDEF.settings.customProductsList.mode:=:category</displayCond>
 							<config>
 								<type>input</type>
 								<size>5</size>

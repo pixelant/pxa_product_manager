@@ -786,9 +786,7 @@ class Product extends AbstractEntity
      */
     public function getListImage(): ?Image
     {
-        return $this->findImageByType(Image::LISTING_IMAGE)
-            ?? $this->getMainImage()
-            ?? $this->images->current();
+        return $this->findImageByType(Image::LISTING_IMAGE) ?? $this->getMainImage();
     }
 
     /**

@@ -54,6 +54,7 @@ class Registry
             'label' => 'flexform.mode.product_custom_products_list',
             'flexforms' => [
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_custom_products_list.xml',
+                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_products_orderings.xml',
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_show.xml',
             ],
             'excludeFields' => [],

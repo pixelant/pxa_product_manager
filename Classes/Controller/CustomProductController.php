@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
+use Pixelant\PxaProductManager\Domain\Model\Category;
+use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility as GU;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
@@ -49,10 +52,13 @@ class CustomProductController extends AbstractController
     {
         switch ($this->settings['customProductsList']['mode']) {
             case 'products':
-                $products = $this->findProductByList($this->settings['customProductsList']['products']);
+                $products = $this->findRecordsByList(
+                    $this->settings['customProductsList']['products'],
+                    $this->productRepository
+                );
                 break;
             case 'category':
-                $categories = $this->findCategoriesByList($this->settings['customProductsList']['categories']);
+                $categories = $this->customCategoriesWithProducts();
                 break;
             default:
                 $products = $categories = [];
@@ -62,25 +68,34 @@ class CustomProductController extends AbstractController
     }
 
     /**
-     * Find list of products
+     * Find selected categories for custom view and set products
      *
-     * @param string $list
-     * @return array
+     * @return Category[]
      */
-    protected function findCategoriesByList(string $list): array
+    protected function customCategoriesWithProducts(): array
     {
-        return $this->findRecordsByList($list, $this->categoryRepository);
-    }
+        $categories = $this->findRecordsByList(
+            $this->settings['customProductsList']['categories'],
+            $this->categoryRepository
+        );
 
-    /**
-     * Find list of products
-     *
-     * @param string $list
-     * @return array
-     */
-    protected function findProductByList(string $list): array
-    {
-        return $this->findRecordsByList($list, $this->productRepository);
+        /** @var ProductDemand $demand */
+        $demand = $this->createProductsDemand($this->settings);
+
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $demand->setCategories([$category]);
+
+            $productsStorage = new ObjectStorage();
+            foreach ($this->productRepository->findDemanded($demand) as $product) {
+                $productsStorage->attach($product);
+            }
+
+            // Set category products, but from demand result
+            $category->setProducts($productsStorage);
+        }
+
+        return $categories;
     }
 
     /**
