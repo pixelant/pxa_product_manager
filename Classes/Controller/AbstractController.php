@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller;
 
+use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
@@ -10,6 +11,7 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
@@ -18,9 +20,36 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 abstract class AbstractController extends ActionController
 {
     /**
+     * @var SettingsReader
+     */
+    protected SettingsReader $siteSettings;
+
+    /**
+     * @param SettingsReader $settingsReader
+     */
+    public function injectSettingsReader(SettingsReader $settingsReader)
+    {
+        $this->siteSettings = $settingsReader;
+    }
+
+    /**
      * @var Dispatcher
      */
     protected Dispatcher $dispatcher;
+
+    /**
+     * Override plugin settings with site settings, before resolving view
+     * @return ViewInterface
+     */
+    protected function resolveView()
+    {
+        if ($singleViewPid = $this->siteSettings->getValue('singleViewPid')) {
+            $this->settings['pids']['singleViewPid'] = $singleViewPid;
+        }
+
+        return parent::resolveView();
+    }
+
 
     /**
      * @param Dispatcher $dispatcher
