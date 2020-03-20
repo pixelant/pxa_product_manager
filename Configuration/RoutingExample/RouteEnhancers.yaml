@@ -20,70 +20,70 @@ routeEnhancers:
 
       # One level categories
       -
-        routePath: '/{category_title_0}'
+        routePath: '/{category_title}'
         _controller: 'Product::list'
         _arguments:
-          category_title_0: 'category_0'
+          category_title: 'category'
       -
-        routePath: '/{category_title_0}/{product_title}'
+        routePath: '/{category_title}/{product_title}'
         _controller: 'Product::show'
         _arguments:
-          category_title_0: 'category_0'
+          category_title: 'category'
           product_title: 'product'
 
       # Two levels
       -
-        routePath: '/{category_title_0}/{category_title_1}'
+        routePath: '/{category_title_0}/{category_title}'
         _controller: 'Product::list'
         _arguments:
           category_title_0: 'category_0'
-          category_title_1: 'category_1'
+          category_title: 'category'
 
       -
-        routePath: '/{category_title_0}/{category_title_1}/{product_title}'
+        routePath: '/{category_title_0}/{category_title}/{product_title}'
         _controller: 'Product::show'
         _arguments:
           category_title_0: 'category_0'
-          category_title_1: 'category_1'
+          category_title: 'category'
           product_title: 'product'
 
 
       # Three levels
       -
-        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}'
+        routePath: '/{category_title_0}/{category_title_1}/{category_title}'
         _controller: 'Product::list'
         _arguments:
           category_title_0: 'category_0'
           category_title_1: 'category_1'
-          category_title_2: 'category_2'
+          category_title: 'category'
 
       -
-        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{product_title}'
+        routePath: '/{category_title_0}/{category_title_1}/{category_title}/{product_title}'
         _controller: 'Product::show'
         _arguments:
           category_title_0: 'category_0'
           category_title_1: 'category_1'
-          category_title_2: 'category_2'
+          category_title: 'category'
           product_title: 'product'
 
       # Four levels
       -
-        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{category_title_3}'
+        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{category_title}'
         _controller: 'Product::list'
         _arguments:
           category_title_0: 'category_0'
           category_title_1: 'category_1'
           category_title_2: 'category_2'
-          category_title_3: 'category_3'
+          category_title: 'category'
 
       -
-        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{category_title_3}/{product_title}'
+        routePath: '/{category_title_0}/{category_title_1}/{category_title_2}/{category_title}/{product_title}'
         _controller: 'Product::show'
         _arguments:
           category_title_0: 'category_0'
           category_title_1: 'category_1'
           category_title_2: 'category_2'
-          category_title_3: 'category_3'
+          category_title: 'category'
           product_title: 'product'
 
     defaultController: 'Product::list'
@@ -100,7 +100,7 @@ routeEnhancers:
         type: PersistedAliasMapper
         tableName: 'sys_category'
         routeFieldName: 'pxapm_slug'
-      category_title_3:
+      category_title:
         type: PersistedAliasMapper
         tableName: 'sys_category'
         routeFieldName: 'pxapm_slug'
