@@ -99,6 +99,16 @@ class AttributeTest extends UnitTestCase
         $this->assertTrue($this->subject->isLinkType());
     }
 
+    /**
+     * @test
+     */
+    public function usingAsStringReturnValue()
+    {
+        $this->subject->setValue('value');
+
+        $this->assertEquals('value', (string)$this->subject);
+    }
+
     public function isFalTypeProvider()
     {
         return [
