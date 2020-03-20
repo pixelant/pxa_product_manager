@@ -445,4 +445,14 @@ class Attribute extends AbstractEntity
     {
         return $this->type === self::ATTRIBUTE_TYPE_LINK;
     }
+
+    /**
+     * As string return value
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->value;
+    }
 }
