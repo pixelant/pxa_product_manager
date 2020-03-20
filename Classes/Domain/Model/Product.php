@@ -727,17 +727,19 @@ class Product extends AbstractEntity
         // This will cache result and map attributes values
         $attributesSets = $this->getAttributesSets();
 
-        $attributes = $this->collection($attributesSets)
-            ->pluck('attributes')
-            ->shiftLevel()
-            ->toArray();
+        return $this->getCachedProperty('attributes', function () use ($attributesSets) {
+            $attributes = $this->collection($attributesSets)
+                ->pluck('attributes')
+                ->shiftLevel()
+                ->toArray();
 
-        $keys = array_map(
-            fn(Attribute $attribute) => $attribute->getIdentifier() ?: $attribute->getUid(),
-            $attributes
-        );
+            $keys = array_map(
+                fn(Attribute $attribute) => $attribute->getIdentifier() ?: $attribute->getUid(),
+                $attributes
+            );
 
-        return array_combine($keys, $attributes);
+            return array_combine($keys, $attributes);
+        });
     }
 
     /**
