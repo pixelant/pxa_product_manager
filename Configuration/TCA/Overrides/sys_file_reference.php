@@ -22,7 +22,7 @@ defined('TYPO3_MODE') || die;
 
     $columnsForAttribute = [
         'pxa_attribute' => [
-            'label' => 'pxa_attribute',
+            'label' => $ll . 'sys_file_reference.pxa_attribute',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',

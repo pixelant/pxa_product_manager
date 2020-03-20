@@ -224,6 +224,9 @@
 			<!--Link TCA:END-->
 
 			<!--sys_file_reference TCA:START-->
+			<trans-unit id="sys_file_reference.pxa_attribute">
+			    <source>Attribite</source>
+			</trans-unit>
 			<trans-unit id="sys_file_reference.pxapm_type">
 				<source>Image type</source>
 			</trans-unit>
