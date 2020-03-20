@@ -453,6 +453,10 @@ class Attribute extends AbstractEntity
      */
     public function __toString()
     {
-        return $this->value;
+        if (is_array($this->value)) {
+            return implode(',', $this->value);
+        }
+
+        return (string)$this->value;
     }
 }
