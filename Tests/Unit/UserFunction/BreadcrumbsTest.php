@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\UserFunction;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\UserFunction\Breadcrumbs;
 use TYPO3\CMS\Core\Http\ServerRequest;
@@ -144,5 +145,21 @@ class BreadcrumbsTest extends UnitTestCase
         ];
 
         $this->assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'renameCategoriesArguments', $arguments));
+    }
+
+    /**
+     * @test
+     */
+    public function addCategoriesNeverCallRepositoryFindMethodIfEmptyArguments()
+    {
+        $subject = $this->getMockBuilder(Breadcrumbs::class)->setMethods(['filterCategoriesArguments', 'getArguments'])->disableOriginalConstructor()->getMock();
+        $subject->expects($this->once())->method('filterCategoriesArguments')->willReturn([]);
+
+        $mockedRepository = $this->createMock(CategoryRepository::class);
+        $mockedRepository->expects($this->never())->method('findByUids');
+
+        $this->inject($subject, 'categoryRepository', $mockedRepository);
+
+        $this->callInaccessibleMethod($subject, 'addCategories');
     }
 }

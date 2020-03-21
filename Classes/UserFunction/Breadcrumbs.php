@@ -81,7 +81,7 @@ class Breadcrumbs
     protected function addProduct(): void
     {
         $arguments = $this->getArguments();
-        if (!isset($arguments['product'])) {
+        if (! isset($arguments['product'])) {
             return;
         }
 
@@ -105,6 +105,10 @@ class Breadcrumbs
     protected function addCategories(): void
     {
         $arguments = $this->filterCategoriesArguments($this->getArguments());
+        // If not categories arguments nothing to do
+        if (empty($arguments)) {
+            return;
+        }
 
         $uids = array_map('intval', $arguments);
         $categories = $this->collection(
