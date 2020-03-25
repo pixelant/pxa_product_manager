@@ -3,16 +3,17 @@
         <sDEF>
             <ROOT>
                 <el>
-                    <settings.lazyList.limit>
+                    <settings.limit>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lazy_list.limit</label>
+                            <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.limit</label>
                             <config>
                                 <type>input</type>
                                 <size>5</size>
                                 <eval>int</eval>
+                                <default>20</default>
                             </config>
                         </TCEforms>
-                    </settings.lazyList.limit>
+                    </settings.limit>
 
                     <settings.lazyList.categoriesConjunctionMode>
                         <TCEforms>
@@ -54,12 +55,12 @@
                                 <size>10</size>
                                 <autoSizeMax>20</autoSizeMax>
                                 <minitems>1</minitems>
-                                <maxitems>1</maxitems>
+                                <maxitems>99</maxitems>
                             </config>
                         </TCEforms>
                     </settings.lazyList.entryCategories>
 
-                    <settings.lazyList.excludeCategories>
+                    <!--<settings.lazyList.excludeCategories>
                         <TCEforms>
                             <label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.lazy_list.exclude_categories</label>
                             <config>
@@ -82,7 +83,7 @@
                                 <maxitems>99</maxitems>
                             </config>
                         </TCEforms>
-                    </settings.lazyList.excludeCategories>
+                    </settings.lazyList.excludeCategories>-->
                 </el>
             </ROOT>
         </sDEF>
@@ -132,7 +133,7 @@
                                 <type>select</type>
                                 <renderType>selectMultipleSideBySide</renderType>
                                 <foreign_table>tx_pxaproductmanager_domain_model_filter</foreign_table>
-                                <foreign_table_where> AND (tx_pxaproductmanager_domain_model_filter.sys_language_uid = 0 OR tx_pxaproductmanager_domain_model_filter.l10n_parent = 0) ORDER BY tx_pxaproductmanager_domain_model_filter.sorting</foreign_table_where>
+                                <foreign_table_where> AND (tx_pxaproductmanager_domain_model_filter.sys_language_uid = 0 OR tx_pxaproductmanager_domain_model_filter.l10n_parent = 0)</foreign_table_where>
                                 <size>10</size>
                                 <minitems>1</minitems>
                                 <autoSizeMax>20</autoSizeMax>

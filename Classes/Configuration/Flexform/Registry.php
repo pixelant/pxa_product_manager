@@ -60,7 +60,7 @@ class Registry
             'excludeFields' => [],
         ],
         [
-            'action' => 'Product->lazyList;AjaxProducts->loadLazyList;Product->show',
+            'action' => 'LazyProduct->list;Product->show',
             'label' => 'flexform.mode.product_lazy_list',
             'flexforms' => [
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_lazy_list.xml',

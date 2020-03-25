@@ -50,6 +50,20 @@ class ProductDemand extends AbstractDemand
     protected string $categoryConjunction = 'or';
 
     /**
+     * Lazy loading filter conjunction
+     *
+     * @var string
+     */
+    protected string $filterConjunction = 'and';
+
+    /**
+     * Filters from lazy loading
+     *
+     * @var array
+     */
+    protected array $attributes = [];
+
+    /**
      * @return array
      */
     public function getCategories(): array
@@ -82,6 +96,42 @@ class ProductDemand extends AbstractDemand
     public function setCategoryConjunction(string $categoryConjunction): ProductDemand
     {
         $this->categoryConjunction = $categoryConjunction;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param array $attributes
+     * @return ProductDemand
+     */
+    public function setAttributes(array $attributes): ProductDemand
+    {
+        $this->attributes = $attributes;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilterConjunction(): string
+    {
+        return $this->filterConjunction;
+    }
+
+    /**
+     * @param string $filterConjunction
+     * @return ProductDemand
+     */
+    public function setFilterConjunction(string $filterConjunction): ProductDemand
+    {
+        $this->filterConjunction = $filterConjunction;
         return $this;
     }
 }

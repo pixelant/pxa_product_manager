@@ -89,7 +89,7 @@ plugin.tx_pxaproductmanager {
 
         demand {
             orderByAllowed = name,title,tstamp,crdate,sorting
-            allowMapingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy,filtersConjunction
+            allowMappingProperties = offSet,categories,limit,filters,storagePid,orderDirection,orderBy,attributes,filterConjunction
 
             objects {
                 productDemand =
@@ -108,3 +108,4 @@ plugin.tx_pxaproductmanager {
 page.includeCSS.product_manager_basic = EXT:pxa_product_manager/Resources/Public/Css/product_manager_basic.css
 
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Library/" extensions="typoscript">
+<INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Api/" extensions="typoscript">

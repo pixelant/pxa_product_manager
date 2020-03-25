@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Controller;
 
 use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
@@ -12,6 +13,7 @@ use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
@@ -19,6 +21,8 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
  */
 abstract class AbstractController extends ActionController
 {
+    use CanCreateCollection;
+
     /**
      * @var SettingsReader
      */
@@ -57,6 +61,25 @@ abstract class AbstractController extends ActionController
     public function injectDispatcher(Dispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * Find records using repository by uids list.
+     * Sort records according to given list
+     *
+     * @param string $uidsList
+     * @param Repository $repository
+     * @return array
+     */
+    protected function findRecordsByList(string $uidsList, Repository $repository): array
+    {
+        $uids = GeneralUtility::intExplode(',', $uidsList, true);
+        if (! empty($uids)) {
+            $records = $repository->findByUids($uids)->toArray();
+            return $this->collection($records)->sortByOrderList($uids, 'uid')->toArray();
+        }
+
+        return [];
     }
 
     /**

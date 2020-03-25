@@ -11,7 +11,7 @@ abstract class AbstractDemand implements DemandInterface
     /**
      * Array of PIDs storage
      *
-     * @var array|null
+     * @var array
      */
     protected ?array $storagePid = null;
 
@@ -55,7 +55,7 @@ abstract class AbstractDemand implements DemandInterface
     }
 
     /**
-     * @param array|null $storagePid
+     * @param array $storagePid
      * @return AbstractDemand
      */
     public function setStoragePid(?array $storagePid): AbstractDemand

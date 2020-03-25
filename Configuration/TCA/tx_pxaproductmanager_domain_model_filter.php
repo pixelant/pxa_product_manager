@@ -28,7 +28,7 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg'
         ],
         'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, category, attribute, inverse_conjunction',
+            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, category, attribute, conjunction',
         ],
         'types' => [
             '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories,'],
@@ -37,9 +37,9 @@ return (function () {
         ],
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
-            'common' => ['showitem' => 'type, --linebreak--, name, --linebreak--, label'],
-            'categories' => ['showitem' => 'inverse_conjunction, --linebreak--, category'],
-            'attributes' => ['showitem' => 'inverse_conjunction, --linebreak--, attribute'],
+            'common' => ['showitem' => 'type, --linebreak--, name, label'],
+            'categories' => ['showitem' => 'conjunction, --linebreak--, category'],
+            'attributes' => ['showitem' => 'conjunction, --linebreak--, attribute'],
         ],
         'columns' => [
             'sys_language_uid' => [
@@ -93,35 +93,6 @@ return (function () {
                             'invertStateDisplay' => true
                         ]
                     ],
-                ],
-            ],
-            'starttime' => [
-                'exclude' => true,
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-                'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
-                    'eval' => 'datetime,int',
-                    'default' => 0,
-                    'behaviour' => [
-                        'allowLanguageSynchronization' => true
-                    ]
-                ],
-            ],
-            'endtime' => [
-                'exclude' => true,
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
-                'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
-                    'eval' => 'datetime,int',
-                    'default' => 0,
-                    'range' => [
-                        'upper' => mktime(0, 0, 0, 1, 1, 2038)
-                    ],
-                    'behaviour' => [
-                        'allowLanguageSynchronization' => true
-                    ]
                 ],
             ],
 
@@ -197,19 +168,18 @@ return (function () {
                     'maxitems' => 1,
                 ]
             ],
-            'inverse_conjunction' => [
+            'conjunction' => [
                 'displayCond' => 'FIELD:type:!=:3', // hide for range filter
                 'exclude' => true,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.inverse_conjunction',
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.conjunction',
                 'config' => [
-                    'type' => 'check',
-                    'renderType' => 'checkboxToggle',
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'default' => 'and',
                     'items' => [
-                        [
-                            0 => '',
-                            1 => '',
-                        ]
-                    ],
+                        ['And', \Pixelant\PxaProductManager\Domain\Model\Filter::CONJUNCTION_AND],
+                        ['Or', \Pixelant\PxaProductManager\Domain\Model\Filter::CONJUNCTION_OR],
+                    ]
                 ],
             ],
         ]

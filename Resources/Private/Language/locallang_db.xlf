@@ -104,8 +104,8 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_filter.attribute">
 				<source>Attribute</source>
 			</trans-unit>
-			<trans-unit id="tx_pxaproductmanager_domain_model_filter.inverse_conjunction">
-				<source>Use login "AND" conjunction (default is "OR")</source>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.conjunction">
+				<source>Conjunction</source>
 			</trans-unit>
 			<!--Filter TCA:END-->
 

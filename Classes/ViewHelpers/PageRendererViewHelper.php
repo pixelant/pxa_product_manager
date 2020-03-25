@@ -21,8 +21,9 @@ class PageRendererViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('includeJSFooterlibs', 'array', 'List of custom JavaScript file to be loaded');
-        $this->registerArgument('includeJSFooter', 'array', 'List of custom JavaScript file to be loaded');
+        $this->registerArgument('cssLibs', 'array', 'Array of css libs');
+        $this->registerArgument('includeJSFooterlibs', 'array', 'Array of custom JavaScript file to be loaded');
+        $this->registerArgument('includeJSFooter', 'array', 'Array of custom JavaScript file to be loaded');
     }
 
     /**
@@ -38,6 +39,7 @@ class PageRendererViewHelper extends AbstractViewHelper
     ): void {
         $includeJSFooterlibs = $arguments['includeJSFooterlibs'] ?? [];
         $includeJSFooter = $arguments['includeJSFooter'] ?? [];
+        $cssLibs = $arguments['cssLibs'] ?? [];
 
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 
@@ -46,6 +48,9 @@ class PageRendererViewHelper extends AbstractViewHelper
         }
         foreach ($includeJSFooter as $footerlib) {
             $pageRenderer->addJsFooterFile($footerlib, '', true, false, '', true);
+        }
+        foreach ($cssLibs as $cssLib) {
+            $pageRenderer->addCssLibrary($cssLib, 'stylesheet', 'all', '', true, false, '', true);
         }
     }
 }

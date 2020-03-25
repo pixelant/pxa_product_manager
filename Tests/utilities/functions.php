@@ -18,6 +18,10 @@ function createCategoriesRootLineAndReturnLastCategory(): \Pixelant\PxaProductMa
 
 function entitiesToUidsArray($objects)
 {
+    if (is_object($objects)) {
+        $objects = $objects->toArray();
+    }
+
     return array_map(fn($object) => $object->getUid(), $objects);
 }
 

@@ -73,7 +73,7 @@ class PageLayoutView
             );
 
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
-            if (!empty($switchableControllerActions)) {
+            if (! empty($switchableControllerActions)) {
                 $additionalInfo .= $this->modeLabel($switchableControllerActions);
 
                 $fieldsGroups = $this->getFlexformGroupedFields($switchableControllerActions);
@@ -150,6 +150,9 @@ class PageLayoutView
             case 'select':
                 $value = $this->getSelectBoxValue($config, $value);
                 break;
+            case 'input':
+                $value = (string)$value;
+                break;
             default:
                 $value = "Unsupported type '{$config['type']}'";
         }
@@ -166,9 +169,9 @@ class PageLayoutView
      */
     protected function getSelectBoxValue(array $config, $value): string
     {
-        if (!empty($config['foreign_table'])) {
+        if (! empty($config['foreign_table'])) {
             $value = $this->getValueFromDB($config['foreign_table'], ...GeneralUtility::intExplode(',', $value));
-        } elseif (!empty($config['items'])) {
+        } elseif (! empty($config['items'])) {
             // Search select item and use it label
             $item = $this->collection($config['items'])->searchByProperty('1', $value)->first();
             if (is_array($item)) {

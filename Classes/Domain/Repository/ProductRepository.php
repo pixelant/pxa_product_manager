@@ -42,7 +42,17 @@ class ProductRepository extends AbstractDemandRepository
     use AbleFindByUidList;
 
     /**
-     * @inheritDoc
+     * @param FilterRepository $filterRepository
+     */
+    public function injectFilterRepository(FilterRepository $filterRepository)
+    {
+        $this->filterRepository = $filterRepository;
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param ProductDemand|DemandInterface $demand
+     * @return array
      */
     protected function createConstraints(QueryInterface $query, DemandInterface $demand): array
     {
@@ -51,11 +61,15 @@ class ProductRepository extends AbstractDemandRepository
             $constraints['categories'] = $this->categoriesConstraint($query, $demand);
         }
 
+        if (! empty($demand->getAttributes())) {
+            $constraints['attributes'] = $this->filtersConstraint($query, $demand);
+        }
+
         return $constraints;
     }
 
     /**
-     * Create categories contraint
+     * Create categories constraint
      *
      * @param QueryInterface $query
      * @param DemandInterface|ProductDemand $demand
@@ -69,5 +83,24 @@ class ProductRepository extends AbstractDemandRepository
         }
 
         return $this->createConstraintFromConstraintsArray($query, $constraints, $demand->getCategoryConjunction());
+    }
+
+    /**
+     * Create filters constraint
+     *
+     * @param QueryInterface $query
+     * @param ProductDemand|DemandInterface $demand
+     */
+    protected function filtersConstraint(QueryInterface $query, DemandInterface $demand)
+    {
+        $constraints = [];
+        foreach ($demand->getAttributes() as $attributeUid => $filterData) {
+            $constraints[] = $query->logicalAnd([
+                $query->equals('attributesValues.attribute', $attributeUid),
+                $query->equals('attributesValues.value', $filterData['value'][0])
+            ]);
+        }
+
+        return $this->createConstraintFromConstraintsArray($query, $constraints, $demand->getFilterConjunction());
     }
 }

@@ -1,0 +1,35 @@
+PAGE_LAZY_LOADING = PAGE
+PAGE_LAZY_LOADING {
+    typeNum = 201701
+
+    config {
+        disableAllHeaderCode = 1
+        admPanel = 0
+        debug = 0
+        no_cache = 1
+        additionalHeaders {
+            10 {
+                header = Content-Type: application/json
+                replace = 1
+            }
+        }
+    }
+
+    10 = USER
+    10 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        extensionName = PxaProductManager
+        pluginName = Pi1
+        vendorName = Pixelant
+
+        features {
+            requireCHashArgumentForActionArguments = 0
+        }
+
+        switchableControllerActions {
+            Api\LazyLoading {
+                1 = list
+            }
+        }
+    }
+}

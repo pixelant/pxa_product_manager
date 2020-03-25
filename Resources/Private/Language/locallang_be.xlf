@@ -136,9 +136,6 @@
 			<trans-unit id="flexform.lazy_list.exclude_categories">
 				<source>Exclude product categories</source>
 			</trans-unit>
-			<trans-unit id="flexform.lazy_list.limit">
-				<source>Limit</source>
-			</trans-unit>
 			<!--Filters-->
 			<trans-unit id="flexform.filtering_sheet__title">
 				<source>Filtering</source>
@@ -243,7 +240,7 @@
 			<trans-unit id="flexform.custom_products_list.categories">
 				<source>Select categories</source>
 			</trans-unit>
-			<trans-unit id="flexform.custom_products_list.limit">
+			<trans-unit id="flexform.limit">
 				<source>Limit</source>
 			</trans-unit>
 			<!--FlexForm:CustomProductsList:END-->

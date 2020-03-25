@@ -42,111 +42,48 @@ class Filter extends AbstractEntity
     const CONJUNCTION_AND = 'and';
 
     /**
-     * categories type
+     * Types
      */
     const TYPE_CATEGORIES = 1;
-
-    /**
-     * attributes type
-     */
     const TYPE_ATTRIBUTES = 2;
-
-    /**
-     * attributes type minmax
-     */
     const TYPE_ATTRIBUTES_MINMAX = 3;
 
     /**
-     * type
-     *
      * @var int
      */
-    protected $type = 1;
+    protected int $type = 1;
 
     /**
-     * name
-     *
      * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
-     * parentCategory
-     *
      * @var \Pixelant\PxaProductManager\Domain\Model\Category
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $parentCategory;
+    protected $category = null;
 
     /**
-     * attribute
-     *
      * @var \Pixelant\PxaProductManager\Domain\Model\Attribute
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $attribute;
+    protected $attribute = null;
 
     /**
      * label
      *
-     * @var \string
+     * @var string
      */
-    protected $label = '';
+    protected string $label = '';
 
     /**
-     * @var bool
+     * @var string
      */
-    protected $inverseConjunction = false;
+    protected string $conjunction = 'and';
 
     /**
-     * Returns the name
-     *
-     * @return string $name
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Sets the name
-     *
-     * @param string $name
-     * @return void
-     */
-    public function setName(string $name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Returns the parentCategory
-     *
-     * @return \Pixelant\PxaProductManager\Domain\Model\Category parentCategory
-     */
-    public function getParentCategory()
-    {
-        if ($this->parentCategory instanceof LazyLoadingProxy) {
-            $this->parentCategory->_loadRealInstance();
-        }
-        return $this->parentCategory;
-    }
-
-    /**
-     * Sets the parentCategory
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Category $parentCategory
-     * @return void
-     */
-    public function setParentCategory(\Pixelant\PxaProductManager\Domain\Model\Category $parentCategory)
-    {
-        $this->parentCategory = $parentCategory;
-    }
-
-    /**
-     * Returns the type
-     *
-     * @return int $type
+     * @return int
      */
     public function getType(): int
     {
@@ -154,44 +91,79 @@ class Filter extends AbstractEntity
     }
 
     /**
-     * Sets the type
-     *
-     * @param string $type
-     * @return void
+     * @param int $type
+     * @return Filter
      */
-    public function setType(int $type)
+    public function setType(int $type): Filter
     {
         $this->type = $type;
+        return $this;
     }
 
     /**
-     * Returns the attribute
-     *
-     * @return \Pixelant\PxaProductManager\Domain\Model\Attribute $attribute
+     * @return string
      */
-    public function getAttribute()
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return Filter
+     */
+    public function setName(string $name): Filter
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return Category|null
+     */
+    public function getCategory(): ?Category
+    {
+        if ($this->category instanceof LazyLoadingProxy) {
+            $this->category = $this->category->_loadRealInstance();
+        }
+
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     * @return Filter
+     */
+    public function setCategory(Category $category): Filter
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    /**
+     * @return Attribute|null
+     */
+    public function getAttribute(): ?Attribute
     {
         if ($this->attribute instanceof LazyLoadingProxy) {
-            $this->attribute->_loadRealInstance();
+            $this->attribute = $this->attribute->_loadRealInstance();
         }
+
         return $this->attribute;
     }
 
     /**
-     * Sets the attribute
-     *
-     * @param \Pixelant\PxaProductManager\Domain\Model\Attribute $attribute
-     * @return void
+     * @param Attribute $attribute
+     * @return Filter
      */
-    public function setAttribute(\Pixelant\PxaProductManager\Domain\Model\Attribute $attribute)
+    public function setAttribute(Attribute $attribute): Filter
     {
         $this->attribute = $attribute;
+        return $this;
     }
 
     /**
-     * Returns the label
-     *
-     * @return \string $label
+     * @return string
      */
     public function getLabel(): string
     {
@@ -199,39 +171,70 @@ class Filter extends AbstractEntity
     }
 
     /**
-     * Sets the label
-     *
-     * @param \string $label
-     * @return void
+     * @param string $label
+     * @return Filter
      */
-    public function setLabel(string $label)
+    public function setLabel(string $label): Filter
     {
         $this->label = $label;
+        return $this;
     }
 
     /**
-     * @return bool
-     */
-    public function isInverseConjunction(): bool
-    {
-        return $this->inverseConjunction;
-    }
-
-    /**
-     * @param bool $inverseConjunction
-     */
-    public function setInverseConjunction(bool $inverseConjunction): void
-    {
-        $this->inverseConjunction = $inverseConjunction;
-    }
-
-    /**
-     * Return filter conjunction as string
-     *
      * @return string
      */
-    public function getConjunctionAsString(): string
+    public function getConjunction(): string
     {
-        return $this->isInverseConjunction() ? self::CONJUNCTION_AND : self::CONJUNCTION_OR;
+        return $this->conjunction;
+    }
+
+    /**
+     * @param string $conjunction
+     * @return Filter
+     */
+    public function setConjunction(string $conjunction): Filter
+    {
+        $this->conjunction = $conjunction;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAttributeUid(): int
+    {
+        $attribute = $this->getAttribute();
+
+        return $attribute ? $attribute->getUid() : 0;
+    }
+
+    /**
+     * Return array of options for filtering
+     *
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        switch ($this->type) {
+            case static::TYPE_CATEGORIES:
+                $entityOptions = $this->getCategory()->getSubCategories();
+                break;
+            case static::TYPE_ATTRIBUTES:
+                $entityOptions = $this->getAttribute()->getOptions();
+                break;
+            default:
+                $entityOptions = [];
+        }
+
+        $options = [];
+        /** @var AbstractEntity $entityOption */
+        foreach ($entityOptions as $entityOption) {
+            $options[] = [
+                'value' => $entityOption->getUid(),
+                'label' => $entityOption->getTitle(),
+            ];
+        }
+
+        return $options;
     }
 }

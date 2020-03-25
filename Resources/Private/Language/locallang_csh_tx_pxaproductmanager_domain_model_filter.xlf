@@ -15,9 +15,6 @@
 			<trans-unit id="attribute.description">
 				<source>Filter attribute (Only selectbox)</source>
 			</trans-unit>
-			<trans-unit id="inverse_conjunction.description">
-				<source>Use "AND" logical behaviour</source>
-			</trans-unit>
 			<trans-unit id="label.description">
 				<source>Override name on frontend</source>
 			</trans-unit>

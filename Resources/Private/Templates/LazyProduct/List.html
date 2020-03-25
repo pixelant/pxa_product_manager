@@ -1,0 +1,44 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+<f:section name="main">
+    <pxa:pageRenderer includeJSFooterlibs="{0: 'EXT:pxa_product_manager/Resources/Public/Assets/js/chunk-vendors.js'}"
+                      includeJSFooter="{0: 'EXT:pxa_product_manager/Resources/Public/Assets/js/app.js'}" />
+
+
+    <div id="pm-lazy-loading-app">
+        <div class="row">
+            <f:for as="filter" each="{filters}">
+                <div class="col-md-3">
+                    <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
+                </div>
+            </f:for>
+        </div>
+
+        <lazy-loading :settings="{settingsJson}" endpoint="{f:uri.page(pageType: '201701')}" inline-template>
+            <div class="lazy-loading-wrapper" :class="{loading: loading}">
+                <loader v-show="loading"></loader>
+
+                <div class="row" v-show="!loading" v-cloak>
+                    <div class="col-md-3" v-for="product in products" :key="product.uid">
+                        <a href="">
+                            <div class="item">
+                                <div class="item-img">
+                                    <img title="RIDE-ON BOARD +SIT" alt="RIDE-ON BOARD +SIT"
+                                         src="/fileadmin/_processed_/1/5/csm_Image_45_18a00b6bce.png"
+                                         width="265" height="186">
+                                </div>
+                                <div class="item-body">
+                                    <div class="item-title"><h4>{{ product.name }}</h4></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </lazy-loading>
+    </div>
+</f:section>
+</html>

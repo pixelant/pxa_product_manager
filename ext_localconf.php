@@ -21,9 +21,12 @@ defined('TYPO3_MODE') || die;
             'Product' => 'list, show',
             'Category' => 'list',
             'CustomProduct' => 'list',
+            'LazyProduct' => 'list',
+            'Api\\LazyLoading' => 'list',
         ],
         // non-cacheable actions
         [
+            'Api\\LazyLoading' => 'list',
         ]
     );
 
@@ -85,5 +88,20 @@ defined('TYPO3_MODE') || die;
             \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
             ['source' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/' . $path]
         );
+    }
+
+    // Cache framework
+    $cacheIdentifier = 'pm_cache_categories';
+    if (! is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier])) {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] = [];
+    }
+    if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend'])) {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend'] = \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class;
+    }
+    if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'])) {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'] = ['defaultLifetime' => 0];
+    }
+    if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['groups'])) {
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['groups'] = ['pages', 'system'];
     }
 })();

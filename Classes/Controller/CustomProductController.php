@@ -8,9 +8,7 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility as GU;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * @package Pixelant\PxaProductManager\Controller
@@ -96,23 +94,5 @@ class CustomProductController extends AbstractController
         }
 
         return $categories;
-    }
-
-    /**
-     * Find records by uids and sort in same order
-     *
-     * @param string $list
-     * @param Repository $repository
-     * @return array
-     */
-    protected function findRecordsByList(string $list, Repository $repository): array
-    {
-        $uids = GU::intExplode(',', $list, true);
-        if (! empty($uids)) {
-            $products = $repository->findByUids($uids)->toArray();
-            return $this->collection($products)->sortByOrderList($uids, 'uid')->toArray();
-        }
-
-        return [];
     }
 }

@@ -5,6 +5,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use TYPO3\CMS\Extbase\Domain\Model\Category as CategoryExtbase;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /***************************************************************
@@ -63,12 +64,12 @@ class Category extends CategoryExtbase
     protected string $metaDescription = '';
 
     /**
-     * Image
+     * Image. Typed property was only fixed in typo3 10 for lazy loading
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected ?FileReference $image = null;
+    protected $image = null;
 
     /**
      * @var boolean
@@ -94,7 +95,7 @@ class Category extends CategoryExtbase
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected ?FileReference $bannerImage = null;
+    protected $bannerImage = null;
 
     /**
      * @var float $taxRate
@@ -237,6 +238,10 @@ class Category extends CategoryExtbase
      */
     public function getImage(): ?FileReference
     {
+        if ($this->image instanceof LazyLoadingProxy) {
+            $this->image = $this->image->_loadRealInstance();
+        }
+
         return $this->image;
     }
 
@@ -321,6 +326,10 @@ class Category extends CategoryExtbase
      */
     public function getBannerImage(): ?FileReference
     {
+        if ($this->bannerImage instanceof LazyLoadingProxy) {
+            $this->bannerImage = $this->bannerImage->_loadRealInstance();
+        }
+
         return $this->bannerImage;
     }
 
@@ -475,7 +484,7 @@ class Category extends CategoryExtbase
             do {
                 $rootLine[] = $category;
                 $category = $category->getParent();
-            } while ($category !== null && !in_array($category, $rootLine, true));
+            } while ($category !== null && ! in_array($category, $rootLine, true));
 
             return $rootLine;
         });
@@ -501,7 +510,7 @@ class Category extends CategoryExtbase
     {
         return $this
             ->collection($this->getParentsRootLineReverse())
-            ->filter(fn(Category $category) => !$category->isHiddenInNavigation())
+            ->filter(fn(Category $category) => ! $category->isHiddenInNavigation())
             ->toArray();
     }
 }
