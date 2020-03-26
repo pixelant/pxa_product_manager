@@ -1,69 +1,72 @@
 /**
- * Save original categories, so we can set it if categories filter was reset
- */
-let _originalCategories = null;
-
-/**
  * Products lazy loading demand
  */
 class Demand
 {
     constructor(settings) {
-        this.categories = _originalCategories = settings.categories;
+        this.categories = settings.categories;
         this.storagePid = settings.storagePid;
         this.orderBy = settings.orderBy;
         this.orderDirection = settings.orderDirection;
         this.filterConjunction = settings.filterConjunction;
         this.limit = settings.limit;
-        this.attributes = {};
+        this.filters = settings.filters || {};
         this.offSet = 0;
     }
 
     /**
-     * Update attributes. Method called after filter update event
+     * Update filters. Method called after filter update event
      *
      * @param filter
      * @param selectedOptions
      */
     updateFilter(filter, selectedOptions) {
-        // If filter is categories just update categories
-        if (filter.type === 1) {
-            this.updateCategories(selectedOptions);
+        // If filters filter
+        let id = filter.uid;
+
+        // If not options, just unset filter attribute
+        if (Object.keys(selectedOptions).length === 0) {
+            delete this.filters[id];
             return;
         }
 
-        // If attributes filter
-        let id = filter.attributeUid;
-
-        this.attributes[id] = {
+        this.filters[id] = {
             conjunction: filter.conjunction,
+            attribute: filter.attributeUid,
+            type: filter.type,
             value: [],
         };
 
         for (let option in selectedOptions) {
             let value = selectedOptions[option].value;
 
-            this.attributes[id].value.push(value);
+            this.filters[id].value.push(value);
         }
     }
 
     /**
-     * Update categories filter
+     * Check if has filters
      *
-     * @param selectedOptions
+     * @returns {boolean}
      */
-    updateCategories(selectedOptions) {
-        this.categories = [];
+    hasFilters() {
+        return Object.keys(this.filters).length > 0;
+    }
 
-        for (let option in selectedOptions) {
-            let value = selectedOptions[option].value;
+    /**
+     * Convert demand to query string
+     */
+    asQueryParams() {
+        let params = {};
 
-            this.categories.push(value);
+        for (let property in this) {
+            const value = this[property];
+            params[property] = property === 'filters'
+                ? JSON.stringify(value)
+                : value;
         }
 
-        if (this.categories.length === 0) {
-            this.categories = _originalCategories;
-        }
+        return params;
     }
 }
 

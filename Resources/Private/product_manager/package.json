@@ -18,7 +18,8 @@
     "eslint-plugin-vue": "^6.1.2",
     "vue-template-compiler": "^2.6.11",
     "axios": "^0.19.2",
-    "object-to-formdata": "^3.0.6"
+    "object-to-formdata": "^3.0.6",
+    "query-string": "^6.11.1"
   },
   "eslintConfig": {
     "root": true,
