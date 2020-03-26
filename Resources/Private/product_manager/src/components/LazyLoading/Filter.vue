@@ -32,12 +32,33 @@
             }
         },
 
+        created() {
+            EventHandler.on('filterPreSelect', filters => {
+                const preselectValue = filters[this.filter.uid].value || null;
+                if (preselectValue) {
+                    this.value = this.findOptionsByValues(preselectValue);
+                }
+            });
+        },
+
         methods: {
             emitUpdate() {
                 EventHandler.emit('filterUpdate', {
                     filter: this.filter,
                     options: this.value,
                 });
+            },
+
+            findOptionsByValues(values) {
+                let options = [];
+
+                for (const option in this.options) {
+                    if (values.includes(this.options[option].value)) {
+                        options.push(this.options[option]);
+                    }
+                }
+
+                return options
             }
         }
     }

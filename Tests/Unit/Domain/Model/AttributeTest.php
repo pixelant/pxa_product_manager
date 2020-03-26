@@ -20,6 +20,16 @@ class AttributeTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function isMultipleSelectBoxReturnTrueonMultipleSelectBox()
+    {
+        $this->subject->setType(Attribute::ATTRIBUTE_TYPE_MULTISELECT);
+
+        $this->assertTrue($this->subject->isMultipleSelectBox());
+    }
+
+    /**
+     * @test
      * @dataProvider isFalTypeProvider
      */
     public function isFalTypeCanCheckIfTypeOfAttributeIsImageOrFile($type, $expect)

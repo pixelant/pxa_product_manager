@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model\DTO;
 
+use Pixelant\PxaProductManager\Domain\Model\Filter;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -25,8 +27,6 @@ namespace Pixelant\PxaProductManager\Domain\Model\DTO;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
  * Class Demand
@@ -61,7 +61,7 @@ class ProductDemand extends AbstractDemand
      *
      * @var array
      */
-    protected array $attributes = [];
+    protected array $filters = [];
 
     /**
      * @return array
@@ -102,18 +102,18 @@ class ProductDemand extends AbstractDemand
     /**
      * @return array
      */
-    public function getAttributes(): array
+    public function getFilters(): array
     {
-        return $this->attributes;
+        return $this->filters;
     }
 
     /**
-     * @param array $attributes
+     * @param array $filters
      * @return ProductDemand
      */
-    public function setAttributes(array $attributes): ProductDemand
+    public function setFilters(array $filters): ProductDemand
     {
-        $this->attributes = $attributes;
+        $this->filters = $filters;
         return $this;
     }
 
@@ -133,5 +133,21 @@ class ProductDemand extends AbstractDemand
     {
         $this->filterConjunction = $filterConjunction;
         return $this;
+    }
+
+    /**
+     * Return true if one of the filters is category filter
+     *
+     * @return bool
+     */
+    public function hasFiltersCategoryFilter(): bool
+    {
+        foreach ($this->filters as $filter) {
+            if ((int)$filter['type'] === Filter::TYPE_CATEGORIES && ! empty($filter['value'])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

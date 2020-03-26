@@ -19,9 +19,7 @@
 
         <lazy-loading :settings="{settingsJson}" endpoint="{f:uri.page(pageType: '201701')}" inline-template>
             <div class="lazy-loading-wrapper" :class="{loading: loading}">
-                <loader v-show="loading"></loader>
-
-                <div class="row" v-show="!loading" v-cloak>
+                <div class="row" v-cloak>
                     <div class="col-md-3" v-for="product in products" :key="product.uid">
                         <a href="">
                             <div class="item">
@@ -37,6 +35,8 @@
                         </a>
                     </div>
                 </div>
+
+                <loader v-show="loading"></loader>
             </div>
         </lazy-loading>
     </div>

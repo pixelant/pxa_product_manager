@@ -27,6 +27,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
+use Pixelant\PxaProductManager\Domain\Model\Filter;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
@@ -42,14 +43,6 @@ class ProductRepository extends AbstractDemandRepository
     use AbleFindByUidList;
 
     /**
-     * @param FilterRepository $filterRepository
-     */
-    public function injectFilterRepository(FilterRepository $filterRepository)
-    {
-        $this->filterRepository = $filterRepository;
-    }
-
-    /**
      * @param QueryInterface $query
      * @param ProductDemand|DemandInterface $demand
      * @return array
@@ -57,19 +50,25 @@ class ProductRepository extends AbstractDemandRepository
     protected function createConstraints(QueryInterface $query, DemandInterface $demand): array
     {
         $constraints = [];
-        if (! empty($demand->getCategories())) {
+
+        // In case demand has category filter, skip setting categories constraint,
+        // since filter already has it's own categories restriction
+        if (! empty($demand->getCategories()) && ! $demand->hasFiltersCategoryFilter()) {
             $constraints['categories'] = $this->categoriesConstraint($query, $demand);
         }
 
-        if (! empty($demand->getAttributes())) {
-            $constraints['attributes'] = $this->filtersConstraint($query, $demand);
+        // If filters are present in demand it mean this is lazy loading request.
+        // Categories will be set as filter constraint.
+        // Attributes and categories are sharing same conjunction filters settings.
+        if (! empty($demand->getFilters())) {
+            $constraints['filters'] = $this->filtersConstraint($query, $demand);
         }
 
         return $constraints;
     }
 
     /**
-     * Create categories constraint
+     * Create categories constraint from demand
      *
      * @param QueryInterface $query
      * @param DemandInterface|ProductDemand $demand
@@ -77,12 +76,28 @@ class ProductRepository extends AbstractDemandRepository
      */
     protected function categoriesConstraint(QueryInterface $query, DemandInterface $demand): ConstraintInterface
     {
+        return $this->createConstraintFromConstraintsArray(
+            $query,
+            $this->categoriesConstraintsArray($query, $demand->getCategories()),
+            $demand->getCategoryConjunction()
+        );
+    }
+
+    /**
+     * Create categories constraints array
+     *
+     * @param QueryInterface $query
+     * @param array $categories
+     * @return array
+     */
+    protected function categoriesConstraintsArray(QueryInterface $query, array $categories): array
+    {
         $constraints = [];
-        foreach ($demand->getCategories() as $category) {
+        foreach ($categories as $category) {
             $constraints[] = $query->contains('categories', $category);
         }
 
-        return $this->createConstraintFromConstraintsArray($query, $constraints, $demand->getCategoryConjunction());
+        return $constraints;
     }
 
     /**
@@ -90,17 +105,60 @@ class ProductRepository extends AbstractDemandRepository
      *
      * @param QueryInterface $query
      * @param ProductDemand|DemandInterface $demand
+     * @return ConstraintInterface
      */
-    protected function filtersConstraint(QueryInterface $query, DemandInterface $demand)
+    protected function filtersConstraint(QueryInterface $query, DemandInterface $demand): ConstraintInterface
     {
         $constraints = [];
-        foreach ($demand->getAttributes() as $attributeUid => $filterData) {
-            $constraints[] = $query->logicalAnd([
-                $query->equals('attributesValues.attribute', $attributeUid),
-                $query->equals('attributesValues.value', $filterData['value'][0])
-            ]);
+
+        foreach ($demand->getFilters() as $filterData) {
+            $type = (int)$filterData['type'];
+            $conjunction = $filterData['conjunction'];
+            $value = $filterData['value'];
+
+            if ($type === Filter::TYPE_CATEGORIES) {
+                $constraints[] = $this->createConstraintFromConstraintsArray(
+                    $query,
+                    $this->categoriesConstraintsArray($query, $value),
+                    $conjunction
+                );
+            } elseif ($type === Filter::TYPE_ATTRIBUTES) {
+                $constraints[] = $this->attributeFilterConstraint(
+                    $query,
+                    (int)$filterData['attribute'],
+                    $value,
+                    $conjunction
+                );
+            }
         }
 
         return $this->createConstraintFromConstraintsArray($query, $constraints, $demand->getFilterConjunction());
+    }
+
+    /**
+     * Create single filter attribute constraint
+     *
+     * @param QueryInterface $query
+     * @param int $attribute
+     * @param array $values
+     * @param string $conjunction
+     * @return ConstraintInterface
+     */
+    protected function attributeFilterConstraint(
+        QueryInterface $query,
+        int $attribute,
+        array $values,
+        string $conjunction
+    ): ConstraintInterface {
+        // Create like constraint for each filter value
+        $valueConstraints = array_map(function ($value) use ($query) {
+            return $query->like('attributesValues.value', sprintf('%%,%s,%%', $value));
+        }, $values);
+
+        // Add attribute uid constraint to values constraints
+        return $query->logicalAnd([
+            $query->equals('attributesValues.attribute', $attribute),
+            $this->createConstraintFromConstraintsArray($query, $valueConstraints, $conjunction)
+        ]);
     }
 }

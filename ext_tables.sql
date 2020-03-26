@@ -69,7 +69,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attributevalue
     attribute int(11) unsigned DEFAULT '0' NOT NULL,
 
     KEY product(product),
-    KEY attribute(attribute)
+    KEY attribute(attribute),
+    KEY attribute_value(value(40))
 );
 
 #

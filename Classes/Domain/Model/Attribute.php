@@ -427,6 +427,16 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Multiple select box
+     *
+     * @return bool
+     */
+    public function isMultipleSelectBox(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_MULTISELECT;
+    }
+
+    /**
      * Checkbox type
      *
      * @return bool

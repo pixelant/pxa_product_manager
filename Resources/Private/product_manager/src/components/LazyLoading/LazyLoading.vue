@@ -57,6 +57,9 @@
                     let settings = queryString.parse(hash, queryStringOptions);
                     settings.filters = JSON.parse(settings.filters);
 
+                    // Emit preselect even, so filters will read data
+                    EventHandler.emit('filterPreSelect', settings.filters);
+
                     return settings;
                 }
 
