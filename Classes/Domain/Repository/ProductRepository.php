@@ -76,9 +76,15 @@ class ProductRepository extends AbstractDemandRepository
      */
     protected function categoriesConstraint(QueryInterface $query, DemandInterface $demand): ConstraintInterface
     {
+        // If OR, just use in query, reduce number of joins
+        // Or is always used for entry point demand of list/lazy loading
+        if ($this->isOrConjunction($demand->getCategoryConjunction())) {
+            return $query->in('categories.uid', $demand->getCategories());
+        }
+
         return $this->createConstraintFromConstraintsArray(
             $query,
-            $this->categoriesConstraintsArray($query, $demand->getCategories()),
+            $this->categoriesContainsConstraints($query, $demand->getCategories()),
             $demand->getCategoryConjunction()
         );
     }
@@ -90,7 +96,7 @@ class ProductRepository extends AbstractDemandRepository
      * @param array $categories
      * @return array
      */
-    protected function categoriesConstraintsArray(QueryInterface $query, array $categories): array
+    protected function categoriesContainsConstraints(QueryInterface $query, array $categories): array
     {
         $constraints = [];
         foreach ($categories as $category) {
@@ -119,7 +125,7 @@ class ProductRepository extends AbstractDemandRepository
             if ($type === Filter::TYPE_CATEGORIES) {
                 $constraints[] = $this->createConstraintFromConstraintsArray(
                     $query,
-                    $this->categoriesConstraintsArray($query, $value),
+                    $this->categoriesContainsConstraints($query, $value),
                     $conjunction
                 );
             } elseif ($type === Filter::TYPE_ATTRIBUTES) {

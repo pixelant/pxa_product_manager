@@ -9,6 +9,7 @@ class Demand
         this.orderBy = settings.orderBy;
         this.orderDirection = settings.orderDirection;
         this.filterConjunction = settings.filterConjunction;
+        this.hideFilterOptionsNoResult = parseInt(settings.hideFilterOptionsNoResult);
         this.limit = parseInt(settings.limit);
         this.filters = settings.filters || {};
         this.offSet = parseInt(settings.offSet || 0);

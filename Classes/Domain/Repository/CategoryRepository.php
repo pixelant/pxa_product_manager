@@ -68,6 +68,46 @@ class CategoryRepository extends AbstractDemandRepository
     }
 
     /**
+     * Find available categories uids by products sub-query
+     *
+     * @param string $subQuery
+     * @return array
+     */
+    public function findIdsByProductsSubQuery(string $subQuery): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            'sys_category'
+        );
+
+        return $queryBuilder
+            ->select('category.uid')
+            ->from('sys_category', 'category')
+            ->join(
+                'category',
+                'sys_category_record_mm',
+                'mm',
+                $queryBuilder->expr()->eq(
+                    'category.uid',
+                    $queryBuilder->quoteIdentifier('mm.uid_local')
+                )
+            )
+            ->where(
+                $queryBuilder->expr()->in('mm.uid_foreign', "($subQuery)"),
+                $queryBuilder->expr()->eq('mm.tablenames', $queryBuilder->createNamedParameter(
+                    'tx_pxaproductmanager_domain_model_product',
+                    \PDO::PARAM_STR
+                )),
+                $queryBuilder->expr()->eq('mm.fieldname', $queryBuilder->createNamedParameter(
+                    'categories',
+                    Connection::PARAM_STR
+                ))
+            )
+            ->groupBy('category.uid')
+            ->execute()
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    /**
      * @param QueryInterface $query
      * @param DemandInterface|CategoryDemand $demand
      * @return array

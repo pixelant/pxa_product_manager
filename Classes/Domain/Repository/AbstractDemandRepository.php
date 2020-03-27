@@ -66,7 +66,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      * @param DemandInterface $demand
      * @return QueryInterface
      */
-    protected function createDemandQuery(DemandInterface $demand): QueryInterface
+    public function createDemandQuery(DemandInterface $demand): QueryInterface
     {
         $query = $this->createQuery();
 
@@ -82,7 +82,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
 
         $constraints = $this->createConstraints($query, $demand);
 
-        if (!empty($constraints)) {
+        if (! empty($constraints)) {
             $query->matching(
                 $this->createConstraintFromConstraintsArray(
                     $query,
@@ -138,16 +138,9 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
             return array_shift($constraints);
         }
 
-        switch ($conjunction) {
-            case 'or':
-                $constraint = $query->logicalOr($constraints);
-                break;
-            case 'and':
-            default:
-                $constraint = $query->logicalAnd($constraints);
-        }
-
-        return $constraint;
+        return $this->isOrConjunction($conjunction)
+            ? $query->logicalOr($constraints)
+            : $query->logicalAnd($constraints);
     }
 
     /**
@@ -163,6 +156,15 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
 
             $query->getQuerySettings()->setStoragePageIds($storage);
         }
+    }
+
+    /**
+     * @param string $conjunction
+     * @return bool
+     */
+    protected function isOrConjunction(string $conjunction): bool
+    {
+        return $conjunction === 'or';
     }
 
     /**

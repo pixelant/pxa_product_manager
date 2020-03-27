@@ -25,6 +25,8 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -35,6 +37,46 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class AttributeValueRepository extends Repository
 {
+    /**
+     * Find all available values for product demand
+     *
+     * @param string $subQuery
+     * @return array
+     */
+    public function findOptionIdsByProductSubQuery(string $subQuery): array
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            'tx_pxaproductmanager_domain_model_attributevalue'
+        );
+
+        return $queryBuilder
+            ->select('attributevalue.value')
+            ->from('tx_pxaproductmanager_domain_model_attributevalue', 'attributevalue')
+            ->join(
+                'attributevalue',
+                'tx_pxaproductmanager_domain_model_attribute',
+                'attributes',
+                $queryBuilder->expr()->eq(
+                    'attributevalue.attribute',
+                    $queryBuilder->quoteIdentifier('attributes.uid')
+                )
+            )
+            ->where(
+                $queryBuilder->expr()->in('attributevalue.product', "($subQuery)"),
+                $queryBuilder->expr()->in(
+                    'attributes.type',
+                    $queryBuilder->createNamedParameter(
+                        [Attribute::ATTRIBUTE_TYPE_DROPDOWN, Attribute::ATTRIBUTE_TYPE_MULTISELECT],
+                        Connection::PARAM_INT_ARRAY
+                    )
+                )
+            )
+            ->groupBy('attributevalue.value')
+            ->execute()
+            ->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+
     /**
      * Find raw attribute value
      *

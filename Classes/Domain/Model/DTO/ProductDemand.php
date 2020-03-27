@@ -43,7 +43,6 @@ class ProductDemand extends AbstractDemand
 
     /**
      * Category conjunction
-     * could be 'and'
      *
      * @var string
      */
@@ -55,6 +54,11 @@ class ProductDemand extends AbstractDemand
      * @var string
      */
     protected string $filterConjunction = 'and';
+
+    /**
+     * @var bool
+     */
+    protected bool $hideFilterOptionsNoResult = false;
 
     /**
      * Filters from lazy loading
@@ -132,6 +136,24 @@ class ProductDemand extends AbstractDemand
     public function setFilterConjunction(string $filterConjunction): ProductDemand
     {
         $this->filterConjunction = $filterConjunction;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHideFilterOptionsNoResult(): bool
+    {
+        return $this->hideFilterOptionsNoResult;
+    }
+
+    /**
+     * @param bool $hideFilterOptionsNoResult
+     * @return ProductDemand
+     */
+    public function setHideFilterOptionsNoResult(bool $hideFilterOptionsNoResult): ProductDemand
+    {
+        $this->hideFilterOptionsNoResult = $hideFilterOptionsNoResult;
         return $this;
     }
 

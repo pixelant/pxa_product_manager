@@ -38,14 +38,14 @@
 
                 loading: true,
                 nextQueueLoading: false,
-                reachLimit: false,
                 products: [],
+                countAll: 0,
             }
         },
 
         computed: {
             hasMore() {
-                return this.settings.limit > 0 && !this.reachLimit;
+                return this.settings.limit > 0 && (this.products.length < this.countAll);
             }
         },
 
@@ -97,11 +97,18 @@
                 this.request.load(demand)
                     .then(({data}) => {
                         this.products = data.products;
+                        this.countAll = data.countAll;
+
+                        EventHandler.emit('filterOptionsUpdate', data.availableFilterOptions);
+
                         this.loading = false;
                     })
                     .catch(error => console.error('Error while request products:', error));
             },
 
+            /**
+             * On load more click
+             */
             loadMore() {
                 this.nextQueueLoading = true;
                 this.demand.offSet += this.settings.limit;

@@ -87,6 +87,7 @@ class LazyProductController extends AbstractController
                 'storagePid' => $this->storagePid(),
                 'limit' => (int)$this->settings['limit'],
                 'filterConjunction' => $this->settings['filtering']['conjunction'],
+                'hideFilterOptionsNoResult' => (int)$this->settings['filtering']['hideFilterOptionsNoResult'],
                 'categories' => $this->categoryTree->childrenIdsRecursiveAndCache($categories),
             ] + $this->settings['productOrderings'];
     }

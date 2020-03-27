@@ -33,18 +33,8 @@
         },
 
         created() {
-            EventHandler.on('filterPreSelect', filters => {
-                const filterId = this.filter.uid;
-                if (typeof filters[filterId] === 'undefined') {
-                    return;
-                }
-
-                const preselectValue = filters[filterId].value;
-                if (preselectValue) {
-                    this.value = this.findOptionsByValues(preselectValue);
-                }
-
-            });
+            EventHandler.on('filterPreSelect', filters => this.preselectOptions(filters));
+            EventHandler.on('filterOptionsUpdate', options => this.updateAvailableOptions(options));
         },
 
         methods: {
@@ -55,17 +45,33 @@
                 });
             },
 
-            findOptionsByValues(values) {
-                let options = [];
-
-                for (const option in this.options) {
-                    if (values.includes(this.options[option].value)) {
-                        options.push(this.options[option]);
-                    }
+            preselectOptions(filters) {
+                const filterId = this.filter.uid;
+                if (typeof filters[filterId] === 'undefined') {
+                    return;
                 }
 
-                return options
-            }
+                const preselectValue = filters[filterId].value;
+                if (preselectValue) {
+                    this.value = this.filter.options.filter(option => preselectValue.includes(option.value));
+                }
+            },
+
+            updateAvailableOptions(options) {
+                // If all is available
+                if (options === null) {
+                    this.options = this.filter.options;
+                    return;
+                }
+
+                const available = options[this.isCategoryType() ? 'categories' : 'options'];
+
+                this.options = this.filter.options.filter(option => available.includes(option.value));
+            },
+
+            isCategoryType() {
+                return this.filter.type === 1;
+            },
         }
     }
 </script>
