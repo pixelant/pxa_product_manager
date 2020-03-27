@@ -29,12 +29,17 @@
                                          width="265" height="186">
                                 </div>
                                 <div class="item-body">
-                                    <div class="item-title"><h4>{{ product.name }}</h4></div>
+                                    <div class="item-title"><h4>{{ product.name }} {{ product.uid }}</h4></div>
                                 </div>
                             </div>
                         </a>
                     </div>
                 </div>
+
+                <button @click="loadMore" v-if="hasMore" class="btn btn-default" :disabled="nextQueueLoading">
+                    <span v-if="nextQueueLoading">Loading...</span>
+                    <span v-else>Load more</span>
+                </button>
 
                 <loader v-show="loading"></loader>
             </div>

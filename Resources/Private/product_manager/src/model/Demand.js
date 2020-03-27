@@ -9,9 +9,9 @@ class Demand
         this.orderBy = settings.orderBy;
         this.orderDirection = settings.orderDirection;
         this.filterConjunction = settings.filterConjunction;
-        this.limit = settings.limit;
+        this.limit = parseInt(settings.limit);
         this.filters = settings.filters || {};
-        this.offSet = 0;
+        this.offSet = parseInt(settings.offSet || 0);
     }
 
     /**
@@ -45,12 +45,12 @@ class Demand
     }
 
     /**
-     * Check if has filters
+     * Check if has value for query string
      *
      * @returns {boolean}
      */
-    hasFilters() {
-        return Object.keys(this.filters).length > 0;
+    hasQueryStringChanges() {
+        return Object.keys(this.filters).length > 0 || this.offSet > 0;
     }
 
     /**

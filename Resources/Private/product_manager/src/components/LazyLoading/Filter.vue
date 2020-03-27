@@ -34,10 +34,16 @@
 
         created() {
             EventHandler.on('filterPreSelect', filters => {
-                const preselectValue = filters[this.filter.uid].value || null;
+                const filterId = this.filter.uid;
+                if (typeof filters[filterId] === 'undefined') {
+                    return;
+                }
+
+                const preselectValue = filters[filterId].value;
                 if (preselectValue) {
                     this.value = this.findOptionsByValues(preselectValue);
                 }
+
             });
         },
 

@@ -29,21 +29,35 @@
         },
 
         data() {
-            return {
-                loading: true,
-                products: [],
+            const querySettings = this.parseSettingsFromHash();
 
-                demand: new Demand(this.parseSettingsFromHash() || this.settings),
+            return {
+                demand: new Demand(querySettings || this.settings),
                 request: new LazyLoadingRequest(this.endpoint),
+                initialOffSet: parseInt(querySettings ? querySettings.offSet : 0),
+
+                loading: true,
+                nextQueueLoading: false,
+                reachLimit: false,
+                products: [],
+            }
+        },
+
+        computed: {
+            hasMore() {
+                return this.settings.limit > 0 && !this.reachLimit;
             }
         },
 
         created() {
-            this.loadProducts();
+            this.initLoad();
 
             EventHandler.on('filterUpdate', data => {
                 this.demand.updateFilter(data.filter, data.options);
-                this.loadProducts();
+
+                // Reset offset
+                this.demand.offSet = 0;
+                this.initLoad();
 
                 // With activated filters update query string
                 this.updateQueryString();
@@ -66,22 +80,49 @@
                 return null;
             },
 
-            loadProducts() {
+            /**
+             * First load
+             */
+            initLoad() {
                 this.loading = true;
 
-                this.request.load(this.demand)
+                let demand = Object.assign({}, this.demand);
+                demand.offSet = 0;
+
+                if (this.settings.limit && this.initialOffSet) {
+                    demand.limit += this.initialOffSet;
+                    this.initialOffSet = 0;
+                }
+
+                this.request.load(demand)
                     .then(({data}) => {
                         this.products = data.products;
-
                         this.loading = false;
                     })
                     .catch(error => console.error('Error while request products:', error));
             },
 
+            loadMore() {
+                this.nextQueueLoading = true;
+                this.demand.offSet += this.settings.limit;
+
+                this.request.load(this.demand)
+                    .then(({data}) => {
+                        this.products = this.products.concat(data.products);
+
+                        this.updateQueryString();
+                        this.nextQueueLoading = false;
+                    })
+                    .catch(error => console.error('Error while request products:', error));
+            },
+
+            /**
+             * Set demand state to query string
+             */
             updateQueryString() {
                 let hash = '';
 
-                if (this.demand.hasFilters()) {
+                if (this.demand.hasQueryStringChanges()) {
                     hash = queryString.stringify(
                         this.demand.asQueryParams(),
                         queryStringOptions
