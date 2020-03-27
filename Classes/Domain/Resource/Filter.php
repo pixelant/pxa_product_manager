@@ -9,13 +9,16 @@ namespace Pixelant\PxaProductManager\Domain\Resource;
 class Filter extends AbstractResource
 {
     /**
-     * @var array
+     * @return array
      */
-    protected array $extractableProperties = [
-        'uid',
-        'type',
-        'options',
-        'attributeUid',
-        'conjunction',
-    ];
+    protected function extractableProperties(): array
+    {
+        return [
+            'uid',
+            'type',
+            'options',
+            'attributeUid',
+            'conjunction',
+        ];
+    }
 }

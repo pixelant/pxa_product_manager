@@ -24,12 +24,13 @@
                         <a href="">
                             <div class="item">
                                 <div class="item-img">
-                                    <img title="RIDE-ON BOARD +SIT" alt="RIDE-ON BOARD +SIT"
-                                         src="/fileadmin/_processed_/1/5/csm_Image_45_18a00b6bce.png"
-                                         width="265" height="186">
+                                    <img :src="product.listImage"
+                                         :title="product.name"
+                                         :alt="product.name"
+                                         v-if="product.listImage">
                                 </div>
                                 <div class="item-body">
-                                    <div class="item-title"><h4>{{ product.name }} {{ product.uid }}</h4></div>
+                                    <div class="item-title"><h4 v-text="product.name"></h4></div>
                                 </div>
                             </div>
                         </a>

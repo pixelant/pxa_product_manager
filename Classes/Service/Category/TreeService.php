@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service\Category;
 
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Traversable;
 use TYPO3\CMS\Core\Cache\CacheManager;
@@ -14,6 +15,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class TreeService
 {
+    use CanCreateCollection;
+
     /**
      * @var FrontendInterface
      */
@@ -30,12 +33,9 @@ class TreeService
     }
 
     /**
-     * Return array of given categories + all childer recursive
-     *
-     * @param array|Traversable $categories
      * @return array
      */
-    public function childrenRecursive($categories): array
+    public function childrenIdsRecursiveAndCache($categories): array
     {
         $this->validateType($categories);
 
@@ -44,10 +44,23 @@ class TreeService
             return $this->cache->get($cacheHash);
         }
 
-        $result = $this->fetchChildrenRecursive($categories);
+        $recursiveCategories = $this->fetchChildrenRecursive($categories);
+        $result = $this->collection($recursiveCategories)->pluck('uid')->toArray();
+
         $this->cache->set($cacheHash, $result);
 
         return $result;
+    }
+
+    /**
+     * Return array of given categories + all children recursive
+     *
+     * @param array|Traversable $categories
+     * @return array
+     */
+    public function childrenRecursive($categories): array
+    {
+        return $this->fetchChildrenRecursive($categories);
     }
 
     /**
@@ -58,7 +71,7 @@ class TreeService
      */
     protected function cacheHash($categories): string
     {
-        $uids = array_map(fn(Category $category) => $category->getUid(), $categories);
+        $uids = $this->collection($categories)->pluck('uid')->toArray();
 
         return sha1('pm_cache_categories' . implode(',', $uids));
     }

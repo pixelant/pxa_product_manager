@@ -7,6 +7,7 @@ use Pixelant\PxaProductManager\Controller\AbstractController;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Mvc\View\LazyLoadingJsonView;
+use Pixelant\PxaProductManager\Service\Resource\ResourceConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\View\JsonView;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfiguration;
@@ -32,11 +33,24 @@ class LazyLoadingController extends AbstractController
     protected ProductRepository $productRepository;
 
     /**
+     * @var ResourceConverter
+     */
+    protected ResourceConverter $resourceConverter;
+
+    /**
      * @param ProductRepository $productRepository
      */
     public function injectProductRepository(ProductRepository $productRepository)
     {
         $this->productRepository = $productRepository;
+    }
+
+    /**
+     * @param ResourceConverter $resourceConverter
+     */
+    public function injectResourceConverter(ResourceConverter $resourceConverter)
+    {
+        $this->resourceConverter = $resourceConverter;
     }
 
     /**
@@ -65,7 +79,7 @@ class LazyLoadingController extends AbstractController
         $products = $this->productRepository->findDemanded($demand);
 
         $response = [
-            'products' => $products
+            'products' => $this->resourceConverter->covertMany($products->toArray()),
         ];
 
         $this->view->setVariablesToRender(['response']);

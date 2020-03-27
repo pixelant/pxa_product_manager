@@ -22,13 +22,6 @@ abstract class AbstractResource implements ResourceInterface
     protected AbstractEntity $entity;
 
     /**
-     * Properties that will be extracted to array
-     *
-     * @var array
-     */
-    protected array $extractableProperties = [];
-
-    /**
      * @var Dispatcher
      */
     protected Dispatcher $dispatcher;
@@ -58,13 +51,20 @@ abstract class AbstractResource implements ResourceInterface
     {
         $result = [];
 
-        foreach ($this->extractableProperties as $property) {
+        foreach ($this->extractableProperties() as $property) {
             $result[$property] = ObjectAccess::getProperty($this->entity, $property);
         }
 
         $eventData = GeneralUtility::makeInstance(ResourceToArray::class, $result);
-        $this->dispatcher->dispatch(get_class($this), 'resourceToArray', [$eventData]);
+        $this->dispatcher->dispatch(get_class($this), 'resourceToArray', [$eventData, $this->entity]);
 
         return $eventData->getData();
     }
+
+    /**
+     * Properties that will be extracted to array
+     *
+     * @return array
+     */
+    abstract protected function extractableProperties(): array;
 }

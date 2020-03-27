@@ -83,17 +83,12 @@ class LazyProductController extends AbstractController
      */
     protected function lazyListSettings(array $categories): array
     {
-        // Recursive fetch all catagories
-        $categoriesList = $this->collection(
-            $this->categoryTree->childrenRecursive($categories)
-        )->pluck('uid')->toArray();
-
         return [
-            'storagePid' => $this->storagePid(),
-            'limit' => (int)$this->settings['limit'],
-            'filterConjunction' => $this->settings['filtering']['conjunction'],
-            'categories' => $categoriesList,
-        ] + $this->settings['productOrderings'];
+                'storagePid' => $this->storagePid(),
+                'limit' => (int)$this->settings['limit'],
+                'filterConjunction' => $this->settings['filtering']['conjunction'],
+                'categories' => $this->categoryTree->childrenIdsRecursiveAndCache($categories),
+            ] + $this->settings['productOrderings'];
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\ViewHelpers;
 
 use Pixelant\PxaProductManager\Domain\Resource\ResourceInterface;
+use Pixelant\PxaProductManager\Service\Resource\ResourceConverter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -17,6 +18,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 class ResourceEncodeViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
+
+    /**
+     * @var ResourceConverter
+     */
+    protected static ?ResourceConverter $converter = null;
 
     /**
      * View helper arguments
@@ -40,22 +46,22 @@ class ResourceEncodeViewHelper extends AbstractViewHelper
     ): string {
         /** @var AbstractEntity $entity */
         $entity = $arguments['entity'] ?? $renderChildrenClosure();
-        $resourceClassName = $arguments['resource'] ?? static::translateEntityNameToResourceName(get_class($entity));
 
         /** @var ResourceInterface $resource */
-        $resource = GeneralUtility::makeInstance(ObjectManager::class)->get($resourceClassName, $entity);
+        $resourceArray = static::getConverter()->convert($entity, $arguments['resource']);
 
-        return json_encode($resource->toArray());
+        return json_encode($resourceArray);
     }
 
     /**
-     * Translate entity to its corresponsing resource
-     *
-     * @param string $entityClassName
-     * @return string
+     * @return ResourceConverter
      */
-    protected static function translateEntityNameToResourceName(string $entityClassName): string
+    protected static function getConverter(): ResourceConverter
     {
-        return str_replace('\\Model\\', '\\Resource\\', $entityClassName);
+        if (static::$converter === null) {
+            static::$converter = GeneralUtility::makeInstance(ObjectManager::class)->get(ResourceConverter::class);
+        }
+
+        return self::$converter;
     }
 }

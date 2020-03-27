@@ -60,7 +60,7 @@ class TreeServiceTest extends UnitTestCase
 
         $this->inject($subject, 'cache', $cache->reveal());
 
-        $subject->childrenRecursive([createEntity(Category::class, 1)]);
+        $subject->childrenIdsRecursiveAndCache([createEntity(Category::class, 1)]);
     }
 
     /**
