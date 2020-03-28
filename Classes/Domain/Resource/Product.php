@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Resource;
 
+use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
+use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Service\ImageService;
@@ -23,6 +25,23 @@ class Product extends AbstractResource
     protected ImageService $imageService;
 
     /**
+     * @var UrlBuilderServiceInterface
+     */
+    protected UrlBuilderServiceInterface $urlBuilderService;
+
+    /**
+     * @var SettingsReader
+     */
+    protected SettingsReader $siteConfiguration;
+
+    /**
+     * Plugin TS settings
+     *
+     * @var array
+     */
+    protected array $settings;
+
+    /**
      * @param ConfigurationManagerInterface $configurationManager
      */
     public function injectConfigurationManagerInterface(ConfigurationManagerInterface $configurationManager)
@@ -39,20 +58,59 @@ class Product extends AbstractResource
     }
 
     /**
+     * @param UrlBuilderServiceInterface $urlBuilderServiceInterface
+     */
+    public function injectUrlBuilderServiceInterface(UrlBuilderServiceInterface $urlBuilderServiceInterface)
+    {
+        $this->urlBuilderService = $urlBuilderServiceInterface;
+    }
+
+    /**
+     * @param SettingsReader $settingsReader
+     */
+    public function injectSettingsReader(SettingsReader $settingsReader)
+    {
+        $this->siteConfiguration = $settingsReader;
+    }
+
+    /**
+     * @param array|null $additional
      * @return array
      */
-    public function toArray(): array
+    public function extractProperties(array $additional = null): array
     {
-        $array = parent::toArray();
-        $array['listImage'] = $this->getProcessedImageUri($this->entity->getListImage());
+        $this->settings = $this->getPluginSettings();
 
-        return $array;
+        $resource = [
+            'listImage' => $this->getProcessedImageUri($this->entity->getListImage()),
+            'url' => $this->getUrl(),
+        ];
+
+        return parent::extractProperties($resource + ($additional ?? []));
+    }
+
+    /**
+     * Product url
+     *
+     * @return string
+     */
+    protected function getUrl(): string
+    {
+        $tsPid = $this->settings['pids']['singleViewPid'] ?? 0;
+        $pageUid = intval($tsPid ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
+
+        return $this->urlBuilderService->url(
+            $pageUid,
+            $this->entity->getFirstCategory(),
+            $this->entity
+        );
     }
 
     /**
      * Return uri of image with listing processing instructions
      *
      * @param FileReference|null $reference
+     * @param array $settings
      * @return string|null
      */
     protected function getProcessedImageUri(?FileReference $reference): ?string
@@ -61,8 +119,8 @@ class Product extends AbstractResource
             return null;
         }
 
-        $processingInstructions = $this->getPluginSettings()['listView']['images'];
-        //$array['mainImage']=
+        $processingInstructions = $this->settings['listView']['images'];
+
         $processedImage = $this->imageService->applyProcessingInstructions(
             $reference->getOriginalResource(),
             $processingInstructions

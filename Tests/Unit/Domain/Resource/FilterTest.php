@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Resource;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -18,23 +18,31 @@ class FilterTest extends UnitTestCase
      */
     public function toArrayWillReturnEntityAsArray()
     {
-        $uid = 10;
-        $name = 'test name';
-        $label = 'test label';
+        $data = [
+            'uid' => 15,
+            'type' => 1,
+            'options' => ['123'],
+            'attributeUid' => 1,
+            'conjunction' => 'or',
+        ];
 
-        $fields = ['uid', 'name', 'label'];
-        $filter = createEntity(Filter::class, compact('uid', 'name', 'label'));
+        $filter = new class extends Filter {
+            public function getOptions(): array
+            {
+                return ['123'];
+            }
+
+            public function getAttributeUid(): int
+            {
+                return 1;
+            }
+        };
+        $filter->_setProperty('uid', 15);
+        $filter->setType(1)->setConjunction('or');
 
         $subject = new FilterResource($filter);
         $subject->injectDispatcher($this->createMock(Dispatcher::class));
-        $this->inject($subject, 'extractableProperties', $fields);
 
-        $expect = [
-            'uid' => $uid,
-            'name' => $name,
-            'label' => $label,
-        ];
-
-        $this->assertEquals($expect, $subject->toArray());
+        $this->assertEquals($data, $subject->toArray());
     }
 }

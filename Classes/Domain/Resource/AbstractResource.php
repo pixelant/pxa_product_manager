@@ -49,16 +49,34 @@ abstract class AbstractResource implements ResourceInterface
      */
     public function toArray(): array
     {
+        $result = $this->extractProperties();
+
+        $eventData = GeneralUtility::makeInstance(ResourceToArray::class, $result);
+        $this->dispatcher->dispatch(get_class($this), 'resourceToArray', [$eventData, $this->entity]);
+
+        return $eventData->getData();
+    }
+
+    /**
+     * Extract properties from entity. Allow to pass additional values from child object
+     * when override this method
+     *
+     * @param array|null $additionalProperties
+     * @return array
+     */
+    protected function extractProperties(array $additionalProperties = null): array
+    {
         $result = [];
 
         foreach ($this->extractableProperties() as $property) {
             $result[$property] = ObjectAccess::getProperty($this->entity, $property);
         }
 
-        $eventData = GeneralUtility::makeInstance(ResourceToArray::class, $result);
-        $this->dispatcher->dispatch(get_class($this), 'resourceToArray', [$eventData, $this->entity]);
+        if ($additionalProperties) {
+            $result = array_merge($result, $additionalProperties);
+        }
 
-        return $eventData->getData();
+        return $result;
     }
 
     /**

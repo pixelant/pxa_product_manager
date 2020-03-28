@@ -23,10 +23,12 @@ defined('TYPO3_MODE') || die;
             'CustomProduct' => 'list',
             'LazyProduct' => 'list',
             'Api\\LazyLoading' => 'list',
+            'Api\\LazyAvailableFilters' => 'list',
         ],
         // non-cacheable actions
         [
             'Api\\LazyLoading' => 'list',
+            'Api\\LazyAvailableFilters' => 'list',
         ]
     );
 

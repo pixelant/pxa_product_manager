@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;

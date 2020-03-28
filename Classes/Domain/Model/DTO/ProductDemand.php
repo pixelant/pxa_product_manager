@@ -122,6 +122,21 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Remove filter by uid
+     *
+     * @param int $uid
+     * @return ProductDemand
+     */
+    public function removeFilter(int $uid): ProductDemand
+    {
+        if (isset($this->filters[$uid])) {
+            unset($this->filters[$uid]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getFilterConjunction(): string

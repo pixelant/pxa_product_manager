@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model\Dto;
 
@@ -22,6 +23,32 @@ class ProductDemandTest extends UnitTestCase
         $demand->setFilters($filtes);
 
         $this->assertEquals($expect, $demand->hasFiltersCategoryFilter(), $testName);
+    }
+
+    /**
+     * @test
+     */
+    public function removeFilterWillRemoveFilter()
+    {
+        $demand = new ProductDemand();
+
+        $demand->setFilters(['1' => 'test', 2 => 'second']);
+        $demand->removeFilter(1);
+
+        $this->assertEquals([2 => 'second'], $demand->getFilters());
+    }
+
+    /**
+     * @test
+     */
+    public function removeFilterDoesNothingIfFilterNoSet()
+    {
+        $demand = new ProductDemand();
+
+        $demand->setFilters(['1' => 'test', 2 => 'second']);
+        $demand->removeFilter(3);
+
+        $this->assertEquals(['1' => 'test', 2 => 'second'], $demand->getFilters());
     }
 
     public function filtersData()

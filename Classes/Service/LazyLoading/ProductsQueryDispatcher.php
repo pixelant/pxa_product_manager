@@ -96,19 +96,19 @@ class ProductsQueryDispatcher
      */
     public function availableFilterOptions(): array
     {
-        $queryBuilder = clone $this->queryBuilder;
-        $queryBuilder->select('tx_pxaproductmanager_domain_model_product.uid');
-
-        $subQuery = $this->queryBuilderToSql($queryBuilder);
-
-        $options = $this->attributeValueRepository->findOptionIdsByProductSubQuery($subQuery);
-        $options = array_unique(array_merge(
+        $options = $this->attributeValueRepository->findOptionIdsByProductSubQuery($this->subQuery());
+        return array_unique(array_merge(
             ...array_map(fn($value) => GeneralUtility::intExplode(',', $value, true), $options)
         ));
+    }
 
-        $categories = $this->categoryRepository->findIdsByProductsSubQuery($subQuery);
-
-        return compact('options', 'categories');
+    /**
+     * Return all available categories for query builder
+     * @return array
+     */
+    public function availableCategories(): array
+    {
+        return $this->categoryRepository->findIdsByProductsSubQuery($this->subQuery());
     }
 
     /**
@@ -124,6 +124,19 @@ class ProductsQueryDispatcher
             ->count('tx_pxaproductmanager_domain_model_product.uid')
             ->execute()
             ->fetchColumn(0);
+    }
+
+    /**
+     * Generate products sub-query string
+     *
+     * @return string
+     */
+    protected function subQuery(): string
+    {
+        $queryBuilder = clone $this->queryBuilder;
+        $queryBuilder->select('tx_pxaproductmanager_domain_model_product.uid');
+
+        return $this->queryBuilderToSql($queryBuilder);
     }
 
     /**

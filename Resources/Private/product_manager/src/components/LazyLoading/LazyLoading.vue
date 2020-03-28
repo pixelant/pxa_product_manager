@@ -94,14 +94,20 @@
                     this.initialOffSet = 0;
                 }
 
-                this.request.load(demand)
+                // Only load products
+                this.request.loadProducts(demand)
                     .then(({data}) => {
                         this.products = data.products;
+                        this.loading = false;
+                    })
+                    .catch(error => console.error('Error while request products:', error));
+
+                // Load available options
+                this.request.loadAvailableOptions(demand)
+                    .then(({data}) => {
                         this.countAll = data.countAll;
 
-                        EventHandler.emit('filterOptionsUpdate', data.availableFilterOptions);
-
-                        this.loading = false;
+                        EventHandler.emit('filterOptionsUpdate', data.options);
                     })
                     .catch(error => console.error('Error while request products:', error));
             },
@@ -113,7 +119,7 @@
                 this.nextQueueLoading = true;
                 this.demand.offSet += this.settings.limit;
 
-                this.request.load(this.demand)
+                this.request.loadProducts(this.demand)
                     .then(({data}) => {
                         this.products = this.products.concat(data.products);
 

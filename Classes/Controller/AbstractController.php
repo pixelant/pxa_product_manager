@@ -39,7 +39,7 @@ abstract class AbstractController extends ActionController
     /**
      * @var Dispatcher
      */
-    protected Dispatcher $queryDispatcher;
+    protected Dispatcher $dispatcher;
 
     /**
      * Override plugin settings with site settings, before resolving view
@@ -60,7 +60,7 @@ abstract class AbstractController extends ActionController
      */
     public function injectDispatcher(Dispatcher $dispatcher)
     {
-        $this->queryDispatcher = $dispatcher;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -110,7 +110,7 @@ abstract class AbstractController extends ActionController
             $demand->setOrderDirection($settings['orderDirection']);
         }
 
-        $this->queryDispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
+        $this->dispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
 
         return $demand;
     }

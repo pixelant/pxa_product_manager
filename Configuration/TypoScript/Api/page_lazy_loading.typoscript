@@ -30,6 +30,10 @@ PAGE_LAZY_LOADING {
             Api\LazyLoading {
                 1 = list
             }
+
+            Api\LazyAvailableFilters {
+                1 = list
+            }
         }
     }
 }

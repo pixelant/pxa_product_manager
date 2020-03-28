@@ -64,13 +64,9 @@
                     return;
                 }
 
-                const available = options[this.isCategoryType() ? 'categories' : 'options'];
+                const available = options[this.filter.uid] || options['and'];
 
                 this.options = this.filter.options.filter(option => available.includes(option.value));
-            },
-
-            isCategoryType() {
-                return this.filter.type === 1;
             },
         }
     }
