@@ -33,17 +33,14 @@
                                          v-if="product.listImage">
                                 </div>
                                 <div class="item-body">
-                                    <div class="item-title"><h4 v-text="product.name"></h4><span v-text="product.uid"></span></div>
+                                    <div class="item-title"><h4 v-text="product.name"></h4></div>
                                 </div>
                             </div>
                         </a>
                     </div>
                 </div>
 
-                <button @click="loadMore" v-if="hasMore" class="btn btn-default" :disabled="nextQueueLoading">
-                    <span v-if="nextQueueLoading">{{ 'loading' | trans }}</span>
-                    <span v-else>{{ 'load_more' | trans }}</span>
-                </button>
+                <button @click="loadMore" v-if="hasMore" class="btn btn-default" :disabled="nextQueueLoading" v-text="loadMoreText"></button>
 
                 <loader v-show="loading"></loader>
             </div>

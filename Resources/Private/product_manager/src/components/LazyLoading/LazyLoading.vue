@@ -50,6 +50,11 @@
 
             countAllLabel() {
                 return this.countAll ? this.countAll : '--';
+            },
+
+            loadMoreText() {
+                const key = this.nextQueueLoading ? 'loading' : 'load_more';
+                return this.$options.filters.trans(key);
             }
         },
 
