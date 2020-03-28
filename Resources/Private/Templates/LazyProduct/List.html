@@ -5,6 +5,7 @@
 
 <f:section name="main">
     <pxa:pageRenderer includeJSFooterlibs="{0: 'EXT:pxa_product_manager/Resources/Public/Assets/js/chunk-vendors.js'}"
+                      inlineLanguageLabelFiles="{0: 'EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf'}"
                       includeJSFooter="{0: 'EXT:pxa_product_manager/Resources/Public/Assets/js/app.js'}" />
 
 
@@ -19,7 +20,7 @@
 
         <lazy-loading :settings="{settingsJson}" endpoint="{f:uri.page(pageType: '201701')}" inline-template>
             <div class="lazy-loading-wrapper" :class="{loading: loading}">
-                <h4 v-cloak>Total results {{ countAll }}</h4>
+                <h4 v-cloak>{{ 'total_results' | trans }} {{ countAllLabel }}</h4>
 
                 <div class="row" v-cloak>
                     <div class="col-md-3" v-for="product in products" :key="product.uid">
@@ -40,8 +41,8 @@
                 </div>
 
                 <button @click="loadMore" v-if="hasMore" class="btn btn-default" :disabled="nextQueueLoading">
-                    <span v-if="nextQueueLoading">Loading...</span>
-                    <span v-else>Load more</span>
+                    <span v-if="nextQueueLoading">{{ 'loading' | trans }}</span>
+                    <span v-else>{{ 'load_more' | trans }}</span>
                 </button>
 
                 <loader v-show="loading"></loader>

@@ -24,6 +24,7 @@ class PageRendererViewHelper extends AbstractViewHelper
         $this->registerArgument('cssLibs', 'array', 'Array of css libs');
         $this->registerArgument('includeJSFooterlibs', 'array', 'Array of custom JavaScript file to be loaded');
         $this->registerArgument('includeJSFooter', 'array', 'Array of custom JavaScript file to be loaded');
+        $this->registerArgument('inlineLanguageLabelFiles', 'array', 'Array of labels files');
     }
 
     /**
@@ -40,6 +41,7 @@ class PageRendererViewHelper extends AbstractViewHelper
         $includeJSFooterlibs = $arguments['includeJSFooterlibs'] ?? [];
         $includeJSFooter = $arguments['includeJSFooter'] ?? [];
         $cssLibs = $arguments['cssLibs'] ?? [];
+        $inlineLanguageLabelFiles = $arguments['inlineLanguageLabelFiles'] ?? [];
 
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 
@@ -51,6 +53,9 @@ class PageRendererViewHelper extends AbstractViewHelper
         }
         foreach ($cssLibs as $cssLib) {
             $pageRenderer->addCssLibrary($cssLib, 'stylesheet', 'all', '', true, false, '', true);
+        }
+        foreach ($inlineLanguageLabelFiles as $inlineLanguageLabelFile) {
+            $pageRenderer->addInlineLanguageLabelFile($inlineLanguageLabelFile, 'js.');
         }
     }
 }

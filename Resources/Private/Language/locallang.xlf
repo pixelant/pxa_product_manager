@@ -201,6 +201,19 @@
             <trans-unit id="fe.solr.type_facet_name">
                 <target>Products</target>
             </trans-unit>
+
+            <trans-unit id="js.load_more">
+                <source>Load more</source>
+            </trans-unit>
+            <trans-unit id="js.total_results">
+                <source>Total results</source>
+            </trans-unit>
+            <trans-unit id="js.please_select">
+                <source>Please select...</source>
+            </trans-unit>
+            <trans-unit id="js.loading">
+                <source>Loading...</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

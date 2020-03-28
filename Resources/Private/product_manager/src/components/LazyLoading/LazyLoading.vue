@@ -46,6 +46,10 @@
         computed: {
             hasMore() {
                 return this.settings.limit > 0 && (this.products.length < this.countAll);
+            },
+
+            countAllLabel() {
+                return this.countAll ? this.countAll : '--';
             }
         },
 

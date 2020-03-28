@@ -6,7 +6,7 @@
                      track-by="value"
                      label="label"
                      @input="emitUpdate"
-                     placeholder="Select one"></multiselect>
+                     :placeholder="translate('please_select')"></multiselect>
     </div>
 </template>
 
@@ -38,6 +38,10 @@
         },
 
         methods: {
+            translate(key) {
+                return this.$options.filters.trans(key);
+            },
+
             emitUpdate() {
                 EventHandler.emit('filterUpdate', {
                     filter: this.filter,
