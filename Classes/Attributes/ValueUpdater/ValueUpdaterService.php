@@ -44,11 +44,12 @@ class ValueUpdaterService implements UpdaterInterface
      */
     public function update($product, $attribute, $value): void
     {
+        // Prepare value for updating
+        $value = $this->convertValue($attribute, $value);
+        
         $product = $this->castToInt($product);
         $attribute = $this->castToInt($attribute);
 
-        // Prepare value for updating
-        $value = $this->convertValue($attribute, $value);
 
         $attributeRow = $this->attributeValueRepository->findRawByProductAndAttribute($product, $attribute);
         if ($attributeRow) {

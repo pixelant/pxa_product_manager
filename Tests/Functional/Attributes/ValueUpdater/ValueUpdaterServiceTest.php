@@ -65,7 +65,7 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
 
         $this->subject->update($product, $attribute, $newValue);
 
-        $queryBuilder =  GeneralUtility::makeInstance(ConnectionPool::class)
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
 
         $attributeValueRow = $queryBuilder
@@ -77,6 +77,38 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
             ->fetch();
 
         $this->assertEquals($newValue, $attributeValueRow['value']);
+        $this->assertEquals($productUid, $attributeValueRow['product']);
+        $this->assertEquals($attributeUid, $attributeValueRow['attribute']);
+    }
+
+    /**
+     * @test
+     */
+    public function updateWillCreateAttributeValueWithCommaWrapIfIsSelectBox()
+    {
+        $productUid = 1;
+        $attributeUid = 2;
+
+        $product = createEntity(Product::class, ['_localizedUid' => $productUid]);
+        $attribute = createEntity(Attribute::class, ['_localizedUid' => $attributeUid, 'type' => Attribute::ATTRIBUTE_TYPE_DROPDOWN]);
+
+        $newValue = '2';
+        $expectValue = ",$newValue,";
+
+        $this->subject->update($product, $attribute, $newValue);
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
+
+        $attributeValueRow = $queryBuilder
+            ->select('*')
+            ->from('tx_pxaproductmanager_domain_model_attributevalue')
+            ->setMaxResults(1)
+            ->orderBy('uid', 'desc')
+            ->execute()
+            ->fetch();
+
+        $this->assertEquals($expectValue, $attributeValueRow['value'], 'given value: ' . $attributeValueRow['value']);
         $this->assertEquals($productUid, $attributeValueRow['product']);
         $this->assertEquals($attributeUid, $attributeValueRow['attribute']);
     }
