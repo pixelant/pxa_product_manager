@@ -256,7 +256,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,alphanum,nospace,unique',
+                    'eval' => 'trim,alphanum,nospace,uniqueInPid',
                     'fieldControl' => [
                         'attributeIdentifierControl' => [
                             'renderType' => 'attributeIdentifierControl'
