@@ -15,6 +15,8 @@ class Filter extends AbstractResource
     {
         return [
             'uid',
+            'name',
+            'label',
             'type',
             'options',
             'attributeUid',

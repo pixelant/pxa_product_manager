@@ -138,6 +138,8 @@ class Product extends AbstractResource
             'uid',
             'name',
             'sku',
+            'price',
+            'formattedPrice',
         ];
     }
 
