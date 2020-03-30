@@ -255,6 +255,44 @@
 			</trans-unit>
 			<!--Link handler:END-->
 
+			<!--Extension manager configuration:START-->
+			<trans-unit id="extconf.categoriesRestriction">
+				<source>Categories PID restriction: Restrict the available categories in product records. PageTsConfig:
+					TCEFORM.tx_pxaproductmanager_domain_model_product.categories.PAGE_TSCONFIG_IDLIST=xxx,xxx.</source>
+			</trans-unit>
+			<trans-unit id="extconf.accessoriesRestriction" xml:space="preserve">
+            <source>Accessories PID restriction: Restrict the available accessories in product records. PageTsConfig:
+                TCEFORM.tx_pxaproductmanager_domain_model_product.accessories.PAGE_TSCONFIG_IDLIST=xxx,xxx.
+            </source>
+            </trans-unit>
+			<trans-unit id="extconf.relatedProductsRestriction" xml:space="preserve">
+            <source>Related Products PID restriction: Restrict the available accessories in product records. PageTsConfig:
+                TCEFORM.tx_pxaproductmanager_domain_model_product.related_products.PAGE_TSCONFIG_IDLIST=xxx,xxx.
+            </source>
+            </trans-unit>
+			<trans-unit id="extconf.subProductsRestriction" xml:space="preserve">
+            <source>Sub Products PID restriction: Restrict the available accessories in product records. PageTsConfig:
+                TCEFORM.tx_pxaproductmanager_domain_model_product.sub_products.PAGE_TSCONFIG_IDLIST=xxx,xxx.
+            </source>
+            </trans-unit>
+			<trans-unit id="extconf.attributesSetsRestriction">
+				<source>Attributes Sets PID restriction: Restrict the available attributes sets in categories records. PageTsConfig:
+					TCEFORM.sys_category.pxapm_attributes_sets.PAGE_TSCONFIG_IDLIST=xxx,xxx.</source>
+			</trans-unit>
+			<trans-unit id="extconf.restriction.current_pid" xml:space="preserve">
+                <source>Current page</source>
+            </trans-unit>
+			<trans-unit id="extconf.restriction.siteroot" xml:space="preserve">
+                <source>Site root</source>
+            </trans-unit>
+			<trans-unit id="extconf.restriction.pages_tsconfig" xml:space="preserve">
+                <source>Page TsConfig</source>
+            </trans-unit>
+			<trans-unit id="extconf.restriction.none" xml:space="preserve">
+                <source>No restriction</source>
+            </trans-unit>
+			<!--Extension manager configuration:END-->
+
 			<trans-unit id="be.page_categories_found">
 				<source>Found connected categories</source>
 			</trans-unit>
