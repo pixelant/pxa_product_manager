@@ -18,8 +18,10 @@ class FilterTest extends UnitTestCase
      */
     public function toArrayWillReturnEntityAsArray()
     {
-        $data = [
+        $expect = [
             'uid' => 15,
+            'name' => 'name',
+            'label' => 'label',
             'type' => 1,
             'options' => ['123'],
             'attributeUid' => 1,
@@ -38,11 +40,15 @@ class FilterTest extends UnitTestCase
             }
         };
         $filter->_setProperty('uid', 15);
-        $filter->setType(1)->setConjunction('or');
+        $filter
+            ->setType(1)
+            ->setConjunction('or')
+            ->setName('name')
+            ->setLabel('label');
 
         $subject = new FilterResource($filter);
         $subject->injectDispatcher($this->createMock(Dispatcher::class));
 
-        $this->assertEquals($data, $subject->toArray());
+        $this->assertEquals($expect, $subject->toArray());
     }
 }
