@@ -27,11 +27,13 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  ***************************************************************/
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
+use Pixelant\PxaProductManager\Event\Repository\RepositoryDemand as RepositoryDemandEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use UnexpectedValueException;
 
 /**
@@ -40,6 +42,19 @@ use UnexpectedValueException;
  */
 abstract class AbstractDemandRepository extends Repository implements DemandRepositoryInterface
 {
+    /**
+     * @var Dispatcher
+     */
+    protected Dispatcher $dispatcher;
+
+    /**
+     * @param Dispatcher $dispatcher
+     */
+    public function injectDispatcher(Dispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
     /**
      * @param DemandInterface $demand
      * @return QueryResultInterface
@@ -70,6 +85,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     {
         $query = $this->createQuery();
 
+        $this->fireDemandEvent('afterDemandQueryInitialize', $demand, $query);
+
         $this->setStorage($query, $demand);
         $this->setOrderings($query, $demand);
 
@@ -80,7 +97,11 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
             $query->setOffset($demand->getOffSet());
         }
 
+        $this->fireDemandEvent('beforeDemandCreateConstraints', $demand, $query);
+
         $constraints = $this->createConstraints($query, $demand);
+
+        $this->fireDemandEvent('afterDemandCreateConstraints', $demand, $query);
 
         if (! empty($constraints)) {
             $query->matching(
@@ -91,6 +112,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
                 )
             );
         }
+
+        $this->fireDemandEvent('beforeReturnDemandQuery', $demand, $query);
 
         return $query;
     }
@@ -165,6 +188,17 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     protected function isOrConjunction(string $conjunction): bool
     {
         return $conjunction === 'or';
+    }
+
+    /**
+     * @param string $name
+     * @param DemandInterface $demand
+     * @param QueryInterface $query
+     */
+    protected function fireDemandEvent(string $name, DemandInterface $demand, QueryInterface $query): void
+    {
+        $event = GeneralUtility::makeInstance(RepositoryDemandEvent::class, $demand, $query);
+        $this->dispatcher->dispatch(get_class($this), $name, [$event]);
     }
 
     /**

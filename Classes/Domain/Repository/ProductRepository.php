@@ -28,6 +28,8 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
+use Pixelant\PxaProductManager\Event\Repository\FilterConstraints;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
@@ -138,7 +140,14 @@ class ProductRepository extends AbstractDemandRepository
             }
         }
 
-        return $this->createConstraintFromConstraintsArray($query, $constraints, $demand->getFilterConjunction());
+        $event = GeneralUtility::makeInstance(FilterConstraints::class, $demand, $query, $constraints);
+        $this->dispatcher->dispatch(__CLASS__, 'filtersConstraintArray', [$event]);
+
+        return $this->createConstraintFromConstraintsArray(
+            $query,
+            $event->getConstraints(),
+            $demand->getFilterConjunction()
+        );
     }
 
     /**
