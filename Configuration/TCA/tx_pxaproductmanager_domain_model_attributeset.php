@@ -82,7 +82,7 @@ return (function () {
                 ]
             ],
             'categories' => [
-                'label' => $ll . 'categories',
+                'label' => $ll . '.categories',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
