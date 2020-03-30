@@ -6,7 +6,7 @@
                      track-by="value"
                      label="label"
                      @input="emitUpdate"
-                     :placeholder="translate('please_select')"></multiselect>
+                     :placeholder="placeholder"></multiselect>
     </div>
 </template>
 
@@ -32,16 +32,18 @@
             }
         },
 
+        computed: {
+            placeholder() {
+                return this.filter.label || this.$options.filters.trans('please_select');
+            }
+        },
+
         created() {
             EventHandler.on('filterPreSelect', filters => this.preselectOptions(filters));
             EventHandler.on('filterOptionsUpdate', options => this.updateAvailableOptions(options));
         },
 
         methods: {
-            translate(key) {
-                return this.$options.filters.trans(key);
-            },
-
             emitUpdate() {
                 EventHandler.emit('filterUpdate', {
                     filter: this.filter,
