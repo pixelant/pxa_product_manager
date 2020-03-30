@@ -97,6 +97,10 @@ plugin.tx_pxaproductmanager {
             }
         }
 
+        price {
+            currency = {$plugin.tx_pxaproductmanager.settings.price.currency}
+        }
+
         attributes {
             # Don't compare images and link
             ignoreAttributeTypesInCompareView = 6,7

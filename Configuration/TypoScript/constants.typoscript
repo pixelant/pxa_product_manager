@@ -105,4 +105,12 @@ plugin.tx_pxaproductmanager {
             senderEmail = noreply@site.com
         }
     }
+
+    # customsubcategory=pxaproductmanager_price=Price
+    settings {
+        price {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_price/010; type=string; label=Currency
+            currency = USD
+        }
+    }
 }
