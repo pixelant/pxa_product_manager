@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Event\Product;
 
+use NumberFormatter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
@@ -11,9 +12,19 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 class FormatPrice
 {
     /**
+     * @var NumberFormatter
+     */
+    protected NumberFormatter $formatter;
+
+    /**
      * @var string
      */
-    protected string $formattedPrice;
+    protected string $currency;
+
+    /**
+     * @var string
+     */
+    protected string $locale;
 
     /**
      * @var Product
@@ -21,31 +32,51 @@ class FormatPrice
     protected Product $product;
 
     /**
-     * @param string $formattedPrice
+     * @param NumberFormatter $formatter
+     * @param string $currency
+     * @param string $locale
      * @param Product $product
      */
-    public function __construct(string $formattedPrice, Product $product)
+    public function __construct(NumberFormatter $formatter, string $currency, string $locale, Product $product)
     {
-        $this->formattedPrice = $formattedPrice;
+        $this->formatter = $formatter;
+        $this->currency = $currency;
+        $this->locale = $locale;
         $this->product = $product;
+    }
+
+    /**
+     * @return NumberFormatter
+     */
+    public function getFormatter(): NumberFormatter
+    {
+        return $this->formatter;
     }
 
     /**
      * @return string
      */
-    public function getFormattedPrice(): string
+    public function getCurrency(): string
     {
-        return $this->formattedPrice;
+        return $this->currency;
     }
 
     /**
-     * @param string $formattedPrice
+     * @param string $currency
      * @return FormatPrice
      */
-    public function setFormattedPrice(string $formattedPrice): FormatPrice
+    public function setCurrency(string $currency): FormatPrice
     {
-        $this->formattedPrice = $formattedPrice;
+        $this->currency = $currency;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 
     /**

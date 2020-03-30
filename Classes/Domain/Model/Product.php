@@ -30,12 +30,10 @@ use DateTime;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
-use Pixelant\PxaProductManager\Event\Product\FormatPrice;
 use Pixelant\PxaProductManager\Formatter\PriceFormatter;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Product model
@@ -53,11 +51,6 @@ class Product extends AbstractEntity
      * @var UpdaterInterface
      */
     protected UpdaterInterface $attributeValueUpdater;
-
-    /**
-     * @var Dispatcher
-     */
-    protected Dispatcher $dispatcher;
 
     /**
      * @var ObjectManager
@@ -235,14 +228,6 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @param Dispatcher $dispatcher
-     */
-    public function injectDispatcher(Dispatcher $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
-
-    /**
      * @param ObjectManager $objectManager
      */
     public function injectObjectManager(ObjectManager $objectManager)
@@ -324,12 +309,7 @@ class Product extends AbstractEntity
      */
     public function getFormattedPrice(): string
     {
-        $formattedPrice = $this->objectManager->get(PriceFormatter::class)->format($this->getPrice());
-
-        $event = $this->objectManager->get(FormatPrice::class, $formattedPrice, $this);
-
-        $this->dispatcher->dispatch(__CLASS__, 'beforeReturnFormattedPrice', [$event]);
-        return $event->getFormattedPrice();
+        return $this->objectManager->get(PriceFormatter::class)->format($this);
     }
 
     /**
