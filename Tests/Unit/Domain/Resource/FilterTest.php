@@ -51,4 +51,16 @@ class FilterTest extends UnitTestCase
 
         $this->assertEquals($expect, $subject->toArray());
     }
+
+    /**
+     * @test
+     */
+    public function convertPropertyValueReturnArrayIfObjectStorage()
+    {
+        $storage = createObjectStorage(...createMultipleEntities(Filter::class, 3));
+
+        $subject = $this->getMockBuilder(FilterResource::class)->disableOriginalConstructor()->setMethods(null)->getMock();
+
+        $this->assertTrue(is_array($this->callInaccessibleMethod($subject, 'convertPropertyValue', $storage)));
+    }
 }

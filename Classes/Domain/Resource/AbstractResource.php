@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Domain\Resource;
 use Pixelant\PxaProductManager\Event\Resource\ResourceToArray;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
@@ -69,7 +70,9 @@ abstract class AbstractResource implements ResourceInterface
         $result = [];
 
         foreach ($this->extractableProperties() as $property) {
-            $result[$property] = ObjectAccess::getProperty($this->entity, $property);
+            $result[$property] = $this->convertPropertyValue(
+                ObjectAccess::getProperty($this->entity, $property)
+            );
         }
 
         if ($additionalProperties) {
@@ -77,6 +80,21 @@ abstract class AbstractResource implements ResourceInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Process property value
+     *
+     * @param $value
+     * @return mixed
+     */
+    protected function convertPropertyValue($value)
+    {
+        if ($value instanceof ObjectStorage) {
+            return $value->toArray();
+        }
+
+        return $value;
     }
 
     /**
