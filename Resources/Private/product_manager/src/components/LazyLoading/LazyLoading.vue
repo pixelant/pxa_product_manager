@@ -94,6 +94,7 @@
              */
             initLoad() {
                 this.loading = true;
+                this.countAll = 0;
 
                 let demand = Object.assign({}, this.demand);
                 demand.offSet = 0;
@@ -103,22 +104,32 @@
                     this.initialOffSet = 0;
                 }
 
+                // Load available options
+                const availableOptionsRequest = this.request.loadAvailableOptions(demand);
+
                 // Only load products
                 this.request.loadProducts(demand)
                     .then(({data}) => {
                         this.products = data.products;
                         this.loading = false;
+
+                        this.updateAvailableOptions(availableOptionsRequest);
                     })
                     .catch(error => console.error('Error while request products:', error));
+            },
 
-                // Load available options
-                this.request.loadAvailableOptions(demand)
+            /**
+             * Update count all and fire even
+             * with available filter options
+             */
+            updateAvailableOptions(request) {
+                request
                     .then(({data}) => {
                         this.countAll = data.countAll;
 
                         EventHandler.emit('filterOptionsUpdate', data.options);
                     })
-                    .catch(error => console.error('Error while request products:', error));
+                    .catch(error => console.error('Error while request filter options:', error));
             },
 
             /**
