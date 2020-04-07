@@ -69,8 +69,8 @@ plugin.tx_solr.index.queue {
 plugin.tx_solr.search.faceting.facets.type {
     renderingInstruction {
         # Products
-        products = TEXT
-        products {
+        tx_pxaproductmanager_domain_model_product = TEXT
+        tx_pxaproductmanager_domain_model_product {
             value = {LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf:fe.solr.type_facet_name}
             insertData = 1
         }

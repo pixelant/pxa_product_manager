@@ -199,7 +199,7 @@
             </trans-unit>
 
             <trans-unit id="fe.solr.type_facet_name">
-                <target>Products</target>
+                <source>Products</source>
             </trans-unit>
 
             <trans-unit id="js.load_more">
