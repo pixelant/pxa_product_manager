@@ -218,8 +218,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             ->toArray();
 
         /** @var AttributeValue[] $values */
-        $values = $this->collection($product->getAttributesValues())
-            ->filter(fn(AttributeValue $attributeValue) => $attributeValue->getAttribute() !== null)
+        $values = $this->collection($product->getAttributesValuesWithValidAttributes())
             ->mapWithKeysOfProperty('attribute', fn(Attribute $valueAttribute) => $valueAttribute->getUid())
             ->toArray();
 

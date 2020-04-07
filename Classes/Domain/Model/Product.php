@@ -689,6 +689,18 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Return array of attributes values that has valid attributes
+     *
+     * @return array
+     */
+    public function getAttributesValuesWithValidAttributes(): array
+    {
+        return $this->collection($this->getAttributesValues())
+            ->filter(fn(AttributeValue $attributeValue) => is_object($attributeValue->getAttribute()))
+            ->toArray();
+    }
+
+    /**
      * @param ObjectStorage $attributesValues
      * @return Product
      */

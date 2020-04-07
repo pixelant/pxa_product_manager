@@ -6,6 +6,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
+use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Image;
 use Pixelant\PxaProductManager\Domain\Model\Product;
@@ -267,5 +268,21 @@ class ProductTest extends UnitTestCase
         $this->subject->setName('name');
 
         $this->assertEquals('name', $this->subject->getNavigationTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function getAttributesValuesWithValidAttributesReturnAttributesValuesThatHasAttributes()
+    {
+        $attributeValue = createEntity(AttributeValue::class, 1);
+        $attributeValue->setAttribute(createEntity(Attribute::class, 100));
+
+        $attributeValue2 = createEntity(AttributeValue::class, 2);
+
+        $subject = $this->createPartialMock(Product::class, ['getAttributesValues']);
+        $subject->expects($this->once())->method('getAttributesValues')->willReturn(createObjectStorage($attributeValue, $attributeValue2));
+
+        $this->assertEquals([$attributeValue], array_values($subject->getAttributesValuesWithValidAttributes()));
     }
 }
