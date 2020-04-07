@@ -437,6 +437,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
   	price_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
   	tax_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
     subscription int(11) unsigned DEFAULT '0' NOT NULL,
+    state_hash varchar(32) DEFAULT '' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,

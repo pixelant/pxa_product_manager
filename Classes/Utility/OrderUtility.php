@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Utility;
 
+use Pixelant\PxaProductManager\Domain\Model\Coupon;
 use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\OrderRepository;
@@ -199,5 +200,48 @@ class OrderUtility
     public static function updateOrder(Order $order)
     {
         GeneralUtility::makeInstance(ObjectManager::class)->get(OrderRepository::class)->update($order);
+    }
+
+    /**
+     * Returns a hash based on products, product count, and coupons
+     *
+     * Hookable with $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['Utility/OrderUtility.php']['calculateOrderStateHash']
+     * which receives $hashBaseArray as parameter and $order as reference.
+     *
+     * @param Order $order
+     *
+     * @return string
+     */
+    public static function calculateOrderStateHash(Order $order): string
+    {
+        $hashBaseArray = [];
+
+        //Add products and product quantities
+        $hashBaseArray['products'] = [];
+        /** @var Product $product */
+        foreach ($order->getProducts() as $product) {
+            $hashBaseArray['products'][] = [
+                'uid' => $product->getUid(),
+                'quantity' => $order->getProductQuantity($product)
+            ];
+        }
+
+        //Add coupons
+        $hashBaseArray['coupons'] = [];
+        /** @var Coupon $coupon */
+        foreach ($order->getCoupons() as $coupon) {
+            $hashBaseArray['coupons'] = [
+                'uid' => $coupon->getUid()
+            ];
+        }
+
+        //Handle $hashBaseArray additions through a hook
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['Utility/OrderUtility.php']['calculateOrderStateHash'])) {
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['Utility/OrderUtility.php']['calculateOrderStateHash'] as $functionReference) {
+                $hashBaseArray = GeneralUtility::callUserFunction($functionReference, $hashBaseArray, $order);
+            }
+        }
+
+        return md5(serialize($hashBaseArray));
     }
 }
