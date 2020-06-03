@@ -83,7 +83,7 @@ class OrderUtility
 
             if ($order !== null && !$order->isComplete()) {
                 return $order;
-            } elseif ($order->isComplete()) {
+            } elseif ($order !== null && $order->isComplete()) {
                 self::$sessionOrder = null;
             }
         }
