@@ -207,7 +207,7 @@
 		        <target>Ange rabattkod</target>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.noCodeSuppliedWarning">
-		        <target>Ingen rabattkod tillhandahölls. Ange koden i textfältet innan du klickar på knappen Lägg till rabattkod.</target>
+		        <target>Ingen rabattkod är angiven. Ange koden i textfältet innan du klickar på knappen Lägg till rabattkod.</target>
 	        </trans-unit>
 	        <trans-unit id="fe.couponCode.codeNotFoundError">
 		        <target>Den rabattkod du angav kunde inte hittas. Kontrollera att du har angett den korrekt.</target>
