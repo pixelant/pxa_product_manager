@@ -59,6 +59,11 @@ plugin.tx_pxaproductmanager {
             }
         }
 
+        coupons {
+            enable = 1
+            orderMax = 1
+        }
+
         email {
             senderName = {$plugin.tx_pxaproductmanager.settings.email.senderName}
             senderEmail = {$plugin.tx_pxaproductmanager.settings.email.senderEmail}

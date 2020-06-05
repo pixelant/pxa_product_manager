@@ -287,6 +287,16 @@ class ProductController extends AbstractController
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function addCouponCodeToOrderAction($couponCode = '') {
+        if (!$this->settings['coupons']['enable']) {
+            $this->addFlashMessage(
+                $this->translate('fe.couponCode.notEnabled'),
+                '',
+                FlashMessage::ERROR
+            );
+
+            $this->redirect('wishList');
+        }
+
         if($couponCode === '') {
             $this->addFlashMessage(
                 $this->translate('fe.couponCode.noCodeSuppliedWarning'),
@@ -319,6 +329,16 @@ class ProductController extends AbstractController
                 $this->translate('fe.couponCode.codeAlreadyAddedWarning'),
                 '',
                 FlashMessage::WARNING
+            );
+
+            $this->redirect('wishList');
+        }
+
+        if ($this->settings['coupons']['orderMax'] && $order->getCoupons()->count() > $this->settings['coupons']['orderMax']) {
+            $this->addFlashMessage(
+                $this->translate('fe.couponCode.orderMaxReached', [$this->settings['coupons']['orderMax']]),
+                '',
+                FlashMessage::ERROR
             );
 
             $this->redirect('wishList');
