@@ -226,6 +226,12 @@
 	        <trans-unit id="fe.couponCode.newCodeAdded">
 		        <source>The coupon code was successfully applied.</source>
 	        </trans-unit>
+	        <trans-unit id="fe.couponCode.notEnabled">
+		        <source>Attempted to add a discount code, but the feature is not enabled.</source>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.orderMaxReached">
+		        <source>You cannot add more discount codes to this order. The maximum number of coupons (%s) has been reached.</source>
+	        </trans-unit>
 
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
