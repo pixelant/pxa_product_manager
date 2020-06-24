@@ -25,20 +25,22 @@
                     </div>
                 </f:if>
 
-                <f:if condition="{subCategories}">
-                    <div class="row">
-                        <f:for as="subCategory" each="{subCategories}">
-                            <div class="col-md-3">
-                                <div class="item-title"><h4>{subCategory.title}</h4></div>
+                <f:if condition="!{category.hideSubCategories}">
+                    <f:if condition="{subCategories}">
+                        <div class="row">
+                            <f:for as="subCategory" each="{subCategories}">
+                                <div class="col-md-3">
+                                    <div class="item-title"><h4>{subCategory.title}</h4></div>
 
-                                <pxa:link page="{settings.pids.singleViewPid}" category="{subCategory}">
-                                    <div class="item">
-                                        <f:render partial="Product/ListImage" arguments="{image: subCategory.image, title: subCategory.title}" />
-                                    </div>
-                                </pxa:link>
-                            </div>
-                        </f:for>
-                    </div>
+                                    <pxa:link page="{settings.pids.singleViewPid}" category="{subCategory}">
+                                        <div class="item">
+                                            <f:render partial="Product/ListImage" arguments="{image: subCategory.image, title: subCategory.title}" />
+                                        </div>
+                                    </pxa:link>
+                                </div>
+                            </f:for>
+                        </div>
+                    </f:if>
                 </f:if>
 
                 <f:if condition="!{category.hideProducts}">

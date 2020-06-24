@@ -39,9 +39,9 @@ class MetaTagViewHelper extends AbstractViewHelper
     ) {
         $type = $arguments['type'];
         $name = $arguments['name'];
-        $content = trim(strip_tags($arguments['content'] ?? $renderChildrenClosure()));
 
         if (!empty($content)) {
+            $content = trim(strip_tags($arguments['content'] ?? $renderChildrenClosure()));
             static::getPageRenderer()->setMetaTag(
                 $type,
                 $name,

@@ -38,6 +38,7 @@ config.tx_extbase {
                         pxapm_content_colpos.mapOnProperty = contentColPos
                         pxapm_hidden_in_navigation.mapOnProperty = hiddenInNavigation
                         pxapm_hide_products.mapOnProperty = hideProducts
+                        pxapm_hide_subcategories.mapOnProperty = hideSubCategories
                         pxapm_alternative_title.mapOnProperty = alternativeTitle
                         pxapm_meta_description.mapOnProperty = metaDescription
                         pxapm_keywords.mapOnProperty = keywords

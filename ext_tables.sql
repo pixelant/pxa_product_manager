@@ -129,7 +129,8 @@ CREATE TABLE sys_category
     pxapm_content_page         int(11) unsigned     DEFAULT '0'    NOT NULL,
     pxapm_content_colpos       int(11) unsigned     DEFAULT '0'    NOT NULL,
     pxapm_hidden_in_navigation smallint(5) unsigned DEFAULT '0'    NOT NULL,
-    pxapm_hide_products        smallint(5) unsigned DEFAULT '0'    NOT NULL
+    pxapm_hide_products        smallint(5) unsigned DEFAULT '0'    NOT NULL,
+    pxapm_hide_subcategories   smallint(5) unsigned DEFAULT '0'    NOT NULL
 );
 
 #
