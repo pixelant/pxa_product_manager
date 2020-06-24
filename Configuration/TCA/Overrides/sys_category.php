@@ -278,10 +278,28 @@ defined('TYPO3_MODE') || die;
                 ],
             ]
         ],
+        'pxapm_hide_subcategories' => [
+            'exclude' => true,
+            'label' => $ll . 'sys_category.pxapm_hide_subcategories',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
+                'behaviour' => [
+                    'allowLanguageSynchronization' => true
+                ],
+            ]
+        ],
     ];
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $tempColumns);
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('sys_category', 'pxaProductManagerAssets', 'pxapm_image, --linebreak--, pxapm_banner_image');
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('sys_category', 'pxaProductManagerNavigation', 'pxapm_hidden_in_navigation, pxapm_hide_products');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('sys_category', 'pxaProductManagerNavigation', 'pxapm_hidden_in_navigation, pxapm_hide_products, pxapm_hide_subcategories');
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('sys_category', 'pxaProductManagerContent', 'pxapm_content_page, --linebreak--, pxapm_content_colpos, pxapm_content_page_link');
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('sys_category', 'pxaProductManagerSeo', 'pxapm_alternative_title, --linebreak--, pxapm_meta_description, pxapm_keywords');
 

@@ -290,6 +290,9 @@
 			<trans-unit id="sys_category.pxapm_hide_products">
 				<source>Show products on list view</source>
 			</trans-unit>
+			<trans-unit id="sys_category.pxapm_hide_subcategories">
+				<source>Show sub-categories on list view</source>
+			</trans-unit>
 			<trans-unit id="sys_category.palette.assets">
 			    <source>Assets</source>
 			</trans-unit>

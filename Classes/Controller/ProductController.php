@@ -51,7 +51,7 @@ class ProductController extends AbstractController
         $categoryDemand = $this->createCategoriesDemand(
             $this->settings + ['parent' => $category, 'onlyVisibleInNavigation' => true]
         );
-        $productDemand = $this->createProductsDemand($this->settings + ['categories' => [$category]]);
+        $productDemand = $this->createProductsDemand(['categories' => [$category]] + $this->settings);
 
         $this->view->assignMultiple([
             'category' => $category,
