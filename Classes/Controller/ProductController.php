@@ -10,13 +10,16 @@ use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\OrderConfiguration;
 use Pixelant\PxaProductManager\Domain\Model\OrderFormField;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\CouponRepository;
 use Pixelant\PxaProductManager\Service\OrderMailService;
 use Pixelant\PxaProductManager\Utility\ConfigurationUtility;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use Pixelant\PxaProductManager\Utility\OrderUtility;
 use Pixelant\PxaProductManager\Utility\ProductUtility;
 use Pixelant\PxaProductManager\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\VisibilityAspect;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -229,6 +232,8 @@ class ProductController extends AbstractController
      */
     public function wishListAction(bool $sendOrder = false)
     {
+        $order = OrderUtility::getSessionOrder();
+
         // Select the checkout system to use
         $checkoutToUse = $this->settings['wishList']['checkoutSystem']
             ?: ConfigurationUtility::getExtManagerConfigurationByPath('checkoutSystem') ?: 'default';
@@ -267,18 +272,89 @@ class ProductController extends AbstractController
             }
         }
 
-        if ($this->request->hasArgument('orderProducts')) {
-            $orderState = $this->request->getArgument('orderProducts');
-        } else {
-            $orderState = ProductUtility::getOrderState();
-        }
-
         $this->view->assignMultiple([
             'checkout' => $checkout,
-            'products' => $this->getProductsFromCookieList(ProductUtility::WISH_LIST_COOKIE_NAME),
-            'orderProducts' => $orderState ?? [],
-            'sendOrder' => $sendOrder
+            'products' => $order->getProducts(),
+            'orderProducts' => $order->getProductsQuantity(),
+            'sendOrder' => $sendOrder,
+            'coupons' => $order->getCoupons()
         ]);
+    }
+
+    /**
+     * @param string $couponCode submitted by the user
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     */
+    public function addCouponCodeToOrderAction($couponCode = '') {
+        if (!$this->settings['coupons']['enable']) {
+            $this->addFlashMessage(
+                $this->translate('fe.couponCode.notEnabled'),
+                '',
+                FlashMessage::ERROR
+            );
+
+            $this->redirect('wishList');
+        }
+
+        if($couponCode === '') {
+            $this->addFlashMessage(
+                $this->translate('fe.couponCode.noCodeSuppliedWarning'),
+                '',
+                FlashMessage::WARNING
+            );
+
+            $this->redirect('wishList');
+        }
+
+        /** @var CouponRepository $couponRepository */
+        $couponRepository = $this->objectManager->get(CouponRepository::class);
+
+        $coupon = $couponRepository->findByCaseInsensitiveCode($couponCode);
+
+        if ($coupon === null) {
+            $this->addFlashMessage(
+                $this->translate('fe.couponCode.codeNotFoundError'),
+                '',
+                FlashMessage::ERROR
+            );
+
+            $this->redirect('wishList');
+        }
+
+        $order = OrderUtility::getSessionOrder();
+
+        if ($order->getCoupons()->contains($coupon)) {
+            $this->addFlashMessage(
+                $this->translate('fe.couponCode.codeAlreadyAddedWarning'),
+                '',
+                FlashMessage::WARNING
+            );
+
+            $this->redirect('wishList');
+        }
+
+        if ($this->settings['coupons']['orderMax'] && $order->getCoupons()->count() > $this->settings['coupons']['orderMax']) {
+            $this->addFlashMessage(
+                $this->translate('fe.couponCode.orderMaxReached', [$this->settings['coupons']['orderMax']]),
+                '',
+                FlashMessage::ERROR
+            );
+
+            $this->redirect('wishList');
+        }
+
+        $order->addCoupon($coupon);
+
+        $this->orderRepository->update($order);
+
+        $this->addFlashMessage(
+            $this->translate('fe.couponCode.newCodeAdded'),
+            '',
+            FlashMessage::OK
+        );
+
+        $this->redirect('wishList');
     }
 
     /**
@@ -919,11 +995,15 @@ class ProductController extends AbstractController
      */
     protected function getProductsFromCookieList($cookieName, int $excludeProduct = 0, int $limit = 0)
     {
-        $productUids = array_key_exists($cookieName, $_COOKIE)
-            ? GeneralUtility::intExplode(',', $_COOKIE[$cookieName], true)
-            : [];
+        if($cookieName === ProductUtility::WISH_LIST_COOKIE_NAME) {
+            $products = OrderUtility::getSessionOrder()->getProducts()->getArray();
+        } else {
+            $productUids = array_key_exists($cookieName, $_COOKIE)
+                ? GeneralUtility::intExplode(',', $_COOKIE[$cookieName], true)
+                : [];
 
-        $products = $this->getProductByUidsList($productUids, $excludeProduct);
+            $products = $this->getProductByUidsList($productUids, $excludeProduct);
+        }
 
         if ($limit && count($products) > $limit) {
             $products = array_slice($products, 0, $limit);

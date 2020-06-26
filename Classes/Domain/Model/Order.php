@@ -26,6 +26,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaProductManager\Utility\OrderUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -36,6 +37,19 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Order extends AbstractEntity
 {
+    /**
+     * Recurring (Subscription) periods
+     */
+    const RECURRING_FOR_WEEK = 1;
+    const RECURRING_FOR_MONTH = 2;
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_PAUSED = 2;
+    const STATUS_CANCELLED = 3;
+
+    const WEEK_TIME_MODIFIER = '+5 days';
+    const MONTH_TIME_MODIFIER = '+1 months';
+
     /**
      * @var bool
      */
@@ -91,6 +105,39 @@ class Order extends AbstractEntity
     protected $checkoutType = 'default';
 
     /**
+     * Coupons used for this order
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Coupon>
+     */
+    protected $coupons = null;
+
+    /**
+     * The price of the order all inclusive at checkout time, independent on changing product prices, taxes and coupons
+     *
+     * @var float
+     */
+    protected $priceAtCheckout = 0.0;
+
+    /**
+     * The tax for the order at checkout time, independent on changing product prices, taxes and coupons
+     *
+     * @var float
+     */
+    protected $taxAtCheckout = 0.0;
+
+    /**
+     * @var \Pixelant\PxaProductManager\Domain\Model\Subscription
+     */
+    protected $subscription = null;
+
+    /**
+     * The order state hash
+     *
+     * @var string
+     */
+    protected $stateHash = '';
+
+    /**
      * __construct
      */
     public function __construct()
@@ -110,6 +157,7 @@ class Order extends AbstractEntity
     protected function initStorageObjects()
     {
         $this->products = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->coupons = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -120,7 +168,11 @@ class Order extends AbstractEntity
      */
     public function addProduct(\Pixelant\PxaProductManager\Domain\Model\Product $product)
     {
-        $this->products->attach($product);
+        if ($this->getProductQuantity($product) < 1) {
+            $this->products->attach($product);
+        }
+
+        $this->setProductQuantity($product, $this->getProductQuantity($product) + 1);
     }
 
     /**
@@ -131,7 +183,14 @@ class Order extends AbstractEntity
      */
     public function removeProduct(\Pixelant\PxaProductManager\Domain\Model\Product $productToRemove)
     {
-        $this->products->detach($productToRemove);
+        $this->setProductQuantity($productToRemove, 0);
+
+        foreach ($this->products as $product) {
+            if ($product->getUid() === $productToRemove->getUid()) {
+                $this->products->detach($product);
+                break;
+            }
+        }
     }
 
     /**
@@ -213,6 +272,45 @@ class Order extends AbstractEntity
         $result = unserialize($this->getSerializedProductsQuantity());
 
         return is_array($result) ? $result : [];
+    }
+
+    /**
+     * Returns the sum of products including the products quantity
+     *
+     * @return int
+     */
+    public function getProductsQuantityTotal(): int
+    {
+        return array_sum($this->getProductsQuantity());
+    }
+
+    /**
+     * Returns the quantity of a specific product in the order
+     *
+     * @param Product $product
+     * @return int
+     */
+    public function getProductQuantity(Product $product)
+    {
+        return (int) $this->getProductsQuantity()[$product->getUid()];
+    }
+
+    /**
+     * Sets the quantity of a specific product
+     * @param Product $product
+     * @param int $quantity
+     */
+    public function setProductQuantity(Product $product, int $quantity)
+    {
+        $productQuantities = $this->getProductsQuantity();
+
+        if ($quantity === 0) {
+            unset($productQuantities[$product->getUid()]);
+        } else {
+            $productQuantities[$product->getUid()] = $quantity;
+        }
+
+        $this->setProductsQuantity($productQuantities);
     }
 
     /**
@@ -330,9 +428,9 @@ class Order extends AbstractEntity
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getCrdate(): \DateTime
+    public function getCrdate(): ?\DateTime
     {
         return $this->crdate;
     }
@@ -377,4 +475,132 @@ class Order extends AbstractEntity
     {
         $this->checkoutType = $checkoutType;
     }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getCoupons(): ObjectStorage
+    {
+        return $this->coupons;
+    }
+
+    /**
+     * @param ObjectStorage $coupons
+     */
+    public function setCoupons(ObjectStorage $coupons)
+    {
+        $this->coupons = $coupons;
+    }
+
+    /**
+     * Add a coupon
+     *
+     * @param Coupon $coupon
+     */
+    public function addCoupon(Coupon $coupon)
+    {
+        $this->coupons->attach($coupon);
+    }
+
+    /**
+     * Remove a coupon
+     *
+     * @param Coupon $coupon
+     */
+    public function removeCoupon(Coupon $coupon)
+    {
+        $this->coupons->detach($coupon);
+    }
+
+    /**
+     * The all-inclusive price at checkout time
+     *
+     * @return float
+     */
+    public function getPriceAtCheckout(): float
+    {
+        return $this->priceAtCheckout;
+    }
+
+    /**
+     * The all-inclusive price at checkout time
+     *
+     * @param float $priceAtCheckout
+     */
+    public function setPriceAtCheckout(float $priceAtCheckout)
+    {
+        $this->priceAtCheckout = $priceAtCheckout;
+    }
+
+    /**
+     * The tax sum at checkout time
+     *
+     * @return float
+     */
+    public function getTaxAtCheckout(): float
+    {
+        return $this->taxAtCheckout;
+    }
+
+    /**
+     * The tax sum at checkout time
+     *
+     * @param float $taxAtCheckout
+     */
+    public function setTaxAtCheckout(float $taxAtCheckout)
+    {
+        $this->taxAtCheckout = $taxAtCheckout;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfProducts()
+    {
+        return $this->getProducts()->count();
+    }
+
+    /**
+     * @return Subscription|null
+     */
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    /**
+     * @param \Pixelant\PxaProductManager\Domain\Model\Subscription $subscription
+     * @return Order
+     */
+    public function setSubscription(Subscription $subscription): Order
+    {
+        $this->subscription = $subscription;
+        return $this;
+    }
+
+    /**
+     * Get the order's state hash
+     *
+     * @see OrderUtility::calculateOrderStateHash()
+     *
+     * @return string
+     */
+    public function getStateHash(): string
+    {
+        return $this->stateHash;
+    }
+
+    /**
+     * Set the order's state hash
+     *
+     * @see OrderUtility::calculateOrderStateHash()
+     *
+     * @param string $stateHash
+     */
+    public function setStateHash(string $stateHash)
+    {
+        $this->stateHash = $stateHash;
+    }
+
+
 }

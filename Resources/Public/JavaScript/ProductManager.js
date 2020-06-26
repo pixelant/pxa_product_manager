@@ -157,22 +157,25 @@
 		 * @param $cartCounters
 		 * @param modifier
 		 */
-		updateCartCounter: function ($mainCartCounter, $cartCounters, modifier) {
-			modifier = modifier || 0;
+		updateCartCounter: function ($mainCartCounter, $cartCounters, newValue) {
+			const uri = $(ProductManager.settings.wishList.wishListCartContainer).data('wishlist-product-count-ajax-uri');
 
-			if ($mainCartCounter.length === 1) {
-				let currentValue = parseInt($mainCartCounter.text().trim());
-				if (isNaN(currentValue)) {
-					currentValue = 0;
-				}
-
-				let newValue = currentValue + modifier;
-				newValue = newValue > 0 ? newValue : 0;
-
-				if ($cartCounters.length >= 1) {
-					$cartCounters.text(newValue);
-				}
+			if (!uri) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+				return false;
 			}
+
+			$.ajax({
+				url: uri,
+				dataType: 'json'
+			}).done(function (data) {
+				$cartCounters.text(data);
+			}).fail(function (jqXHR, textStatus) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
+
 		},
 
 		/**
@@ -202,6 +205,16 @@
 
 				j = (i.length > 3) ? i.length % 3 : 0;
 			return sign + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : '');
+		},
+
+		formatNumberFromFormatString: function (number, format) {
+			format = this.trimChar(format, '|').split('|');
+
+			const decimals = parseInt(format[0]) || 2;
+			const decimalSep = format[1] || '.';
+			const thousandsSep = format[2] || ',';
+
+			return this.numberFormat(number, decimals, decimalSep, thousandsSep);
 		},
 
 		/**

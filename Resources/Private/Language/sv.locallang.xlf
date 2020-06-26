@@ -196,6 +196,35 @@
             <trans-unit id="fe.solr.type_facet_name">
                 <target>Produkter</target>
             </trans-unit>
+
+	        <trans-unit id="fe.couponCode.addButton">
+		        <target>Lägg till rabattkod</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.fieldPlaceholder">
+		        <target>Ange kod</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.fieldLabel">
+		        <target>Ange rabattkod</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.noCodeSuppliedWarning">
+		        <target>Ingen rabattkod är angiven. Ange koden i textfältet innan du klickar på knappen Lägg till rabattkod.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.codeNotFoundError">
+		        <target>Den rabattkod du angav kunde inte hittas. Kontrollera att du har angett den korrekt.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.codeAlreadyAddedWarning">
+		        <target>Du kan inte lägga till en rabattkod två gånger. Den kod du angav fanns redan i listan.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.newCodeAdded">
+		        <target>Rabattkoden lades till.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.notEnabled">
+		        <target>Försökte lägga till en rabattkod, men funktionen är inte aktiverad.</target>
+	        </trans-unit>
+	        <trans-unit id="fe.couponCode.orderMaxReached">
+		        <target>Du kan inte lägga till fler rabattkoder i den här beställningen. Det maximala antalet koder (%s) har uppnåtts.</target>
+	        </trans-unit>
+
             <!--Javascript labels-->
             <trans-unit id="fe.js.no_options_found">
                 <target>Inga resultat</target>

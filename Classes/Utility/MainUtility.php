@@ -150,6 +150,11 @@ class MainUtility
      */
     public static function addValueToListCookie(string $name, int $value, int $maxValues = 20)
     {
+        if ($name === ProductUtility::WISH_LIST_COOKIE_NAME) {
+            OrderUtility::addProductUidToSessionOrder($value);
+            return;
+        }
+
         // Can't be 0
         $maxValues = $maxValues === 0 ? 20 : $maxValues;
 

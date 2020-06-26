@@ -405,6 +405,16 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Same as getPrice(), but override this method if you need to calculate price differently for the checkout
+     *
+     * @return float
+     */
+    public function getPriceForCheckout(): float
+    {
+        return $this->getPrice();
+    }
+
+    /**
      * Format price
      *
      * @return float
@@ -1392,7 +1402,18 @@ class Product extends AbstractEntity
      */
     public function getTax(): float
     {
-        return $this->getPrice() * ($this->getTaxRateRecursively() / 100);
+        // @TODO: Make it possible to define price as inclusive or inclusive tax
+        return $this->getPrice() - ($this->getPrice() / (($this->getTaxRateRecursively() / 100) + 1));
+    }
+
+    /**
+     * Same as getTax(), but override this method if you need to calculate price differently for the checkout
+     *
+     * @return float
+     */
+    public function getTaxForCheckout()
+    {
+        return $this->getTax();
     }
 
     /**

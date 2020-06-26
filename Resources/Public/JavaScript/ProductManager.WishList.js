@@ -35,6 +35,11 @@
 			$totalPrice,
 			$totalTax;
 
+		let wishlist = [];
+
+		let updateOrderRequest = null;
+		let updateOrderDispatcher = null;
+
 		/**
 		 * Main wish list function
 		 *
@@ -53,7 +58,9 @@
 			);
 			ajaxLoadingInProgress = false;
 
-			_updatePriceAndTax();
+			if ($(settings.wishListContainer).length > 0) {
+				_updatePriceAndTax();
+			}
 			_saveCurrentStateOfAmountOfProducts();
 			_trackOrderAmountChanges();
 		};
@@ -160,91 +167,29 @@
 			});
 		};
 
-		/**
-		 * Update total price if pricing enabled
-		 *
-		 * @returns {boolean}
-		 * @private
-		 */
-		const _updateTotalPrice = function () {
-			if ($totalPrice.length === 0) {
-				return false;
-			}
-
-			let sum = 0,
-				currencyFormat = $totalPrice.first().data('currency-format') || '',
-				numberFormat = $totalPrice.first().data('nubmer-format') || '',
-				format = ProductManager.Main.trimChar(numberFormat, '|').split('|'),
-
-				decimals = parseInt(format[0]) || 2,
-				decimalSep = format[1] || '.',
-				thousandsSep = format[2] || ',';
-
-			$orderItemsPrices.each(function () {
-				const $this = $(this);
-
-				let productUid = parseInt($this.data('product-uid'));
-				if (productUid > 0) {
-					let $amountItem = $(_convertClassToIdWithProductId(settings.orderItemAmountClass, productUid));
-					if ($amountItem.length === 1) {
-						let amount = parseInt($amountItem.val());
-						sum += amount * parseFloat($this.data('price'));
-					}
-				}
-			});
-
-			$totalPrice.text(
-				sprintf(
-					currencyFormat,
-					ProductManager.Main.numberFormat(sum, decimals, decimalSep, thousandsSep)
-				)
-			);
-		};
-
-		/**
-		 * Update total tax if pricing enabled
-		 *
-		 * @returns {boolean}
-		 * @private
-		 */
-		const _updateTotalTax = function () {
-			if ($totalTax.length === 0) {
-				return false;
-			}
-
-			let sum = 0,
-				currencyFormat = $totalTax.first().data('currency-format') || '',
-				numberFormat = $totalTax.first().data('nubmer-format') || '',
-				format = ProductManager.Main.trimChar(numberFormat, '|').split('|'),
-
-				decimals = parseInt(format[0]) || 2,
-				decimalSep = format[1] || '.',
-				thousandsSep = format[2] || ',';
-
-			$orderItemsTaxes.each(function () {
-				const $this = $(this);
-
-				let productUid = parseInt($this.data('product-uid'));
-				if (productUid > 0) {
-					let $amountItem = $(_convertClassToIdWithProductId(settings.orderItemAmountClass, productUid));
-					if ($amountItem.length === 1) {
-						let amount = parseInt($amountItem.val());
-						sum += amount * parseFloat($this.data('tax'));
-					}
-				}
-			});
-
-			$totalTax.text(
-				sprintf(
-					currencyFormat,
-					ProductManager.Main.numberFormat(sum, decimals, decimalSep, thousandsSep)
-				)
-			);
-		};
-
 		const _updatePriceAndTax = function () {
-			_updateTotalPrice();
-			_updateTotalTax();
+			const uri = $(settings.wishListContainer).data('total-order-prices-ajax-uri');
+
+			if (uri.length <= 0) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+			}
+
+			$totalPrice.addClass(settings.loadingClass);
+			$totalTax.addClass(settings.loadingClass);
+
+			$.ajax({
+				url: uri,
+				dataType: 'json'
+			}).done(function (data) {
+				$totalPrice.find('.value').text(formattedPrice(data.totalPrice, $totalPrice));
+				$totalPrice.removeClass(settings.loadingClass);
+				$totalTax.find('.value').text(formattedPrice(data.totalTaxPrice, $totalTax));
+				$totalTax.removeClass(settings.loadingClass);
+			}).fail(function (jqXHR, textStatus) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
 		};
 
 		/**
@@ -259,6 +204,7 @@
 			}
 
 			$orderItemsAmount.on('change', function () {
+
 				const $this = $(this);
 				let value = parseInt($this.val());
 
@@ -266,8 +212,16 @@
 					$this.val(1);
 				}
 
-				_updatePriceAndTax();
-				_saveCurrentStateOfAmountOfProducts();
+				if(updateOrderDispatcher) {
+					clearTimeout(updateOrderDispatcher);
+				}
+
+				updateOrderDispatcher = setTimeout(function() {
+					_updateOrder(function () {
+						_updatePriceAndTax();
+						_saveCurrentStateOfAmountOfProducts();
+					});
+				}, 500);
 			});
 		};
 
@@ -278,20 +232,7 @@
 		 * @private
 		 */
 		const _saveCurrentStateOfAmountOfProducts = function () {
-			let currentState = {};
-
-			if ($orderItemsAmount.length <= 0) {
-				return false;
-			}
-
-			$orderItemsAmount.each(function () {
-				const $this = $(this);
-				let productUid = parseInt($this.data('product-uid'));
-
-				if (productUid > 0) {
-					currentState[productUid] = parseInt($this.val());
-				}
-			});
+			const currentState = _getCurrentOrderState();
 
 			ProductManager.Main.setCookie(
 				ORDER_STATE_COOKIE_NAME,
@@ -320,8 +261,6 @@
 		 * @public
 		 */
 		const initButtons = function ($buttons) {
-			const productsWishList = ProductManager.Main.getCookie('pxa_pm_wish_list') || '';
-
 			$buttons.on('click', function (e) {
 				e.preventDefault();
 
@@ -330,26 +269,28 @@
 				}
 			});
 
-			$buttons.each(function () {
-				let button = $(this),
-					productUid = parseInt(button.data('product-uid')),
-					text = '',
-					className = '';
+			_getWhilist(function (wishlistProducts) {
+				$buttons.each(function () {
+					let button = $(this),
+						productUid = parseInt(button.data('product-uid')),
+						text = '',
+						className = '';
 
-				if (ProductManager.Main.isInList(productsWishList, productUid)) {
-					text = button.data('remove-from-list-text');
-					className = settings.inListClass;
-				} else {
-					text = button.data('add-to-list-text');
-					className = settings.notInListClass;
-				}
+					if (ProductManager.Main.isInList(wishlistProducts, productUid)) {
+						text = button.data('remove-from-list-text');
+						className = settings.inListClass;
+					} else {
+						text = button.data('add-to-list-text');
+						className = settings.notInListClass;
+					}
 
-				button
-					.attr('title', text)
-					.removeClass(settings.loadingClass)
-					.removeClass(settings.initializationClass)
-					.addClass(className)
-					.find(settings.wishListButtonSingleView).text(text);
+					button
+						.attr('title', text)
+						.removeClass(settings.loadingClass)
+						.removeClass(settings.initializationClass)
+						.addClass(className)
+						.find(settings.wishListButtonSingleView).text(text);
+				});
 			});
 		};
 
@@ -360,6 +301,123 @@
 		 */
 		const getSettings = function () {
 			return settings;
+		};
+
+		const _getWhilist = function (callback) {
+			if (wishlist.length > 0) {
+				callback(wishlist);
+				return true;
+			}
+
+			_loadWhishlistState(callback);
+		};
+
+		const _loadWhishlistState = function (callback) {
+			const uri = $(ProductManager.settings.productManagerMainWrapper).data('load-whishlist-ajax-uri');
+
+			if (!uri) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+				return false;
+			}
+
+			$.ajax({
+				url: uri,
+				dataType: 'json'
+			}).done(function (data) {
+				if (data.wishList === undefined) {
+					return false;
+				}
+
+				wishlist = Array.from(data.wishList).map(function (product) {
+					return product.uid;
+				});
+
+				callback(wishlist);
+			}).fail(function (jqXHR, textStatus) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
+		};
+
+		/**
+		 *
+		 * @param price
+		 * @param $element
+		 * @returns {string}
+		 */
+		const formattedPrice = function (price, $element) {
+			if ($totalPrice.first().length <= 0) {
+				return '';
+			}
+
+			const priceCurrencyFormat = $element.first().data('currency-format') || '';
+			const priceNumberFormat = $element.first().data('nubmer-format') || '';
+			return sprintf(
+				priceCurrencyFormat,
+				ProductManager.Main.formatNumberFromFormatString(price, priceNumberFormat)
+			);
+		};
+
+		/**
+		 *  Get current state
+		 *
+		 * @returns {{}|boolean}
+		 * @private
+		 */
+		const _getCurrentOrderState = function () {
+			let currentState = {};
+
+			if ($orderItemsAmount.length <= 0) {
+				return false;
+			}
+
+			$orderItemsAmount.each(function () {
+				const $this = $(this);
+				let productUid = parseInt($this.data('product-uid'));
+
+				if (productUid > 0) {
+					currentState[productUid] = parseInt($this.val());
+				}
+			});
+
+			return currentState;
+		};
+
+		/**
+		 *
+		 * @param callback
+		 * @returns {boolean}
+		 * @private
+		 */
+		const _updateOrder = function(callback) {
+			const currentState = _getCurrentOrderState();
+			const uri = $(settings.wishListContainer).data('update-order-quantities-ajax-uri');
+
+			if (!uri) {
+				ProductManager.Messanger.showErrorMessage('Request failed: ' + 'Invalid url');
+				return false;
+			}
+
+			if (updateOrderRequest !== null) {
+				updateOrderRequest.abort();
+			}
+
+			updateOrderRequest = $.ajax({
+				type: 'POST',
+				url: uri,
+				data: {
+					'quantities': currentState
+				}
+			}).done(function (data) {
+				callback();
+			}).fail(function (jqXHR, textStatus) {
+				if (status !== 0 && textStatus !== 'abort') {
+					ProductManager.Messanger.showErrorMessage('Request failed: ' + textStatus);
+				}
+			}).always(function () {
+				ajaxLoadingInProgress = false;
+			});
 		};
 
 		return {

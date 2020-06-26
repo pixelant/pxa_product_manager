@@ -59,6 +59,11 @@ plugin.tx_pxaproductmanager {
             }
         }
 
+        coupons {
+            enable = 1
+            orderMax = 1
+        }
+
         email {
             senderName = {$plugin.tx_pxaproductmanager.settings.email.senderName}
             senderEmail = {$plugin.tx_pxaproductmanager.settings.email.senderEmail}
@@ -154,6 +159,16 @@ plugin.tx_pxaproductmanager {
 
         # don't compare images and links
         ignoreAttributeTypesInCompareView = 6,7
+        payments {
+            ## To debug the payments. Used for  faking today date and few other things
+            debug = 0
+
+            ### !!! WARNING !!! Be careful. This will replace the today date with whatever you specify
+            ### It is added to test the subscription renewals
+            ### Only works if 'debug' option is enabled
+            ### The format is Y-m-d
+            todayDate =
+        }
     }
 
     _LOCAL_LANG {
@@ -303,6 +318,9 @@ PXA_PRODUCT_MANAGER_WISH_LIST {
                 3 = loadCompareList
                 4 = emptyCompareList
                 5 = loadWishList
+                6 = totalOrderPrices
+                7 = wishlistProductsCount
+                8 = updateOrderQuantities
             }
         }
     }

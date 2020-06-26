@@ -33,6 +33,7 @@ use Pixelant\PxaProductManager\Domain\Model\Order;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Exception\UnknownProductException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -251,12 +252,11 @@ class ProductUtility
      * Uids of wish list
      *
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public static function getWishList(): array
     {
-        $list = $_COOKIE[self::WISH_LIST_COOKIE_NAME] ?: '';
-
-        return GeneralUtility::intExplode(',', $list, true);
+        return OrderUtility::sessionOrderExists() ? OrderUtility::getSessionOrder()->getProducts()->getArray() : [];
     }
 
     /**
@@ -264,12 +264,43 @@ class ProductUtility
      *
      * @param object|int $product
      * @return bool
+     * @throws UnknownProductException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public static function isProductInWishList($product): bool
     {
-        $list = $_COOKIE[self::WISH_LIST_COOKIE_NAME] ?: '';
+        if (!is_object($product)) {
+            $product = self::getProductByUid($product);
+        }
 
-        return GeneralUtility::inList($list, is_object($product) ? $product->getUid() : (int)$product);
+        $wishlistUids = array_map(function ($item) {
+            return $item->getUid();
+        }, OrderUtility::getSessionOrder()->getProducts()->toArray());
+
+        // TODO: objectStorage->contains() doesn't work here. Find out why
+        return in_array($product->getUid(), $wishlistUids);
+    }
+
+    /**
+     * Returns the product
+     *
+     * @param int $uid
+     * @return Product
+     * @throws UnknownProductException
+     */
+    public static function getProductByUid(int $uid)
+    {
+        /** @var ProductRepository $productRepository */
+        $productRepository = GeneralUtility::makeInstance(ProductRepository::class);
+
+        /** @var Product $product */
+        $product = $productRepository->findByUid($uid);
+
+        if ($product === null) {
+            throw new UnknownProductException('Product with UID ' . $uid . ' does not exist.');
+        }
+
+        return $product;
     }
 
     /**

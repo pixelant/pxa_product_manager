@@ -22,7 +22,10 @@
 		notInListClass: 'inactive-icon',
 		initializationClass: 'ongoing-initialization',
 		loadingClass: 'in-progress',
-		wishListButtonSingleView: '.btn-wish-list-single-view'	
+		wishListButtonSingleView: '.btn-wish-list-single-view',
+		wishListContainer: '#pm-products-wishlist',
+        wishListCartContainer: '.pm-products-wishlist-cart:first',
+		productManagerMainWrapper: '.products-list-view-wrapper:first'
 	};
 
 	if (ProductManager.settings.wishlistTSSettings) {

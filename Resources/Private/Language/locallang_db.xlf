@@ -264,6 +264,58 @@
             <trans-unit id="tx_pxaproductmanager_domain_model_order.checkout_type">
                 <source>Checkout type</source>
             </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.coupons">
+                <source>Coupons</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.price_at_checkout">
+                <source>Price at checkout</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.tax_at_checkout">
+                <source>Tax at checkout</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.tabs.recurring_payments">
+                <source>Recurring payments</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.subscription">
+                <source>Subscription</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_order.subscription.single">
+                <source>Single purchase</source>
+            </trans-unit>
+
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon">
+                <source>Price coupon</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.code">
+                <source>Coupon code (uppercase, dash, and underscore allowed)</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.type">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.type.0">
+                <source>Cash rebate</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.type.1">
+                <source>Percentage rebate</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.value">
+                <source>Value</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.usage_limit">
+                <source>Max uses (0 = no limit)</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.cost_limit">
+                <source>Cost limit (0.00 = no limit)</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.usage_count">
+                <source>Usage count</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_coupon.total_cost">
+                <source>Total cost</source>
+            </trans-unit>
             <!--Order TCA:END-->
 
             <!--Order Configuration TCA:START-->
@@ -398,6 +450,51 @@
                 <source>Default</source>
             </trans-unit>
             <!--sys_category TCA:END-->
+
+            <!-- Subscription -->
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription">
+                <source>Subscription</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.renew_date">
+                <source>Renew date</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.next_try">
+                <source>Next try</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status">
+                <source>Status</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status.1">
+                <source>Active</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status.2">
+                <source>Paused</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.status.3">
+                <source>Cancelled</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.last_renew_status">
+                <source>Last renew status</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.attempts_left">
+                <source>Attempts left</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.orders">
+                <source>Orders</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.serialized_products_quantity">
+                <source>Serialized products quantity</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.subscription_period">
+                <source>Subscription period</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.subscription_period.1">
+                <source>Week subscription</source>
+            </trans-unit>
+            <trans-unit id="tx_pxaproductmanager_domain_model_subscription.subscription_period.2">
+                <source>Month subscription</source>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

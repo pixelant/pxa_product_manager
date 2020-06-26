@@ -1,7 +1,11 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
       xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
 
-<div class="container-fluid pm-products-user-list {f:if(condition: '{ppm:isPricingEnabled()}', then: 'pricing-enabled')}">
+<div id="pm-products-wishlist"
+     class="container-fluid pm-products-user-list {f:if(condition: '{ppm:isPricingEnabled()}', then: 'pricing-enabled')}"
+     data-total-order-prices-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'totalOrderPrices', absolute: '1', pageType: '{settings.wishList.pageType}')}"
+     data-update-order-quantities-ajax-uri="{f:uri.action(controller: 'AjaxJson', action: 'updateOrderQuantities', absolute: '1', pageType: '{settings.wishList.pageType}')}">
+
     <f:if condition="{products}">
         <f:form pageUid="{checkout.pid}" extensionName="{checkout.extension}" controller="{checkout.controller}"
                 action="{checkout.action}"  arguments="{sendOrder: 1}" class="form-horizontal">
@@ -21,6 +25,13 @@
                 </div>
             </f:for>
 
+            <f:for each="{coupons}" as="coupon">
+                <div class="row item-order-row">
+                    <f:render section="coupon"
+                              arguments="{coupon: coupon}" />
+                </div>
+            </f:for>
+
             <div class="row">
                 <div class="col-sm-12 col-md-12">
                     <div class="pull-right">
@@ -30,6 +41,7 @@
                                 <span class="pxa-pm-order-total-price"
                                       data-nubmer-format="{f:translate(key: 'priceFormat')}"
                                       data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
+                                    <span class="value"></span>
                                     <div class="lds-dual-ring"><div class="small"></div></div>
                                 </span>
                                 <f:if condition="{settings.wishList.showTaxInfo}">
@@ -39,10 +51,11 @@
                                         <span class="pxa-pm-order-total-tax"
                                               data-nubmer-format="{f:translate(key: 'priceFormat')}"
                                               data-currency-format="{f:translate(key: 'fe.price_currency_format')}">
-                                        <div class="lds-dual-ring">
-                                            <div class="small"></div>
-                                        </div>
-                                    </span>
+                                            <span class="value"></span>
+                                            <div class="lds-dual-ring">
+                                                <div class="small"></div>
+                                            </div>
+                                        </span>
                                         )
                                     </small>
                                 </f:if>
@@ -90,6 +103,8 @@
                 </div>
             </f:if>
         </f:form>
+
+        <f:render section="addCouponCodes" />
     </f:if>
     <div class="list-no-products-found">
         0 -
@@ -178,7 +193,7 @@
                 <f:form.textfield
                     name="orderProducts[{product.uid}]"
                     type="number"
-                    value="{f:if(condition: '{orderProducts.{product.uid}}', then: '{orderProducts.{product.uid}}', else: 1)}"
+                    value="{orderProducts.{product.uid}}"
                     class="order-product-amount"
                     id="order-product-amount-{product.uid}"
                     data="{product-uid: product.uid}" />
@@ -201,6 +216,24 @@
                     <div class="lds-dual-ring"><div class="small"></div></div>
                 </div>
             </div>
+        </div>
+    </div>
+</f:section>
+
+<f:section name="coupon">
+    {coupon.code}
+</f:section>
+
+<f:section name="addCouponCodes">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <f:form action="addCouponCodeToOrder">
+                <div class="form-inline">
+                    <label for="couponCodeTextfield" class="sr-only"><f:translate key="fe.couponCode.fieldLabel" /></label>
+                    <f:form.textfield name="couponCode" id="couponCodeTextfield" value="" placeholder="{f:translate(key: 'fe.couponCode.fieldPlaceholder')}" size="10" class="form-control" />
+                    <button type="submit" class="btn btn-secondary"><f:translate key="fe.couponCode.addButton" /></button>
+                </div>
+            </f:form>
         </div>
     </div>
 </f:section>

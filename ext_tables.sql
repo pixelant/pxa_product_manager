@@ -429,10 +429,15 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
 	products int(11) unsigned DEFAULT '0' NOT NULL,
 	fe_user int(11) unsigned DEFAULT '0' NOT NULL,
 	complete tinyint(4) unsigned DEFAULT '0' NOT NULL,
-  serialized_order_fields blob,
-  serialized_products_quantity blob,
-  external_id varchar(255) DEFAULT '' NOT NULL,
-  checkout_type varchar(255) DEFAULT 'default' NOT NULL,
+  	serialized_order_fields blob,
+  	serialized_products_quantity blob,
+  	external_id varchar(255) DEFAULT '' NOT NULL,
+  	checkout_type varchar(255) DEFAULT 'default' NOT NULL,
+  	coupons int(11) unsigned DEFAULT '0' NOT NULL,
+  	price_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
+  	tax_at_checkout double(11,2) DEFAULT '0.00' NOT NULL,
+    subscription int(11) unsigned DEFAULT '0' NOT NULL,
+    state_hash varchar(32) DEFAULT '' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
 	crdate int(11) unsigned DEFAULT '0' NOT NULL,
@@ -455,6 +460,19 @@ CREATE TABLE tx_pxaproductmanager_domain_model_order (
 # Table structure for table 'tx_pxaproductmanager_order_product_mm'
 #
 CREATE TABLE tx_pxaproductmanager_order_product_mm (
+  uid_local int(11) unsigned DEFAULT '0' NOT NULL,
+  uid_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+  sorting int(11) unsigned DEFAULT '0' NOT NULL,
+  sorting_foreign int(11) unsigned DEFAULT '0' NOT NULL,
+
+  KEY uid_local (uid_local),
+  KEY uid_foreign (uid_foreign)
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_order_coupon_mm'
+#
+CREATE TABLE tx_pxaproductmanager_order_coupon_mm (
   uid_local int(11) unsigned DEFAULT '0' NOT NULL,
   uid_foreign int(11) unsigned DEFAULT '0' NOT NULL,
   sorting int(11) unsigned DEFAULT '0' NOT NULL,
@@ -529,4 +547,61 @@ CREATE TABLE tx_pxaproductmanager_domain_model_orderformfield (
 	PRIMARY KEY (uid),
 	KEY parent (pid),
 	KEY language (l10n_parent,sys_language_uid)
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_domain_model_cupon'
+#
+CREATE TABLE tx_pxaproductmanager_domain_model_coupon (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+
+	name varchar(255) DEFAULT '' NOT NULL,
+	code varchar(255) DEFAULT '' NOT NULL,
+	type tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	value double(11,2) DEFAULT '0.00' NOT NULL,
+	usage_limit int(11) unsigned DEFAULT '0' NOT NULL,
+	cost_limit double(11,2) DEFAULT '0.00' NOT NULL,
+	usage_count int(11) unsigned DEFAULT '0' NOT NULL,
+	total_cost double(11,2) DEFAULT '0.00' NOT NULL,
+
+	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+	crdate int(11) unsigned DEFAULT '0' NOT NULL,
+	cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+	deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	hidden tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	starttime int(11) unsigned DEFAULT '0' NOT NULL,
+	endtime int(11) unsigned DEFAULT '0' NOT NULL,
+
+	PRIMARY KEY (uid),
+	KEY couponcode (code),
+	KEY parent (pid)
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_domain_model_subscription'
+#
+CREATE TABLE tx_pxaproductmanager_domain_model_subscription (
+   uid int(11) NOT NULL auto_increment,
+   pid int(11) DEFAULT '0' NOT NULL,
+
+   renew_date int(11) unsigned DEFAULT '0' NOT NULL,
+   next_try int(11) unsigned DEFAULT '0' NOT NULL,
+   status smallint(5) unsigned DEFAULT '0' NOT NULL,
+   last_renew_status varchar(255) DEFAULT '' NOT NULL,
+   attempts_left int(11) unsigned DEFAULT '0' NOT NULL,
+   orders int(11) unsigned DEFAULT '0' NOT NULL,
+   serialized_products_quantity blob,
+   subscription_period smallint(5) unsigned DEFAULT '0' NOT NULL,
+
+   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+   crdate int(11) unsigned DEFAULT '0' NOT NULL,
+   cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+   deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
+   hidden tinyint(4) unsigned DEFAULT '0' NOT NULL,
+   starttime int(11) unsigned DEFAULT '0' NOT NULL,
+   endtime int(11) unsigned DEFAULT '0' NOT NULL,
+
+   PRIMARY KEY (uid),
+   KEY parent (pid)
 );

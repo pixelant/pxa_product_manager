@@ -44,7 +44,7 @@
                                     </numIndex>
                                     <numIndex index="7">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_wish_list</numIndex>
-                                        <numIndex index="1">Product->wishList;Product->finishOrder</numIndex>
+                                        <numIndex index="1">Product->wishList;Product->finishOrder;Product->addCouponCodeToOrder</numIndex>
                                     </numIndex>
                                     <numIndex index="8">
                                         <numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.mode.product_compare_pre_view</numIndex>

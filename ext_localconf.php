@@ -11,17 +11,17 @@ call_user_func(
             'Pixelant.' . $_EXTKEY,
             'Pi1',
             [
-                'Product' => 'list, show, wishList, finishOrder, lazyList, comparePreView, compareView, groupedList, promotionList',
+                'Product' => 'list, show, wishList, finishOrder, lazyList, comparePreView, compareView, groupedList, promotionList, addCouponCodeToOrder',
                 'Navigation' => 'show',
                 'AjaxProducts' => 'ajaxLazyList, latestVisited',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList, addLatestVisitedProduct',
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList, addLatestVisitedProduct, totalOrderPrices, wishlistProductsCount, updateOrderQuantities',
                 'Filter' => 'showFilter'
             ],
             // non-cacheable actions
             [
-                'Product' => 'wishList, finishOrder, comparePreView, compareView',
+                'Product' => 'wishList, finishOrder, comparePreView, compareView, addCouponCodeToOrder',
                 'AjaxProducts' => 'ajaxLazyList, latestVisited',
-                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList, addLatestVisitedProduct'
+                'AjaxJson' => 'toggleWishList, toggleCompareList, loadCompareList, emptyCompareList, loadWishList, addLatestVisitedProduct, totalOrderPrices, wishlistProductsCount, updateOrderQuantities'
             ]
         );
         // @codingStandardsIgnoreEnd
