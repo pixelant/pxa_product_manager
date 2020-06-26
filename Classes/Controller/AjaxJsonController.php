@@ -208,6 +208,14 @@ class AjaxJsonController extends AbstractController
 
             $totalPrice = $priceService->calculatePrice();
             $totalTaxPrice = $priceService->calculateTax();
+
+            $orderWithoutCoupon = clone $priceService->getOrder();
+            foreach ($orderWithoutCoupon->getCoupons() as $coupon) {
+                $orderWithoutCoupon->removeCoupon($coupon);
+            }
+
+            $totalPriceThereafter = $priceService->calculatePrice();
+            $totalTaxPriceThereafter = $priceService->calculateTax();
         } catch (\Exception $e) {
             $this->response->setStatus(500, 'Price calculation error');
             return null;
@@ -220,7 +228,9 @@ class AjaxJsonController extends AbstractController
 
         $response = [
             'totalPrice' => $totalPrice,
-            'totalTaxPrice' => $totalTaxPrice
+            'totalTaxPrice' => $totalTaxPrice,
+            'totalPriceThereafter' => $totalPriceThereafter,
+            'totalTaxPriceThereafter' => $totalTaxPriceThereafter
         ];
 
         $this->response->setStatus(200, 'OK');
