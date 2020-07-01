@@ -44,6 +44,7 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
 
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->siteConfiguration = GeneralUtility::makeInstance(SettingsReader::class);
+        $this->checkExtbaseMappings();
     }
 
 
@@ -133,5 +134,45 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
         );
 
         return intval($settings['pids']['singleViewPid'] ?? 0);
+    }
+
+    /**
+     * Checks if extbase mapping is set for mappings in ext_typoscript_setup.txt
+     *
+     * Workaround to prevent the wrong tablename getting written
+     * in cf_extbase_datamapfactory_datamap for identifier
+     * 'Pixelant%PxaProductManager%Domain%Model%Category'
+     * when LinkBuilder is called from middleware in TYPO3 v9,
+     * e.g. the first request after cache is cleared is a redirec to a Category (PM).
+     *
+     * Since extbase ts configuration isn't loaded when TypolinkBuilderService
+     *
+     * TODO: check progress of https://forge.typo3.org/issues/75399
+     *
+     * @return void
+     */
+    protected function checkExtbaseMappings(): void
+    {
+        $configurationManager = $this->objectManager->get(ConfigurationManagerInterface::class);
+        $configuration = $configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+        );
+
+        $mappings = [
+            'Pixelant\PxaProductManager\Domain\Model\Image' => 'sys_file_reference',
+            'Pixelant\PxaProductManager\Domain\Model\AttributeFile' => 'sys_file_reference',
+            'Pixelant\PxaProductManager\Domain\Model\Category' => 'sys_category',
+        ];
+
+        foreach ($mappings as $class => $mapping) {
+            if (empty($configuration['persistence']['classes'][$class]['mapping']['tableName'])) {
+                $configuration['persistence']['classes'][$class]['mapping']['tableName'] = $mapping;
+                $configurationManager->setConfiguration($configuration);
+            }
+        }
+
+        $configuration = $configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+        );
     }
 }

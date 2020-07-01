@@ -1,4 +1,8 @@
 # Mapping
+# Note if more mappings are added, please add them to
+# pxa_product_manager/Classes/Service/TypolinkBuilderService.php -> checkExtbaseMappings()
+# function to, or else an exception may occur if first visit to site after a clear cache
+# is a redirect with a Product or Category as target
 config.tx_extbase {
     persistence {
         classes {
