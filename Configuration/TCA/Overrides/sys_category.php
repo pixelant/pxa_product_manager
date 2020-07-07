@@ -255,6 +255,7 @@ call_user_func(function () {
             'onChange' => 'reload',
             'label' => $ll . 'sys_category.pxapm_content_page',
             'config' => [
+                'default' => 0,
                 'type' => 'group',
                 'internal_type' => 'db',
                 'allowed' => 'pages',
