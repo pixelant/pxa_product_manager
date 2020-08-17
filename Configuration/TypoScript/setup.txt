@@ -243,7 +243,7 @@ page {
     }
 }
 
-[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}]
+[{$plugin.tx_pxaproductmanager.settings.includeDefaultStyling} == "1"]
     page {
         includeCSS {
             pxa_product_manager = EXT:pxa_product_manager/Resources/Public/Css/product_manager.css
@@ -251,7 +251,7 @@ page {
     }
 [end]
 
-[globalVar = LIT:1 = {$plugin.tx_pxaproductmanager.settings.includeDefaultStyling}] && [request.getQueryParams()['tx_pxaproductmanager_pi1']['product'] > 0]
+[{$plugin.tx_pxaproductmanager.settings.includeDefaultStyling} == "1"] && [traverse(request.getQueryParams(), "tx_pxaproductmanager_pi1/product") > 0]
     # add stuff for gallery
     page {
         includeCSS {
