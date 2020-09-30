@@ -32,6 +32,8 @@ use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Service\Link\LinkBuilderService;
 use Pixelant\PxaProductManager\Utility\MainUtility;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -91,6 +93,10 @@ class BreadcrumbsBuilder
         $arguments = GeneralUtility::_GP('tx_pxaproductmanager_pi1');
 
         if (is_array($arguments)) {
+            /** @var LanguageAspect $languageAspect */
+            $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
+            $languageId = $languageAspect->getId();
+
             foreach ($arguments as $argument => $value) {
                 if (StringUtility::beginsWith($argument, LinkBuilderService::CATEGORY_ARGUMENT_START_WITH)) {
                     /** @var Category $category */
@@ -99,7 +105,8 @@ class BreadcrumbsBuilder
                     if ($category !== null && !$category->isNavHide()) {
                         $breadcrumbs[] = [
                             'title' => $category->getAlternativeTitle() ?: $category->getTitle(),
-                            'uid' => $value,
+                            'product_uid' => $value,
+                            'sys_language_uid' => $languageId,
                             '_OVERRIDE_HREF' => $this->buildLink($breadcrumbs, $value)
                         ];
                     }
