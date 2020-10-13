@@ -42,14 +42,15 @@ defined('TYPO3_MODE') || die;
         $columnsForAttribute
     );
 
-    // add special product manager palette
-    $GLOBALS['TCA']['sys_file_reference']['palettes']['pxaProductManagerPalette'] = [
-        'showitem' => 'pxapm_type',
-        'canNotCollapse' => true
-    ];
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette(
+        'sys_file_reference',
+        'pxaProductManagerPalette',
+        'pxapm_type'
+    );
 
-    $GLOBALS['TCA']['sys_file_reference']['palettes']['pxaProductManagerAttributePalette'] = [
-        'showitem' => 'pxa_attribute',
-        'canNotCollapse' => true
-    ];
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette(
+        'sys_file_reference',
+        'pxaProductManagerAttributePalette',
+        'pxa_attribute'
+    );
 })();

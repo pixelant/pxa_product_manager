@@ -273,17 +273,19 @@ return (function () {
                             'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
                             'collapseAll' => true,
                         ],
-                        'foreign_types' => [
-                            \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
-                                'showitem' => '
-                            --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
-                            ],
-                            \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
-                                'showitem' => '
-                            --palette--;;pxaProductManagerPalette,
-                            --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
+                        'overrideChildTca' => [
+                            'types' => [
+                                \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
+                                    'showitem' => '
+                                --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
+                                --palette--;;filePalette'
+                                ],
+                                \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                                    'showitem' => '
+                                --palette--;;pxaProductManagerPalette,
+                                --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                --palette--;;filePalette'
+                                ],
                             ],
                         ],
                         'maxitems' => 99
