@@ -16,7 +16,7 @@ class FalMapper extends AbstractMapper
      */
     public function map(Product $product, Attribute $attribute): void
     {
-        $attribute->setValue(
+        $attribute->setArrayValue(
             $this
                 ->collection($product->getAttributesFiles())
                 ->searchByProperty('attribute', $attribute->getUid())

@@ -105,6 +105,7 @@ plugin.tx_pxaproductmanager {
             # Don't compare images and link
             ignoreAttributeTypesInCompareView = 6,7
             dateFormat = {$plugin.tx_pxaproductmanager.settings.attributes.dateFormat}
+            imageMaxWidth = {$plugin.tx_pxaproductmanager.settings.attributes.imageMaxWidth}
         }
     }
 }

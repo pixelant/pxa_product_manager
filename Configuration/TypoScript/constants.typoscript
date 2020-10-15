@@ -80,6 +80,7 @@ plugin.tx_pxaproductmanager {
     settings {
         # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/060; type=string; label=Date format
         attributes.dateFormat = %B %d %Y
+        attributes.imageMaxWidth = 265
     }
 
     # customsubcategory=pxaproductmanager_list_view=List view settings

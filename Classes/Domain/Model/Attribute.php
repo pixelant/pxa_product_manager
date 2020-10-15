@@ -110,11 +110,18 @@ class Attribute extends AbstractEntity
     protected string $defaultValue = '';
 
     /**
-     * Value for current product
+     * String value for current product
      *
-     * @var mixed
+     * @var string
      */
-    protected $value;
+    protected string $stringValue;
+
+    /**
+     * Array value for current product
+     *
+     * @var array
+     */
+    protected array $arrayValue;
 
     /**
      * @var string
@@ -340,16 +347,47 @@ class Attribute extends AbstractEntity
      */
     public function getValue()
     {
-        return $this->value;
+        if ($this->isFalType() ||
+            $this->isSelectBoxType()
+        ) {
+            return $this->arrayValue;
+        }
+        return $this->stringValue;
     }
 
     /**
-     * @param mixed $value
+     * @return string
+     */
+    public function getStringValue(): string
+    {
+        return $this->stringValue;
+    }
+
+    /**
+     * @param string $value
      * @return Attribute
      */
-    public function setValue($value)
+    public function setStringValue($value)
     {
-        $this->value = $value;
+        $this->stringValue = $value;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArrayValue(): array
+    {
+        return $this->arrayValue;
+    }
+
+    /**
+     * @param array $value
+     * @return Attribute
+     */
+    public function setArrayValue($value)
+    {
+        $this->arrayValue = $value;
         return $this;
     }
 
@@ -454,6 +492,16 @@ class Attribute extends AbstractEntity
     public function isLinkType(): bool
     {
         return $this->type === self::ATTRIBUTE_TYPE_LINK;
+    }
+
+    /**
+     * Label type
+     *
+     * @return bool
+     */
+    public function isLabelType(): bool
+    {
+        return $this->type === self::ATTRIBUTE_TYPE_LABEL;
     }
 
     /**

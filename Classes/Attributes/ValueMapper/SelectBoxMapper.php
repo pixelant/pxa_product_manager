@@ -26,7 +26,7 @@ class SelectBoxMapper extends AbstractMapper
                 }
             );
 
-            $attribute->setValue(array_values($selectedOptions));
+            $attribute->setArrayValue(array_values($selectedOptions));
         }
     }
 }

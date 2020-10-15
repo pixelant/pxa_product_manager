@@ -33,6 +33,10 @@ class ConfigurationProviderFactory
                 return GeneralUtility::makeInstance(LinkProvider::class, $attribute);
             case $attribute->isFalType():
                 return GeneralUtility::makeInstance(FalProvider::class, $attribute);
+            case $attribute->isDateType():
+                return GeneralUtility::makeInstance(DateTimeProvider::class, $attribute);
+            case $attribute->isLabelType():
+                return GeneralUtility::makeInstance(LabelProvider::class, $attribute);
         }
 
         throw new \UnexpectedValueException(

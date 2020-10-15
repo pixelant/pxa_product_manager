@@ -145,4 +145,22 @@ class AttributeSet extends AbstractEntity
         $this->attributes = $attributes;
         return $this;
     }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getCategories(): ObjectStorage
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param ObjectStorage $categories
+     * @return AttributeSet
+     */
+    public function setCategories(ObjectStorage $categories): AttributeSet
+    {
+        $this->categories = $categories;
+        return $this;
+    }
 }

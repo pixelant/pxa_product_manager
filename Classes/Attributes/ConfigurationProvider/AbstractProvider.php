@@ -95,6 +95,16 @@ abstract class AbstractProvider implements ProviderInterface
                 'softref' => 'typolink'
             ],
         ],
+
+        Attribute::ATTRIBUTE_TYPE_LABEL => [
+            'exclude' => false,
+            'label' => '',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim',
+            ]
+        ],
     ];
 
     /**

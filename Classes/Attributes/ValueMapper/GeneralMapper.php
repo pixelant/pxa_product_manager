@@ -17,7 +17,7 @@ class GeneralMapper extends AbstractMapper
     public function map(Product $product, Attribute $attribute): void
     {
         if ($attributeValue = $this->searchAttributeValue($product, $attribute)) {
-            $attribute->setValue($attributeValue->getValue());
+            $attribute->setStringValue($attributeValue->getValue());
         }
     }
 }
