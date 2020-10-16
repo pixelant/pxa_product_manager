@@ -123,6 +123,11 @@ class Product extends AbstractEntity
     protected ?DateTime $tstamp = null;
 
     /**
+     * @var \Pixelant\PxaProductManager\Domain\Model\ProductType
+     */
+    protected ?ProductType $productType = null;
+
+    /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Category>
      */
@@ -187,13 +192,6 @@ class Product extends AbstractEntity
     protected ObjectStorage $attributesValues;
 
     /**
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
-     */
-    protected ObjectStorage $attributesSets;
-
-    /**
      * __construct
      */
     public function __construct()
@@ -255,7 +253,6 @@ class Product extends AbstractEntity
         $this->falLinks = new ObjectStorage();
         $this->assets = new ObjectStorage();
         $this->attributesValues = new ObjectStorage();
-        $this->attributesSets = new ObjectStorage();
     }
 
     /**
@@ -711,36 +708,6 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return attributes set that were assigned to only this products
-     *
-     * @return ObjectStorage
-     */
-    public function getOwnAttributesSets(): ObjectStorage
-    {
-        return $this->attributesSets;
-    }
-
-    /**
-     * @param AttributeSet $attributeSet
-     * @return Product
-     */
-    public function addAttributesSet(AttributeSet $attributeSet): Product
-    {
-        $this->attributesSets->attach($attributeSet);
-        return $this;
-    }
-
-    /**
-     * @param ObjectStorage $attributesSets
-     * @return Product
-     */
-    public function setAttributesSets(ObjectStorage $attributesSets): Product
-    {
-        $this->attributesSets = $attributesSets;
-        return $this;
-    }
-
-    /**
      * Will return all attributes sets of all categories rootline.
      * Init attribute values at same time
      *
@@ -789,6 +756,24 @@ class Product extends AbstractEntity
         return $this->collection($this->getAttributes())
             ->filter(fn(Attribute $attribute) => $attribute->isShowInAttributeListing())
             ->toArray();
+    }
+
+    /**
+     * @return ProductType
+     */
+    public function getProductType(): ProductType
+    {
+        return $this->productType;
+    }
+
+    /**
+     * @param string $productType
+     * @return Product
+     */
+    public function setProductType(string $productType): Product
+    {
+        $this->productType = $productType;
+        return $this;
     }
 
     /**
@@ -869,7 +854,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return all attributes sets.
+     * Return all attributes sets from choosen productType.
      * It fetch every attribute set of every category from parents tree
      * + product own attributes sets
      *
@@ -880,14 +865,14 @@ class Product extends AbstractEntity
     // @codingStandardsIgnoreStart
     public function _getAllAttributesSets(): array // @codingStandardsIgnoreEnd
     {
-        $attributesSets = $this->collection($this->getOwnAttributesSets());
+        if (empty($this->productType)) {
+            return [];
+        }
 
-        $categoriesAttributeSets = $this->collection($this->getCategoriesWithParents())
-            ->pluck('attributesSets')
-            ->shiftLevel();
+        $attributesSets = $this->productType->getAttributeSets();
 
         return array_values(
-            $attributesSets->unionUniqueProperty($categoriesAttributeSets, 'uid')->toArray()
+            $attributesSets->toArray()
         );
     }
 

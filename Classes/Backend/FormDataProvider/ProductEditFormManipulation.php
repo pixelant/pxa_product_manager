@@ -15,11 +15,11 @@ use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-
 /**
  * Form data provider hook, add TCA on a fly
  *
@@ -63,8 +63,11 @@ class ProductEditFormManipulation implements FormDataProviderInterface
 
         if (!$isNew) {
             $this->init();
+            // Fetch product raw data with getRecord instead of using $result['databaseRow']
+            // the "rawRow" is different in databaseRow and can throw errors when mapped
+            $record = BackendUtility::getRecord($result['tableName'], $row['uid']);
+            $product = $this->rawRowToProduct($record);
 
-            $product = $this->rawRowToProduct($row);
             // Save result. This is not cached
             $attributesSets = $product->_getAllAttributesSets();
 

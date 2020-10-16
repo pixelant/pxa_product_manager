@@ -121,35 +121,6 @@ defined('TYPO3_MODE') || die;
                 'maxitems' => 9999,
             ]
         ],
-        'pxapm_attributes_sets' => [
-            'exclude' => 0,
-            'label' => $ll . 'sys_category.pxapm_attributes_sets',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectMultipleSideBySide',
-                'foreign_table' => 'tx_pxaproductmanager_domain_model_attributeset',
-                'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAttributesSetsForeignTableWherePid() .
-                    ' ORDER BY tx_pxaproductmanager_domain_model_attributeset.sorting',
-                'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
-                'MM_match_fields' => [
-                    'tablenames' => 'sys_category',
-                    'fieldname' => 'categories',
-                ],
-                'MM_opposite_field' => 'categories',
-                'size' => 10,
-                'autoSizeMax' => 30,
-                'maxitems' => 9999,
-                'multiple' => 0,
-                'fieldControl' => [
-                    'editPopup' => [
-                        'disabled' => false
-                    ],
-                    'addRecord' => [
-                        'disabled' => false,
-                    ]
-                ]
-            ]
-        ],
         'pxapm_description' => [
             'exclude' => 0,
             'label' => $ll . 'sys_category.pxapm_description',
@@ -310,7 +281,6 @@ defined('TYPO3_MODE') || die;
          --palette--;' . $ll . 'sys_category.palette.assets;pxaProductManagerAssets, pxapm_tax_rate, pxapm_description,
         --div--;' . $ll . 'sys_category.metadata_tab, --palette--;;pxaProductManagerSeo,
         --div--;' . $ll . 'sys_category.content_tab, --palette--;;pxaProductManagerContent,
-        --div--;' . $ll . 'sys_category.attributes_tab, pxapm_attributes_sets,
         --div--;' . $ll . 'sys_category.subcategories_tab, pxapm_subcategories',
         '',
         'after:items'

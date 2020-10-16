@@ -11,6 +11,7 @@ defined('TYPO3_MODE') || die;
         'tx_pxaproductmanager_domain_model_option',
         'tx_pxaproductmanager_domain_model_link',
         'tx_pxaproductmanager_domain_model_filter',
+        'tx_pxaproductmanager_domain_model_producttype',
     ];
     foreach ($tablesOnStandardPages as $table) {
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages($table);

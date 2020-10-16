@@ -22,10 +22,10 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg'
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, attributes, categories',
+            'showRecordFieldList' => 'hidden, name, attributes, product_types',
         ],
         'types' => [
-            '1' => ['showitem' => 'name, attributes, categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
+            '1' => ['showitem' => 'name, attributes, product_types, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -81,19 +81,19 @@ return (function () {
                     ]
                 ]
             ],
-            'categories' => [
-                'label' => $ll . '.categories',
+            'product_types' => [
+                'label' => $ll . '.product_types',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
-                    'foreign_table' => 'sys_category',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause() .
-                        ' AND sys_category.sys_language_uid <= 0',
+                    'foreign_table' => 'tx_pxaproductmanager_domain_model_producttype',
                     'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
                     'MM_match_fields' => [
-                        'tablenames' => 'sys_category',
-                        'fieldname' => 'categories',
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_producttype',
+                        'fieldname' => 'product_type',
                     ],
+                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAttributesSetsForeignTableWherePid() .
+                        ' ORDER BY tx_pxaproductmanager_attributeset_record_mm.sorting',
                     'size' => 10,
                     'autoSizeMax' => 30,
                     'maxitems' => 9999,

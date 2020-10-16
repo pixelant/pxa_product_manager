@@ -30,13 +30,12 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/product.svg'
         ],
         'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp,
-            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, attributes_sets',
+            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, product_type, name, sku, price, tax_rate, teaser, description, usp,
+            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug',
         ],
         'types' => [
             '1' => [
-                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;general,
---div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.attributes_sets, attributes_sets,--palette--;;paletteAttributes,
+                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, related_products, sub_products, accessories,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.links, fal_links, links,
@@ -48,6 +47,7 @@ return (function () {
             'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, sku, --linebreak--, price, tax_rate, --linebreak--,  teaser, usp, --linebreak--, description'],
             'access' => ['showitem' => 'hidden, --linebreak--, starttime, endtime'],
             'paletteAttributes' => ['showitem' => ''],
+            'paletteProdyctType' => ['showitem' => 'product_type']
         ],
         'columns' => [
             'sys_language_uid' => [
@@ -506,6 +506,21 @@ return (function () {
                     'eval' => 'trim',
                 ]
             ],
+            'product_type' => [
+                'exclude' => false,
+                'onChange' => 'reload',
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.product_type',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        ['', 0],
+                    ],
+                    'foreign_table' => 'tx_pxaproductmanager_domain_model_producttype',
+                    'minitems' => 0,
+                    'maxitems' => 1,
+                ]
+            ],
             'accessories' => [
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.accessories',
@@ -526,35 +541,6 @@ return (function () {
                     'maxitems' => 9999,
                     'multiple' => 0,
                     'enableMultiSelectFilterTextfield' => true,
-                    'fieldControl' => [
-                        'editPopup' => [
-                            'disabled' => false
-                        ],
-                        'addRecord' => [
-                            'disabled' => false,
-                        ]
-                    ]
-                ]
-            ],
-            'attributes_sets' => [
-                'exclude' => true,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.attributes_sets',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
-                    'foreign_table' => 'tx_pxaproductmanager_domain_model_attributeset',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAttributesSetsForeignTableWherePid() .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_attributeset.sorting',
-                    'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
-                    'MM_match_fields' => [
-                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
-                        'fieldname' => 'products',
-                    ],
-                    'MM_opposite_field' => 'products',
-                    'size' => 10,
-                    'autoSizeMax' => 30,
-                    'maxitems' => 9999,
-                    'multiple' => 0,
                     'fieldControl' => [
                         'editPopup' => [
                             'disabled' => false

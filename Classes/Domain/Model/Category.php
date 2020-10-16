@@ -82,14 +82,6 @@ class Category extends CategoryExtbase
     protected bool $deleted = false;
 
     /**
-     * Attribute sets
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     */
-    protected ObjectStorage $attributesSets;
-
-    /**
      * Banner Image
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
@@ -169,7 +161,6 @@ class Category extends CategoryExtbase
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
          */
-        $this->attributesSets = new ObjectStorage();
         $this->subCategories = new ObjectStorage();
         $this->products = new ObjectStorage();
     }
@@ -293,36 +284,6 @@ class Category extends CategoryExtbase
     public function setDeleted(bool $deleted): Category
     {
         $this->deleted = $deleted;
-        return $this;
-    }
-
-    /**
-     * @return ObjectStorage
-     */
-    public function getAttributesSets(): ObjectStorage
-    {
-        return $this->attributesSets;
-    }
-
-    /**
-     * Add attribute set
-     *
-     * @param AttributeSet $attributeSet
-     * @return Category
-     */
-    public function addAttributeSet(AttributeSet $attributeSet): Category
-    {
-        $this->attributesSets->attach($attributeSet);
-        return $this;
-    }
-
-    /**
-     * @param ObjectStorage $attributesSets
-     * @return Category
-     */
-    public function setAttributesSets(ObjectStorage $attributesSets): Category
-    {
-        $this->attributesSets = $attributesSets;
         return $this;
     }
 
