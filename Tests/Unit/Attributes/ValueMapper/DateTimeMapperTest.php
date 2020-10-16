@@ -24,6 +24,7 @@ class DateTimeMapperTest extends UnitTestCase
         $attributeValue->getValue()->shouldBeCalled()->willReturn('now');
 
         $attribute = createEntity(Attribute::class, 1);
+        $attribute->setType(Attribute::ATTRIBUTE_TYPE_DATETIME);
         $product = createEntity(Product::class, 1);
 
         $mapper->expects($this->once())->method('searchAttributeValue')->willReturn($attributeValue->reveal());
@@ -43,6 +44,7 @@ class DateTimeMapperTest extends UnitTestCase
         $attributeValue->getValue()->shouldBeCalled()->willReturn('invalid');
 
         $attribute = createEntity(Attribute::class, 1);
+        $attribute->setType(Attribute::ATTRIBUTE_TYPE_DATETIME);
         $product = createEntity(Product::class, 1);
 
         $mapper->expects($this->once())->method('searchAttributeValue')->willReturn($attributeValue->reveal());

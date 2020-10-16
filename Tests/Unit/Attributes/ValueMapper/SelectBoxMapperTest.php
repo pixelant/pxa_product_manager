@@ -30,6 +30,7 @@ class SelectBoxMapperTest extends UnitTestCase
         $attributeValue->getValue()->shouldBeCalled()->willReturn('2,3');
 
         $attribute = createEntity(Attribute::class, 1);
+        $attribute->setType(Attribute::ATTRIBUTE_TYPE_MULTISELECT);
         $attribute->setOptions(createObjectStorage($option1, $option2, $option3, $option4));
 
         $product = createEntity(Product::class, 1);

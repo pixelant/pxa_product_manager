@@ -32,6 +32,8 @@ class FalMapperTest extends UnitTestCase
         $attributeFile3 = createEntity(AttributeFile::class, ['uid' => 2, 'attribute' => 20]);
 
         $attribute = createEntity(Attribute::class, 10);
+        $attribute->setType(Attribute::ATTRIBUTE_TYPE_FILE);
+
         /** @var Product $product */
         $product = createEntity(Product::class, 1);
         $product->setAttributesFiles(createObjectStorage($attributeFile1, $attributeFile2, $attributeFile3));

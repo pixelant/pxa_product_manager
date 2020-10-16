@@ -87,17 +87,6 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getOwnAttributesSetsReturnProductAttributesSets()
-    {
-        $sets = createObjectStorage(...createMultipleEntities(AttributeSet::class, 2));
-        $this->subject->setAttributesSets($sets);
-
-        $this->assertSame($sets, $this->subject->getOwnAttributesSets());
-    }
-
-    /**
-     * @test
-     */
     public function productCanUpdateAttributeValue()
     {
         $attribute = createEntity(Attribute::class, 1);

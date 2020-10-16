@@ -114,14 +114,14 @@ class Attribute extends AbstractEntity
      *
      * @var string
      */
-    protected string $stringValue;
+    protected string $stringValue = '';
 
     /**
      * Array value for current product
      *
      * @var array
      */
-    protected array $arrayValue;
+    protected array $arrayValue = [];
 
     /**
      * @var string

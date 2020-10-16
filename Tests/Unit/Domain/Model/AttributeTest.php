@@ -114,9 +114,9 @@ class AttributeTest extends UnitTestCase
      */
     public function usingAsStringReturnValue()
     {
-        $this->subject->setValue('value');
+        $this->subject->setStringValue('value');
 
-        $this->assertEquals('value', (string)$this->subject);
+        $this->assertEquals('value', (string)$this->subject->getStringValue());
     }
 
     public function isFalTypeProvider()
