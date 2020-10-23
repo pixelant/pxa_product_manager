@@ -92,8 +92,6 @@ return (function () {
                         'tablenames' => 'tx_pxaproductmanager_domain_model_producttype',
                         'fieldname' => 'product_type',
                     ],
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAttributesSetsForeignTableWherePid() .
-                        ' ORDER BY tx_pxaproductmanager_attributeset_record_mm.sorting',
                     'size' => 10,
                     'autoSizeMax' => 30,
                     'maxitems' => 9999,

@@ -36,6 +36,9 @@ class MapperFactory
         if ($attribute->isSelectBoxType()) {
             return SelectBoxMapper::class;
         }
+        if ($attribute->isDateType()) {
+            return DateTimeMapper::class;
+        }
 
         return GeneralMapper::class;
     }

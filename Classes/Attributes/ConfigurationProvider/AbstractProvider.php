@@ -80,7 +80,7 @@ abstract class AbstractProvider implements ProviderInterface
             'config' => [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
-                'eval' => 'datetime'
+                'eval' => 'datetime,int'
             ]
         ],
 

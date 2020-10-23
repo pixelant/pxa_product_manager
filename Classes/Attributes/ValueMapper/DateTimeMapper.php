@@ -18,11 +18,12 @@ class DateTimeMapper extends AbstractMapper
     {
         if ($attributeValue = $this->searchAttributeValue($product, $attribute)) {
             try {
-                $value = new \DateTime($attributeValue->getValue());
+                $value = $attributeValue->getValue();
             } catch (\Exception $exception) {
                 $value = null;
             }
-            $attribute->setValue($value);
+
+            $attribute->setStringValue($value);
         }
     }
 }

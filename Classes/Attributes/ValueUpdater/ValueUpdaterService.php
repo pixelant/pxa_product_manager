@@ -44,12 +44,10 @@ class ValueUpdaterService implements UpdaterInterface
      */
     public function update($product, $attribute, $value): void
     {
-        // Prepare value for updating
         $value = $this->convertValue($attribute, $value);
-        
+
         $product = $this->castToInt($product);
         $attribute = $this->castToInt($attribute);
-
 
         $attributeRow = $this->attributeValueRepository->findRawByProductAndAttribute($product, $attribute);
         if ($attributeRow) {
@@ -74,7 +72,14 @@ class ValueUpdaterService implements UpdaterInterface
         if ($attribute->isSelectBoxType()) {
             return sprintf(',%s,', $value);
         }
-
+        if ($attribute->isDateType()) {
+            try {
+                $dt = new \DateTime($value);
+                $value = $dt->getTimestamp();
+            } catch (\Exception $exception) {
+                $value = null;
+            }
+        }
         return $value;
     }
 
