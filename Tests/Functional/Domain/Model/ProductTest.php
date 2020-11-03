@@ -36,11 +36,11 @@ class ProductTest extends FunctionalTestCase
     {
         $this->importDataSet(__DIR__ . '/../../../Fixtures/products_attributes_set_test.xml');
 
-        $product = $this->repository->findByUid(10);
+        $product = $this->repository->findByUid(1000);
 
         $allAttributesSets = $product->_getAllAttributesSets();
 
-        $expectAttributesSetsUids = [4, 1, 2, 3, 5];
+        $expectAttributesSetsUids = [3, 1];
         $this->assertEquals($expectAttributesSetsUids, entitiesToUidsArray($allAttributesSets));
     }
 
