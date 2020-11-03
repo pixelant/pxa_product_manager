@@ -72,12 +72,12 @@ class ValueUpdaterService implements UpdaterInterface
         if ($attribute->isSelectBoxType()) {
             return sprintf(',%s,', $value);
         }
-        if ($attribute->isDateType()) {
+        if ($attribute->isDateType() && !empty($value)) {
             try {
                 $dt = new \DateTime($value);
                 $value = $dt->getTimestamp();
             } catch (\Exception $exception) {
-                $value = null;
+                $value = '';
             }
         }
         return $value;

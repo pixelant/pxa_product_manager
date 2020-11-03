@@ -79,6 +79,7 @@ abstract class AbstractProvider implements ProviderInterface
             'label' => '',
             'config' => [
                 'type' => 'input',
+                'default' => 0,
                 'renderType' => 'inputDateTime',
                 'eval' => 'datetime,int'
             ]
