@@ -6,13 +6,10 @@ namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Service
- */
 class MapperFactory
 {
     /**
-     * Factory method create adapter depend on attribute
+     * Factory method create adapter depend on attribute.
      *
      * @param Attribute $attribute
      * @return MapperInterface
@@ -23,7 +20,7 @@ class MapperFactory
     }
 
     /**
-     * Detect mapper based on attribute
+     * Detect mapper based on attribute.
      *
      * @param Attribute $attribute
      * @return string

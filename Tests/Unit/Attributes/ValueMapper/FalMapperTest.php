@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ValueMapper;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -8,14 +9,11 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeFile;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Adapter\Attributes
- */
 class FalMapperTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -25,7 +23,7 @@ class FalMapperTest extends UnitTestCase
     /**
      * @test
      */
-    public function mapWillSetMatchingFilesAsValueOfAttribute()
+    public function mapWillSetMatchingFilesAsValueOfAttribute(): void
     {
         $attributeFile1 = createEntity(AttributeFile::class, ['uid' => 1, 'attribute' => 10]);
         $attributeFile2 = createEntity(AttributeFile::class, ['uid' => 2, 'attribute' => 10]);
@@ -40,6 +38,6 @@ class FalMapperTest extends UnitTestCase
 
         $this->subject->map($product, $attribute);
 
-        $this->assertEquals([$attributeFile1, $attributeFile2], $attribute->getValue());
+        self::assertEquals([$attributeFile1, $attributeFile2], $attribute->getValue());
     }
 }

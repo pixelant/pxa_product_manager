@@ -8,7 +8,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -29,21 +29,21 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- * TCA hook that will update attributes values table before product save
+ * TCA hook that will update attributes values table before product save.
  */
 class AttributesValuesUpdate
 {
     /**
-     * Save attributes values and remove from fields array
+     * Save attributes values and remove from fields array.
      *
      * @param array $fieldArray
      * @param string $table
      * @param $id
      */
-    // @codingStandardsIgnoreStart
+    /** @codingStandardsIgnoreStart */
     public function processDatamap_preProcessFieldArray(array &$fieldArray, string $table, $id): void
     {// @codingStandardsIgnoreEnd
         if ($table === 'tx_pxaproductmanager_domain_model_product'

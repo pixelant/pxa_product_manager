@@ -8,9 +8,6 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
-/**
- * @package Pixelant\PxaProductManager\ViewHelpers
- */
 class LinkViewHelper extends AbstractTagBasedViewHelper
 {
     /**
@@ -26,15 +23,15 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
     /**
      * @param UrlBuilderServiceInterface $urlBuilder
      */
-    public function injectUrlBuilderServiceInterface(UrlBuilderServiceInterface $urlBuilder)
+    public function injectUrlBuilderServiceInterface(UrlBuilderServiceInterface $urlBuilder): void
     {
         $this->urlBuilder = $urlBuilder;
     }
 
     /**
-     * Register arguments
+     * Register arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerUniversalTagAttributes();
@@ -48,13 +45,13 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
     }
 
     /**
-     * Render link tag
+     * Render link tag.
      *
      * @return string
      */
     public function render()
     {
-        $page = intval($this->arguments['page']);
+        $page = (int) ($this->arguments['page']);
         $product = $this->arguments['product'];
         $category = $this->arguments['category'];
         $target = $this->arguments['target'];
@@ -66,7 +63,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
         if ($page && ($product !== null || $category !== null)) {
             $this->urlBuilder->absolute($absolute);
 
-            $url = $excludeCategories || is_null($category)
+            $url = $excludeCategories || null === $category
                 ? $this->urlBuilder->productUrl($page, $product)
                 : $this->urlBuilder->url($page, $category, $product);
 

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Collection;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -9,15 +10,12 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Collection
- */
 class CollectionTest extends UnitTestCase
 {
     /**
      * @test
      */
-    public function collectionThrownExceptionIfNotIterableArgumentGiven()
+    public function collectionThrownExceptionIfNotIterableArgumentGiven(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -27,7 +25,7 @@ class CollectionTest extends UnitTestCase
     /**
      * @test
      */
-    public function canMapCollectionWithKeysFromPropertyValue()
+    public function canMapCollectionWithKeysFromPropertyValue(): void
     {
         $collectionArray = [
             [
@@ -44,13 +42,13 @@ class CollectionTest extends UnitTestCase
 
         $collection = new Collection($collectionArray);
 
-        $this->assertEquals($expect, $collection->mapWithKeysOfProperty('uid')->toArray());
+        self::assertEquals($expect, $collection->mapWithKeysOfProperty('uid')->toArray());
     }
 
     /**
      * @test
      */
-    public function canMapCollectionWithKeysFromPropertyValueWithCallbackFunction()
+    public function canMapCollectionWithKeysFromPropertyValueWithCallbackFunction(): void
     {
         $item1 = [
             'prop' => createEntity(Category::class, 22),
@@ -69,24 +67,26 @@ class CollectionTest extends UnitTestCase
 
         $collection = new Collection($collectionArray);
 
-        $this->assertEquals($expect, $collection->mapWithKeysOfProperty('prop', fn($collectionKey) => $collectionKey->getUid())->toArray());
+        self::assertEquals($expect, $collection->mapWithKeysOfProperty('prop', fn ($collectionKey) => $collectionKey->getUid())->toArray());
     }
 
     /**
      * @test
      * @dataProvider toArrayReturnIterableToArrayDataProvider
+     * @param mixed $items
+     * @param mixed $expect
      */
-    public function toArrayReturnIterableToArray($items, $expect)
+    public function toArrayReturnIterableToArray($items, $expect): void
     {
         $collectionInstance = new Collection($items);
 
-        $this->assertEquals($expect, array_values($collectionInstance->toArray()));
+        self::assertEquals($expect, array_values($collectionInstance->toArray()));
     }
 
     /**
      * @test
      */
-    public function pluckExtractValuesByPropertyFromArray()
+    public function pluckExtractValuesByPropertyFromArray(): void
     {
         $items = [
             ['uid' => 1, 'title' => 'test me'],
@@ -96,13 +96,13 @@ class CollectionTest extends UnitTestCase
         $collection = new Collection($items);
         $expect = [1, 123];
 
-        $this->assertEquals($expect, $collection->pluck('uid')->toArray());
+        self::assertEquals($expect, $collection->pluck('uid')->toArray());
     }
 
     /**
      * @test
      */
-    public function pluckExtractValuesByPropertyFromObjectStorage()
+    public function pluckExtractValuesByPropertyFromObjectStorage(): void
     {
         $items = createObjectStorage(
             createEntity(Category::class, 88),
@@ -112,13 +112,13 @@ class CollectionTest extends UnitTestCase
         $collection = new Collection($items);
         $expectFromStorage = [88, 99];
 
-        $this->assertEquals($expectFromStorage, array_values($collection->pluck('uid')->toArray()));
+        self::assertEquals($expectFromStorage, array_values($collection->pluck('uid')->toArray()));
     }
 
     /**
      * @test
      */
-    public function pluckWithCallbackWillApplyCallbackFunctionToKeys()
+    public function pluckWithCallbackWillApplyCallbackFunctionToKeys(): void
     {
         $attribute1 = createEntity(Attribute::class, 5);
         $attribute2 = createEntity(Attribute::class, 10);
@@ -134,16 +134,16 @@ class CollectionTest extends UnitTestCase
         $expectAttributesUids = [5, 10];
         $collection = new Collection($items);
 
-        $this->assertEquals(
+        self::assertEquals(
             $expectAttributesUids,
-            $collection->pluck('attribute', fn($attribute) => $attribute->getUid())->toArray()
+            $collection->pluck('attribute', fn ($attribute) => $attribute->getUid())->toArray()
         );
     }
 
     /**
      * @test
      */
-    public function unionUniquePropertyWillAddOnlyUniqueItems()
+    public function unionUniquePropertyWillAddOnlyUniqueItems(): void
     {
         $item1 = ['uid' => 1, 'title' => 'I\'m title'];
         $category1 = createEntity(Category::class, ['uid' => 123, 'title' => 'Im category']);
@@ -167,13 +167,13 @@ class CollectionTest extends UnitTestCase
 
         $merged = (new Collection($items))->unionUniqueProperty($merge, 'uid');
 
-        $this->assertEquals($expect, array_values($merged->toArray()));
+        self::assertEquals($expect, array_values($merged->toArray()));
     }
 
     /**
      * @test
      */
-    public function shiftLevelWillRemoveFirstLevelOfArray()
+    public function shiftLevelWillRemoveFirstLevelOfArray(): void
     {
         $item1 = ['uid' => 1];
         $item2 = ['uid' => 2];
@@ -181,19 +181,19 @@ class CollectionTest extends UnitTestCase
 
         $items = [
             [$item1, $item2],
-            [$item3]
+            [$item3],
         ];
 
         $expect = [$item1, $item2, $item3];
         $collection = new Collection($items);
 
-        $this->assertEquals($expect, $collection->shiftLevel()->toArray());
+        self::assertEquals($expect, $collection->shiftLevel()->toArray());
     }
 
     /**
      * @test
      */
-    public function shiftLevelWillRemoveFirstLevelOfObjectStorage()
+    public function shiftLevelWillRemoveFirstLevelOfObjectStorage(): void
     {
         $item1 = createEntity(Category::class, 1);
         $item2 = createEntity(Category::class, 2);
@@ -207,53 +207,53 @@ class CollectionTest extends UnitTestCase
         $expect = [$item2, $item3, $item1];
         $collection = new Collection($items);
 
-        $this->assertEquals($expect, array_values($collection->shiftLevel()->toArray()));
+        self::assertEquals($expect, array_values($collection->shiftLevel()->toArray()));
     }
 
     /**
      * @test
      */
-    public function uniqueWillReturnArrayOfUniqueValues()
+    public function uniqueWillReturnArrayOfUniqueValues(): void
     {
-        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3, $item2, $item3];
 
         $expect = [$item1, $item2, $item3];
         $collection = new Collection($items);
 
-        $this->assertEquals($expect, $collection->unique()->toArray());
+        self::assertEquals($expect, $collection->unique()->toArray());
     }
 
     /**
      * @test
      */
-    public function searchOneByPropertyWillReturnNullIfNothingIsFound()
+    public function searchOneByPropertyWillReturnNullIfNothingIsFound(): void
     {
-        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
 
-        $this->assertNull($collection->searchOneByProperty('uid', 5));
+        self::assertNull($collection->searchOneByProperty('uid', 5));
     }
 
     /**
      * @test
      */
-    public function searchOneByPropertyWillReturnItemIfFound()
+    public function searchOneByPropertyWillReturnItemIfFound(): void
     {
-        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
 
-        $this->assertSame($item2, $collection->searchOneByProperty('uid', 2));
+        self::assertSame($item2, $collection->searchOneByProperty('uid', 2));
     }
 
     /**
      * @test
      */
-    public function searchOneByPropertyWithCallbackWillReturnItemIfFound()
+    public function searchOneByPropertyWithCallbackWillReturnItemIfFound(): void
     {
         $attribute1 = createEntity(Attribute::class, 10);
         $attribute2 = createEntity(Attribute::class, 50);
@@ -269,19 +269,18 @@ class CollectionTest extends UnitTestCase
             $attributeValue3,
         ];
 
-
         $collection = new Collection($items);
 
-        $this->assertSame(
+        self::assertSame(
             $attributeValue2,
-            $collection->searchOneByProperty('attribute', 50, fn($attribute) => $attribute->getUid())
+            $collection->searchOneByProperty('attribute', 50, fn ($attribute) => $attribute->getUid())
         );
     }
 
     /**
      * @test
      */
-    public function searchByPropertyWillReturnItems()
+    public function searchByPropertyWillReturnItems(): void
     {
         $attribute1 = createEntity(Attribute::class, 10);
         $attribute2 = createEntity(Attribute::class, 50);
@@ -296,48 +295,47 @@ class CollectionTest extends UnitTestCase
             $attributeValue3,
         ];
 
-
         $collection = new Collection($items);
         $expect = [$attributeValue2, $attributeValue3];
 
-        $this->assertEquals(
+        self::assertEquals(
             $expect,
-            $collection->searchByProperty('attribute', 50, fn($attribute) => $attribute->getUid())->toArray()
+            $collection->searchByProperty('attribute', 50, fn ($attribute) => $attribute->getUid())->toArray()
         );
     }
 
     /**
      * @test
      */
-    public function firstReturnFirstItemFromCollection()
+    public function firstReturnFirstItemFromCollection(): void
     {
-        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
 
-        $this->assertSame($item1, $collection->first());
+        self::assertSame($item1, $collection->first());
     }
 
     /**
      * @test
      */
-    public function filterFilterItems()
+    public function filterFilterItems(): void
     {
-        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
 
-        $this->assertEquals([$item1], $collection->filter(fn($filterItem) => $filterItem->getUid() === 1)->toArray());
+        self::assertEquals([$item1], $collection->filter(fn ($filterItem) => $filterItem->getUid() === 1)->toArray());
     }
 
     /**
      * @test
      */
-    public function unshiftAddItemsToBeginningOfCollection()
+    public function unshiftAddItemsToBeginningOfCollection(): void
     {
-        list($item1, $item2, $item3) = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $item10 = createEntity(Category::class, 10);
@@ -348,40 +346,41 @@ class CollectionTest extends UnitTestCase
 
         $expect = [$item10, $item20, $item1, $item2, $item3];
 
-        $this->assertEquals($expect, $collection->unshift(...$add)->toArray());
+        self::assertEquals($expect, $collection->unshift(...$add)->toArray());
     }
 
     /**
      * @test
      *
      * @dataProvider sortList
+     * @param mixed $sortList
      */
-    public function sortByKeysListSortCollectionByGivenList($sortList)
+    public function sortByKeysListSortCollectionByGivenList($sortList): void
     {
         $items = [
-            ['title' => 'last', 'uid' => 10,],
-            ['title' => 'first', 'uid' => 5,],
-            ['title' => 'middle', 'uid' => 7,],
+            ['title' => 'last', 'uid' => 10],
+            ['title' => 'first', 'uid' => 5],
+            ['title' => 'middle', 'uid' => 7],
         ];
 
         $collection = new Collection($items);
         $expect = [
-            ['title' => 'first', 'uid' => 5,],
-            ['title' => 'middle', 'uid' => 7,],
-            ['title' => 'last', 'uid' => 10,],
+            ['title' => 'first', 'uid' => 5],
+            ['title' => 'middle', 'uid' => 7],
+            ['title' => 'last', 'uid' => 10],
         ];
 
-        $this->assertEquals($expect, $collection->sortByOrderList($sortList, 'uid')->toArray());
+        self::assertEquals($expect, $collection->sortByOrderList($sortList, 'uid')->toArray());
     }
 
     public function sortList()
     {
         return [
             'string_list' => [
-                'list' => '5, 7, 10'
+                'list' => '5, 7, 10',
             ],
             'array_list' => [
-                'list' => ['5', '7', '10']
+                'list' => ['5', '7', '10'],
             ],
         ];
     }

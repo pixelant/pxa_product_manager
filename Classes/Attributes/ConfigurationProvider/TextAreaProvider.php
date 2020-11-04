@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
 /**
- * Simple input
+ * Simple input.
  */
 class TextAreaProvider extends InputProvider
 {
-
 }

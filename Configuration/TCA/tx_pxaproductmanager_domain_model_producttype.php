@@ -21,7 +21,7 @@ return (function () {
                 'disabled' => 'hidden',
             ],
             'searchFields' => 'name',
-            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg'
+            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg',
         ],
         'interface' => [
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets, ',
@@ -44,11 +44,11 @@ return (function () {
                         [
                             'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                             -1,
-                            'flags-multiple'
+                            'flags-multiple',
                         ],
                     ],
                     'default' => 0,
-                ]
+                ],
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -62,7 +62,7 @@ return (function () {
                     ],
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_producttype',
                     'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_producttype.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_producttype.sys_language_uid IN (-1,0)',
-                    'default' => 0
+                    'default' => 0,
                 ],
             ],
             'l10n_diffsource' => [
@@ -81,8 +81,8 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
                 ],
             ],
@@ -92,7 +92,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'attribute_sets' => [
@@ -116,14 +116,14 @@ return (function () {
                     'multiple' => 0,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
-        ]
+        ],
     ];
 })();

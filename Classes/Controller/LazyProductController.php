@@ -10,9 +10,6 @@ use Pixelant\PxaProductManager\Service\Category\TreeService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
-/**
- * @package Pixelant\PxaProductManager\Controller
- */
 class LazyProductController extends AbstractController
 {
     use CanCreateCollection;
@@ -35,7 +32,7 @@ class LazyProductController extends AbstractController
     /**
      * @param TreeService $treeService
      */
-    public function injectTreeService(TreeService $treeService)
+    public function injectTreeService(TreeService $treeService): void
     {
         $this->categoryTree = $treeService;
     }
@@ -43,7 +40,7 @@ class LazyProductController extends AbstractController
     /**
      * @param CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    public function injectCategoryRepository(CategoryRepository $categoryRepository): void
     {
         $this->categoryRepository = $categoryRepository;
     }
@@ -51,17 +48,17 @@ class LazyProductController extends AbstractController
     /**
      * @param FilterRepository $filterRepository
      */
-    public function injectFilterRepository(FilterRepository $filterRepository)
+    public function injectFilterRepository(FilterRepository $filterRepository): void
     {
         $this->filterRepository = $filterRepository;
     }
 
     /**
-     * App wrapper for lazy loading
+     * App wrapper for lazy loading.
      *
      * @return void
      */
-    public function listAction()
+    public function listAction(): void
     {
         // Selected filters
         $filters = $this->findRecordsByList($this->settings['filtering']['filters'], $this->filterRepository);
@@ -76,7 +73,7 @@ class LazyProductController extends AbstractController
     }
 
     /**
-     * Prepare lazy loading settings
+     * Prepare lazy loading settings.
      *
      * @param array $categories
      * @return array
@@ -84,16 +81,16 @@ class LazyProductController extends AbstractController
     protected function lazyListSettings(array $categories): array
     {
         return [
-                'storagePid' => $this->storagePid(),
-                'limit' => (int)$this->settings['limit'],
-                'filterConjunction' => $this->settings['filtering']['conjunction'],
-                'hideFilterOptionsNoResult' => (int)$this->settings['filtering']['hideFilterOptionsNoResult'],
-                'categories' => $this->categoryTree->childrenIdsRecursiveAndCache($categories),
-            ] + $this->settings['productOrderings'];
+            'storagePid' => $this->storagePid(),
+            'limit' => (int)$this->settings['limit'],
+            'filterConjunction' => $this->settings['filtering']['conjunction'],
+            'hideFilterOptionsNoResult' => (int)$this->settings['filtering']['hideFilterOptionsNoResult'],
+            'categories' => $this->categoryTree->childrenIdsRecursiveAndCache($categories),
+        ] + $this->settings['productOrderings'];
     }
 
     /**
-     * Storages list
+     * Storages list.
      *
      * @return array
      */

@@ -1,7 +1,7 @@
 <?php
 defined('TYPO3_MODE') || die;
 
-(function () {
+(function (): void {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
         'pxa_product_manager',
         'Pi1',

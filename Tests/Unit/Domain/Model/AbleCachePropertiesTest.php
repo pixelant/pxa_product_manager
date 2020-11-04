@@ -1,18 +1,16 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\AbleCacheProperties;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
- */
 class AbleCachePropertiesTest extends UnitTestCase
 {
     use AbleCacheProperties;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -22,22 +20,22 @@ class AbleCachePropertiesTest extends UnitTestCase
     /**
      * @test
      */
-    public function getCachedPropertyReturnValueOfPropertyFromCache()
+    public function getCachedPropertyReturnValueOfPropertyFromCache(): void
     {
         $this->cacheProperties['test'] = 'value';
 
-        $this->assertEquals('value', $this->getCachedProperty('test', function () {}));
+        self::assertEquals('value', $this->getCachedProperty('test', function (): void {}));
     }
 
     /**
      * @test
      */
-    public function getCachedPropertyReturnValueOfPropertyProvidedByClosure()
+    public function getCachedPropertyReturnValueOfPropertyProvidedByClosure(): void
     {
         $value = 'test value';
         $key = 'testkey';
 
-        $this->assertEquals($value, $this->getCachedProperty($key, fn() => $value));
-        $this->assertEquals($this->cacheProperties[$key], $value);
+        self::assertEquals($value, $this->getCachedProperty($key, fn () => $value));
+        self::assertEquals($this->cacheProperties[$key], $value);
     }
 }

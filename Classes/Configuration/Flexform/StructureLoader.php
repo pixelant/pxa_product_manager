@@ -6,20 +6,17 @@ namespace Pixelant\PxaProductManager\Configuration\Flexform;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Service\Flexform
- */
 class StructureLoader
 {
     /**
-     * Default flexform loaded for all actions
+     * Default flexform loaded for all actions.
      *
      * @var string
      */
     public static string $defaultFlexform = 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_common.xml';
 
     /**
-     * Merge default flexform with action specific
+     * Merge default flexform with action specific.
      *
      * @param array $dataStructure
      * @param array|null $actionConfiguration
@@ -40,7 +37,7 @@ class StructureLoader
     }
 
     /**
-     * Load all actions default data structure
+     * Load all actions default data structure.
      *
      * @param array $dataStructure
      * @return array
@@ -51,7 +48,7 @@ class StructureLoader
     }
 
     /**
-     * Load flexforms data structure from flexforms subparts
+     * Load flexforms data structure from flexforms subparts.
      *
      * @param array $dataStructure
      * @param array|null $actionConfiguration
@@ -81,7 +78,7 @@ class StructureLoader
     }
 
     /**
-     * Update data structure
+     * Update data structure.
      *
      * @param array $dataStructure
      * @param string $flexformPath
@@ -92,7 +89,7 @@ class StructureLoader
         $fullPath = GeneralUtility::getFileAbsFileName($flexformPath);
         if (!file_exists($fullPath)) {
             throw new \RuntimeException(
-                "Could not find flexform with path '$fullPath'(given path '$flexformPath')",
+                "Could not find flexform with path '${fullPath}'(given path '${flexformPath}')",
                 1570185225935
             );
         }

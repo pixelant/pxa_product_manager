@@ -4,7 +4,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -25,14 +25,10 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class AttributeValue extends AbstractEntity
 {
@@ -63,9 +59,10 @@ class AttributeValue extends AbstractEntity
      * @param Product|null $product
      * @return AttributeValue
      */
-    public function setProduct(?Product $product): AttributeValue
+    public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
         return $this;
     }
 
@@ -81,9 +78,10 @@ class AttributeValue extends AbstractEntity
      * @param string $value
      * @return AttributeValue
      */
-    public function setValue(string $value): AttributeValue
+    public function setValue(string $value): self
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -99,9 +97,10 @@ class AttributeValue extends AbstractEntity
      * @param Attribute|null $attribute
      * @return AttributeValue
      */
-    public function setAttribute(?Attribute $attribute): AttributeValue
+    public function setAttribute(?Attribute $attribute): self
     {
         $this->attribute = $attribute;
+
         return $this;
     }
 }

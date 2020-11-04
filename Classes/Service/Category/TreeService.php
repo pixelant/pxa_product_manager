@@ -10,9 +10,6 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Service\Category
- */
 class TreeService
 {
     use CanCreateCollection;
@@ -23,7 +20,7 @@ class TreeService
     protected FrontendInterface $cache;
 
     /**
-     * Constructor setting up the cache
+     * Constructor setting up the cache.
      *
      * @param FrontendInterface|null $cache
      */
@@ -34,6 +31,7 @@ class TreeService
 
     /**
      * @return array
+     * @param mixed $categories
      */
     public function childrenIdsRecursiveAndCache($categories): array
     {
@@ -53,7 +51,7 @@ class TreeService
     }
 
     /**
-     * Return array of given categories + all children recursive
+     * Return array of given categories + all children recursive.
      *
      * @param array|Traversable $categories
      * @return array
@@ -64,7 +62,7 @@ class TreeService
     }
 
     /**
-     * Return hash
+     * Return hash.
      *
      * @param array|Traversable $categories
      * @return string
@@ -77,7 +75,7 @@ class TreeService
     }
 
     /**
-     * Fetch all children recursive
+     * Fetch all children recursive.
      *
      * @param array|Traversable $categories
      * @param array $result
@@ -87,22 +85,23 @@ class TreeService
     {
         /** @var Category $category */
         foreach ($categories as $category) {
-            if (! in_array($category, $result, true)) {
+            if (!in_array($category, $result, true)) {
                 $result[] = $category;
                 $result = $this->fetchChildrenRecursive($category->getSubCategories(), $result);
             }
         }
+
         return $result;
     }
 
     /**
-     * Validate incoming type of categories
+     * Validate incoming type of categories.
      *
      * @param $categories
      */
     protected function validateType($categories): void
     {
-        if (! is_array($categories) && ! $categories instanceof Traversable) {
+        if (!is_array($categories) && !$categories instanceof Traversable) {
             throw new \InvalidArgumentException(
                 sprintf('Expect categories to be array or Traversable, but got "%s"', gettype($categories)),
                 1585128511867

@@ -5,9 +5,6 @@ namespace Pixelant\PxaProductManager\Domain\Model\DTO;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Model\DTO
- */
 class CategoryDemand extends AbstractDemand
 {
     /**
@@ -16,14 +13,14 @@ class CategoryDemand extends AbstractDemand
     protected $parent = null;
 
     /**
-     * Show only enabled in navigation
+     * Show only enabled in navigation.
      *
      * @var bool
      */
     protected bool $onlyVisibleInNavigation = false;
 
     /**
-     * Hide categories that doesn't have products
+     * Hide categories that doesn't have products.
      *
      * @var bool
      */
@@ -41,9 +38,10 @@ class CategoryDemand extends AbstractDemand
      * @param Category|int $parent
      * @return CategoryDemand
      */
-    public function setParent($parent): CategoryDemand
+    public function setParent($parent): self
     {
         $this->parent = $parent;
+
         return $this;
     }
 
@@ -59,9 +57,10 @@ class CategoryDemand extends AbstractDemand
      * @param bool $onlyVisibleInNavigation
      * @return CategoryDemand
      */
-    public function setOnlyVisibleInNavigation(bool $onlyVisibleInNavigation): CategoryDemand
+    public function setOnlyVisibleInNavigation(bool $onlyVisibleInNavigation): self
     {
         $this->onlyVisibleInNavigation = $onlyVisibleInNavigation;
+
         return $this;
     }
 
@@ -77,9 +76,10 @@ class CategoryDemand extends AbstractDemand
      * @param bool $hideCategoriesWithoutProducts
      * @return CategoryDemand
      */
-    public function setHideCategoriesWithoutProducts(bool $hideCategoriesWithoutProducts): CategoryDemand
+    public function setHideCategoriesWithoutProducts(bool $hideCategoriesWithoutProducts): self
     {
         $this->hideCategoriesWithoutProducts = $hideCategoriesWithoutProducts;
+
         return $this;
     }
 }

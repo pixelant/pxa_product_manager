@@ -14,8 +14,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Seo\XmlSitemap\AbstractXmlSitemapDataProvider;
 
 /**
- * Class ProductsXmlSitemapDataProvider
- * @package Pixelant\PxaProductManager\Seo\XmlSitemap
+ * Class ProductsXmlSitemapDataProvider.
  */
 class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
 {
@@ -30,14 +29,14 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     protected UrlBuilderServiceInterface $urlBuilder;
 
     /**
-     * Exclude categories from url
+     * Exclude categories from url.
      *
      * @var bool
      */
     protected bool $excludeCategories = false;
 
     /**
-     * Target url page ID
+     * Target url page ID.
      *
      * @var int
      */
@@ -57,8 +56,8 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     ) {
         parent::__construct($request, $key, $config, $cObj);
 
-        $this->excludeCategories = boolval($config['url']['excludeCategories'] ?? false);
-        $this->pageId = intval($config['url']['pageId'] ?? 0);
+        $this->excludeCategories = (bool) ($config['url']['excludeCategories'] ?? false);
+        $this->pageId = (int) ($config['url']['pageId'] ?? 0);
 
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
@@ -67,14 +66,13 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
         $this->urlBuilder = $objectManager->get(UrlBuilderServiceInterface::class);
         $this->urlBuilder->absolute(true);
 
-
         $this->generateItems();
     }
 
     /**
-     * Generate site map items
+     * Generate site map items.
      */
-    protected function generateItems()
+    protected function generateItems(): void
     {
         $demand = $this->createDemand();
 
@@ -100,7 +98,7 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     }
 
     /**
-     * Storage pids
+     * Storage pids.
      *
      * @return array
      */
@@ -126,7 +124,7 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
     }
 
     /**
-     * Build product item URL
+     * Build product item URL.
      *
      * @param array $data
      * @return array

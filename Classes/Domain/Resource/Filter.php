@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Resource;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Resource
- */
 class Filter extends AbstractResource
 {
     /**

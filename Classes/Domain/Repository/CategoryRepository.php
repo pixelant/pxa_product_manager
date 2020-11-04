@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -23,32 +23,25 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
-use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class CategoryRepository extends AbstractDemandRepository
 {
     use AbleFindByUidList;
 
     /**
-     * Default orderings
+     * Default orderings.
      *
      * @var array
      */
@@ -59,7 +52,7 @@ class CategoryRepository extends AbstractDemandRepository
     /**
      * Initializes the repository.
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         /** @var Typo3QuerySettings $querySettings */
         $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
@@ -68,7 +61,7 @@ class CategoryRepository extends AbstractDemandRepository
     }
 
     /**
-     * Find available categories uids by products sub-query
+     * Find available categories uids by products sub-query.
      *
      * @param string $subQuery
      * @return array
@@ -92,7 +85,7 @@ class CategoryRepository extends AbstractDemandRepository
                 )
             )
             ->where(
-                $queryBuilder->expr()->in('mm.uid_foreign', "($subQuery)"),
+                $queryBuilder->expr()->in('mm.uid_foreign', "(${subQuery})"),
                 $queryBuilder->expr()->eq('mm.tablenames', $queryBuilder->createNamedParameter(
                     'tx_pxaproductmanager_domain_model_product',
                     \PDO::PARAM_STR

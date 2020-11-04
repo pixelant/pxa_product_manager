@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -23,16 +23,12 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class Link extends AbstractEntity
 {
@@ -63,9 +59,10 @@ class Link extends AbstractEntity
      * @param string $name
      * @return Link
      */
-    public function setName(string $name): Link
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -81,9 +78,10 @@ class Link extends AbstractEntity
      * @param string $link
      * @return Link
      */
-    public function setLink(string $link): Link
+    public function setLink(string $link): self
     {
         $this->link = $link;
+
         return $this;
     }
 
@@ -99,9 +97,10 @@ class Link extends AbstractEntity
      * @param string $description
      * @return Link
      */
-    public function setDescription(string $description): Link
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 }

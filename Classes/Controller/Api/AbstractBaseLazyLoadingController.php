@@ -8,9 +8,6 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\JsonView;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfiguration;
 
-/**
- * @package Pixelant\PxaProductManager\Controller\Api
- */
 abstract class AbstractBaseLazyLoadingController extends ActionController
 {
     /**
@@ -24,9 +21,9 @@ abstract class AbstractBaseLazyLoadingController extends ActionController
     protected $defaultViewObjectName = JsonView::class;
 
     /**
-     * Initialize configuration
+     * Initialize configuration.
      */
-    public function initializeListAction()
+    public function initializeListAction(): void
     {
         // Allow to create Demand from arguments
         $allowedProperties = GeneralUtility::trimExplode(

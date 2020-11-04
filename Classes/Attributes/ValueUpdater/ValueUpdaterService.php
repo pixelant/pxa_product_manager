@@ -8,11 +8,6 @@ use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 
-use function PHPSTORM_META\type;
-
-/**
- * @package Pixelant\PxaProductManager\Attributes\ValueUpdater
- */
 class ValueUpdaterService implements UpdaterInterface
 {
     /**
@@ -28,7 +23,7 @@ class ValueUpdaterService implements UpdaterInterface
     /**
      * @param AttributeRepository $attributeRepository
      */
-    public function injectAttributeRepository(AttributeRepository $attributeRepository)
+    public function injectAttributeRepository(AttributeRepository $attributeRepository): void
     {
         $this->attributeRepository = $attributeRepository;
     }
@@ -36,13 +31,13 @@ class ValueUpdaterService implements UpdaterInterface
     /**
      * @param AttributeValueRepository $attributeValueRepository
      */
-    public function injectAttributeValueRepository(AttributeValueRepository $attributeValueRepository)
+    public function injectAttributeValueRepository(AttributeValueRepository $attributeValueRepository): void
     {
         $this->attributeValueRepository = $attributeValueRepository;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function update($product, $attribute, $value): void
     {
@@ -60,7 +55,7 @@ class ValueUpdaterService implements UpdaterInterface
     }
 
     /**
-     * Convert given value depending on attribute
+     * Convert given value depending on attribute.
      *
      * @param $attribute
      * @param $value
@@ -82,18 +77,19 @@ class ValueUpdaterService implements UpdaterInterface
                 $value = '';
             }
         }
+
         return $value;
     }
 
     /**
-     * If given attribute is uid - find attribute
+     * If given attribute is uid - find attribute.
      *
      * @param $attribute
      * @return Attribute
      */
     protected function getAttributeEntity($attribute): Attribute
     {
-        if (! is_object($attribute)) {
+        if (!is_object($attribute)) {
             return $this->attributeRepository->findByUid((int)$attribute);
         }
 
@@ -101,7 +97,7 @@ class ValueUpdaterService implements UpdaterInterface
     }
 
     /**
-     * Translate parameter to int if object given
+     * Translate parameter to int if object given.
      *
      * @param $value
      * @return int

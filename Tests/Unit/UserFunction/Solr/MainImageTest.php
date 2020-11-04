@@ -7,9 +7,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\UserFunction\Solr\MainImage;
 use TYPO3\CMS\Core\Resource\FileReference;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\UserFunction
- */
 class MainImageTest extends UnitTestCase
 {
     /**
@@ -17,7 +14,7 @@ class MainImageTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -27,48 +24,48 @@ class MainImageTest extends UnitTestCase
     /**
      * @test
      */
-    public function getUrlWithEmptyImagesReturnEmptyUrl()
+    public function getUrlWithEmptyImagesReturnEmptyUrl(): void
     {
-        $this->subject->expects($this->once())->method('getImages')->willReturn([]);
+        $this->subject->expects(self::once())->method('getImages')->willReturn([]);
 
-        $this->assertEquals('', $this->subject->getUrl());
+        self::assertEquals('', $this->subject->getUrl());
     }
 
     /**
      * @test
      */
-    public function getUrlReturnFirstMatchedImagePublicUrl()
+    public function getUrlReturnFirstMatchedImagePublicUrl(): void
     {
         $file1 = $this->createMock(FileReference::class);
         $file2 = $this->createMock(FileReference::class);
         $file3 = $this->createMock(FileReference::class);
         $file4 = $this->createMock(FileReference::class);
 
-        $this->subject->expects($this->once())->method('getImages')->willReturn([
-            $file1, $file2, $file3, $file4
+        $this->subject->expects(self::once())->method('getImages')->willReturn([
+            $file1, $file2, $file3, $file4,
         ]);
-        $this->subject->expects($this->once())->method('findMatchedImage')->willReturn($file3);
+        $this->subject->expects(self::once())->method('findMatchedImage')->willReturn($file3);
 
-        $file3->expects($this->once())->method('getPublicUrl')->willReturn('url');
-        $this->assertEquals('url', $this->subject->getUrl());
+        $file3->expects(self::once())->method('getPublicUrl')->willReturn('url');
+        self::assertEquals('url', $this->subject->getUrl());
     }
 
     /**
      * @test
      */
-    public function getUrlReturnFirstNonMatchedImageIfNotFound()
+    public function getUrlReturnFirstNonMatchedImageIfNotFound(): void
     {
         $file1 = $this->createMock(FileReference::class);
         $file2 = $this->createMock(FileReference::class);
         $file3 = $this->createMock(FileReference::class);
         $file4 = $this->createMock(FileReference::class);
 
-        $this->subject->expects($this->once())->method('getImages')->willReturn([
-            $file1, $file2, $file3, $file4
+        $this->subject->expects(self::once())->method('getImages')->willReturn([
+            $file1, $file2, $file3, $file4,
         ]);
-        $this->subject->expects($this->once())->method('findMatchedImage')->willReturn(null);
+        $this->subject->expects(self::once())->method('findMatchedImage')->willReturn(null);
 
-        $file1->expects($this->once())->method('getPublicUrl')->willReturn('file1');
-        $this->assertEquals('file1', $this->subject->getUrl());
+        $file1->expects(self::once())->method('getPublicUrl')->willReturn('file1');
+        self::assertEquals('file1', $this->subject->getUrl());
     }
 }

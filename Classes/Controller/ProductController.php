@@ -8,9 +8,6 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 
-/**
- * @package Pixelant\PxaProductManager\Controller
- */
 class ProductController extends AbstractController
 {
     /**
@@ -26,7 +23,7 @@ class ProductController extends AbstractController
     /**
      * @param ProductRepository $productRepository
      */
-    public function injectProductRepository(ProductRepository $productRepository)
+    public function injectProductRepository(ProductRepository $productRepository): void
     {
         $this->productRepository = $productRepository;
     }
@@ -34,17 +31,17 @@ class ProductController extends AbstractController
     /**
      * @param CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    public function injectCategoryRepository(CategoryRepository $categoryRepository): void
     {
         $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * List action
+     * List action.
      *
      * @param Category|null $category
      */
-    public function listAction(Category $category = null)
+    public function listAction(Category $category = null): void
     {
         $category ??= $this->categoryRepository->findByUid((int)$this->settings['list']['entryNavigationCategory']);
 
@@ -61,12 +58,12 @@ class ProductController extends AbstractController
     }
 
     /**
-     * Show product
+     * Show product.
      *
      * @param Product $product
      * @param Category|null $category
      */
-    public function showAction(Product $product, Category $category = null)
+    public function showAction(Product $product, Category $category = null): void
     {
         $this->view->assignMultiple(compact('product', 'category'));
     }

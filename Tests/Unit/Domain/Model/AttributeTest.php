@@ -1,18 +1,16 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
- */
 class AttributeTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->subject = new Attribute();
@@ -21,102 +19,104 @@ class AttributeTest extends UnitTestCase
     /**
      * @test
      */
-    public function isMultipleSelectBoxReturnTrueonMultipleSelectBox()
+    public function isMultipleSelectBoxReturnTrueonMultipleSelectBox(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_MULTISELECT);
 
-        $this->assertTrue($this->subject->isMultipleSelectBox());
+        self::assertTrue($this->subject->isMultipleSelectBox());
     }
 
     /**
      * @test
      * @dataProvider isFalTypeProvider
+     * @param mixed $type
+     * @param mixed $expect
      */
-    public function isFalTypeCanCheckIfTypeOfAttributeIsImageOrFile($type, $expect)
+    public function isFalTypeCanCheckIfTypeOfAttributeIsImageOrFile($type, $expect): void
     {
         $this->subject->setType($type);
 
-        $this->assertEquals($expect, $this->subject->isFalType());
+        self::assertEquals($expect, $this->subject->isFalType());
     }
 
     /**
      * @test
      */
-    public function isInputTypeReturnTrueOnInput()
+    public function isInputTypeReturnTrueOnInput(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_INPUT);
 
-        $this->assertTrue($this->subject->isInputType());
+        self::assertTrue($this->subject->isInputType());
     }
 
     /**
      * @test
      */
-    public function isTextAreaReturnTrueOnTextArea()
+    public function isTextAreaReturnTrueOnTextArea(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_TEXT);
 
-        $this->assertTrue($this->subject->isTextArea());
+        self::assertTrue($this->subject->isTextArea());
     }
 
     /**
      * @test
      */
-    public function isTextAreaReturnTrueOnSelectBox()
+    public function isTextAreaReturnTrueOnSelectBox(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_DROPDOWN);
 
-        $this->assertTrue($this->subject->isSelectBoxType());
+        self::assertTrue($this->subject->isSelectBoxType());
     }
 
     /**
      * @test
      */
-    public function isInputTypeReturnTrueOnMultipleSelectBox()
+    public function isInputTypeReturnTrueOnMultipleSelectBox(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_MULTISELECT);
 
-        $this->assertTrue($this->subject->isSelectBoxType());
+        self::assertTrue($this->subject->isSelectBoxType());
     }
 
     /**
      * @test
      */
-    public function isDateTypeReturnTrueOnDateType()
+    public function isDateTypeReturnTrueOnDateType(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_DATETIME);
 
-        $this->assertTrue($this->subject->isDateType());
+        self::assertTrue($this->subject->isDateType());
     }
 
     /**
      * @test
      */
-    public function isCheckboxTypeReturnTrueOnCheckbox()
+    public function isCheckboxTypeReturnTrueOnCheckbox(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_CHECKBOX);
 
-        $this->assertTrue($this->subject->isCheckboxType());
+        self::assertTrue($this->subject->isCheckboxType());
     }
 
     /**
      * @test
      */
-    public function isLinkTypeReturnTrueOnLinkType()
+    public function isLinkTypeReturnTrueOnLinkType(): void
     {
         $this->subject->setType(Attribute::ATTRIBUTE_TYPE_LINK);
 
-        $this->assertTrue($this->subject->isLinkType());
+        self::assertTrue($this->subject->isLinkType());
     }
 
     /**
      * @test
      */
-    public function usingAsStringReturnValue()
+    public function usingAsStringReturnValue(): void
     {
         $this->subject->setStringValue('value');
 
-        $this->assertEquals('value', (string)$this->subject->getStringValue());
+        self::assertEquals('value', (string)$this->subject->getStringValue());
     }
 
     public function isFalTypeProvider()

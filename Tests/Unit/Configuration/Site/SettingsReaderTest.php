@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Configuration\Site;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -7,16 +8,12 @@ use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Site\Entity\Site;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Configuration\Flexform
- */
 class SettingsReaderTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function initWillSetSettingsFromSiteConfiguration()
+    public function initWillSetSettingsFromSiteConfiguration(): void
     {
         $settings = ['test' => 'test value'];
 
@@ -29,37 +26,36 @@ class SettingsReaderTest extends UnitTestCase
         $subject = new SettingsReader($request->reveal());
         $this->callInaccessibleMethod($subject, 'init');
 
-        $this->assertEquals($settings, getProtectedVarValue($subject, 'settings'));
+        self::assertEquals($settings, getProtectedVarValue($subject, 'settings'));
     }
 
     /**
      * @test
      */
-    public function getValueReturnValueOfSettingAndAddPrefix()
+    public function getValueReturnValueOfSettingAndAddPrefix(): void
     {
         $settings = [
-            'pxapm_singleViewPid' => 11
+            'pxapm_singleViewPid' => 11,
         ];
 
         $subject = new SettingsReader($this->createMock(ServerRequest::class));
         $this->inject($subject, 'settings', $settings);
 
-        $this->assertEquals(11, $subject->getValue('singleViewPid'));
+        self::assertEquals(11, $subject->getValue('singleViewPid'));
     }
-
 
     /**
      * @test
      */
-    public function getValueReturnValueIfGivenKeyIsWithPrefixAlready()
+    public function getValueReturnValueIfGivenKeyIsWithPrefixAlready(): void
     {
         $settings = [
-            'pxapm_singleViewPid' => 22
+            'pxapm_singleViewPid' => 22,
         ];
 
         $subject = new SettingsReader($this->createMock(ServerRequest::class));
         $this->inject($subject, 'settings', $settings);
 
-        $this->assertEquals(22, $subject->getValue('pxapm_singleViewPid'));
+        self::assertEquals(22, $subject->getValue('pxapm_singleViewPid'));
     }
 }

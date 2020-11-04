@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
 /**
- * Checkbox configuration
+ * Checkbox configuration.
  */
 class CheckboxProvider extends AbstractProvider
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function overrideWithSpecificTca(array $tca): array
     {

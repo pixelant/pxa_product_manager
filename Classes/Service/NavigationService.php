@@ -12,9 +12,7 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Generate categories navigation tree
- *
- * @package Pixelant\PxaProductManager\Service
+ * Generate categories navigation tree.
  */
 class NavigationService
 {
@@ -49,14 +47,14 @@ class NavigationService
     protected ?array $items = null;
 
     /**
-     * Array of active categories
+     * Array of active categories.
      *
      * @var array
      */
     protected array $active = [];
 
     /**
-     * UID of current category
+     * UID of current category.
      *
      * @var int
      */
@@ -77,13 +75,13 @@ class NavigationService
     /**
      * @param CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    public function injectCategoryRepository(CategoryRepository $categoryRepository): void
     {
         $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * Generate navigation items tree
+     * Generate navigation items tree.
      *
      * @return array
      */
@@ -108,14 +106,15 @@ class NavigationService
      * @param bool $expandAll
      * @return NavigationService
      */
-    public function setExpandAll(bool $expandAll): NavigationService
+    public function setExpandAll(bool $expandAll): self
     {
         $this->expandAll = $expandAll;
+
         return $this;
     }
 
     /**
-     * Init items
+     * Init items.
      */
     protected function init(): void
     {
@@ -124,9 +123,9 @@ class NavigationService
     }
 
     /**
-     * Set active categories and current from request
+     * Set active categories and current from request.
      */
-    protected function setActiveFromRequest()
+    protected function setActiveFromRequest(): void
     {
         $prefix = UrlBuilderService::CATEGORY_ARGUMENT_START_WITH;
         $params = $this->request->getQueryParams()[UrlBuilderService::NAMESPACES] ?? [];
@@ -137,12 +136,12 @@ class NavigationService
 
         $this->active = array_map(
             'intval',
-            array_filter($params, fn($paramName) => strpos($paramName, $prefix) === 0, ARRAY_FILTER_USE_KEY)
+            array_filter($params, fn ($paramName) => strpos($paramName, $prefix) === 0, ARRAY_FILTER_USE_KEY)
         );
     }
 
     /**
-     * Generate items tree
+     * Generate items tree.
      *
      * @param array $categories
      * @param int $iterator
@@ -179,7 +178,7 @@ class NavigationService
     }
 
     /**
-     * Find subcategories
+     * Find subcategories.
      *
      * @param Category $parent
      * @return array
@@ -187,11 +186,12 @@ class NavigationService
     protected function findSubCategories(Category $parent): array
     {
         $demand = $this->getDemandWithParent($parent);
+
         return $this->categoryRepository->findDemanded($demand)->toArray();
     }
 
     /**
-     * Create demand clone with new parent
+     * Create demand clone with new parent.
      *
      * @param Category $parent
      * @return DemandInterface

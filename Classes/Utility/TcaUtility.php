@@ -6,7 +6,7 @@ namespace Pixelant\PxaProductManager\Utility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/***************************************************************
+/*
  *
  *  Copyright notice
  *
@@ -29,16 +29,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- * Class TCAUtility
- * @package Pixelant\PxaProductManager\Utility
+ * Class TCAUtility.
  */
 class TcaUtility
 {
     /**
-     * Table where for accessories
+     * Table where for accessories.
      *
      * @return string
      */
@@ -51,7 +50,7 @@ class TcaUtility
     }
 
     /**
-     * Table where for related-products
+     * Table where for related-products.
      *
      * @return string
      */
@@ -64,7 +63,7 @@ class TcaUtility
     }
 
     /**
-     * Table where for sub-products
+     * Table where for sub-products.
      *
      * @return string
      */
@@ -77,7 +76,7 @@ class TcaUtility
     }
 
     /**
-     * Table where for attributes sets
+     * Table where for attributes sets.
      *
      * @return string
      */
@@ -90,7 +89,7 @@ class TcaUtility
     }
 
     /**
-     * TCA where clause for categories
+     * TCA where clause for categories.
      *
      * @return string
      */
@@ -103,7 +102,7 @@ class TcaUtility
     }
 
     /**
-     * Generate dynamic foreign table where
+     * Generate dynamic foreign table where.
      *
      * @param $setting
      * @param $table
@@ -121,15 +120,19 @@ class TcaUtility
             switch ($restrictionSetting) {
                 case 'current_pid':
                     $foreignTableWhere = ' AND ' . $table . '.pid=###CURRENT_PID### ';
+
                     break;
                 case 'siteroot':
                     $foreignTableWhere = ' AND ' . $table . '.pid IN (###SITEROOT###) ';
+
                     break;
                 case 'page_tsconfig':
                     $foreignTableWhere = ' AND ' . $table . '.pid IN (###PAGE_TSCONFIG_IDLIST###) ';
+
                     break;
                 case 'none':
                     $foreignTableWhere = '';
+
                     break;
             }
         }

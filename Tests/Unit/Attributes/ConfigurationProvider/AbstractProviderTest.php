@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\AbstractProvider;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Backend\Provider\AttributesConfiguration
- */
 class AbstractProviderTest extends UnitTestCase
 {
     /**
@@ -16,7 +14,7 @@ class AbstractProviderTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -29,7 +27,7 @@ class AbstractProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributeConfigurationReturnConfigurationByAttributeTypeAndSetNameAsLabel()
+    public function getAttributeConfigurationReturnConfigurationByAttributeTypeAndSetNameAsLabel(): void
     {
         $type = Attribute::ATTRIBUTE_TYPE_INPUT;
         $testConf = ['conf' => ['type' => 'input']];
@@ -41,7 +39,7 @@ class AbstractProviderTest extends UnitTestCase
         $this->inject($this->subject, 'attribute', $attribute);
         $this->inject($this->subject, 'tca', $tca);
 
-        $this->assertEquals(
+        self::assertEquals(
             $testConf + ['label' => 'Attribute'],
             $this->callInaccessibleMethod($this->subject, 'getAttributeConfiguration')
         );
@@ -50,12 +48,12 @@ class AbstractProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function isRequiredReturnTrueIfAttributeIsRequired()
+    public function isRequiredReturnTrueIfAttributeIsRequired(): void
     {
         $attribute = createEntity(Attribute::class, ['uid' => 1, 'required' => true]);
 
         $this->inject($this->subject, 'attribute', $attribute);
 
-        $this->assertTrue($this->callInaccessibleMethod($this->subject, 'isRequired'));
+        self::assertTrue($this->callInaccessibleMethod($this->subject, 'isRequired'));
     }
 }

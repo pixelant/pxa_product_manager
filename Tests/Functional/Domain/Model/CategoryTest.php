@@ -9,9 +9,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Functional
- */
 class CategoryTest extends FunctionalTestCase
 {
     /**
@@ -20,10 +17,10 @@ class CategoryTest extends FunctionalTestCase
     protected $repository;
 
     protected $testExtensionsToLoad = [
-        'typo3conf/ext/pxa_product_manager'
+        'typo3conf/ext/pxa_product_manager',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -33,7 +30,7 @@ class CategoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function mappingOfCustomFieldsIsWorking()
+    public function mappingOfCustomFieldsIsWorking(): void
     {
         $this->importDataSet(__DIR__ . '/../../../Fixtures/categories_root_line_with_product.xml');
 
@@ -51,8 +48,8 @@ class CategoryTest extends FunctionalTestCase
         /** @var Category $persistedCategory */
         $persistedCategory = $this->repository->findByUid($category->getUid());
 
-        $this->assertTrue($persistedCategory->isHiddenInNavigation());
-        $this->assertEquals($category->getMetaDescription(), $persistedCategory->getMetaDescription());
-        $this->assertEquals($category->getContentPage(), $persistedCategory->getContentPage());
+        self::assertTrue($persistedCategory->isHiddenInNavigation());
+        self::assertEquals($category->getMetaDescription(), $persistedCategory->getMetaDescription());
+        self::assertEquals($category->getContentPage(), $persistedCategory->getContentPage());
     }
 }

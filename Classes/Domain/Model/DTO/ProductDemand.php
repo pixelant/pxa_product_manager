@@ -5,7 +5,7 @@ namespace Pixelant\PxaProductManager\Domain\Model\DTO;
 
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2017
@@ -26,30 +26,29 @@ use Pixelant\PxaProductManager\Domain\Model\Filter;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- * Class Demand
- * @package Pixelant\PxaProductManager\Domain\Model
+ * Class Demand.
  */
 class ProductDemand extends AbstractDemand
 {
     /**
-     * Array of uids or objects
+     * Array of uids or objects.
      *
      * @var array
      */
     protected array $categories = [];
 
     /**
-     * Category conjunction
+     * Category conjunction.
      *
      * @var string
      */
     protected string $categoryConjunction = 'or';
 
     /**
-     * Lazy loading filter conjunction
+     * Lazy loading filter conjunction.
      *
      * @var string
      */
@@ -61,7 +60,7 @@ class ProductDemand extends AbstractDemand
     protected bool $hideFilterOptionsNoResult = false;
 
     /**
-     * Filters from lazy loading
+     * Filters from lazy loading.
      *
      * @var array
      */
@@ -79,9 +78,10 @@ class ProductDemand extends AbstractDemand
      * @param array $categories
      * @return ProductDemand
      */
-    public function setCategories(array $categories): ProductDemand
+    public function setCategories(array $categories): self
     {
         $this->categories = $categories;
+
         return $this;
     }
 
@@ -97,9 +97,10 @@ class ProductDemand extends AbstractDemand
      * @param string $categoryConjunction
      * @return ProductDemand
      */
-    public function setCategoryConjunction(string $categoryConjunction): ProductDemand
+    public function setCategoryConjunction(string $categoryConjunction): self
     {
         $this->categoryConjunction = $categoryConjunction;
+
         return $this;
     }
 
@@ -115,19 +116,20 @@ class ProductDemand extends AbstractDemand
      * @param array $filters
      * @return ProductDemand
      */
-    public function setFilters(array $filters): ProductDemand
+    public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
         return $this;
     }
 
     /**
-     * Remove filter by uid
+     * Remove filter by uid.
      *
      * @param int $uid
      * @return ProductDemand
      */
-    public function removeFilter(int $uid): ProductDemand
+    public function removeFilter(int $uid): self
     {
         if (isset($this->filters[$uid])) {
             unset($this->filters[$uid]);
@@ -148,9 +150,10 @@ class ProductDemand extends AbstractDemand
      * @param string $filterConjunction
      * @return ProductDemand
      */
-    public function setFilterConjunction(string $filterConjunction): ProductDemand
+    public function setFilterConjunction(string $filterConjunction): self
     {
         $this->filterConjunction = $filterConjunction;
+
         return $this;
     }
 
@@ -166,21 +169,22 @@ class ProductDemand extends AbstractDemand
      * @param bool $hideFilterOptionsNoResult
      * @return ProductDemand
      */
-    public function setHideFilterOptionsNoResult(bool $hideFilterOptionsNoResult): ProductDemand
+    public function setHideFilterOptionsNoResult(bool $hideFilterOptionsNoResult): self
     {
         $this->hideFilterOptionsNoResult = $hideFilterOptionsNoResult;
+
         return $this;
     }
 
     /**
-     * Return true if one of the filters is category filter
+     * Return true if one of the filters is category filter.
      *
      * @return bool
      */
     public function hasFiltersCategoryFilter(): bool
     {
         foreach ($this->filters as $filter) {
-            if ((int)$filter['type'] === Filter::TYPE_CATEGORIES && ! empty($filter['value'])) {
+            if ((int)$filter['type'] === Filter::TYPE_CATEGORIES && !empty($filter['value'])) {
                 return true;
             }
         }

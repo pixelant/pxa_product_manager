@@ -7,13 +7,12 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class AttributeConfigurationProviderFactory
- * @package Pixelant\PxaProductManager\Configuration\AttributesTCA
+ * Class AttributeConfigurationProviderFactory.
  */
 class ConfigurationProviderFactory
 {
     /**
-     * Factory method
+     * Factory method.
      *
      * @param Attribute $attribute
      * @return ProviderInterface

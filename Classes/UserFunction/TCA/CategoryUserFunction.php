@@ -7,9 +7,7 @@ use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * TCA user function
- *
- * @package Pixelant\PxaProductManager\UserFunction
+ * TCA user function.
  */
 class CategoryUserFunction
 {

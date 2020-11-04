@@ -9,9 +9,6 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Service\ImageService;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Resource
- */
 class Product extends AbstractResource
 {
     /**
@@ -35,7 +32,7 @@ class Product extends AbstractResource
     protected SettingsReader $siteConfiguration;
 
     /**
-     * Plugin TS settings
+     * Plugin TS settings.
      *
      * @var array
      */
@@ -44,7 +41,7 @@ class Product extends AbstractResource
     /**
      * @param ConfigurationManagerInterface $configurationManager
      */
-    public function injectConfigurationManagerInterface(ConfigurationManagerInterface $configurationManager)
+    public function injectConfigurationManagerInterface(ConfigurationManagerInterface $configurationManager): void
     {
         $this->configurationManager = $configurationManager;
     }
@@ -52,7 +49,7 @@ class Product extends AbstractResource
     /**
      * @param ImageService $imageService
      */
-    public function injectImageService(ImageService $imageService)
+    public function injectImageService(ImageService $imageService): void
     {
         $this->imageService = $imageService;
     }
@@ -60,7 +57,7 @@ class Product extends AbstractResource
     /**
      * @param UrlBuilderServiceInterface $urlBuilderServiceInterface
      */
-    public function injectUrlBuilderServiceInterface(UrlBuilderServiceInterface $urlBuilderServiceInterface)
+    public function injectUrlBuilderServiceInterface(UrlBuilderServiceInterface $urlBuilderServiceInterface): void
     {
         $this->urlBuilderService = $urlBuilderServiceInterface;
     }
@@ -68,7 +65,7 @@ class Product extends AbstractResource
     /**
      * @param SettingsReader $settingsReader
      */
-    public function injectSettingsReader(SettingsReader $settingsReader)
+    public function injectSettingsReader(SettingsReader $settingsReader): void
     {
         $this->siteConfiguration = $settingsReader;
     }
@@ -90,14 +87,14 @@ class Product extends AbstractResource
     }
 
     /**
-     * Product url
+     * Product url.
      *
      * @return string
      */
     protected function getUrl(): string
     {
         $tsPid = $this->settings['pids']['singleViewPid'] ?? 0;
-        $pageUid = intval($tsPid ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
+        $pageUid = (int) ($tsPid ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
 
         return $this->urlBuilderService->url(
             $pageUid,
@@ -107,7 +104,7 @@ class Product extends AbstractResource
     }
 
     /**
-     * Return uri of image with listing processing instructions
+     * Return uri of image with listing processing instructions.
      *
      * @param FileReference|null $reference
      * @param array $settings
@@ -130,7 +127,7 @@ class Product extends AbstractResource
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function extractableProperties(): array
     {
@@ -144,7 +141,7 @@ class Product extends AbstractResource
     }
 
     /**
-     * Plugin settings
+     * Plugin settings.
      *
      * @return array
      */

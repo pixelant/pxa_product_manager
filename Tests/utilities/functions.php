@@ -1,6 +1,6 @@
 <?php
 
-function createCategoriesRootLineAndReturnLastCategory(): \Pixelant\PxaProductManager\Domain\Model\Category
+function createCategoriesRootLineAndReturnLastCategory(): Pixelant\PxaProductManager\Domain\Model\Category
 {
     $rootLine = createMultipleEntities(\Pixelant\PxaProductManager\Domain\Model\Category::class, 5);
 
@@ -22,7 +22,7 @@ function entitiesToUidsArray($objects)
         $objects = $objects->toArray();
     }
 
-    return array_map(fn($object) => $object->getUid(), $objects);
+    return array_map(fn ($object) => $object->getUid(), $objects);
 }
 
 function createMultipleEntities(string $className, int $to, int $from = 1)
@@ -39,10 +39,10 @@ function createMultipleEntities(string $className, int $to, int $from = 1)
     return $objects;
 }
 
-function createEntity(string $className, $properties, callable $callback = null): \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+function createEntity(string $className, $properties, callable $callback = null): TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     /** @var \TYPO3\CMS\Extbase\DomainObject\AbstractEntity $entity */
-    $entity = new $className;
+    $entity = new $className();
 
     if (is_int($properties)) {
         // Assume it's uid
@@ -60,7 +60,7 @@ function createEntity(string $className, $properties, callable $callback = null)
     return $entity;
 }
 
-function createObjectStorage(...$objects): \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+function createObjectStorage(...$objects): TYPO3\CMS\Extbase\Persistence\ObjectStorage
 {
     $objectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 

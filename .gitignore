@@ -19,3 +19,5 @@ package-lock.json
 /var
 
 /Build/testing-docker/.env
+
+.php_cs.cache

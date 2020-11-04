@@ -9,12 +9,12 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Set attribute options as values
+ * Set attribute options as values.
  */
 class SelectBoxMapper extends AbstractMapper
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function map(Product $product, Attribute $attribute): void
     {

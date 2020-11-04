@@ -10,8 +10,7 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class LinkHandlingFormData
- * @package Pixelant\PxaProductManager\LinkHandler
+ * Class LinkHandlingFormData.
  */
 class LinkHandlingFormData
 {
@@ -23,7 +22,7 @@ class LinkHandlingFormData
     protected IconFactory $iconFactory;
 
     /**
-     * Initialization
+     * Initialization.
      *
      * @param IconFactory|null $iconFactory
      */
@@ -33,7 +32,7 @@ class LinkHandlingFormData
     }
 
     /**
-     * Data for link fields preview
+     * Data for link fields preview.
      *
      * @param array $linkData
      * @param array $linkParts

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Service\Url;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -9,9 +10,6 @@ use Pixelant\PxaProductManager\Service\Url\UrlBuilderService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Service\Url
- */
 class UrlBuilderServiceTest extends UnitTestCase
 {
     /**
@@ -19,7 +17,7 @@ class UrlBuilderServiceTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -33,8 +31,6 @@ class UrlBuilderServiceTest extends UnitTestCase
             {
                 $this->cObj = $cObj;
             }
-
-
         };
 
         $this->subject = new UrlBuilderService();
@@ -43,17 +39,17 @@ class UrlBuilderServiceTest extends UnitTestCase
     /**
      * @test
      */
-    public function canSetAbsoluteUrl()
+    public function canSetAbsoluteUrl(): void
     {
         $this->subject->absolute(true);
 
-        $this->assertTrue(getProtectedVarValue($this->subject, 'absolute'));
+        self::assertTrue(getProtectedVarValue($this->subject, 'absolute'));
     }
 
     /**
      * @test
      */
-    public function getCategoriesArgumentsGenerateEmptyArgumentsFromEmptyNavigationTree()
+    public function getCategoriesArgumentsGenerateEmptyArgumentsFromEmptyNavigationTree(): void
     {
         $rootCategory = createEntity(Category::class, 10);
         $rootCategory->setHiddenInNavigation(true);
@@ -61,13 +57,13 @@ class UrlBuilderServiceTest extends UnitTestCase
         // expect empty array with one hidden root category
         $expect = [];
 
-        $this->assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'getCategoriesArguments', $rootCategory));
+        self::assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'getCategoriesArguments', $rootCategory));
     }
 
     /**
      * @test
      */
-    public function getCategoriesArgumentsGenerateArgumentsFromRootLine()
+    public function getCategoriesArgumentsGenerateArgumentsFromRootLine(): void
     {
         $lastCategory = createCategoriesRootLineAndReturnLastCategory();
         $lastCategory->setHiddenInNavigation(true);
@@ -83,21 +79,21 @@ class UrlBuilderServiceTest extends UnitTestCase
             $prefix . '1' => 2,
             $prefix . '2' => 3,
             $prefix . '3' => 4,
-            'category' => $testCategory->getUid()
+            'category' => $testCategory->getUid(),
         ];
 
-        $this->assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'getCategoriesArguments', $testCategory));
+        self::assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'getCategoriesArguments', $testCategory));
     }
 
     /**
      * @test
      */
-    public function createParamsAddCategoriesToParams()
+    public function createParamsAddCategoriesToParams(): void
     {
         $subject = $this->createPartialMock(UrlBuilderService::class, ['getCategoriesArguments']);
         $category = createEntity(Category::class, 1);
 
-        $subject->expects($this->once())->method('getCategoriesArguments')->with($category)->willReturn(['category' => 1]);
+        $subject->expects(self::once())->method('getCategoriesArguments')->with($category)->willReturn(['category' => 1]);
 
         $params = $this->callInaccessibleMethod($subject, 'createParams', $category, null);
         $expect = [
@@ -105,13 +101,13 @@ class UrlBuilderServiceTest extends UnitTestCase
             'action' => 'list',
             'category' => 1,
         ];
-        $this->assertEquals($expect, $params);
+        self::assertEquals($expect, $params);
     }
 
     /**
      * @test
      */
-    public function createParamsAddProductToParamsAndChangeAction()
+    public function createParamsAddProductToParamsAndChangeAction(): void
     {
         $product = createEntity(Product::class, 10);
 
@@ -121,6 +117,6 @@ class UrlBuilderServiceTest extends UnitTestCase
             'action' => 'show',
             'product' => 10,
         ];
-        $this->assertEquals($expect, $params);
+        self::assertEquals($expect, $params);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 defined('TYPO3_MODE') || die;
 
-(function () {
+(function (): void {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
 
     $tempColumns = [
@@ -13,9 +13,9 @@ defined('TYPO3_MODE') || die;
                 'cols' => 30,
                 'rows' => 5,
                 'behaviour' => [
-                    'allowLanguageSynchronization' => true
-                ]
-            ]
+                    'allowLanguageSynchronization' => true,
+                ],
+            ],
         ],
         'pxapm_meta_description' => [
             'exclude' => 1,
@@ -25,9 +25,9 @@ defined('TYPO3_MODE') || die;
                 'cols' => 30,
                 'rows' => 5,
                 'behaviour' => [
-                    'allowLanguageSynchronization' => true
-                ]
-            ]
+                    'allowLanguageSynchronization' => true,
+                ],
+            ],
         ],
         'pxapm_alternative_title' => [
             'exclude' => 0,
@@ -35,7 +35,7 @@ defined('TYPO3_MODE') || die;
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-            ]
+            ],
         ],
         'pxapm_slug' => [
             'exclude' => true,
@@ -46,13 +46,13 @@ defined('TYPO3_MODE') || die;
                 'generatorOptions' => [
                     'fields' => ['title'],
                     'replacements' => [
-                        '/' => '-'
+                        '/' => '-',
                     ],
                 ],
                 'fallbackCharacter' => '-',
                 'eval' => 'uniqueInPid',
                 'default' => '',
-            ]
+            ],
         ],
         'pxapm_image' => [
             'exclude' => true,
@@ -61,7 +61,7 @@ defined('TYPO3_MODE') || die;
                 'pxapm_image',
                 [
                     'appearance' => [
-                        'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference'
+                        'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
                     ],
                     'behaviour' => [
                         'allowLanguageSynchronization' => true,
@@ -70,20 +70,20 @@ defined('TYPO3_MODE') || die;
                         \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
                             'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                         ],
                         \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
                             'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                         ],
                     ],
-                    'maxitems' => 1
+                    'maxitems' => 1,
                 ],
                 $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
             ),
         ],
-        /* This field is mainly used for sorting */
+        // This field is mainly used for sorting
         'pxapm_subcategories' => [
             'label' => $ll . 'sys_category.pxapm_subcategories',
             'config' => [
@@ -103,9 +103,9 @@ defined('TYPO3_MODE') || die;
                         'hide' => false,
                         'delete' => false,
                         'localize' => false,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ],
         'pxapm_products' => [
             'label' => 'Products list',
@@ -119,7 +119,7 @@ defined('TYPO3_MODE') || die;
                     'fieldname' => 'categories',
                 ],
                 'maxitems' => 9999,
-            ]
+            ],
         ],
         'pxapm_description' => [
             'exclude' => 0,
@@ -132,10 +132,10 @@ defined('TYPO3_MODE') || die;
                 'enableRichtext' => true,
                 'fieldControl' => [
                     'fullScreenRichtext' => [
-                        'disabled' => false
-                    ]
-                ]
-            ]
+                        'disabled' => false,
+                    ],
+                ],
+            ],
         ],
         'pxapm_banner_image' => [
             'exclude' => 1,
@@ -144,7 +144,7 @@ defined('TYPO3_MODE') || die;
                 'pxapm_banner_image',
                 [
                     'appearance' => [
-                        'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference'
+                        'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
                     ],
                     'behaviour' => [
                         'allowLanguageSynchronization' => true,
@@ -153,15 +153,15 @@ defined('TYPO3_MODE') || die;
                         \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
                             'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                         ],
                         \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
                             'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                         ],
                     ],
-                    'maxitems' => 1
+                    'maxitems' => 1,
                 ],
                 $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
             ),
@@ -177,7 +177,7 @@ defined('TYPO3_MODE') || die;
                     'upper' => 100,
                 ],
                 'eval' => 'double2',
-                'default' => 0.00
+                'default' => 0.00,
             ],
         ],
         'pxapm_content_page' => [
@@ -210,8 +210,8 @@ defined('TYPO3_MODE') || die;
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ],
         'pxapm_hidden_in_navigation' => [
             'exclude' => true,
@@ -223,13 +223,13 @@ defined('TYPO3_MODE') || die;
                     [
                         0 => '',
                         1 => '',
-                        'invertStateDisplay' => true
-                    ]
+                        'invertStateDisplay' => true,
+                    ],
                 ],
                 'behaviour' => [
-                    'allowLanguageSynchronization' => true
+                    'allowLanguageSynchronization' => true,
                 ],
-            ]
+            ],
         ],
         'pxapm_hide_products' => [
             'exclude' => true,
@@ -241,13 +241,13 @@ defined('TYPO3_MODE') || die;
                     [
                         0 => '',
                         1 => '',
-                        'invertStateDisplay' => true
-                    ]
+                        'invertStateDisplay' => true,
+                    ],
                 ],
                 'behaviour' => [
-                    'allowLanguageSynchronization' => true
+                    'allowLanguageSynchronization' => true,
                 ],
-            ]
+            ],
         ],
         'pxapm_hide_subcategories' => [
             'exclude' => true,
@@ -259,13 +259,13 @@ defined('TYPO3_MODE') || die;
                     [
                         0 => '',
                         1 => '',
-                        'invertStateDisplay' => true
-                    ]
+                        'invertStateDisplay' => true,
+                    ],
                 ],
                 'behaviour' => [
-                    'allowLanguageSynchronization' => true
+                    'allowLanguageSynchronization' => true,
                 ],
-            ]
+            ],
         ],
     ];
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_category', $tempColumns);

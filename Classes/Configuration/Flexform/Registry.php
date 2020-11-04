@@ -4,14 +4,12 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Configuration\Flexform;
 
 /**
- * Flexform registry service. Keep actions to flexform parts registry
- *
- * @package Pixelant\PxaProductManager\Service\Flexform
+ * Flexform registry service. Keep actions to flexform parts registry.
  */
 class Registry
 {
     /**
-     * Default flexform actions
+     * Default flexform actions.
      * @var array
      */
     protected array $defaultSwitchableActions = [
@@ -46,7 +44,7 @@ class Registry
                 'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_show.xml',
             ],
             'excludeFields' => [
-                'settings.pids.singleViewPid'
+                'settings.pids.singleViewPid',
             ],
         ],
         [
@@ -72,7 +70,7 @@ class Registry
             'action' => 'Product->wishList;Product->finishOrder',
             'label' => 'flexform.mode.product_wish_list',
             'flexforms' => [
-                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_with_list.xml'
+                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_with_list.xml',
             ],
             'excludeFields' => [],
         ],
@@ -85,7 +83,7 @@ class Registry
     ];
 
     /**
-     * Register default actions
+     * Register default actions.
      */
     public function registerDefaultActions(): void
     {
@@ -104,7 +102,7 @@ class Registry
     }
 
     /**
-     * Add action to flexform of product manager
+     * Add action to flexform of product manager.
      *
      * @param string $action Action: Product->action
      * @param string $label Label path with LLL:ext:
@@ -118,7 +116,7 @@ class Registry
     }
 
     /**
-     * Remove action from flexform
+     * Remove action from flexform.
      *
      * @param string $action
      */
@@ -130,7 +128,7 @@ class Registry
     }
 
     /**
-     * Get action configuration
+     * Get action configuration.
      *
      * @param string $action
      * @return array|null
@@ -141,7 +139,7 @@ class Registry
     }
 
     /**
-     * Get all actions
+     * Get all actions.
      *
      * @return array
      */

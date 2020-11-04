@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/***************************************************************
+/*
  *
  *  Copyright notice
  *
@@ -25,14 +25,13 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
- * Filter
+ * Filter.
  */
 class ProductType extends AbstractEntity
 {
@@ -42,7 +41,7 @@ class ProductType extends AbstractEntity
     protected string $name = '';
 
     /**
-     * Attribute sets
+     * Attribute sets.
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -50,7 +49,7 @@ class ProductType extends AbstractEntity
     protected ObjectStorage $attributeSets;
 
     /**
-     * __construct
+     * __construct.
      */
     public function __construct()
     {
@@ -60,9 +59,9 @@ class ProductType extends AbstractEntity
 
     /**
      * Extbase container doesn't call constructor,
-     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     * which leads to an error "Typed property must not be accessed before initialization" on debug.
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $this->initStorageObjects();
     }
@@ -72,9 +71,9 @@ class ProductType extends AbstractEntity
      *
      * @return void
      */
-    protected function initStorageObjects()
+    protected function initStorageObjects(): void
     {
-        /**
+        /*
          * Do not modify this method!
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
@@ -94,9 +93,10 @@ class ProductType extends AbstractEntity
      * @param string $name
      * @return ProductType
      */
-    public function setName(string $name): ProductType
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -109,14 +109,15 @@ class ProductType extends AbstractEntity
     }
 
     /**
-     * Add attribute set
+     * Add attribute set.
      *
      * @param AttributeSet $attributeSet
      * @return ProductType
      */
-    public function addAttributeSet(AttributeSet $attributeSet): ProductType
+    public function addAttributeSet(AttributeSet $attributeSet): self
     {
         $this->attributeSets->attach($attributeSet);
+
         return $this;
     }
 
@@ -124,9 +125,10 @@ class ProductType extends AbstractEntity
      * @param ObjectStorage $attributeSets
      * @return ProductType
      */
-    public function setAttributeSets(ObjectStorage $attributeSets): ProductType
+    public function setAttributeSets(ObjectStorage $attributeSets): self
     {
         $this->attributeSets = $attributeSets;
+
         return $this;
     }
 }

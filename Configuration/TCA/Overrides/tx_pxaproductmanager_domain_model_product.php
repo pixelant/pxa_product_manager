@@ -11,7 +11,7 @@ defined('TYPO3_MODE') || die;
     [
         'fieldConfiguration' => [
             'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause()
-                . 'AND sys_category.sys_language_uid IN (-1, 0)'
-        ]
+                . 'AND sys_category.sys_language_uid IN (-1, 0)',
+        ],
     ]
 );

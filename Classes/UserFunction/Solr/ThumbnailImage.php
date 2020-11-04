@@ -5,13 +5,10 @@ namespace Pixelant\PxaProductManager\UserFunction\Solr;
 
 use Pixelant\PxaProductManager\Domain\Model\Image;
 
-/**
- * @package Pixelant\PxaProductManager\UserFunction\Solr
- */
 class ThumbnailImage extends AbstractImage
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function type(): int
     {

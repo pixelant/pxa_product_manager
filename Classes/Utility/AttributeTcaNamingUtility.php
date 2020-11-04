@@ -5,17 +5,14 @@ namespace Pixelant\PxaProductManager\Utility;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 
-/**
- * @package Pixelant\PxaProductManager\Utility
- */
 class AttributeTcaNamingUtility
 {
-    const FAL_DB_FIELD = 'attributes_files';
-    const TCA_PREFIX = 'tx_pxaproductmanager_attribute_';
-    const TCA_FAL_PREFIX = 'tx_pxaproductmanager_attribute_fal_';
+    public const FAL_DB_FIELD = 'attributes_files';
+    public const TCA_PREFIX = 'tx_pxaproductmanager_attribute_';
+    public const TCA_FAL_PREFIX = 'tx_pxaproductmanager_attribute_fal_';
 
     /**
-     * Get name of TCA form field
+     * Get name of TCA form field.
      *
      * @param Attribute $attribute
      * @return string
@@ -30,7 +27,7 @@ class AttributeTcaNamingUtility
     }
 
     /**
-     * Check if given field name is attribute field name
+     * Check if given field name is attribute field name.
      *
      * @param string $field
      * @return bool
@@ -41,7 +38,7 @@ class AttributeTcaNamingUtility
     }
 
     /**
-     * Check if given field is fal field
+     * Check if given field is fal field.
      *
      * @param string $field
      * @return bool
@@ -52,14 +49,14 @@ class AttributeTcaNamingUtility
     }
 
     /**
-     * Get ID of attribute from it's TCA name
+     * Get ID of attribute from it's TCA name.
      *
      * @param string $field
      * @return int
      */
     public static function extractIdFromFieldName(string $field): int
     {
-        list($id) = explode('_', strrev($field), 2);
+        [$id] = explode('_', strrev($field), 2);
 
         return (int)strrev($id);
     }

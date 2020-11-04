@@ -7,14 +7,12 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * Interface for product attribute value update
- *
- * @package Pixelant\PxaProductManager\Attributes\ValueUpdater
+ * Interface for product attribute value update.
  */
 interface UpdaterInterface
 {
     /**
-     * Update attribute value
+     * Update attribute value.
      *
      * @param int|Product $product Product object or uid
      * @param int|Attribute $attribute Attribute object or uid

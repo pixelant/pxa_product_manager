@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -8,14 +9,11 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Model\Option;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
- */
 class FilterTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -25,7 +23,7 @@ class FilterTest extends UnitTestCase
     /**
      * @test
      */
-    public function getOptionsReturnCategoriesOptions()
+    public function getOptionsReturnCategoriesOptions(): void
     {
         $this->subject->setType(Filter::TYPE_CATEGORIES);
 
@@ -44,13 +42,13 @@ class FilterTest extends UnitTestCase
             ['value' => $cat2->getUid(), 'label' => $cat2->getTitle()],
         ];
 
-        $this->assertEquals($expect, $this->subject->getOptions());
+        self::assertEquals($expect, $this->subject->getOptions());
     }
 
     /**
      * @test
      */
-    public function getOptionsReturnAttributeOptions()
+    public function getOptionsReturnAttributeOptions(): void
     {
         $this->subject->setType(Filter::TYPE_ATTRIBUTES);
 
@@ -69,6 +67,6 @@ class FilterTest extends UnitTestCase
             ['value' => $opt2->getUid(), 'label' => $opt2->getValue()],
         ];
 
-        $this->assertEquals($expect, $this->subject->getOptions());
+        self::assertEquals($expect, $this->subject->getOptions());
     }
 }

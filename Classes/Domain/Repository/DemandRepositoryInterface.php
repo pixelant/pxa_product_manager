@@ -1,11 +1,11 @@
 <?php
+
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 
 /**
- * Interface DemandRepositoryInterface
- * @package Pixelant\PxaDealers\Domain\Repository
+ * Interface DemandRepositoryInterface.
  */
 interface DemandRepositoryInterface
 {

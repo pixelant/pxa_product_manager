@@ -7,12 +7,12 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * General mapper for string values
+ * General mapper for string values.
  */
 class GeneralMapper extends AbstractMapper
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function map(Product $product, Attribute $attribute): void
     {

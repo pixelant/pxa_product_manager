@@ -5,13 +5,10 @@ namespace Pixelant\PxaProductManager\Domain\Collection;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Collection
- */
 trait CanCreateCollection
 {
     /**
-     * Able to create collections
+     * Able to create collections.
      *
      * @param $items
      * @return Collection

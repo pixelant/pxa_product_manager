@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Model
- */
 class AttributeFile extends AbstractFileReference
 {
     /**
-     * Attribute uid if belongs to attribute
+     * Attribute uid if belongs to attribute.
      *
      * @var int
      */
@@ -27,9 +24,10 @@ class AttributeFile extends AbstractFileReference
      * @param int $attribute
      * @return AttributeFile
      */
-    public function setAttribute(int $attribute): AttributeFile
+    public function setAttribute(int $attribute): self
     {
         $this->attribute = $attribute;
+
         return $this;
     }
 }

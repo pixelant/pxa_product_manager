@@ -25,7 +25,7 @@ return (function () {
             'type' => 'type',
 
             'searchFields' => 'name,category,attribute',
-            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg'
+            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg',
         ],
         'interface' => [
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, category, attribute, conjunction',
@@ -33,7 +33,7 @@ return (function () {
         'types' => [
             '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories,'],
             '2' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes,'],
-            '3' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes,']
+            '3' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes,'],
         ],
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
@@ -53,11 +53,11 @@ return (function () {
                         [
                             'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                             -1,
-                            'flags-multiple'
+                            'flags-multiple',
                         ],
                     ],
                     'default' => 0,
-                ]
+                ],
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -71,7 +71,7 @@ return (function () {
                     ],
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_filter',
                     'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_filter.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_filter.sys_language_uid IN (-1,0)',
-                    'default' => 0
+                    'default' => 0,
                 ],
             ],
             'l10n_diffsource' => [
@@ -90,8 +90,8 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
                 ],
             ],
@@ -110,7 +110,7 @@ return (function () {
                     ],
                     'size' => 1,
                     'maxitems' => 1,
-                    'eval' => ''
+                    'eval' => '',
                 ],
             ],
             'name' => [
@@ -119,7 +119,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'label' => [
@@ -128,8 +128,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'category' => [
                 'exclude' => true,
@@ -150,7 +150,7 @@ return (function () {
                     'size' => 20,
                     'minitems' => 1,
                     'maxitems' => 1,
-                ]
+                ],
             ],
             'attribute' => [
                 'exclude' => true,
@@ -166,7 +166,7 @@ return (function () {
                         ' AND (tx_pxaproductmanager_domain_model_attribute.sys_language_uid = 0 OR tx_pxaproductmanager_domain_model_attribute.l10n_parent = 0) ORDER BY tx_pxaproductmanager_domain_model_attribute.sorting',
                     'minitems' => 1,
                     'maxitems' => 1,
-                ]
+                ],
             ],
             'conjunction' => [
                 'displayCond' => 'FIELD:type:!=:3', // hide for range filter
@@ -179,9 +179,9 @@ return (function () {
                     'items' => [
                         ['And', \Pixelant\PxaProductManager\Domain\Model\Filter::CONJUNCTION_AND],
                         ['Or', \Pixelant\PxaProductManager\Domain\Model\Filter::CONJUNCTION_OR],
-                    ]
+                    ],
                 ],
             ],
-        ]
+        ],
     ];
 })();

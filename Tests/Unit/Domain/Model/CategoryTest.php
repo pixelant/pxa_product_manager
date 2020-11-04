@@ -6,14 +6,11 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
- */
 class CategoryTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -23,7 +20,7 @@ class CategoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getParentsRootLineReturnRootLineOfParents()
+    public function getParentsRootLineReturnRootLineOfParents(): void
     {
         $lastCategory = createCategoriesRootLineAndReturnLastCategory();
 
@@ -35,13 +32,13 @@ class CategoryTest extends UnitTestCase
         $result = entitiesToUidsArray($this->subject->getParentsRootLine());
 
         // Compare  UIDs, because object won't be same
-        $this->assertEquals($expect, $result);
+        self::assertEquals($expect, $result);
     }
 
     /**
      * @test
      */
-    public function getParentsRootLineReverseReturnReversedRootLine()
+    public function getParentsRootLineReverseReturnReversedRootLine(): void
     {
         $lastCategory = createCategoriesRootLineAndReturnLastCategory();
 
@@ -52,13 +49,13 @@ class CategoryTest extends UnitTestCase
         $result = entitiesToUidsArray($this->subject->getParentsRootLineReverse());
 
         // Compare  UIDs, because object won't be same
-        $this->assertEquals($expect, $result);
+        self::assertEquals($expect, $result);
     }
 
     /**
      * @test
      */
-    public function getParentsRootLineReturnRootLineOfParentsButStopIfLoopFound()
+    public function getParentsRootLineReturnRootLineOfParentsButStopIfLoopFound(): void
     {
         $root = createEntity(Category::class, 99);
         $subCat1 = createEntity(Category::class, 1);
@@ -76,15 +73,15 @@ class CategoryTest extends UnitTestCase
         $this->subject->_setProperty('uid', 100);
 
         $expect = [100, 3, 2, 1, 99];
-        $result = array_map(fn($cat) => $cat->getUid(), $this->subject->getParentsRootLine());
+        $result = array_map(fn ($cat) => $cat->getUid(), $this->subject->getParentsRootLine());
 
-        $this->assertEquals($expect, $result);
+        self::assertEquals($expect, $result);
     }
 
     /**
      * @test
      */
-    public function getNavigationRootLineReturnCategoriesForUrl()
+    public function getNavigationRootLineReturnCategoriesForUrl(): void
     {
         $lastCategory = createCategoriesRootLineAndReturnLastCategory();
         $lastCategory->setHiddenInNavigation(true);
@@ -99,31 +96,31 @@ class CategoryTest extends UnitTestCase
             2,
             3,
             4,
-            $this->subject->getUid()
+            $this->subject->getUid(),
         ];
 
-        $result = array_map(fn($cat) => $cat->getUid(), $this->subject->getNavigationRootLine());
+        $result = array_map(fn ($cat) => $cat->getUid(), $this->subject->getNavigationRootLine());
 
-        $this->assertEquals($expect, array_values($result));
+        self::assertEquals($expect, array_values($result));
     }
 
     /**
      * @test
      */
-    public function getNavigationTitleReturnAlternativeTitleIfExist()
+    public function getNavigationTitleReturnAlternativeTitleIfExist(): void
     {
         $this->subject->setAlternativeTitle('title');
 
-        $this->assertEquals('title', $this->subject->getNavigationTitle());
+        self::assertEquals('title', $this->subject->getNavigationTitle());
     }
 
     /**
      * @test
      */
-    public function getNavigationTitleReturnNameIfNoAlternativeTitle()
+    public function getNavigationTitleReturnNameIfNoAlternativeTitle(): void
     {
         $this->subject->setTitle('title');
 
-        $this->assertEquals('title', $this->subject->getNavigationTitle());
+        self::assertEquals('title', $this->subject->getNavigationTitle());
     }
 }

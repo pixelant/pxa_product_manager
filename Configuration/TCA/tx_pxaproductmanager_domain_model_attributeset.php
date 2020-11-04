@@ -19,7 +19,7 @@ return (function () {
                 'disabled' => 'hidden',
             ],
             'searchFields' => 'name,attributes,',
-            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg'
+            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg',
         ],
         'interface' => [
             'showRecordFieldList' => 'hidden, name, attributes, product_types',
@@ -41,8 +41,8 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
                 ],
             ],
@@ -51,7 +51,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'attributes' => [
@@ -73,13 +73,13 @@ return (function () {
                     'multiple' => 0,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             'product_types' => [
                 'label' => $ll . '.product_types',
@@ -98,13 +98,13 @@ return (function () {
                     'multiple' => 0,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
         ],
     ];

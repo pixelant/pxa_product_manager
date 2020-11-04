@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
 /**
- * Simple input
+ * Simple input.
  */
 class DateTimeProvider extends InputProvider
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function overrideWithSpecificTca(array $tca): array
     {

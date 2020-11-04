@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -23,27 +23,22 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class Option extends AbstractEntity
 {
-
     /**
      * @var string
      */
     protected string $value = '';
 
     /**
-     * Alias to getValue
+     * Alias to getValue.
      *
      * @return string
      */
@@ -64,9 +59,10 @@ class Option extends AbstractEntity
      * @param string $value
      * @return Option
      */
-    public function setValue(string $value): Option
+    public function setValue(string $value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

@@ -3,14 +3,10 @@
 namespace Pixelant\PxaProductManager\Tests\Functional\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Functional
- */
 class ProductTest extends FunctionalTestCase
 {
     /**
@@ -19,10 +15,10 @@ class ProductTest extends FunctionalTestCase
     protected $repository;
 
     protected $testExtensionsToLoad = [
-        'typo3conf/ext/pxa_product_manager'
+        'typo3conf/ext/pxa_product_manager',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -32,7 +28,7 @@ class ProductTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getAllAttributesSetsReturnAttributesSetsOfCategoriesAndProductInCorrectOrder()
+    public function getAllAttributesSetsReturnAttributesSetsOfCategoriesAndProductInCorrectOrder(): void
     {
         $this->importDataSet(__DIR__ . '/../../../Fixtures/products_attributes_set_test.xml');
 
@@ -41,19 +37,19 @@ class ProductTest extends FunctionalTestCase
         $allAttributesSets = $product->_getAllAttributesSets();
 
         $expectAttributesSetsUids = [3, 1];
-        $this->assertEquals($expectAttributesSetsUids, entitiesToUidsArray($allAttributesSets));
+        self::assertEquals($expectAttributesSetsUids, entitiesToUidsArray($allAttributesSets));
     }
 
     /**
      * @test
      */
-    public function getCategoriesWithParentsReturnAllRootLineExcludeDuplications()
+    public function getCategoriesWithParentsReturnAllRootLineExcludeDuplications(): void
     {
         $this->importDataSet(__DIR__ . '/../../../Fixtures/categories_root_line_with_product.xml');
         $product = $this->repository->findByUid(10);
 
         $expect = [20, 10, 40, 30, 50];
 
-        $this->assertEquals($expect, entitiesToUidsArray($product->getCategoriesWithParents()));
+        self::assertEquals($expect, entitiesToUidsArray($product->getCategoriesWithParents()));
     }
 }

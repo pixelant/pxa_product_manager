@@ -9,9 +9,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Resource\FileCollector;
 
-/**
- * @package Pixelant\PxaProductManager\UserFunction\Solr
- */
 abstract class AbstractImage
 {
     use CanCreateCollection;
@@ -22,7 +19,7 @@ abstract class AbstractImage
     public ContentObjectRenderer $cObj;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getUrl(): string
     {
@@ -40,7 +37,7 @@ abstract class AbstractImage
     }
 
     /**
-     * Find image by type
+     * Find image by type.
      *
      * @param array $images
      * @return FileReference|null
@@ -50,7 +47,7 @@ abstract class AbstractImage
         // Try to find by type
         $matchedImages = array_filter(
             $images,
-            fn(FileReference $reference) => $reference->getReferenceProperty('pxapm_type') === $this->type()
+            fn (FileReference $reference) => $reference->getReferenceProperty('pxapm_type') === $this->type()
         );
 
         if (!empty($matchedImages)) {
@@ -61,7 +58,7 @@ abstract class AbstractImage
     }
 
     /**
-     * Product images
+     * Product images.
      *
      * @return FileReference[]
      */
@@ -78,7 +75,7 @@ abstract class AbstractImage
     }
 
     /**
-     * Return type of product image
+     * Return type of product image.
      *
      * @return int
      */

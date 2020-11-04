@@ -6,12 +6,12 @@ namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 use Pixelant\PxaProductManager\Domain\Model\Option;
 
 /**
- * Selectbox TCA
+ * Selectbox TCA.
  */
 class SelectBoxProvider extends AbstractProvider
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function overrideWithSpecificTca(array $tca): array
     {

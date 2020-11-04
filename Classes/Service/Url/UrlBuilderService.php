@@ -10,16 +10,15 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
- * Class LinkBuilderService
- * @package Pixelant\PxaProductManager\Service\Link
+ * Class LinkBuilderService.
  */
 class UrlBuilderService implements UrlBuilderServiceInterface
 {
     /**
-     * Link constants
+     * Link constants.
      */
-    const CATEGORY_ARGUMENT_START_WITH = 'category_';
-    const NAMESPACES = 'tx_pxaproductmanager_pi1';
+    public const CATEGORY_ARGUMENT_START_WITH = 'category_';
+    public const NAMESPACES = 'tx_pxaproductmanager_pi1';
 
     /**
      * @var TypoScriptFrontendController
@@ -27,14 +26,14 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     protected TypoScriptFrontendController $tsfe;
 
     /**
-     * Flag if should force absolute url
+     * Flag if should force absolute url.
      *
      * @var bool
      */
     protected bool $absolute = false;
 
     /**
-     * Initialize
+     * Initialize.
      *
      * @param TypoScriptFrontendController|null $typoScriptFrontendController
      */
@@ -44,7 +43,7 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     }
 
     /**
-     * URL for product and category
+     * URL for product and category.
      *
      * @param int $pageUid
      * @param Category|null $category
@@ -54,11 +53,12 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     public function url(int $pageUid, ?Category $category, Product $product = null): string
     {
         $params = $this->createParams($category, $product);
+
         return $this->buildUri($pageUid, $params);
     }
 
     /**
-     * URL only with product parameter
+     * URL only with product parameter.
      *
      * @param int $pageUid
      * @param Product $product
@@ -81,7 +81,7 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     }
 
     /**
-     * Generate parameters for URL
+     * Generate parameters for URL.
      *
      * @param Category|null $category
      * @param Product|null $product
@@ -105,7 +105,7 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     }
 
     /**
-     * Generate link
+     * Generate link.
      *
      * @param int $pageUid
      * @param array $params
@@ -122,7 +122,7 @@ class UrlBuilderService implements UrlBuilderServiceInterface
             'parameter' => $pageUid,
             'useCacheHash' => true,
             'additionalParams' => $parameters,
-            'forceAbsoluteUrl' => $this->absolute
+            'forceAbsoluteUrl' => $this->absolute,
         ];
 
         /** @var ContentObjectRenderer $contentObjectRenderer */
@@ -135,7 +135,7 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     }
 
     /**
-     * Get category tree arguments
+     * Get category tree arguments.
      *
      * @param Category $category
      * @return array

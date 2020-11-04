@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\LinkHandler;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2017
@@ -23,7 +23,7 @@ namespace Pixelant\PxaProductManager\LinkHandler;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use Pixelant\PxaProductManager\Backend\Tree\BrowserTreeView;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,12 +44,12 @@ use TYPO3\CMS\Recordlist\LinkHandler\LinkHandlerInterface;
 use TYPO3\CMS\Recordlist\Tree\View\LinkParameterProviderInterface;
 
 /**
- * Link handler for page (and content) links
+ * Link handler for page (and content) links.
  */
 abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandlerInterface, LinkParameterProviderInterface
 {
     /**
-     * Parts of the current link
+     * Parts of the current link.
      *
      * @var array
      */
@@ -73,14 +73,14 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     protected int $pid = 0;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         parent::__construct();
         // Remove unsupported link attributes
         $this->linkAttributes = array_filter($this->linkAttributes, function ($attribute) {
-            return !in_array($attribute, ['target', 'rel', 'params']);
+            return !in_array($attribute, ['target', 'rel', 'params'], true);
         });
 
         GeneralUtility::makeInstance(PageRenderer::class)->loadRequireJsModule(
@@ -89,7 +89,7 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     }
 
     /**
-     * Checks if this is the handler for the given link
+     * Checks if this is the handler for the given link.
      *
      * The handler may store this information locally for later usage.
      *
@@ -120,7 +120,7 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     }
 
     /**
-     * Render the link handler
+     * Render the link handler.
      *
      * @param ServerRequestInterface $request
      * @return string
@@ -128,10 +128,10 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     public function render(ServerRequestInterface $request): string
     {
         $this->view->setTemplateRootPaths([
-            10 => 'EXT:pxa_product_manager/Resources/Private/Backend/Templates/LinkBrowser/'
+            10 => 'EXT:pxa_product_manager/Resources/Private/Backend/Templates/LinkBrowser/',
         ]);
 
-        $this->expandPage = intval($request->getQueryParams()['expandPage'] ?? 0);
+        $this->expandPage = (int) ($request->getQueryParams()['expandPage'] ?? 0);
 
         $tsConfig = $GLOBALS['BE_USER']->getTSConfig();
 
@@ -145,7 +145,7 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
 
         $this->view->assignMultiple([
             'tableName' => $this->tableName(),
-            'tree' => $pageTree->getBrowsableTree()
+            'tree' => $pageTree->getBrowsableTree(),
         ]);
 
         $this->addRecordsOnExpandedPage($this->expandPage);
@@ -166,7 +166,7 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     }
 
     /**
-     * Returns the URL of the current script
+     * Returns the URL of the current script.
      *
      * @return string
      */
@@ -183,7 +183,7 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     public function getUrlParameters(array $values): array
     {
         $parameters = [
-            'expandPage' => isset($values['pid']) ? (int)$values['pid'] : $this->expandPage
+            'expandPage' => isset($values['pid']) ? (int)$values['pid'] : $this->expandPage,
         ];
 
         return array_merge($this->linkBrowser->getUrlParameters($values), $parameters);
@@ -197,13 +197,13 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
         return [
             'data-typolink-template' => GeneralUtility::makeInstance(LinkService::class)->asString([
                 'type' => 'pxappm',
-                $this->linkName() => '###RECORD_UID###'
-            ])
+                $this->linkName() => '###RECORD_UID###',
+            ]),
         ];
     }
 
     /**
-     * Format the current link for HTML output
+     * Format the current link for HTML output.
      *
      * @return string
      */
@@ -244,11 +244,11 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     }
 
     /**
-     * Assign list of records
+     * Assign list of records.
      *
      * @param $pageId
      */
-    protected function addRecordsOnExpandedPage($pageId)
+    protected function addRecordsOnExpandedPage($pageId): void
     {
         // If there is an anchor value (content element reference) in the element reference, then force an ID to expand:
         if (!$pageId && isset($this->linkParts['url'][$this->linkName()])) {
@@ -307,14 +307,14 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
     }
 
     /**
-     * Prefix of link handler
+     * Prefix of link handler.
      *
      * @return string
      */
     abstract protected function linkName(): string;
 
     /**
-     * Table name of links records
+     * Table name of links records.
      *
      * @return string
      */

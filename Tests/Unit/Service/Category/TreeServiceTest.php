@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Service\Category;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -8,14 +9,11 @@ use Pixelant\PxaProductManager\Service\Category\TreeService;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Service
- */
 class TreeServiceTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -25,7 +23,7 @@ class TreeServiceTest extends UnitTestCase
     /**
      * @test
      */
-    public function childrenRecursiveReturnAllChilderns()
+    public function childrenRecursiveReturnAllChilderns(): void
     {
         $rootCat1 = createEntity(Category::class, 12);
         $rootCat2 = createEntity(Category::class, 22);
@@ -41,22 +39,22 @@ class TreeServiceTest extends UnitTestCase
         // UIDS
         $expect = [12, 1, 100, 2, 3, 22, 4, 5];
 
-        $this->assertEquals($expect, entitiesToUidsArray($this->subject->childrenRecursive([$rootCat1, $rootCat2])));
+        self::assertEquals($expect, entitiesToUidsArray($this->subject->childrenRecursive([$rootCat1, $rootCat2])));
     }
 
     /**
      * @test
      */
-    public function fetchChildrenRecursiveIsNotCalledIfResultIsCache()
+    public function fetchChildrenRecursiveIsNotCalledIfResultIsCache(): void
     {
         $cache = $this->prophesize(FrontendInterface::class);
         $cache->has('hash')->shouldBeCalled()->willReturn(true);
         $cache->get('hash')->shouldBeCalled()->willReturn([true]);
 
         $subject = $this->createPartialMock(TreeService::class, ['cacheHash', 'fetchChildrenRecursive']);
-        $subject->expects($this->once())->method('cacheHash')->willReturn('hash');
+        $subject->expects(self::once())->method('cacheHash')->willReturn('hash');
 
-        $subject->expects($this->never())->method('fetchChildrenRecursive');
+        $subject->expects(self::never())->method('fetchChildrenRecursive');
 
         $this->inject($subject, 'cache', $cache->reveal());
 
@@ -66,15 +64,16 @@ class TreeServiceTest extends UnitTestCase
     /**
      * @test
      * @dataProvider validateTypeData
+     * @param mixed $value
+     * @param mixed $isValid
      */
-    public function validateTypeExpectTraversableOrArray($value, $isValid)
+    public function validateTypeExpectTraversableOrArray($value, $isValid): void
     {
         if ($isValid) {
-            $this->assertNull($this->callInaccessibleMethod($this->subject, 'validateType', $value));
+            self::assertNull($this->callInaccessibleMethod($this->subject, 'validateType', $value));
         } else {
             $this->expectException(\InvalidArgumentException::class);
             $this->callInaccessibleMethod($this->subject, 'validateType', $value);
-
         }
     }
 
@@ -83,7 +82,7 @@ class TreeServiceTest extends UnitTestCase
         return [
             'valid_array' => [
                 [],
-                true
+                true,
             ],
             'valid_object_storage' => [
                 new ObjectStorage(),
@@ -91,8 +90,8 @@ class TreeServiceTest extends UnitTestCase
             ],
             'invalid' => [
                 123,
-                false
-            ]
+                false,
+            ],
         ];
     }
 }

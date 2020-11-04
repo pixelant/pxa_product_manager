@@ -10,12 +10,12 @@ use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class AttributeIdentifierController
+ * Class AttributeIdentifierController.
  */
 class AttributeIdentifierController
 {
     /**
-     * Convert string for attribute identifier field
+     * Convert string for attribute identifier field.
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface

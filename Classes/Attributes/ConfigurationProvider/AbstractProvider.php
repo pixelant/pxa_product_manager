@@ -6,7 +6,7 @@ namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 
 /**
- * Abstract general configuration
+ * Abstract general configuration.
  */
 abstract class AbstractProvider implements ProviderInterface
 {
@@ -26,7 +26,7 @@ abstract class AbstractProvider implements ProviderInterface
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim',
-            ]
+            ],
         ],
 
         Attribute::ATTRIBUTE_TYPE_TEXT => [
@@ -36,8 +36,8 @@ abstract class AbstractProvider implements ProviderInterface
                 'type' => 'text',
                 'cols' => '48',
                 'rows' => '8',
-                'eval' => 'trim'
-            ]
+                'eval' => 'trim',
+            ],
         ],
 
         Attribute::ATTRIBUTE_TYPE_CHECKBOX => [
@@ -45,8 +45,8 @@ abstract class AbstractProvider implements ProviderInterface
             'label' => '',
             'config' => [
                 'type' => 'check',
-                'items' => []
-            ]
+                'items' => [],
+            ],
         ],
 
         Attribute::ATTRIBUTE_TYPE_DROPDOWN => [
@@ -57,8 +57,8 @@ abstract class AbstractProvider implements ProviderInterface
                 'renderType' => 'selectSingle',
                 'items' => [],
                 'size' => 1,
-                'maxitems' => 1
-            ]
+                'maxitems' => 1,
+            ],
         ],
 
         Attribute::ATTRIBUTE_TYPE_MULTISELECT => [
@@ -71,7 +71,7 @@ abstract class AbstractProvider implements ProviderInterface
                 'size' => 10,
                 'maxitems' => 99,
                 'multiple' => 0,
-            ]
+            ],
         ],
 
         Attribute::ATTRIBUTE_TYPE_DATETIME => [
@@ -81,8 +81,8 @@ abstract class AbstractProvider implements ProviderInterface
                 'type' => 'input',
                 'default' => 0,
                 'renderType' => 'inputDateTime',
-                'eval' => 'datetime,int'
-            ]
+                'eval' => 'datetime,int',
+            ],
         ],
 
         Attribute::ATTRIBUTE_TYPE_LINK => [
@@ -93,7 +93,7 @@ abstract class AbstractProvider implements ProviderInterface
                 'max' => '256',
                 'eval' => 'trim',
                 'renderType' => 'inputLink',
-                'softref' => 'typolink'
+                'softref' => 'typolink',
             ],
         ],
 
@@ -104,7 +104,7 @@ abstract class AbstractProvider implements ProviderInterface
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim',
-            ]
+            ],
         ],
     ];
 
@@ -117,7 +117,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Return attribute TCA
+     * Return attribute TCA.
      *
      * @return array
      */
@@ -129,7 +129,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Initial TCA configuration
+     * Initial TCA configuration.
      *
      * @return array
      */
@@ -146,7 +146,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Shortcut method
+     * Shortcut method.
      *
      * @return bool
      */
@@ -156,7 +156,7 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Specific configuration for attribute
+     * Specific configuration for attribute.
      *
      * @param array $tca
      * @return array

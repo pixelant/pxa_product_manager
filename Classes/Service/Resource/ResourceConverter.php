@@ -7,9 +7,6 @@ use Pixelant\PxaProductManager\Domain\Resource\ResourceInterface;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * @package Pixelant\PxaProductManager\Service
- */
 class ResourceConverter
 {
     /**
@@ -20,13 +17,13 @@ class ResourceConverter
     /**
      * @param ObjectManager $objectManager
      */
-    public function injectObjectManager(ObjectManager $objectManager)
+    public function injectObjectManager(ObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
     }
 
     /**
-     * Convert entity to array using resource
+     * Convert entity to array using resource.
      *
      * @param AbstractEntity $entity
      * @param string|null $resource
@@ -42,7 +39,7 @@ class ResourceConverter
     }
 
     /**
-     * Convert many entities
+     * Convert many entities.
      *
      * @param AbstractEntity[] $entities
      * @param string $resource
@@ -50,11 +47,11 @@ class ResourceConverter
      */
     public function covertMany(array $entities, string $resource = null)
     {
-        return array_map(fn(AbstractEntity $entity) => $this->convert($entity, $resource), $entities);
+        return array_map(fn (AbstractEntity $entity) => $this->convert($entity, $resource), $entities);
     }
 
     /**
-     * Translate entity to its corresponding resource
+     * Translate entity to its corresponding resource.
      *
      * @param AbstractEntity $entity
      * @return string
@@ -65,8 +62,8 @@ class ResourceConverter
         $resource = str_replace('\\Model\\', '\\Resource\\', $entityName);
 
         // If entity was extended, but no resource exist, fallback to original
-        if (! class_exists($resource)) {
-            list($lastPart) = explode('\\', strrev($entityName), 2);
+        if (!class_exists($resource)) {
+            [$lastPart] = explode('\\', strrev($entityName), 2);
 
             $resource = 'Pixelant\\PxaProductManager\\Domain\\Resource\\' . strrev($lastPart);
         }

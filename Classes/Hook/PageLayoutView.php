@@ -15,17 +15,14 @@ use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Hook to display verbose information about pi1 plugin in Web>Page module
- *
- * @package TYPO3
- * @subpackage pxa_product_manager
+ * Hook to display verbose information about pi1 plugin in Web>Page module.
  */
 class PageLayoutView
 {
     use CanTranslateInBackend, CanCreateCollection;
 
     /**
-     * HR tag
+     * HR tag.
      *
      * @var string
      */
@@ -51,9 +48,8 @@ class PageLayoutView
         $this->registry = $registry ?? GeneralUtility::makeInstance(Registry::class);
     }
 
-
     /**
-     * Returns information about this extension's pi1 plugin
+     * Returns information about this extension's pi1 plugin.
      *
      * @param array $params Parameters to the hook
      * @return string Information about pi1 plugin
@@ -67,13 +63,13 @@ class PageLayoutView
 
         $additionalInfo = '';
 
-        if ($params['row']['list_type'] == 'pxaproductmanager_pi1') {
+        if ($params['row']['list_type'] === 'pxaproductmanager_pi1') {
             $flexFormSettings = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray(
                 $params['row']['pi_flexform']
             );
 
             $switchableControllerActions = $flexFormSettings['switchableControllerActions'];
-            if (! empty($switchableControllerActions)) {
+            if (!empty($switchableControllerActions)) {
                 $additionalInfo .= $this->modeLabel($switchableControllerActions);
 
                 $fieldsGroups = $this->getFlexformGroupedFields($switchableControllerActions);
@@ -101,7 +97,7 @@ class PageLayoutView
     }
 
     /**
-     * Information about plugin mode
+     * Information about plugin mode.
      *
      * @param string $switchableControllerActions
      * @return string
@@ -122,7 +118,7 @@ class PageLayoutView
     }
 
     /**
-     * Parse single field information
+     * Parse single field information.
      *
      * @param string $name
      * @param array $config
@@ -143,15 +139,19 @@ class PageLayoutView
         switch ($config['type']) {
             case 'group':
                 $value = $this->getValueFromDB($config['allowed'], (int)$value);
+
                 break;
             case 'check':
                 $value = $this->getCheckboxValue((bool)$value);
+
                 break;
             case 'select':
                 $value = $this->getSelectBoxValue($config, $value);
+
                 break;
             case 'input':
                 $value = (string)$value;
+
                 break;
             default:
                 $value = "Unsupported type '{$config['type']}'";
@@ -161,7 +161,7 @@ class PageLayoutView
     }
 
     /**
-     * Parse value for select box
+     * Parse value for select box.
      *
      * @param array $config
      * @param $value
@@ -169,9 +169,9 @@ class PageLayoutView
      */
     protected function getSelectBoxValue(array $config, $value): string
     {
-        if (! empty($config['foreign_table'])) {
+        if (!empty($config['foreign_table'])) {
             $value = $this->getValueFromDB($config['foreign_table'], ...GeneralUtility::intExplode(',', $value));
-        } elseif (! empty($config['items'])) {
+        } elseif (!empty($config['items'])) {
             // Search select item and use it label
             $item = $this->collection($config['items'])->searchByProperty('1', $value)->first();
             if (is_array($item)) {
@@ -183,7 +183,7 @@ class PageLayoutView
     }
 
     /**
-     * Value for checkbox
+     * Value for checkbox.
      *
      * @param bool $value
      * @return string
@@ -194,7 +194,7 @@ class PageLayoutView
     }
 
     /**
-     * Get value from DB for group or selectbox
+     * Get value from DB for group or selectbox.
      *
      * @param string $table
      * @param array $uids
@@ -220,7 +220,7 @@ class PageLayoutView
     }
 
     /**
-     * Read flexform structure and return its fields grouped by sheets
+     * Read flexform structure and return its fields grouped by sheets.
      *
      * @param string $action
      * @return array
@@ -238,7 +238,7 @@ class PageLayoutView
             $fields[$sheetName] = [
                 'label' => $sheet['ROOT']['TCEforms']['sheetTitle']
                     ?? 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sheet_title',
-                'el' => array_map(fn(array $fieldConfig) => $fieldConfig['TCEforms'], $sheet['ROOT']['el'])
+                'el' => array_map(fn (array $fieldConfig) => $fieldConfig['TCEforms'], $sheet['ROOT']['el']),
             ];
         }
 

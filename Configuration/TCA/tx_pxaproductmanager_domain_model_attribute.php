@@ -28,7 +28,7 @@ return (function () {
             'type' => 'type',
 
             'searchFields' => 'name, label, label_checked, label_unchecked',
-            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/tag.svg'
+            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/tag.svg',
         ],
 
         'interface' => [
@@ -59,11 +59,11 @@ return (function () {
                         [
                             'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                             -1,
-                            'flags-multiple'
+                            'flags-multiple',
                         ],
                     ],
                     'default' => 0,
-                ]
+                ],
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -78,7 +78,7 @@ return (function () {
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_attribute',
                     'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_attribute.pid=###CURRENT_PID###' .
                         ' AND tx_pxaproductmanager_domain_model_attribute.sys_language_uid IN (-1,0)',
-                    'default' => 0
+                    'default' => 0,
                 ],
             ],
             'l10n_diffsource' => [
@@ -96,8 +96,8 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
                 ],
             ],
@@ -110,8 +110,8 @@ return (function () {
                     'eval' => 'datetime,int',
                     'default' => 0,
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true
-                    ]
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'endtime' => [
@@ -123,11 +123,11 @@ return (function () {
                     'eval' => 'datetime,int',
                     'default' => 0,
                     'range' => [
-                        'upper' => mktime(0, 0, 0, 1, 1, 2038)
+                        'upper' => mktime(0, 0, 0, 1, 1, 2038),
                     ],
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true
-                    ]
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
 
@@ -137,8 +137,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
-                ]
+                    'eval' => 'trim,required',
+                ],
             ],
             'label' => [
                 'exclude' => false,
@@ -146,8 +146,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'type' => [
                 'exclude' => false,
@@ -159,49 +159,49 @@ return (function () {
                     'items' => [
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_INPUT,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_INPUT
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_INPUT,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_TEXT,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_TEXT
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_TEXT,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_CHECKBOX,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_IMAGE,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE,
                         ],
                         [
                             $llType . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL,
-                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL
+                            \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LABEL,
                         ],
                     ],
                     'size' => 1,
                     'maxitems' => 1,
-                    'eval' => 'required'
-                ]
+                    'eval' => 'required',
+                ],
             ],
             'required' => [
                 'exclude' => false,
@@ -213,10 +213,10 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                        ]
+                        ],
                     ],
-                    'default' => 0
-                ]
+                    'default' => 0,
+                ],
             ],
             'show_in_attribute_listing' => [
                 'exclude' => false,
@@ -228,10 +228,10 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                        ]
+                        ],
                     ],
-                    'default' => 1
-                ]
+                    'default' => 1,
+                ],
             ],
             'show_in_compare' => [
                 'exclude' => false,
@@ -243,10 +243,10 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                        ]
+                        ],
                     ],
-                    'default' => 1
-                ]
+                    'default' => 1,
+                ],
             ],
             'identifier' => [
                 'exclude' => true,
@@ -259,10 +259,10 @@ return (function () {
                     'eval' => 'trim,alphanum,nospace,uniqueInPid',
                     'fieldControl' => [
                         'attributeIdentifierControl' => [
-                            'renderType' => 'attributeIdentifierControl'
-                        ]
-                    ]
-                ]
+                            'renderType' => 'attributeIdentifierControl',
+                        ],
+                    ],
+                ],
             ],
             'default_value' => [
                 'exclude' => true,
@@ -275,14 +275,14 @@ return (function () {
                         'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_FILE,
                         'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_LINK,
                         'FIELD:type:!=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DATETIME,
-                    ]
+                    ],
                 ],
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.default_value',
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'label_checked' => [
                 'exclude' => true,
@@ -291,8 +291,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 15,
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'label_unchecked' => [
                 'exclude' => true,
@@ -301,8 +301,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 15,
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'options' => [
                 'exclude' => false,
@@ -311,7 +311,7 @@ return (function () {
                     'OR' => [
                         'FIELD:type:=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_DROPDOWN,
                         'FIELD:type:=:' . \Pixelant\PxaProductManager\Domain\Model\Attribute::ATTRIBUTE_TYPE_MULTISELECT,
-                    ]
+                    ],
                 ],
                 'config' => [
                     'type' => 'inline',
@@ -326,9 +326,9 @@ return (function () {
                         'showPossibleLocalizationRecords' => true,
                         'showAllLocalizationLink' => true,
                         'useSortable' => true,
-                    ]
-                ]
+                    ],
+                ],
             ],
-        ]
+        ],
     ];
 })();

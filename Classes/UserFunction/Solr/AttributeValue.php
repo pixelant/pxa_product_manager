@@ -8,9 +8,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
-/**
- * @package Pixelant\PxaProductManager\UserFunction\Solr
- */
 class AttributeValue
 {
     /**
@@ -24,7 +21,7 @@ class AttributeValue
     protected AttributeValueRepository $repository;
 
     /**
-     * Initialize
+     * Initialize.
      */
     public function __construct()
     {
@@ -32,7 +29,7 @@ class AttributeValue
     }
 
     /**
-     * Return string value of attribute
+     * Return string value of attribute.
      *
      * @param $_
      * @param array $params

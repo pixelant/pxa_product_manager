@@ -7,12 +7,12 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * Set files for attribute
+ * Set files for attribute.
  */
 class FalMapper extends AbstractMapper
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function map(Product $product, Attribute $attribute): void
     {

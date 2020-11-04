@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
 /**
- * Link TCA
+ * Link TCA.
  */
 class LinkProvider extends AbstractProvider
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function overrideWithSpecificTca(array $tca): array
     {

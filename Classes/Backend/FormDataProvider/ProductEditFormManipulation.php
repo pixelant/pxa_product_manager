@@ -22,9 +22,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
 /**
- * Form data provider hook, add TCA on a fly
- *
- * @package Pixelant\PxaProductManager\Backend\FormDataProvider
+ * Form data provider hook, add TCA on a fly.
  */
 class ProductEditFormManipulation implements FormDataProviderInterface
 {
@@ -47,7 +45,6 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     {
         $this->flashMessage = $flashMessage ?? GeneralUtility::makeInstance(BackendFlashMessage::class);
     }
-
 
     /**
      * @param array $result
@@ -101,15 +98,15 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Init
+     * Init.
      */
-    protected function init()
+    protected function init(): void
     {
         $this->dataMapper = GeneralUtility::makeInstance(ObjectManager::class)->get(DataMapper::class);
     }
 
     /**
-     * DB row to model
+     * DB row to model.
      *
      * @param array $row
      * @return Product
@@ -120,7 +117,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Configuration provider to given attribute
+     * Configuration provider to given attribute.
      *
      * @param Attribute $attribute
      * @return ProviderInterface
@@ -131,7 +128,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Add attributes configuration to TCA
+     * Add attributes configuration to TCA.
      *
      * @param array $attributesSets
      * @param array &$tca
@@ -185,7 +182,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Generate TCA tabs string with dynamic attributes
+     * Generate TCA tabs string with dynamic attributes.
      *
      * @param array $dynamicAttributesSets
      * @return string
@@ -206,7 +203,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Simulate DB data for attributes
+     * Simulate DB data for attributes.
      *
      * @param Product $product
      * @param array $attributesSets
@@ -218,12 +215,12 @@ class ProductEditFormManipulation implements FormDataProviderInterface
         $attributes = $this->collection($attributesSets)
             ->pluck('attributes')
             ->shiftLevel()
-            ->filter(fn(Attribute $attribute) => $attribute->isFalType() === false)
+            ->filter(fn (Attribute $attribute) => $attribute->isFalType() === false)
             ->toArray();
 
         /** @var AttributeValue[] $values */
         $values = $this->collection($product->getAttributesValuesWithValidAttributes())
-            ->mapWithKeysOfProperty('attribute', fn(Attribute $valueAttribute) => $valueAttribute->getUid())
+            ->mapWithKeysOfProperty('attribute', fn (Attribute $valueAttribute) => $valueAttribute->getUid())
             ->toArray();
 
         /** @var Attribute $attribute */
@@ -244,12 +241,12 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Set difference between translated and original product attribute values
+     * Set difference between translated and original product attribute values.
      *
      * @param array $diffRow
      * @param array $defaultLanguageRow
      */
-    protected function setDiffData(array &$diffRow, array &$defaultLanguageRow)
+    protected function setDiffData(array &$diffRow, array &$defaultLanguageRow): void
     {
         // TODO implementation
         die(__METHOD__);
@@ -268,7 +265,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Show notification message for user
+     * Show notification message for user.
      *
      * @param string $label
      */

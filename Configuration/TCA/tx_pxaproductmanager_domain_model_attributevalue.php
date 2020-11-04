@@ -39,11 +39,11 @@ return [
                     [
                         'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                         -1,
-                        'flags-multiple'
+                        'flags-multiple',
                     ],
                 ],
                 'default' => 0,
-            ]
+            ],
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -57,7 +57,7 @@ return [
                 ],
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_attributevalue',
                 'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_attributevalue.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_attributevalue.sys_language_uid IN (-1,0)',
-                'default' => 0
+                'default' => 0,
             ],
         ],
         'l10n_diffsource' => [
@@ -92,7 +92,7 @@ return [
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
                 'minitems' => 0,
                 'maxitems' => 1,
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

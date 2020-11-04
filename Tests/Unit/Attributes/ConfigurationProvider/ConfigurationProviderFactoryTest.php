@@ -1,20 +1,18 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit
- */
 class ConfigurationProviderFactoryTest extends UnitTestCase
 {
     /**
      * @test
      */
-    public function createThrownExceptionIfTypeOfAttributeIsNotSupported()
+    public function createThrownExceptionIfTypeOfAttributeIsNotSupported(): void
     {
         $attribute = createEntity(Attribute::class, 1);
 
