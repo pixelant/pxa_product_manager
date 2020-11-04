@@ -8,6 +8,8 @@ use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 
+use function PHPSTORM_META\type;
+
 /**
  * @package Pixelant\PxaProductManager\Attributes\ValueUpdater
  */
@@ -51,7 +53,7 @@ class ValueUpdaterService implements UpdaterInterface
 
         $attributeRow = $this->attributeValueRepository->findRawByProductAndAttribute($product, $attribute);
         if ($attributeRow) {
-            $this->attributeValueRepository->updateValue($attributeRow['uid'], $value);
+            $this->attributeValueRepository->updateValue((int)$attributeRow['uid'], $value);
         } else {
             $this->attributeValueRepository->createWithValue($product, $attribute, $value);
         }
