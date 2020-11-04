@@ -886,6 +886,7 @@ class Product extends AbstractEntity
      * @internal Use in BE in order to get all attributes for edit form rendering. Do not use on FE
      * @see getAttributes
      */
+
     /** @codingStandardsIgnoreStart */
     public function _getAllAttributesSets(): array // @codingStandardsIgnoreEnd
     {

@@ -39,6 +39,7 @@ class BrowserTreeView extends ElementBrowserPageTreeView
      * @param int $uid
      * @return bool
      */
+
     /** @codingStandardsIgnoreStart */
     public function ext_isLinkable($doktype, $uid)
     {// @codingStandardsIgnoreEnd
