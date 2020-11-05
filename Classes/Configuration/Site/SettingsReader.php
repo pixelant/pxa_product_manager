@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Configuration\Site;
@@ -54,7 +55,8 @@ class SettingsReader
      */
     protected function init(): void
     {
-        if (($site = $this->request->getAttribute('site')) && ($site instanceof Site)) {
+        $site = $this->request->getAttribute('site');
+        if ($site && ($site instanceof Site)) {
             $this->settings = $site->getConfiguration();
         }
     }

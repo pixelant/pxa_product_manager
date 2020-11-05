@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Configuration\Flexform;
@@ -83,6 +84,7 @@ class StructureLoader
      * @param array $dataStructure
      * @param string $flexformPath
      * @return array
+     * @throws \RuntimeException
      */
     protected function updateDataStructureWithFlexform(array $dataStructure, string $flexformPath): array
     {

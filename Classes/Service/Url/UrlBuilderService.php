@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service\Url;
@@ -146,12 +147,14 @@ class UrlBuilderService implements UrlBuilderServiceInterface
         $i = 0;
 
         // If tree is not empty
-        if ($treeLine = $category->getNavigationRootLine()) {
+        $treeLine = $category->getNavigationRootLine();
+        if ($treeLine) {
             // Last category doesn't have prefix
             $lastCategory = array_pop($treeLine);
 
             foreach ($treeLine as $categoryItem) {
-                $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i++] = $categoryItem->getUid();
+                $i++;
+                $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i] = $categoryItem->getUid();
             }
             $arguments['category'] = $lastCategory->getUid();
         }

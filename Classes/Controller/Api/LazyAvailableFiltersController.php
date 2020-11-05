@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller\Api;
@@ -71,9 +72,11 @@ class LazyAvailableFiltersController extends AbstractBaseLazyLoadingController
             $customDemand->removeFilter($id);
 
             $this->queryDispatcher->prepareQuery($customDemand);
-            $options[$id] = (int) ($data['type']) === Filter::TYPE_CATEGORIES
-                ? $this->queryDispatcher->availableCategories()
-                : $this->queryDispatcher->availableFilterOptions();
+            if ((int)$data['type'] === Filter::TYPE_CATEGORIES) {
+                $options[$id] = $this->queryDispatcher->availableCategories();
+            } else {
+                $options[$id] = $this->queryDispatcher->availableFilterOptions();
+            }
         }
 
         return $options;

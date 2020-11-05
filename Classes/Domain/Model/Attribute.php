@@ -352,7 +352,8 @@ class Attribute extends AbstractEntity
      */
     public function getValue()
     {
-        if ($this->isFalType() ||
+        if (
+            $this->isFalType() ||
             $this->isSelectBoxType()
         ) {
             return $this->arrayValue;

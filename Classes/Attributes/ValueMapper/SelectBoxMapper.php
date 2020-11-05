@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
@@ -18,7 +19,8 @@ class SelectBoxMapper extends AbstractMapper
      */
     public function map(Product $product, Attribute $attribute): void
     {
-        if ($attributeValue = $this->searchAttributeValue($product, $attribute)) {
+        $attributeValue = $this->searchAttributeValue($product, $attribute);
+        if ($attributeValue) {
             $selectedOptions = array_filter(
                 $attribute->getOptions()->toArray(),
                 function (Option $option) use ($attributeValue) {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\ViewHelpers;
@@ -19,7 +20,9 @@ class ResourceEncodeViewHelper extends AbstractViewHelper
     /**
      * @var ResourceConverter
      */
+    /** @codingStandardsIgnoreStart */
     protected static ?ResourceConverter $converter = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * View helper arguments.

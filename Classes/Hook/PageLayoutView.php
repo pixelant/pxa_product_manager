@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Hook;
@@ -19,7 +20,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageLayoutView
 {
-    use CanTranslateInBackend, CanCreateCollection;
+    use CanTranslateInBackend;
+    use CanCreateCollection;
 
     /**
      * HR tag.
@@ -154,7 +156,7 @@ class PageLayoutView
 
                 break;
             default:
-                $value = "Unsupported type '{$config['type']}'";
+                $value = 'Unsupported type "' . $config['type'] . '"';
         }
 
         return sprintf($info, $value ?: $this->translate('be.extension_info.none'));
@@ -235,9 +237,9 @@ class PageLayoutView
 
         $fields = [];
         foreach ($dataStructure['sheets'] as $sheetName => $sheet) {
+            $lll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sheet_title';
             $fields[$sheetName] = [
-                'label' => $sheet['ROOT']['TCEforms']['sheetTitle']
-                    ?? 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sheet_title',
+                'label' => $sheet['ROOT']['TCEforms']['sheetTitle'] ?? $lll,
                 'el' => array_map(fn (array $fieldConfig) => $fieldConfig['TCEforms'], $sheet['ROOT']['el']),
             ];
         }

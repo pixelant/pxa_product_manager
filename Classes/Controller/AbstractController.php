@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller;
@@ -44,7 +45,8 @@ abstract class AbstractController extends ActionController
      */
     protected function resolveView()
     {
-        if ($singleViewPid = $this->siteSettings->getValue('singleViewPid')) {
+        $singleViewPid = $this->siteSettings->getValue('singleViewPid');
+        if ($singleViewPid) {
             $this->settings['pids']['singleViewPid'] = $singleViewPid;
         }
 

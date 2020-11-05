@@ -40,12 +40,16 @@ class AttributeValue extends AbstractEntity
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Product
      */
+    /** @codingStandardsIgnoreStart */
     protected ?Product $product = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Attribute
      */
+    /** @codingStandardsIgnoreStart */
     protected ?Attribute $attribute = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * @return Product|null

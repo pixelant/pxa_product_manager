@@ -47,7 +47,8 @@ class AttributesValuesUpdate
     /** @codingStandardsIgnoreStart */
     public function processDatamap_preProcessFieldArray(array &$fieldArray, string $table, $id): void
     {// @codingStandardsIgnoreEnd
-        if ($table === 'tx_pxaproductmanager_domain_model_product'
+        if (
+            $table === 'tx_pxaproductmanager_domain_model_product'
             && MathUtility::canBeInterpretedAsInteger($id)
         ) {
             $updater = $this->getUpdaterService();

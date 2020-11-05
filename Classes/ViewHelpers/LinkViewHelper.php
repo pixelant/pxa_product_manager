@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\ViewHelpers;
@@ -63,9 +64,11 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
         if ($page && ($product !== null || $category !== null)) {
             $this->urlBuilder->absolute($absolute);
 
-            $url = $excludeCategories || null === $category
-                ? $this->urlBuilder->productUrl($page, $product)
-                : $this->urlBuilder->url($page, $category, $product);
+            if ($excludeCategories || $category === null) {
+                $url = $this->urlBuilder->productUrl($page, $product);
+            } else {
+                $url = $this->urlBuilder->url($page, $category, $product);
+            }
 
             if (!empty($target)) {
                 $this->tag->addAttribute('target', $target);

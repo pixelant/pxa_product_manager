@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction\Solr;
@@ -34,6 +35,7 @@ class AttributeValue
      * @param $_
      * @param array $params
      * @return string
+     * @throws \InvalidArgumentException
      */
     public function value($_, array $params): string
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service;
@@ -44,7 +45,9 @@ class NavigationService
     /**
      * @var NavigationItem[]
      */
+    /** @codingStandardsIgnoreStart */
     protected ?array $items = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * Array of active categories.
@@ -146,6 +149,7 @@ class NavigationService
      * @param array $categories
      * @param int $iterator
      * @return array
+     * @throws \Exception
      */
     protected function generateTree(array $categories, int $iterator = 0): array
     {

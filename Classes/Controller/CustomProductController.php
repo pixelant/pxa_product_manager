@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller;
@@ -58,7 +59,8 @@ class CustomProductController extends AbstractController
 
                 break;
             default:
-                $products = $categories = [];
+                $categories = [];
+                $products = $categories;
         }
 
         $this->view->assignMultiple(compact('products', 'categories'));

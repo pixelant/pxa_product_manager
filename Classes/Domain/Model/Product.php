@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
@@ -40,7 +41,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Product extends AbstractEntity
 {
-    use AbleCacheProperties, CanCreateCollection;
+    use AbleCacheProperties;
+    use CanCreateCollection;
 
     /**
      * @var MapperServiceInterface
@@ -115,17 +117,23 @@ class Product extends AbstractEntity
     /**
      * @var DateTime
      */
+    /** @codingStandardsIgnoreStart */
     protected ?DateTime $crdate = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * @var DateTime
      */
+    /** @codingStandardsIgnoreStart */
     protected ?DateTime $tstamp = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\ProductType
      */
+    /** @codingStandardsIgnoreStart */
     protected ?ProductType $productType = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -858,8 +866,7 @@ class Product extends AbstractEntity
         if ($mainImage !== null) {
             $sorted = $this->collection($this->images)
                 ->filter(fn (Image $image) => $image !== $mainImage)
-                ->unshift($mainImage)
-                ->toArray();
+                ->unshift($mainImage)->toArray();
 
             return array_values($sorted);
         }

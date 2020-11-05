@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model\DTO;
@@ -10,7 +11,9 @@ abstract class AbstractDemand implements DemandInterface
      *
      * @var array
      */
+    /** @codingStandardsIgnoreStart */
     protected ?array $storagePid = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * Limit query result.

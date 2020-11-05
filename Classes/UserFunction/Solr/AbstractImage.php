@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction\Solr;
@@ -29,7 +30,8 @@ abstract class AbstractImage
             return '';
         }
 
-        if ($matchedImage = $this->findMatchedImage($images)) {
+        $matchedImage = $this->findMatchedImage($images);
+        if ($matchedImage) {
             return $matchedImage->getPublicUrl();
         }
 

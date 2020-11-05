@@ -36,7 +36,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Category extends CategoryExtbase
 {
-    use AbleCacheProperties, CanCreateCollection;
+    use AbleCacheProperties;
+    use CanCreateCollection;
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Category

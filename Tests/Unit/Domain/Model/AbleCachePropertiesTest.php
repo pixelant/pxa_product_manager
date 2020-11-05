@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
@@ -23,8 +24,9 @@ class AbleCachePropertiesTest extends UnitTestCase
     public function getCachedPropertyReturnValueOfPropertyFromCache(): void
     {
         $this->cacheProperties['test'] = 'value';
-
+        // @codingStandardsIgnoreStart
         self::assertEquals('value', $this->getCachedProperty('test', function (): void {}));
+        // @codingStandardsIgnoreEnd
     }
 
     /**

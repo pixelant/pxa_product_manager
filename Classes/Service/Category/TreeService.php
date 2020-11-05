@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service\Category;
@@ -98,6 +99,7 @@ class TreeService
      * Validate incoming type of categories.
      *
      * @param $categories
+     * @throws \InvalidArgumentException
      */
     protected function validateType($categories): void
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
@@ -26,7 +27,8 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
  */
 class ProductEditFormManipulation implements FormDataProviderInterface
 {
-    use CanTranslateInBackend, CanCreateCollection;
+    use CanTranslateInBackend;
+    use CanCreateCollection;
 
     /**
      * @var DataMapper
@@ -231,9 +233,11 @@ class ProductEditFormManipulation implements FormDataProviderInterface
                 /** @var AttributeValue $value */
                 $value = $values[$attribute->getUid()];
 
-                $dbRow[$field] = $attribute->isSelectBoxType()
-                    ? GeneralUtility::trimExplode(',', $value->getValue(), true)
-                    : $value->getValue();
+                if ($attribute->isSelectBoxType()) {
+                    $dbRow[$field] = GeneralUtility::trimExplode(',', $value->getValue(), true);
+                } else {
+                    $dbRow[$field] = $value->getValue();
+                }
             } elseif (!$attribute->isSelectBoxType()) {
                 $dbRow[$field] = $attribute->getDefaultValue();
             }

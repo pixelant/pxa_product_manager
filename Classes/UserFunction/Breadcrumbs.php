@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction;
@@ -87,7 +88,8 @@ class Breadcrumbs
         $uid = (int)$arguments['product'];
 
         /** @var Product $product */
-        if ($product = $this->productRepository->findByUid($uid)) {
+        $product = $this->productRepository->findByUid($uid);
+        if ($product) {
             $this->items[] = [
                 'title' => $product->getNavigationTitle(),
                 'sys_language_uid' => $product->_getProperty('_languageUid'),
@@ -122,7 +124,8 @@ class Breadcrumbs
                     'title' => $category->getNavigationTitle(),
                     'sys_language_uid' => $category->_getProperty('_languageUid'),
                     '_OVERRIDE_HREF' => $this->url($this->renameCategoriesArguments($arguments)),
-                    'ITEM_STATE' => empty($this->items) ? 'CUR' : 'NO', // Could be current only if last
+                    // Could be current only if last
+                    'ITEM_STATE' => empty($this->items) ? 'CUR' : 'NO',
                 ];
 
                 // Remove first argument
@@ -145,7 +148,8 @@ class Breadcrumbs
 
         $i = 0;
         foreach ($arguments as $argument) {
-            $name = UrlBuilderService::CATEGORY_ARGUMENT_START_WITH . $i++;
+            $i++;
+            $name = UrlBuilderService::CATEGORY_ARGUMENT_START_WITH . $i;
             $newArguments[$name] = $argument;
         }
 

@@ -46,7 +46,9 @@ use TYPO3\CMS\Recordlist\Tree\View\LinkParameterProviderInterface;
 /**
  * Link handler for page (and content) links.
  */
+/** @codingStandardsIgnoreStart */
 abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandlerInterface, LinkParameterProviderInterface
+// @codingStandardsIgnoreEnd
 {
     /**
      * Parts of the current link.
@@ -256,7 +258,8 @@ abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandl
             $pageId = $this->pid;
         }
         // Draw the record list IF there is a page id to expand:
-        if ($pageId
+        if (
+            $pageId
             && MathUtility::canBeInterpretedAsInteger($pageId) && $this->getBackendUser()->isInWebMount($pageId)
         ) {
             $pageId = (int)$pageId;

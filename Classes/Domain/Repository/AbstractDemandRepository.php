@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Repository;
@@ -124,7 +125,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      */
     protected function setOrderings(QueryInterface $query, DemandInterface $demand): void
     {
-        if ($demand->getOrderBy()
+        if (
+            $demand->getOrderBy()
             && GeneralUtility::inList($demand->getOrderByAllowed(), $demand->getOrderBy())
         ) {
             switch (strtolower($demand->getOrderDirection())) {
@@ -147,6 +149,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      * @param array $constraints
      * @param string $conjunction
      * @return ConstraintInterface
+     * @throws UnexpectedValueException
      */
     protected function createConstraintFromConstraintsArray(
         QueryInterface $query,
@@ -161,9 +164,13 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
             return array_shift($constraints);
         }
 
-        return $this->isOrConjunction($conjunction)
-            ? $query->logicalOr($constraints)
-            : $query->logicalAnd($constraints);
+        if ($this->isOrConjunction($conjunction)) {
+            $constraintInterface = $query->logicalOr($constraints);
+        } else {
+            $constraintInterface = $query->logicalAnd($constraints);
+        }
+
+        return $constraintInterface;
     }
 
     /**
@@ -174,7 +181,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      */
     protected function setStorage(QueryInterface $query, DemandInterface $demand): void
     {
-        if ($storage = $demand->getStoragePid()) {
+        $storage = $demand->getStoragePid();
+        if ($storage) {
             $storage = array_map('intval', $storage);
 
             $query->getQuerySettings()->setStoragePageIds($storage);

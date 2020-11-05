@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Hook;
@@ -28,7 +29,9 @@ class FlexFormDataStructureHook implements SingletonInterface
      *
      * @var string
      */
+    /** @codingStandardsIgnoreStart */
     protected ?string $lastSelectedAction = null;
+    /** @codingStandardsIgnoreEnd */
 
     /**
      * @var FlexFormService
@@ -83,7 +86,8 @@ class FlexFormDataStructureHook implements SingletonInterface
         array $row,
         array $identifier
     ): array {
-        if ($identifier['dataStructureKey'] === $this->identifier
+        if (
+            $identifier['dataStructureKey'] === $this->identifier
             && is_string($row['pi_flexform'])
             && !empty($row['pi_flexform'])
         ) {
@@ -128,7 +132,8 @@ class FlexFormDataStructureHook implements SingletonInterface
      */
     protected function getLastSelectedAction(): ?string
     {
-        // If this is ajax request '/ajax/record/tree/fetchData' then 'getDataStructureIdentifierPostProcess' wasn't called.
+        // If this is ajax request '/ajax/record/tree/fetchData'
+        // then 'getDataStructureIdentifierPostProcess' wasn't called.
         // Need to read value of latest selected action from DB
         if ($this->lastSelectedAction === null && $this->request->getQueryParams()['uid']) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
@@ -156,7 +161,9 @@ class FlexFormDataStructureHook implements SingletonInterface
      */
     protected function addSwitchableControllerActions(array $dataStructure): array
     {
+        /** @codingStandardsIgnoreStart */
         $items = &$dataStructure['sheets']['sDEF']['ROOT']['el']['switchableControllerActions']['TCEforms']['config']['items'];
+        // @codingStandardsIgnoreEnd
 
         foreach ($this->registry->getAllRegisteredActions() as $action) {
             $items[] = [

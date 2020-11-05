@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Formatter;
@@ -51,8 +52,9 @@ class PriceFormatter implements SingletonInterface
     /**
      * @param ConfigurationManagerInterface $configurationManagerInterface
      */
-    public function injectConfigurationManagerInterface(ConfigurationManagerInterface $configurationManagerInterface): void
-    {
+    public function injectConfigurationManagerInterface(
+        ConfigurationManagerInterface $configurationManagerInterface
+    ): void {
         $this->configurationManager = $configurationManagerInterface;
     }
 

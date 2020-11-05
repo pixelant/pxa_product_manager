@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service;
@@ -96,9 +97,11 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
     {
         $id = (int) ($linkDetails['product'] ?? $linkDetails['category']);
 
-        $repository = isset($linkDetails['product'])
-            ? $this->objectManager->get(ProductRepository::class)
-            : $this->objectManager->get(CategoryRepository::class);
+        if (isset($linkDetails['product'])) {
+            $repository = $this->objectManager->get(ProductRepository::class);
+        } else {
+            $repository = $this->objectManager->get(CategoryRepository::class);
+        }
 
         return $repository->findByUid($id);
     }

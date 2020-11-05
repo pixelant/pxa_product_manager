@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Collection;
@@ -30,6 +31,7 @@ class Collection implements Arrayable
      * @param $list
      * @param string $property
      * @return Collection
+     * @throws \InvalidArgumentException
      */
     public function sortByOrderList($list, string $property): self
     {
@@ -100,8 +102,9 @@ class Collection implements Arrayable
      */
     public function unionUniqueProperty($items, string $property): self
     {
-        $unionItems = $this->mapWithKeysOfProperty($property)->toArray()
-            + (new static($items))->mapWithKeysOfProperty($property)->toArray();
+        $unionProp = $this->mapWithKeysOfProperty($property)->toArray();
+        $unionItemsProp = (new static($items))->mapWithKeysOfProperty($property)->toArray();
+        $unionItems = $unionProp + $unionItemsProp;
 
         return new static($unionItems);
     }
@@ -236,6 +239,7 @@ class Collection implements Arrayable
      *
      * @param $items
      * @return array
+     * @throws InvalidArgumentException
      */
     protected function iterableToArray($items): array
     {
