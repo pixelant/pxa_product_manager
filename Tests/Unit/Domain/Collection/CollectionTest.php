@@ -352,24 +352,21 @@ class CollectionTest extends UnitTestCase
 
     /**
      * @test
-     *
-     * @dataProvider sortList
-     * @param mixed $sortList
      */
-    public function sortByKeysListSortCollectionByGivenList($sortList): void
+    public function sortByKeysListSortCollectionByGivenList(): void
     {
         $items = [
             ['title' => 'last', 'uid' => 10],
             ['title' => 'first', 'uid' => 5],
             ['title' => 'middle', 'uid' => 7],
         ];
-
         $collection = new Collection($items);
         $expect = [
             ['title' => 'first', 'uid' => 5],
             ['title' => 'middle', 'uid' => 7],
             ['title' => 'last', 'uid' => 10],
         ];
+        $sortList = [$expect[0]['uid'], $expect[1]['uid'], $expect[2]['uid']];
 
         self::assertEquals($expect, $collection->sortByOrderList($sortList, 'uid')->toArray());
     }

@@ -115,25 +115,19 @@ class Product extends AbstractEntity
     protected bool $deleted = false;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
-    /** @codingStandardsIgnoreStart */
-    protected ?DateTime $crdate = null;
-    /** @codingStandardsIgnoreEnd */
+    protected $crdate;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
-    /** @codingStandardsIgnoreStart */
-    protected ?DateTime $tstamp = null;
-    /** @codingStandardsIgnoreEnd */
+    protected $tstamp;
 
     /**
-     * @var \Pixelant\PxaProductManager\Domain\Model\ProductType
+     * @var \Pixelant\PxaProductManager\Domain\Model\ProductType|null
      */
-    /** @codingStandardsIgnoreStart */
-    protected ?ProductType $productType = null;
-    /** @codingStandardsIgnoreEnd */
+    protected $productType = null;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy

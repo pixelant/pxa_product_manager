@@ -9,7 +9,8 @@
 
 	<tx_pxaproductmanager_domain_model_product>
 		<uid>1000</uid>
-		<name>Product</name>
+		<name>Product name</name>
+		<sku>theproductsku</sku>
 		<product_type>100</product_type>
 		<categories>2</categories>
 	</tx_pxaproductmanager_domain_model_product>
