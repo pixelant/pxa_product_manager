@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
@@ -169,7 +170,8 @@ return (function () {
                 ],
             ],
             'conjunction' => [
-                'displayCond' => 'FIELD:type:!=:3', // hide for range filter
+                // hide for range filter
+                'displayCond' => 'FIELD:type:!=:3',
                 'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.conjunction',
                 'config' => [

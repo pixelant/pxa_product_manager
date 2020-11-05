@@ -403,7 +403,9 @@ class CollectionTest extends UnitTestCase
                 'expect' => $items,
             ],
             'arrayable' => [
+                // @codingStandardsIgnoreStart
                 'array_able' => new class($items) implements Arrayable {
+                    /** @codingStandardsIgnoreEnd */
                     protected $items;
 
                     public function __construct($items)

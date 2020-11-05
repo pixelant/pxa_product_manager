@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') || die;
 
 (function (): void {
@@ -293,8 +294,8 @@ defined('TYPO3_MODE') || die;
         '',
         'after:title'
     );
-
-    if (!empty($categoryWhere = \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause())) {
+    $categoryWhere = \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause();
+    if (!empty($categoryWhere)) {
         $config = &$GLOBALS['TCA']['sys_category']['columns']['parent']['config'];
         $config['foreign_table_where'] = $categoryWhere . ' ' . $config['foreign_table_where'];
     }

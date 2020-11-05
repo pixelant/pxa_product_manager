@@ -153,8 +153,8 @@ class UrlBuilderService implements UrlBuilderServiceInterface
             $lastCategory = array_pop($treeLine);
 
             foreach ($treeLine as $categoryItem) {
-                $i++;
                 $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i] = $categoryItem->getUid();
+                $i++;
             }
             $arguments['category'] = $lastCategory->getUid();
         }

@@ -22,7 +22,9 @@ class UrlBuilderServiceTest extends UnitTestCase
     {
         parent::setUp();
 
+        // @codingStandardsIgnoreStart
         $GLOBALS['TSFE'] = new class($this->createMock(ContentObjectRenderer::class)) extends TypoScriptFrontendController {
+            /** @codingStandardsIgnoreEnd */
             public $cObj;
 
             /**

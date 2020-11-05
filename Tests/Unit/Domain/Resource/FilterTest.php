@@ -29,7 +29,9 @@ class FilterTest extends UnitTestCase
             'conjunction' => 'or',
         ];
 
+        /** @codingStandardsIgnoreStart */
         $filter = new class() extends Filter {
+            /** @codingStandardsIgnoreEnd */
             public function getOptions(): array
             {
                 return ['123'];
@@ -40,6 +42,7 @@ class FilterTest extends UnitTestCase
                 return 1;
             }
         };
+
         $filter->_setProperty('uid', 15);
         $filter
             ->setType(1)

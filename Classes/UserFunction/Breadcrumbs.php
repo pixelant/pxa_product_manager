@@ -148,9 +148,9 @@ class Breadcrumbs
 
         $i = 0;
         foreach ($arguments as $argument) {
-            $i++;
             $name = UrlBuilderService::CATEGORY_ARGUMENT_START_WITH . $i;
             $newArguments[$name] = $argument;
+            $i++;
         }
 
         return $newArguments;
