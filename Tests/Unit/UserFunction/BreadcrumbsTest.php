@@ -8,6 +8,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use Pixelant\PxaProductManager\UserFunction\Breadcrumbs;
 use TYPO3\CMS\Core\Http\ServerRequest;
 
@@ -18,7 +19,11 @@ class BreadcrumbsTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = $this->getMockBuilder(Breadcrumbs::class)->disableOriginalConstructor()->setMethods(['url'])->getMock();
+        $this->subject = $this
+            ->getMockBuilder(Breadcrumbs::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['url'])
+            ->getMock();
     }
 
     /**
@@ -67,7 +72,10 @@ class BreadcrumbsTest extends UnitTestCase
 
         $this->inject($this->subject, 'request', $request->reveal());
 
-        self::assertEquals($arguments['tx_pxaproductmanager_pi1'], $this->callInaccessibleMethod($this->subject, 'getArguments'));
+        self::assertEquals(
+            $arguments['tx_pxaproductmanager_pi1'],
+            $this->callInaccessibleMethod($this->subject, 'getArguments')
+        );
     }
 
     /**
@@ -89,7 +97,9 @@ class BreadcrumbsTest extends UnitTestCase
         $this->inject($this->subject, 'request', $request->reveal());
 
         $repo = $this->prophesize(ProductRepository::class);
-        $repo->findByUid(1)->shouldBeCalled()->willReturn(createEntity(Product::class, ['name' => 'test']));
+        $repo->findByUid(1)->shouldBeCalled()->willReturn(
+            TestsUtility::createEntity(Product::class, ['name' => 'test'])
+        );
 
         $this->inject($this->subject, 'productRepository', $repo->reveal());
 
@@ -120,7 +130,14 @@ class BreadcrumbsTest extends UnitTestCase
             'category_0' => '9',
         ];
 
-        self::assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'filterCategoriesArguments', $arguments['tx_pxaproductmanager_pi1']));
+        self::assertEquals(
+            $expect,
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'filterCategoriesArguments',
+                $arguments['tx_pxaproductmanager_pi1']
+            )
+        );
     }
 
     /**
@@ -142,7 +159,14 @@ class BreadcrumbsTest extends UnitTestCase
             'category_2' => '10',
         ];
 
-        self::assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'renameCategoriesArguments', $arguments));
+        self::assertEquals(
+            $expect,
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'renameCategoriesArguments',
+                $arguments
+            )
+        );
     }
 
     /**
@@ -150,7 +174,12 @@ class BreadcrumbsTest extends UnitTestCase
      */
     public function addCategoriesNeverCallRepositoryFindMethodIfEmptyArguments(): void
     {
-        $subject = $this->getMockBuilder(Breadcrumbs::class)->setMethods(['filterCategoriesArguments', 'getArguments'])->disableOriginalConstructor()->getMock();
+        $subject = $this
+            ->getMockBuilder(Breadcrumbs::class)
+            ->setMethods(['filterCategoriesArguments', 'getArguments'])
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $subject->expects(self::once())->method('filterCategoriesArguments')->willReturn([]);
 
         $mockedRepository = $this->createMock(CategoryRepository::class);

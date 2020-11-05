@@ -19,7 +19,10 @@ class MainImageTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->subject = $this->getMockBuilder(MainImage::class)->setMethods(['getImages', 'findMatchedImage'])->getMock();
+        $this->subject = $this
+            ->getMockBuilder(MainImage::class)
+            ->setMethods(['getImages', 'findMatchedImage'])
+            ->getMock();
     }
 
     /**

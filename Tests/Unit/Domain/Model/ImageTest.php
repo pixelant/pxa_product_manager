@@ -16,7 +16,11 @@ class ImageTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->subject = $this->getMockBuilder(Image::class)->disableOriginalConstructor()->setMethods(['getOriginalResource'])->getMock();
+        $this->subject = $this
+            ->getMockBuilder(Image::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOriginalResource'])
+            ->getMock();
     }
 
     /**

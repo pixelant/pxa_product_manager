@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Model\Option;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class FilterTest extends UnitTestCase
 {
@@ -28,10 +29,10 @@ class FilterTest extends UnitTestCase
     {
         $this->subject->setType(Filter::TYPE_CATEGORIES);
 
-        $cat1 = createEntity(Category::class, ['uid' => 11, 'title' => 'test']);
-        $cat2 = createEntity(Category::class, ['uid' => 22, 'title' => 'second']);
+        $cat1 = TestsUtility::createEntity(Category::class, ['uid' => 11, 'title' => 'test']);
+        $cat2 = TestsUtility::createEntity(Category::class, ['uid' => 22, 'title' => 'second']);
 
-        $categories = createObjectStorage($cat1, $cat2);
+        $categories = TestsUtility::createObjectStorage($cat1, $cat2);
 
         $category = $this->prophesize(Category::class);
         $category->getSubCategories()->willReturn($categories);
@@ -53,10 +54,10 @@ class FilterTest extends UnitTestCase
     {
         $this->subject->setType(Filter::TYPE_ATTRIBUTES);
 
-        $opt1 = createEntity(Option::class, ['uid' => 101, 'value' => 'value1']);
-        $opt2 = createEntity(Option::class, ['uid' => 102, 'value' => 'value2']);
+        $opt1 = TestsUtility::createEntity(Option::class, ['uid' => 101, 'value' => 'value1']);
+        $opt2 = TestsUtility::createEntity(Option::class, ['uid' => 102, 'value' => 'value2']);
 
-        $options = createObjectStorage($opt1, $opt2);
+        $options = TestsUtility::createObjectStorage($opt1, $opt2);
 
         $attribute = $this->prophesize(Attribute::class);
         $attribute->getOptions()->willReturn($options);

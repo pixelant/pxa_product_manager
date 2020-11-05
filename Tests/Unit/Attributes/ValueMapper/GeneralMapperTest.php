@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Attributes\ValueMapper\GeneralMapper;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class GeneralMapperTest extends UnitTestCase
 {
@@ -26,8 +27,8 @@ class GeneralMapperTest extends UnitTestCase
      */
     public function searchAttributeValueReturnNullIfValueNotFound(): void
     {
-        $attribute = createEntity(Attribute::class, 1);
-        $product = createEntity(Product::class, 1);
+        $attribute = TestsUtility::createEntity(Attribute::class, 1);
+        $product = TestsUtility::createEntity(Product::class, 1);
 
         self::assertNull($this->callInaccessibleMethod($this->subject, 'searchAttributeValue', $product, $attribute));
     }
@@ -37,17 +38,19 @@ class GeneralMapperTest extends UnitTestCase
      */
     public function searchAttributeValueReturnCorrespondingForAttributeValue(): void
     {
-        $attribute1 = createEntity(Attribute::class, 10);
-        $attribute2 = createEntity(Attribute::class, 50);
-        $attribute3 = createEntity(Attribute::class, 100);
+        $attribute1 = TestsUtility::createEntity(Attribute::class, 10);
+        $attribute2 = TestsUtility::createEntity(Attribute::class, 50);
+        $attribute3 = TestsUtility::createEntity(Attribute::class, 100);
 
-        $attributeValue1 = createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
-        $attributeValue2 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
-        $attributeValue3 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute3]);
+        $attributeValue1 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
+        $attributeValue2 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+        $attributeValue3 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute3]);
 
         /** @var Product $product */
-        $product = createEntity(Product::class, 1);
-        $product->setAttributesValues(createObjectStorage($attributeValue1, $attributeValue2, $attributeValue3));
+        $product = TestsUtility::createEntity(Product::class, 1);
+        $product->setAttributesValues(
+            TestsUtility::createObjectStorage($attributeValue1, $attributeValue2, $attributeValue3)
+        );
 
         self::assertSame(
             $attributeValue3,
@@ -63,8 +66,8 @@ class GeneralMapperTest extends UnitTestCase
         $attributeValue = $this->prophesize(AttributeValue::class);
         $attributeValue->getValue()->shouldBeCalled()->willReturn('testvalue');
 
-        $attribute = createEntity(Attribute::class, 1);
-        $product = createEntity(Product::class, 1);
+        $attribute = TestsUtility::createEntity(Attribute::class, 1);
+        $product = TestsUtility::createEntity(Product::class, 1);
 
         $adapter = $this->createPartialMock(GeneralMapper::class, ['searchAttributeValue']);
         $adapter->expects(self::once())->method('searchAttributeValue')->willReturn($attributeValue->reveal());

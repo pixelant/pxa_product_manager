@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Configuration\Site;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Site\Entity\Site;
 
@@ -27,7 +28,7 @@ class SettingsReaderTest extends UnitTestCase
         $subject = new SettingsReader($request->reveal());
         $this->callInaccessibleMethod($subject, 'init');
 
-        self::assertEquals($settings, getProtectedVarValue($subject, 'settings'));
+        self::assertEquals($settings, TestsUtility::getProtectedVarValue($subject, 'settings'));
     }
 
     /**

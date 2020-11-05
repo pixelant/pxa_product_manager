@@ -41,7 +41,8 @@ class CategoryTest extends FunctionalTestCase
 
         $this->repository->update($category);
 
-        $persistanceManager = GeneralUtility::makeInstance(ObjectManager::class)->get(PersistenceManagerInterface::class);
+        $persistanceManager = GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(PersistenceManagerInterface::class);
         $persistanceManager->persistAll();
         $persistanceManager->clearState();
 

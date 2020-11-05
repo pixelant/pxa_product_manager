@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Utility;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 
 class AttributeTcaNamingUtilityTest extends UnitTestCase
@@ -16,7 +17,7 @@ class AttributeTcaNamingUtilityTest extends UnitTestCase
     public function translateAttributeToTcaFieldNameReturnTcaFieldName(): void
     {
         $uid = 12;
-        $attribute = createEntity(Attribute::class, $uid);
+        $attribute = TestsUtility::createEntity(Attribute::class, $uid);
 
         $expect = 'tx_pxaproductmanager_attribute_12';
 
@@ -29,7 +30,13 @@ class AttributeTcaNamingUtilityTest extends UnitTestCase
     public function translateFileAttributeToTcaFieldNameReturnTcaFieldNameOfFal(): void
     {
         $uid = 12;
-        $attribute = createEntity(Attribute::class, ['uid' => $uid, 'type' => Attribute::ATTRIBUTE_TYPE_IMAGE]);
+        $attribute = TestsUtility::createEntity(
+            Attribute::class,
+            [
+                'uid' => $uid,
+                'type' => Attribute::ATTRIBUTE_TYPE_IMAGE,
+            ]
+        );
 
         $expect = 'tx_pxaproductmanager_attribute_fal_12';
 

@@ -44,7 +44,9 @@
     "psr-4": {
       "Pixelant\\PxaProductManager\\Tests\\": "Tests/"
     },
-    "files": ["Tests/utilities/functions.php"]
+    "files": [
+      "Tests/Utility/TestsUtility.php"
+    ]
   },
   "prefer-stable": true,
   "config": {

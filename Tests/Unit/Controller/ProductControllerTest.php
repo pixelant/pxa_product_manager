@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Controller\ProductController;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 class ProductControllerTest extends UnitTestCase
@@ -21,7 +22,11 @@ class ProductControllerTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = $this->getMockBuilder(ProductController::class)->disableOriginalConstructor()->setMethods(null)->getMock();
+        $this->subject = $this
+            ->getMockBuilder(ProductController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
     }
 
     /**
@@ -37,7 +42,14 @@ class ProductControllerTest extends UnitTestCase
             ]
         );
 
-        self::assertEquals('title', $this->callInaccessibleMethod($this->subject, 'readFromSettings', 'categoriesOrderings.orderBy'));
+        self::assertEquals(
+            'title',
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'readFromSettings',
+                'categoriesOrderings.orderBy'
+            )
+        );
     }
 
     /**
@@ -53,7 +65,15 @@ class ProductControllerTest extends UnitTestCase
             ]
         );
 
-        self::assertEquals('defaultValue', $this->callInaccessibleMethod($this->subject, 'readFromSettings', 'categoriesOrderings.orderBy.testKey', 'defaultValue'));
+        self::assertEquals(
+            'defaultValue',
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'readFromSettings',
+                'categoriesOrderings.orderBy.testKey',
+                'defaultValue'
+            )
+        );
     }
 
     /**
@@ -96,7 +116,7 @@ class ProductControllerTest extends UnitTestCase
      */
     public function buildFromSettingsUseSettingsToBuildDemand(): void
     {
-        $parent = createEntity(Category::class, 1);
+        $parent = TestsUtility::createEntity(Category::class, 1);
         $settings = [
             'limit' => '200',
             'parent' => $parent,

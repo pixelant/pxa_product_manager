@@ -7,6 +7,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Resource;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Resource\Filter as FilterResource;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
@@ -61,9 +62,13 @@ class FilterTest extends UnitTestCase
      */
     public function convertPropertyValueReturnArrayIfObjectStorage(): void
     {
-        $storage = createObjectStorage(...createMultipleEntities(Filter::class, 3));
+        $storage = TestsUtility::createObjectStorage(...TestsUtility::createMultipleEntities(Filter::class, 3));
 
-        $subject = $this->getMockBuilder(FilterResource::class)->disableOriginalConstructor()->setMethods(null)->getMock();
+        $subject = $this
+            ->getMockBuilder(FilterResource::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
 
         self::assertIsArray($this->callInaccessibleMethod($subject, 'convertPropertyValue', $storage));
     }

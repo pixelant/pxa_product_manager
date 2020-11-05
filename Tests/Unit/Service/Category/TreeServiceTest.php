@@ -7,6 +7,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Service\Category;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Service\Category\TreeService;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -26,21 +27,28 @@ class TreeServiceTest extends UnitTestCase
      */
     public function childrenRecursiveReturnAllChilderns(): void
     {
-        $rootCat1 = createEntity(Category::class, 12);
-        $rootCat2 = createEntity(Category::class, 22);
+        $rootCat1 = TestsUtility::createEntity(Category::class, 12);
+        $rootCat2 = TestsUtility::createEntity(Category::class, 22);
 
-        $subCategories = createMultipleEntities(Category::class, 5);
+        $subCategories = TestsUtility::createMultipleEntities(Category::class, 5);
 
-        $rootCat1->setSubCategories(createObjectStorage($subCategories[0], $subCategories[1], $subCategories[2]));
-        $rootCat2->setSubCategories(createObjectStorage($subCategories[3], $subCategories[4], $subCategories[0]));
+        $rootCat1->setSubCategories(
+            TestsUtility::createObjectStorage($subCategories[0], $subCategories[1], $subCategories[2])
+        );
+        $rootCat2->setSubCategories(
+            TestsUtility::createObjectStorage($subCategories[3], $subCategories[4], $subCategories[0])
+        );
 
-        $subCategory100 = createEntity(Category::class, 100);
-        $subCategories[0]->setSubCategories(createObjectStorage($subCategory100));
+        $subCategory100 = TestsUtility::createEntity(Category::class, 100);
+        $subCategories[0]->setSubCategories(TestsUtility::createObjectStorage($subCategory100));
 
         // UIDS
         $expect = [12, 1, 100, 2, 3, 22, 4, 5];
 
-        self::assertEquals($expect, entitiesToUidsArray($this->subject->childrenRecursive([$rootCat1, $rootCat2])));
+        self::assertEquals(
+            $expect,
+            TestsUtility::entitiesToUidsArray($this->subject->childrenRecursive([$rootCat1, $rootCat2]))
+        );
     }
 
     /**
@@ -59,7 +67,7 @@ class TreeServiceTest extends UnitTestCase
 
         $this->inject($subject, 'cache', $cache->reveal());
 
-        $subject->childrenIdsRecursiveAndCache([createEntity(Category::class, 1)]);
+        $subject->childrenIdsRecursiveAndCache([TestsUtility::createEntity(Category::class, 1)]);
     }
 
     /**

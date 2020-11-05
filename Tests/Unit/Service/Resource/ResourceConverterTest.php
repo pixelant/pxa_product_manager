@@ -7,6 +7,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Service;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Service\Resource\ResourceConverter;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class ResourceConverterTest extends UnitTestCase
 {
@@ -26,6 +27,13 @@ class ResourceConverterTest extends UnitTestCase
     {
         $expect = 'Pixelant\PxaProductManager\Domain\Resource\Product';
 
-        self::assertEquals($expect, $this->callInaccessibleMethod($this->subject, 'translateEntityNameToResourceName', createEntity(Product::class, 1)));
+        self::assertEquals(
+            $expect,
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'translateEntityNameToResourceName',
+                TestsUtility::createEntity(Product::class, 1)
+            )
+        );
     }
 }

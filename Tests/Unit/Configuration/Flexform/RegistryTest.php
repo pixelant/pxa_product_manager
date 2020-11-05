@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Configuration\Flexform;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Configuration\Flexform\Registry;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class RegistryTest extends UnitTestCase
 {
@@ -29,7 +30,10 @@ class RegistryTest extends UnitTestCase
     {
         $this->subject->registerDefaultActions();
 
-        self::assertCount(count(getProtectedVarValue($this->subject, 'defaultSwitchableActions')), $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']);
+        self::assertCount(
+            count(TestsUtility::getProtectedVarValue($this->subject, 'defaultSwitchableActions')),
+            $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']
+        );
     }
 
     /**
@@ -51,7 +55,8 @@ class RegistryTest extends UnitTestCase
             'excludeFields' => $exclude,
         ];
 
-        $result = $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items'][$action];
+        $scaKey = 'switchableControllerActions';
+        $result = $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'][$action];
 
         self::assertEquals($expect, $result);
     }
@@ -75,7 +80,8 @@ class RegistryTest extends UnitTestCase
 
         $this->subject->removeSwitchableControllerAction($action);
 
-        self::assertEmpty($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']);
+        $scaKey = 'switchableControllerActions';
+        self::assertEmpty($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']);
     }
 
     /**
@@ -83,8 +89,9 @@ class RegistryTest extends UnitTestCase
      */
     public function getAllRegisteredActionsReturnAllItems(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']['test1'] = ['action' => 'test1'];
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']['test2'] = ['action' => 'test2'];
+        $scaKey = 'switchableControllerActions';
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']['test1'] = ['action' => 'test1'];
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']['test2'] = ['action' => 'test2'];
 
         $expect = [
             'test1' => [
@@ -111,7 +118,8 @@ class RegistryTest extends UnitTestCase
      */
     public function getSwitchableControllerActionConfigurationReturnConfigurationIfExist(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']['test1'] = ['action' => 'test1'];
+        $scaKey = 'switchableControllerActions';
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']['test1'] = ['action' => 'test1'];
 
         $expect = [
             'action' => 'test1',

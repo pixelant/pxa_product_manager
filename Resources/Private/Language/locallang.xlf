@@ -172,12 +172,6 @@
             <trans-unit id="fe.please_select">
                 <source>Please select...</source>
             </trans-unit>
-            <trans-unit id="fe.checkbox.1">
-                <source>Yes</source>
-            </trans-unit>
-            <trans-unit id="fe.checkbox.no">
-                <source>No</source>
-            </trans-unit>
 
             <trans-unit id="fe.userEmail.orderForm.subject">
                 <source>Thank you for your order</source>

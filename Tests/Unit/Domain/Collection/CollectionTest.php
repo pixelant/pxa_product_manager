@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Arrayable;
 use Pixelant\PxaProductManager\Domain\Collection\Collection;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Extbase\Domain\Model\Category;
 
 class CollectionTest extends UnitTestCase
@@ -52,11 +53,11 @@ class CollectionTest extends UnitTestCase
     public function canMapCollectionWithKeysFromPropertyValueWithCallbackFunction(): void
     {
         $item1 = [
-            'prop' => createEntity(Category::class, 22),
+            'prop' => TestsUtility::createEntity(Category::class, 22),
             'name' => 'test',
         ];
         $item2 = [
-            'prop' => createEntity(Category::class, 33),
+            'prop' => TestsUtility::createEntity(Category::class, 33),
             'name' => 'name test',
         ];
         $collectionArray = [
@@ -68,7 +69,13 @@ class CollectionTest extends UnitTestCase
 
         $collection = new Collection($collectionArray);
 
-        self::assertEquals($expect, $collection->mapWithKeysOfProperty('prop', fn ($collectionKey) => $collectionKey->getUid())->toArray());
+        self::assertEquals(
+            $expect,
+            $collection->mapWithKeysOfProperty(
+                'prop',
+                fn ($collectionKey) => $collectionKey->getUid()
+            )->toArray()
+        );
     }
 
     /**
@@ -91,7 +98,7 @@ class CollectionTest extends UnitTestCase
     {
         $items = [
             ['uid' => 1, 'title' => 'test me'],
-            createEntity(Category::class, ['uid' => 123, 'title' => 'Im category']),
+            TestsUtility::createEntity(Category::class, ['uid' => 123, 'title' => 'Im category']),
         ];
 
         $collection = new Collection($items);
@@ -105,9 +112,9 @@ class CollectionTest extends UnitTestCase
      */
     public function pluckExtractValuesByPropertyFromObjectStorage(): void
     {
-        $items = createObjectStorage(
-            createEntity(Category::class, 88),
-            createEntity(Category::class, 99),
+        $items = TestsUtility::createObjectStorage(
+            TestsUtility::createEntity(Category::class, 88),
+            TestsUtility::createEntity(Category::class, 99),
         );
 
         $collection = new Collection($items);
@@ -121,11 +128,11 @@ class CollectionTest extends UnitTestCase
      */
     public function pluckWithCallbackWillApplyCallbackFunctionToKeys(): void
     {
-        $attribute1 = createEntity(Attribute::class, 5);
-        $attribute2 = createEntity(Attribute::class, 10);
+        $attribute1 = TestsUtility::createEntity(Attribute::class, 5);
+        $attribute2 = TestsUtility::createEntity(Attribute::class, 10);
 
-        $attributeValue1 = createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
-        $attributeValue2 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+        $attributeValue1 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
+        $attributeValue2 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
 
         $items = [
             $attributeValue1,
@@ -147,10 +154,10 @@ class CollectionTest extends UnitTestCase
     public function unionUniquePropertyWillAddOnlyUniqueItems(): void
     {
         $item1 = ['uid' => 1, 'title' => 'I\'m title'];
-        $category1 = createEntity(Category::class, ['uid' => 123, 'title' => 'Im category']);
+        $category1 = TestsUtility::createEntity(Category::class, ['uid' => 123, 'title' => 'Im category']);
 
         $item23 = ['uid' => 23, 'title' => 'Test title'];
-        $category445 = createEntity(Category::class, ['uid' => 445, 'title' => 'In collection']);
+        $category445 = TestsUtility::createEntity(Category::class, ['uid' => 445, 'title' => 'In collection']);
 
         $items = [
             $item1,
@@ -196,13 +203,13 @@ class CollectionTest extends UnitTestCase
      */
     public function shiftLevelWillRemoveFirstLevelOfObjectStorage(): void
     {
-        $item1 = createEntity(Category::class, 1);
-        $item2 = createEntity(Category::class, 2);
-        $item3 = createEntity(Category::class, 3);
+        $item1 = TestsUtility::createEntity(Category::class, 1);
+        $item2 = TestsUtility::createEntity(Category::class, 2);
+        $item3 = TestsUtility::createEntity(Category::class, 3);
 
         $items = [
-            createObjectStorage($item2, $item3),
-            createObjectStorage($item1),
+            TestsUtility::createObjectStorage($item2, $item3),
+            TestsUtility::createObjectStorage($item1),
         ];
 
         $expect = [$item2, $item3, $item1];
@@ -216,7 +223,7 @@ class CollectionTest extends UnitTestCase
      */
     public function uniqueWillReturnArrayOfUniqueValues(): void
     {
-        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = TestsUtility::createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3, $item2, $item3];
 
         $expect = [$item1, $item2, $item3];
@@ -230,7 +237,7 @@ class CollectionTest extends UnitTestCase
      */
     public function searchOneByPropertyWillReturnNullIfNothingIsFound(): void
     {
-        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = TestsUtility::createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
@@ -243,7 +250,7 @@ class CollectionTest extends UnitTestCase
      */
     public function searchOneByPropertyWillReturnItemIfFound(): void
     {
-        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = TestsUtility::createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
@@ -256,13 +263,13 @@ class CollectionTest extends UnitTestCase
      */
     public function searchOneByPropertyWithCallbackWillReturnItemIfFound(): void
     {
-        $attribute1 = createEntity(Attribute::class, 10);
-        $attribute2 = createEntity(Attribute::class, 50);
-        $attribute3 = createEntity(Attribute::class, 100);
+        $attribute1 = TestsUtility::createEntity(Attribute::class, 10);
+        $attribute2 = TestsUtility::createEntity(Attribute::class, 50);
+        $attribute3 = TestsUtility::createEntity(Attribute::class, 100);
 
-        $attributeValue1 = createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
-        $attributeValue2 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
-        $attributeValue3 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute3]);
+        $attributeValue1 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
+        $attributeValue2 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+        $attributeValue3 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute3]);
 
         $items = [
             $attributeValue1,
@@ -283,12 +290,12 @@ class CollectionTest extends UnitTestCase
      */
     public function searchByPropertyWillReturnItems(): void
     {
-        $attribute1 = createEntity(Attribute::class, 10);
-        $attribute2 = createEntity(Attribute::class, 50);
+        $attribute1 = TestsUtility::createEntity(Attribute::class, 10);
+        $attribute2 = TestsUtility::createEntity(Attribute::class, 50);
 
-        $attributeValue1 = createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
-        $attributeValue2 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
-        $attributeValue3 = createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+        $attributeValue1 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 1, 'attribute' => $attribute1]);
+        $attributeValue2 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
+        $attributeValue3 = TestsUtility::createEntity(AttributeValue::class, ['uid' => 2, 'attribute' => $attribute2]);
 
         $items = [
             $attributeValue1,
@@ -310,7 +317,7 @@ class CollectionTest extends UnitTestCase
      */
     public function firstReturnFirstItemFromCollection(): void
     {
-        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = TestsUtility::createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
@@ -323,7 +330,7 @@ class CollectionTest extends UnitTestCase
      */
     public function filterFilterItems(): void
     {
-        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = TestsUtility::createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
         $collection = new Collection($items);
@@ -336,11 +343,11 @@ class CollectionTest extends UnitTestCase
      */
     public function unshiftAddItemsToBeginningOfCollection(): void
     {
-        [$item1, $item2, $item3] = createMultipleEntities(Category::class, 3);
+        [$item1, $item2, $item3] = TestsUtility::createMultipleEntities(Category::class, 3);
         $items = [$item1, $item2, $item3];
 
-        $item10 = createEntity(Category::class, 10);
-        $item20 = createEntity(Category::class, 20);
+        $item10 = TestsUtility::createEntity(Category::class, 10);
+        $item20 = TestsUtility::createEntity(Category::class, 20);
         $add = [$item10, $item20];
 
         $collection = new Collection($items);
@@ -386,13 +393,13 @@ class CollectionTest extends UnitTestCase
     public function toArrayReturnIterableToArrayDataProvider()
     {
         $items = [
-            createEntity(Category::class, 1),
-            createEntity(Category::class, 2),
+            TestsUtility::createEntity(Category::class, 1),
+            TestsUtility::createEntity(Category::class, 2),
         ];
 
         return [
             'object_storage_to_array' => [
-                'object_storage' => createObjectStorage(...$items),
+                'object_storage' => TestsUtility::createObjectStorage(...$items),
                 'expect' => $items,
             ],
             'array_to_array' => [

@@ -4,6 +4,7 @@ namespace Pixelant\PxaProductManager\Tests\Functional\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -37,7 +38,7 @@ class ProductTest extends FunctionalTestCase
         $allAttributesSets = $product->_getAllAttributesSets();
 
         $expectAttributesSetsUids = [3, 1];
-        self::assertEquals($expectAttributesSetsUids, entitiesToUidsArray($allAttributesSets));
+        self::assertEquals($expectAttributesSetsUids, TestsUtility::entitiesToUidsArray($allAttributesSets));
     }
 
     /**
@@ -50,6 +51,6 @@ class ProductTest extends FunctionalTestCase
 
         $expect = [20, 10, 40, 30, 50];
 
-        self::assertEquals($expect, entitiesToUidsArray($product->getCategoriesWithParents()));
+        self::assertEquals($expect, TestsUtility::entitiesToUidsArray($product->getCategoriesWithParents()));
     }
 }

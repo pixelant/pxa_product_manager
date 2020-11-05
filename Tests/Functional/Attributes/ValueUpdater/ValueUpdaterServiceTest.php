@@ -7,6 +7,7 @@ use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -35,14 +36,16 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
      */
     public function updateWillUpdateExistingValue(): void
     {
-        $product = createEntity(Product::class, ['_localizedUid' => 10]);
-        $attribute = createEntity(Attribute::class, ['_localizedUid' => 101]);
+        $product = TestsUtility::createEntity(Product::class, ['_localizedUid' => 10]);
+        $attribute = TestsUtility::createEntity(Attribute::class, ['_localizedUid' => 101]);
 
         $newValue = 'here new value';
 
         $this->subject->update($product, $attribute, $newValue);
 
-        $attributeValue = GeneralUtility::makeInstance(ObjectManager::class)->get(AttributeValueRepository::class)->findByUid(20);
+        $attributeValue = GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(AttributeValueRepository::class)
+            ->findByUid(20);
 
         self::assertEquals($newValue, $attributeValue->getValue());
     }
@@ -55,8 +58,8 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
         $productUid = 200;
         $attributeUid = 202;
 
-        $product = createEntity(Product::class, ['_localizedUid' => $productUid]);
-        $attribute = createEntity(Attribute::class, ['_localizedUid' => $attributeUid]);
+        $product = TestsUtility::createEntity(Product::class, ['_localizedUid' => $productUid]);
+        $attribute = TestsUtility::createEntity(Attribute::class, ['_localizedUid' => $attributeUid]);
 
         $newValue = 'new created value';
 
@@ -86,8 +89,14 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
         $productUid = 1;
         $attributeUid = 2;
 
-        $product = createEntity(Product::class, ['_localizedUid' => $productUid]);
-        $attribute = createEntity(Attribute::class, ['_localizedUid' => $attributeUid, 'type' => Attribute::ATTRIBUTE_TYPE_DROPDOWN]);
+        $product = TestsUtility::createEntity(Product::class, ['_localizedUid' => $productUid]);
+        $attribute = TestsUtility::createEntity(
+            Attribute::class,
+            [
+                '_localizedUid' => $attributeUid,
+                'type' => Attribute::ATTRIBUTE_TYPE_DROPDOWN,
+            ]
+        );
 
         $newValue = '2';
         $expectValue = ",${newValue},";

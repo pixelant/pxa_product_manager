@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class ValueUpdaterServiceTest extends UnitTestCase
 {
@@ -25,7 +26,7 @@ class ValueUpdaterServiceTest extends UnitTestCase
      */
     public function castToIntConvertObjectToUid(): void
     {
-        $object = createEntity(Product::class, ['_localizedUid' => 12]);
+        $object = TestsUtility::createEntity(Product::class, ['_localizedUid' => 12]);
 
         self::assertEquals(12, $this->callInaccessibleMethod($this->subject, 'castToInt', $object));
     }
@@ -44,14 +45,21 @@ class ValueUpdaterServiceTest extends UnitTestCase
     public function getAttributeEntityTryToFindAttributeIfNotEntity(): void
     {
         $attribute = 10;
-        $attributeEntity = createEntity(Attribute::class, 20);
+        $attributeEntity = TestsUtility::createEntity(Attribute::class, 20);
 
         $repository = $this->prophesize(AttributeRepository::class);
         $repository->findByUid($attribute)->shouldBeCalled()->willReturn($attributeEntity);
 
         $this->subject->injectAttributeRepository($repository->reveal());
 
-        self::assertSame($attributeEntity, $this->callInaccessibleMethod($this->subject, 'getAttributeEntity', $attribute));
+        self::assertSame(
+            $attributeEntity,
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'getAttributeEntity',
+                $attribute
+            )
+        );
     }
 
     /**
@@ -63,7 +71,7 @@ class ValueUpdaterServiceTest extends UnitTestCase
      */
     public function convertValueReturnCommaWrappedValueForMultipleSelectBox($value, $expect, $type): void
     {
-        $attribute = createEntity(Attribute::class, ['uid' => 1, 'type' => $type]);
+        $attribute = TestsUtility::createEntity(Attribute::class, ['uid' => 1, 'type' => $type]);
 
         $subject = $this->getMockBuilder(ValueUpdaterService::class)->setMethods(['getAttributeEntity'])->getMock();
         $subject->expects(self::once())->method('getAttributeEntity')->willReturn($attribute);

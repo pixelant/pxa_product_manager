@@ -8,6 +8,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Service\NavigationService;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\Http\ServerRequest;
 
 class NavigationServiceTest extends UnitTestCase
@@ -18,7 +19,11 @@ class NavigationServiceTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->subject = $this->getMockBuilder(NavigationService::class)->disableOriginalConstructor()->setMethods(null)->getMock();
+        $this->subject = $this
+            ->getMockBuilder(NavigationService::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
     }
 
     /**
@@ -26,10 +31,10 @@ class NavigationServiceTest extends UnitTestCase
      */
     public function getDemandWithParentCloneOriginalDemandAndSetParentCatgory(): void
     {
-        $parent = createEntity(Category::class, 1);
+        $parent = TestsUtility::createEntity(Category::class, 1);
         $demand = new CategoryDemand();
         $demand->setLimit(200);
-        $demand->setParent(createEntity(Category::class, 199));
+        $demand->setParent(TestsUtility::createEntity(Category::class, 199));
 
         $this->inject($this->subject, 'demandPrototype', $demand);
         $newDemand = $this->callInaccessibleMethod($this->subject, 'getDemandWithParent', $parent);
@@ -56,7 +61,13 @@ class NavigationServiceTest extends UnitTestCase
 
         $this->callInaccessibleMethod($this->subject, 'setActiveFromRequest');
 
-        self::assertTrue(14 === getProtectedVarValue($this->subject, 'current'));
-        self::assertEquals(['category_0' => 10, 'category_1' => 100], getProtectedVarValue($this->subject, 'active'));
+        self::assertTrue(14 === TestsUtility::getProtectedVarValue($this->subject, 'current'));
+        self::assertEquals(
+            [
+                'category_0' => 10,
+                'category_1' => 100,
+            ],
+            TestsUtility::getProtectedVarValue($this->subject, 'active')
+        );
     }
 }

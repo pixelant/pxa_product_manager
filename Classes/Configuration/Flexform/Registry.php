@@ -88,8 +88,9 @@ class Registry
      */
     public function registerDefaultActions(): void
     {
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items'])) {
-            $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items'] = [];
+        $scaKey = 'switchableControllerActions';
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'])) {
+            $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'] = [];
         }
 
         foreach ($this->defaultSwitchableActions as $action) {
@@ -110,8 +111,12 @@ class Registry
      * @param array $flexforms Array with subflexforms path
      * @param array $excludeFields Force flexform fields to be excluded
      */
-    public function addSwitchableControllerAction(string $action, string $label, array $flexforms = [], array $excludeFields = []): void
-    {
+    public function addSwitchableControllerAction(
+        string $action,
+        string $label,
+        array $flexforms = [],
+        array $excludeFields = []
+    ): void {
         $items = &$GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items'];
         $items[$action] = compact('action', 'label', 'flexforms', 'excludeFields');
     }
@@ -123,8 +128,9 @@ class Registry
      */
     public function removeSwitchableControllerAction(string $action): void
     {
-        if (isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items'][$action])) {
-            unset($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items'][$action]);
+        $scaKey = 'switchableControllerActions';
+        if (isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'][$action])) {
+            unset($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'][$action]);
         }
     }
 

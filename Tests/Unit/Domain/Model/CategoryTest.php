@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Category;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class CategoryTest extends UnitTestCase
 {
@@ -23,14 +24,14 @@ class CategoryTest extends UnitTestCase
      */
     public function getParentsRootLineReturnRootLineOfParents(): void
     {
-        $lastCategory = createCategoriesRootLineAndReturnLastCategory();
+        $lastCategory = TestsUtility::createCategoriesRootLineAndReturnLastCategory();
 
         $this->subject->setParent($lastCategory);
         $this->subject->_setProperty('uid', 100);
 
         // Vise versa
         $expect = [100, 5, 4, 3, 2, 1];
-        $result = entitiesToUidsArray($this->subject->getParentsRootLine());
+        $result = TestsUtility::entitiesToUidsArray($this->subject->getParentsRootLine());
 
         // Compare  UIDs, because object won't be same
         self::assertEquals($expect, $result);
@@ -41,13 +42,13 @@ class CategoryTest extends UnitTestCase
      */
     public function getParentsRootLineReverseReturnReversedRootLine(): void
     {
-        $lastCategory = createCategoriesRootLineAndReturnLastCategory();
+        $lastCategory = TestsUtility::createCategoriesRootLineAndReturnLastCategory();
 
         $this->subject->setParent($lastCategory);
         $this->subject->_setProperty('uid', 100);
 
         $expect = [1, 2, 3, 4, 5, 100];
-        $result = entitiesToUidsArray($this->subject->getParentsRootLineReverse());
+        $result = TestsUtility::entitiesToUidsArray($this->subject->getParentsRootLineReverse());
 
         // Compare  UIDs, because object won't be same
         self::assertEquals($expect, $result);
@@ -58,10 +59,10 @@ class CategoryTest extends UnitTestCase
      */
     public function getParentsRootLineReturnRootLineOfParentsButStopIfLoopFound(): void
     {
-        $root = createEntity(Category::class, 99);
-        $subCat1 = createEntity(Category::class, 1);
-        $subCat2 = createEntity(Category::class, 2);
-        $subCat3 = createEntity(Category::class, 3);
+        $root = TestsUtility::createEntity(Category::class, 99);
+        $subCat1 = TestsUtility::createEntity(Category::class, 1);
+        $subCat2 = TestsUtility::createEntity(Category::class, 2);
+        $subCat3 = TestsUtility::createEntity(Category::class, 3);
 
         $subCat3->setParent($subCat2);
         $subCat2->setParent($subCat1);
@@ -84,7 +85,7 @@ class CategoryTest extends UnitTestCase
      */
     public function getNavigationRootLineReturnCategoriesForUrl(): void
     {
-        $lastCategory = createCategoriesRootLineAndReturnLastCategory();
+        $lastCategory = TestsUtility::createCategoriesRootLineAndReturnLastCategory();
         $lastCategory->setHiddenInNavigation(true);
 
         $this->subject->setParent($lastCategory);

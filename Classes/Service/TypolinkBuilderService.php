@@ -146,7 +146,7 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
      *
      * Since extbase ts configuration isn't loaded when TypolinkBuilderService
      *
-     * TODO: check progress of https://forge.typo3.org/issues/75399
+     * check progress of https://forge.typo3.org/issues/75399
      *
      * @return void
      */

@@ -252,9 +252,8 @@ class ProductEditFormManipulation implements FormDataProviderInterface
      */
     protected function setDiffData(array &$diffRow, array &$defaultLanguageRow): void
     {
-        // TODO implementation
-        die(__METHOD__);
-
+        die('Not yet implemented: ' . __METHOD__);
+        /*
         $attributeUidToValues = [];
 
         if (!empty($diffRow['serialized_attributes_values'])) {
@@ -266,6 +265,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             $diffRow[$field] = $attributeValue;
             $defaultLanguageRow[$field] = $attributeValue;
         }
+        */
     }
 
     /**
