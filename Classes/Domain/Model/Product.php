@@ -41,7 +41,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Product extends AbstractEntity
 {
-    use AbleCacheProperties;
+    use CanCacheProperties;
     use CanCreateCollection;
 
     /**

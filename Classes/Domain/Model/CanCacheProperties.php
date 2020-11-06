@@ -8,7 +8,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  * Use in models that can cache their properties on heave calculations/operations
  * For example categories root line should be fetched only once.
  */
-trait AbleCacheProperties
+trait CanCacheProperties
 {
     /**
      * Cached properties.

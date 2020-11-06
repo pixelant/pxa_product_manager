@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Domain\Model\AbleCacheProperties;
+use Pixelant\PxaProductManager\Domain\Model\CanCacheProperties;
 
-class AbleCachePropertiesTest extends UnitTestCase
+class CanCachePropertiesTest extends UnitTestCase
 {
-    use AbleCacheProperties;
+    use CanCacheProperties;
 
     protected function setUp(): void
     {
