@@ -146,7 +146,6 @@ jobs:
         php-version:
           - 7.4
         typo3-version:
-          - ^9.5
           - ^10.4
   functional-tests:
     name: "Functional tests"
@@ -209,5 +208,4 @@ jobs:
         php-version:
           - 7.4
         typo3-version:
-          - ^9.5
           - ^10.4
