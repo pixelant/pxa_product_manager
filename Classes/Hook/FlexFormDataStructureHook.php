@@ -29,9 +29,7 @@ class FlexFormDataStructureHook implements SingletonInterface
      *
      * @var string
      */
-    /** @codingStandardsIgnoreStart */
     protected ?string $lastSelectedAction = null;
-    /** @codingStandardsIgnoreEnd */
 
     /**
      * @var FlexFormService

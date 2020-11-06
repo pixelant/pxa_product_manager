@@ -45,9 +45,7 @@ class NavigationService
     /**
      * @var NavigationItem[]
      */
-    /** @codingStandardsIgnoreStart */
     protected ?array $items = null;
-    /** @codingStandardsIgnoreEnd */
 
     /**
      * Array of active categories.

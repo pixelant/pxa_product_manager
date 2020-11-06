@@ -11,9 +11,7 @@ abstract class AbstractDemand implements DemandInterface
      *
      * @var array
      */
-    /** @codingStandardsIgnoreStart */
     protected ?array $storagePid = null;
-    /** @codingStandardsIgnoreEnd */
 
     /**
      * Limit query result.
