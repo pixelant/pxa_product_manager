@@ -46,9 +46,9 @@ use TYPO3\CMS\Recordlist\Tree\View\LinkParameterProviderInterface;
 /**
  * Link handler for page (and content) links.
  */
-/** @codingStandardsIgnoreStart */
-abstract class AbstractLinkHandler extends Typo3LinkHandler implements LinkHandlerInterface, LinkParameterProviderInterface
-// @codingStandardsIgnoreEnd
+abstract class AbstractLinkHandler extends Typo3LinkHandler implements
+    LinkHandlerInterface,
+    LinkParameterProviderInterface
 {
     /**
      * Parts of the current link.

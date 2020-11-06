@@ -22,7 +22,7 @@ $rules = [
         'allow_single_line_closure' => true,
     ],
     'class_attributes_separation' => ['elements' => ['method']],
-    'class_definition' => ['single_line' => true],
+    'class_definition' => ['single_line' => false],
     'combine_consecutive_issets' => true,
     'combine_consecutive_unsets' => true,
     'comment_to_phpdoc' => true,
