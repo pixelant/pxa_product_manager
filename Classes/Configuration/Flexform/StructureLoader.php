@@ -91,7 +91,7 @@ class StructureLoader
         $fullPath = GeneralUtility::getFileAbsFileName($flexformPath);
         if (!file_exists($fullPath)) {
             throw new \RuntimeException(
-                "Could not find flexform with path '${fullPath}'(given path '${flexformPath}')",
+                'Could not find flexform with path "' . $fullPath . '" (given path "' . $flexformPath . '")',
                 1570185225935
             );
         }
