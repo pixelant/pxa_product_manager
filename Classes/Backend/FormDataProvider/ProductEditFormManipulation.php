@@ -11,6 +11,7 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Exception\NotImplementedException;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
@@ -249,10 +250,10 @@ class ProductEditFormManipulation implements FormDataProviderInterface
      *
      * @param array $diffRow
      * @param array $defaultLanguageRow
+     * @throws NotImplementedException
      */
     protected function setDiffData(array &$diffRow, array &$defaultLanguageRow): void
     {
-        die('Not yet implemented: ' . __METHOD__);
         /*
         $attributeUidToValues = [];
 
@@ -266,6 +267,10 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             $defaultLanguageRow[$field] = $attributeValue;
         }
         */
+        throw new NotImplementedException(
+            'Method ' . __METHOD__ . ' is not implemented yet',
+            1604650670
+        );
     }
 
     /**
