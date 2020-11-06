@@ -151,7 +151,7 @@ class ProductsQueryDispatcher
         foreach ($queryBuilder->getParameters() as $key => $value) {
             // prefix array keys with ':'
             //all non numeric values have to be quoted
-            $queryParameters[':' . $key] = is_numeric($value) ? $value : "'${value}'";
+            $queryParameters[':' . $key] = is_numeric($value) ? $value : '\'' . $value . '\'';
         }
 
         return strtr($queryBuilder->getSQL(), $queryParameters);
