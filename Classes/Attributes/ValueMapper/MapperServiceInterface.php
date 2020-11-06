@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
@@ -6,14 +7,12 @@ namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * Service that should map all product attributes with values
- *
- * @package Pixelant\PxaProductManager\Attributes\ValueMapper
+ * Service that should map all product attributes with values.
  */
 interface MapperServiceInterface
 {
     /**
-     * Map all product attributes with values and return result
+     * Map all product attributes with values and return result.
      *
      * @param Product $product
      * @return array

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Formatter;
@@ -13,9 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
-/**
- * @package Pixelant\PxaProductManager\Formatter
- */
 class PriceFormatter implements SingletonInterface
 {
     /**
@@ -54,30 +52,31 @@ class PriceFormatter implements SingletonInterface
     /**
      * @param ConfigurationManagerInterface $configurationManagerInterface
      */
-    public function injectConfigurationManagerInterface(ConfigurationManagerInterface $configurationManagerInterface)
-    {
+    public function injectConfigurationManagerInterface(
+        ConfigurationManagerInterface $configurationManagerInterface
+    ): void {
         $this->configurationManager = $configurationManagerInterface;
     }
 
     /**
      * @param Dispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher)
+    public function injectDispatcher(Dispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
 
     /**
-     * On init set currency and locale
+     * On init set currency and locale.
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $this->setCurrencyFromSettings();
         $this->setCurrencyFromRequest();
     }
 
     /**
-     * Format product price according to locale and currency
+     * Format product price according to locale and currency.
      *
      * @param Product $product
      * @param string|null $locale
@@ -98,7 +97,7 @@ class PriceFormatter implements SingletonInterface
     }
 
     /**
-     * Set currency from plugin settings
+     * Set currency from plugin settings.
      */
     protected function setCurrencyFromSettings(): void
     {
@@ -108,19 +107,19 @@ class PriceFormatter implements SingletonInterface
             'Pi1'
         );
 
-        if (! empty($settings['price']['currency'])) {
+        if (!empty($settings['price']['currency'])) {
             $this->currency = $settings['price']['currency'];
         }
     }
 
     /**
-     * Set locale from site settings
+     * Set locale from site settings.
      */
     protected function setCurrencyFromRequest(): void
     {
         $siteLanguage = $this->request->getAttribute('language', null);
         if ($siteLanguage instanceof SiteLanguage) {
-            list($this->locale) = explode('.', $siteLanguage->getLocale());
+            [$this->locale] = explode('.', $siteLanguage->getLocale());
         }
     }
 }

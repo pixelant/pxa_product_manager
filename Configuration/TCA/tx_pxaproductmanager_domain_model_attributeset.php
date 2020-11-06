@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
@@ -19,13 +20,13 @@ return (function () {
                 'disabled' => 'hidden',
             ],
             'searchFields' => 'name,attributes,',
-            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg'
+            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg',
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, attributes, categories',
+            'showRecordFieldList' => 'hidden, name, attributes, product_types',
         ],
         'types' => [
-            '1' => ['showitem' => 'name, attributes, categories, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
+            '1' => ['showitem' => 'name, attributes, product_types, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -41,8 +42,8 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
                 ],
             ],
@@ -51,7 +52,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'attributes' => [
@@ -73,26 +74,24 @@ return (function () {
                     'multiple' => 0,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
-            'categories' => [
-                'label' => $ll . '.categories',
+            'product_types' => [
+                'label' => $ll . '.product_types',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
-                    'foreign_table' => 'sys_category',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getCategoriesTCAWhereClause() .
-                        ' AND sys_category.sys_language_uid <= 0',
+                    'foreign_table' => 'tx_pxaproductmanager_domain_model_producttype',
                     'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
                     'MM_match_fields' => [
-                        'tablenames' => 'sys_category',
-                        'fieldname' => 'categories',
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_producttype',
+                        'fieldname' => 'product_type',
                     ],
                     'size' => 10,
                     'autoSizeMax' => 30,
@@ -100,13 +99,13 @@ return (function () {
                     'multiple' => 0,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
         ],
     ];

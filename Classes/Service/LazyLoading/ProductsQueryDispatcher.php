@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service\LazyLoading;
@@ -11,9 +12,6 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 
-/**
- * @package Pixelant\PxaProductManager\Service\LazyLoading
- */
 class ProductsQueryDispatcher
 {
     /**
@@ -44,7 +42,7 @@ class ProductsQueryDispatcher
     /**
      * @param AttributeValueRepository $attributeValueRepository
      */
-    public function injectAttributeValueRepository(AttributeValueRepository $attributeValueRepository)
+    public function injectAttributeValueRepository(AttributeValueRepository $attributeValueRepository): void
     {
         $this->attributeValueRepository = $attributeValueRepository;
     }
@@ -52,7 +50,7 @@ class ProductsQueryDispatcher
     /**
      * @param ProductRepository $productRepository
      */
-    public function injectProductRepository(ProductRepository $productRepository)
+    public function injectProductRepository(ProductRepository $productRepository): void
     {
         $this->productRepository = $productRepository;
     }
@@ -60,7 +58,7 @@ class ProductsQueryDispatcher
     /**
      * @param CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    public function injectCategoryRepository(CategoryRepository $categoryRepository): void
     {
         $this->categoryRepository = $categoryRepository;
     }
@@ -68,13 +66,13 @@ class ProductsQueryDispatcher
     /**
      * @param Typo3DbQueryParser $typo3DbQueryParser
      */
-    public function injectTypo3DbQueryParser(Typo3DbQueryParser $typo3DbQueryParser)
+    public function injectTypo3DbQueryParser(Typo3DbQueryParser $typo3DbQueryParser): void
     {
         $this->queryParser = $typo3DbQueryParser;
     }
 
     /**
-     * Prepare extbase query for further processing
+     * Prepare extbase query for further processing.
      *
      * @param DemandInterface $demand
      */
@@ -90,20 +88,21 @@ class ProductsQueryDispatcher
     }
 
     /**
-     * Return all available options for current products query builder
+     * Return all available options for current products query builder.
      *
      * @return array
      */
     public function availableFilterOptions(): array
     {
         $options = $this->attributeValueRepository->findOptionIdsByProductSubQuery($this->subQuery());
+
         return array_unique(array_merge(
-            ...array_map(fn($value) => GeneralUtility::intExplode(',', $value, true), $options)
+            ...array_map(fn ($value) => GeneralUtility::intExplode(',', $value, true), $options)
         ));
     }
 
     /**
-     * Return all available categories for query builder
+     * Return all available categories for query builder.
      * @return array
      */
     public function availableCategories(): array
@@ -112,7 +111,7 @@ class ProductsQueryDispatcher
     }
 
     /**
-     * Count all results for products demand query
+     * Count all results for products demand query.
      *
      * @return int
      */
@@ -127,7 +126,7 @@ class ProductsQueryDispatcher
     }
 
     /**
-     * Generate products sub-query string
+     * Generate products sub-query string.
      *
      * @return string
      */
@@ -140,7 +139,7 @@ class ProductsQueryDispatcher
     }
 
     /**
-     * Convert query builder to sql
+     * Convert query builder to sql.
      *
      * @param QueryBuilder $queryBuilder
      * @return string
@@ -152,7 +151,7 @@ class ProductsQueryDispatcher
         foreach ($queryBuilder->getParameters() as $key => $value) {
             // prefix array keys with ':'
             //all non numeric values have to be quoted
-            $queryParameters[':' . $key] = is_numeric($value) ? $value : "'$value'";
+            $queryParameters[':' . $key] = is_numeric($value) ? $value : '\'' . $value . '\'';
         }
 
         return strtr($queryBuilder->getSQL(), $queryParameters);

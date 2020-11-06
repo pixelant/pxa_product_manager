@@ -1,13 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Configuration\Flexform;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Configuration\Flexform\Registry;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Service\Flexform
- */
 class RegistryTest extends UnitTestCase
 {
     /**
@@ -15,7 +15,7 @@ class RegistryTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -26,17 +26,20 @@ class RegistryTest extends UnitTestCase
     /**
      * @test
      */
-    public function registerDefaultActionWillRegisterDefaultActions()
+    public function registerDefaultActionWillRegisterDefaultActions(): void
     {
         $this->subject->registerDefaultActions();
 
-        $this->assertCount(count(getProtectedVarValue($this->subject, 'defaultSwitchableActions')), $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']);
+        self::assertCount(
+            count(TestsUtility::getProtectedVarValue($this->subject, 'defaultSwitchableActions')),
+            $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']
+        );
     }
 
     /**
      * @test
      */
-    public function addSwitchableControllerActionAddsConfigurationtoGlobalArray()
+    public function addSwitchableControllerActionAddsConfigurationtoGlobalArray(): void
     {
         $action = 'Product->test';
         $label = 'Test';
@@ -52,15 +55,16 @@ class RegistryTest extends UnitTestCase
             'excludeFields' => $exclude,
         ];
 
-        $result = $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items'][$action];
+        $scaKey = 'switchableControllerActions';
+        $result = $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'][$action];
 
-        $this->assertEquals($expect, $result);
+        self::assertEquals($expect, $result);
     }
 
     /**
      * @test
      */
-    public function removeSwitchableControllerActionRemoveByActionName()
+    public function removeSwitchableControllerActionRemoveByActionName(): void
     {
         $action = 'Product->test';
         $label = 'Test';
@@ -76,16 +80,18 @@ class RegistryTest extends UnitTestCase
 
         $this->subject->removeSwitchableControllerAction($action);
 
-        $this->assertEmpty($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']);
+        $scaKey = 'switchableControllerActions';
+        self::assertEmpty($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']);
     }
 
     /**
      * @test
      */
-    public function getAllRegisteredActionsReturnAllItems()
+    public function getAllRegisteredActionsReturnAllItems(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']['test1'] = ['action' => 'test1'];
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']['test2'] = ['action' => 'test2'];
+        $scaKey = 'switchableControllerActions';
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']['test1'] = ['action' => 'test1'];
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']['test2'] = ['action' => 'test2'];
 
         $expect = [
             'test1' => [
@@ -96,28 +102,29 @@ class RegistryTest extends UnitTestCase
             ],
         ];
 
-        $this->assertEquals($expect, $this->subject->getAllRegisteredActions());
+        self::assertEquals($expect, $this->subject->getAllRegisteredActions());
     }
 
     /**
      * @test
      */
-    public function getSwitchableControllerActionConfigurationReturnNullIfConfigurationDoesnotExist()
+    public function getSwitchableControllerActionConfigurationReturnNullIfConfigurationDoesnotExist(): void
     {
-        $this->assertNull($this->subject->getSwitchableControllerActionConfiguration('test'));
+        self::assertNull($this->subject->getSwitchableControllerActionConfiguration('test'));
     }
 
     /**
      * @test
      */
-    public function getSwitchableControllerActionConfigurationReturnConfigurationIfExist()
+    public function getSwitchableControllerActionConfigurationReturnConfigurationIfExist(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager']['switchableControllerActions']['items']['test1'] = ['action' => 'test1'];
+        $scaKey = 'switchableControllerActions';
+        $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items']['test1'] = ['action' => 'test1'];
 
         $expect = [
             'action' => 'test1',
         ];
 
-        $this->assertEquals($expect, $this->subject->getSwitchableControllerActionConfiguration('test1'));
+        self::assertEquals($expect, $this->subject->getSwitchableControllerActionConfiguration('test1'));
     }
 }

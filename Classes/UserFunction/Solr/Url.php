@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction\Solr;
@@ -10,9 +11,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
-/**
- * @package Pixelant\PxaProductManager\UserFunction\Solr
- */
 class Url
 {
     /**
@@ -31,7 +29,7 @@ class Url
     protected ObjectManager $objectManager;
 
     /**
-     * Init
+     * Init.
      */
     public function __construct()
     {
@@ -40,7 +38,7 @@ class Url
     }
 
     /**
-     * Generate product url
+     * Generate product url.
      *
      * @param $_
      * @param array $params
@@ -63,7 +61,7 @@ class Url
     }
 
     /**
-     * Create product model
+     * Create product model.
      *
      * @return Product|null
      */

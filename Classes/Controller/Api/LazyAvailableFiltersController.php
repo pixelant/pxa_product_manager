@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller\Api;
@@ -7,9 +8,6 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Service\LazyLoading\ProductsQueryDispatcher;
 
-/**
- * @package Pixelant\PxaProductManager\Controller\Api
- */
 class LazyAvailableFiltersController extends AbstractBaseLazyLoadingController
 {
     /**
@@ -20,17 +18,17 @@ class LazyAvailableFiltersController extends AbstractBaseLazyLoadingController
     /**
      * @param ProductsQueryDispatcher $productsQueryDispatcher
      */
-    public function injectProductsQueryDispatcher(ProductsQueryDispatcher $productsQueryDispatcher)
+    public function injectProductsQueryDispatcher(ProductsQueryDispatcher $productsQueryDispatcher): void
     {
         $this->queryDispatcher = $productsQueryDispatcher;
     }
 
     /**
-     * Count all results for demand and return available filter options
+     * Count all results for demand and return available filter options.
      *
      * @param ProductDemand $demand
      */
-    public function listAction(ProductDemand $demand)
+    public function listAction(ProductDemand $demand): void
     {
         $this->queryDispatcher->prepareQuery($demand);
 
@@ -46,7 +44,7 @@ class LazyAvailableFiltersController extends AbstractBaseLazyLoadingController
     }
 
     /**
-     * Available filter options for demand
+     * Available filter options for demand.
      *
      * @param ProductDemand $demand
      * @return array|null
@@ -54,7 +52,7 @@ class LazyAvailableFiltersController extends AbstractBaseLazyLoadingController
     protected function collectAvailableOptions(ProductDemand $demand): ?array
     {
         // Do nothing if options is disable in plugin settings
-        if (! $demand->isHideFilterOptionsNoResult()) {
+        if (!$demand->isHideFilterOptionsNoResult()) {
             return null;
         }
 
@@ -68,15 +66,17 @@ class LazyAvailableFiltersController extends AbstractBaseLazyLoadingController
         ];
 
         // For each OR filter we need to get available options without this filter set
-        $orFilters = array_filter($demand->getFilters(), fn($fd) => $fd['conjunction'] === Filter::CONJUNCTION_OR);
+        $orFilters = array_filter($demand->getFilters(), fn ($fd) => $fd['conjunction'] === Filter::CONJUNCTION_OR);
         foreach ($orFilters as $id => $data) {
             $customDemand = clone $demand;
             $customDemand->removeFilter($id);
 
             $this->queryDispatcher->prepareQuery($customDemand);
-            $options[$id] = intval($data['type']) === Filter::TYPE_CATEGORIES
-                ? $this->queryDispatcher->availableCategories()
-                : $this->queryDispatcher->availableFilterOptions();
+            if ((int)$data['type'] === Filter::TYPE_CATEGORIES) {
+                $options[$id] = $this->queryDispatcher->availableCategories();
+            } else {
+                $options[$id] = $this->queryDispatcher->availableFilterOptions();
+            }
         }
 
         return $options;

@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -23,33 +23,29 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class Attribute extends AbstractEntity
 {
     /**
-     * Attributes types
+     * Attributes types.
      */
-    const ATTRIBUTE_TYPE_INPUT = 1;
-    const ATTRIBUTE_TYPE_TEXT = 2;
-    const ATTRIBUTE_TYPE_DATETIME = 3;
-    const ATTRIBUTE_TYPE_DROPDOWN = 4;
-    const ATTRIBUTE_TYPE_CHECKBOX = 5;
-    const ATTRIBUTE_TYPE_LINK = 6;
-    const ATTRIBUTE_TYPE_IMAGE = 7;
-    const ATTRIBUTE_TYPE_LABEL = 8;
-    const ATTRIBUTE_TYPE_MULTISELECT = 9;
-    const ATTRIBUTE_TYPE_FILE = 10;
+    public const ATTRIBUTE_TYPE_INPUT = 1;
+    public const ATTRIBUTE_TYPE_TEXT = 2;
+    public const ATTRIBUTE_TYPE_DATETIME = 3;
+    public const ATTRIBUTE_TYPE_DROPDOWN = 4;
+    public const ATTRIBUTE_TYPE_CHECKBOX = 5;
+    public const ATTRIBUTE_TYPE_LINK = 6;
+    public const ATTRIBUTE_TYPE_IMAGE = 7;
+    public const ATTRIBUTE_TYPE_LABEL = 8;
+    public const ATTRIBUTE_TYPE_MULTISELECT = 9;
+    public const ATTRIBUTE_TYPE_FILE = 10;
 
     /**
      * @var string
@@ -57,22 +53,22 @@ class Attribute extends AbstractEntity
     protected string $name = '';
 
     /**
-     * @var integer
+     * @var int
      */
     protected int $type = 0;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected bool $required = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected bool $showInAttributeListing = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected bool $showInCompare = false;
 
@@ -89,39 +85,39 @@ class Attribute extends AbstractEntity
     protected ObjectStorage $options;
 
     /**
-     * Label for checked checkbox
+     * Label for checked checkbox.
      *
      * @var string
      */
     protected string $labelChecked = '';
 
     /**
-     * Label for un-checked checkbox
+     * Label for un-checked checkbox.
      *
      * @var string
      */
     protected string $labelUnchecked = '';
 
     /**
-     * Default value for TCA
+     * Default value for TCA.
      *
      * @var string
      */
     protected string $defaultValue = '';
 
     /**
-     * String value for current product
+     * String value for current product.
      *
      * @var string
      */
-    protected string $stringValue;
+    protected string $stringValue = '';
 
     /**
-     * Array value for current product
+     * Array value for current product.
      *
      * @var array
      */
-    protected array $arrayValue;
+    protected array $arrayValue = [];
 
     /**
      * @var string
@@ -129,8 +125,7 @@ class Attribute extends AbstractEntity
     protected string $label = '';
 
     /**
-     * __construct
-     *
+     * __construct.
      */
     public function __construct()
     {
@@ -140,9 +135,9 @@ class Attribute extends AbstractEntity
 
     /**
      * Extbase container doesn't call constructor,
-     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     * which leads to an error "Typed property must not be accessed before initialization" on debug.
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $this->initStorageObjects();
     }
@@ -152,9 +147,9 @@ class Attribute extends AbstractEntity
      *
      * @return void
      */
-    protected function initStorageObjects()
+    protected function initStorageObjects(): void
     {
-        /**
+        /*
          * Do not modify this method!
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
@@ -174,9 +169,10 @@ class Attribute extends AbstractEntity
      * @param string $name
      * @return Attribute
      */
-    public function setName(string $name): Attribute
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -192,9 +188,10 @@ class Attribute extends AbstractEntity
      * @param int $type
      * @return Attribute
      */
-    public function setType(int $type): Attribute
+    public function setType(int $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -210,9 +207,10 @@ class Attribute extends AbstractEntity
      * @param bool $required
      * @return Attribute
      */
-    public function setRequired(bool $required): Attribute
+    public function setRequired(bool $required): self
     {
         $this->required = $required;
+
         return $this;
     }
 
@@ -228,9 +226,10 @@ class Attribute extends AbstractEntity
      * @param bool $showInAttributeListing
      * @return Attribute
      */
-    public function setShowInAttributeListing(bool $showInAttributeListing): Attribute
+    public function setShowInAttributeListing(bool $showInAttributeListing): self
     {
         $this->showInAttributeListing = $showInAttributeListing;
+
         return $this;
     }
 
@@ -246,9 +245,10 @@ class Attribute extends AbstractEntity
      * @param bool $showInCompare
      * @return Attribute
      */
-    public function setShowInCompare(bool $showInCompare): Attribute
+    public function setShowInCompare(bool $showInCompare): self
     {
         $this->showInCompare = $showInCompare;
+
         return $this;
     }
 
@@ -264,9 +264,10 @@ class Attribute extends AbstractEntity
      * @param string $identifier
      * @return Attribute
      */
-    public function setIdentifier(string $identifier): Attribute
+    public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
+
         return $this;
     }
 
@@ -282,9 +283,10 @@ class Attribute extends AbstractEntity
      * @param ObjectStorage $options
      * @return Attribute
      */
-    public function setOptions(ObjectStorage $options): Attribute
+    public function setOptions(ObjectStorage $options): self
     {
         $this->options = $options;
+
         return $this;
     }
 
@@ -300,9 +302,10 @@ class Attribute extends AbstractEntity
      * @param string $labelChecked
      * @return Attribute
      */
-    public function setLabelChecked(string $labelChecked): Attribute
+    public function setLabelChecked(string $labelChecked): self
     {
         $this->labelChecked = $labelChecked;
+
         return $this;
     }
 
@@ -318,9 +321,10 @@ class Attribute extends AbstractEntity
      * @param string $labelUnchecked
      * @return Attribute
      */
-    public function setLabelUnchecked(string $labelUnchecked): Attribute
+    public function setLabelUnchecked(string $labelUnchecked): self
     {
         $this->labelUnchecked = $labelUnchecked;
+
         return $this;
     }
 
@@ -336,9 +340,10 @@ class Attribute extends AbstractEntity
      * @param string $defaultValue
      * @return Attribute
      */
-    public function setDefaultValue(string $defaultValue): Attribute
+    public function setDefaultValue(string $defaultValue): self
     {
         $this->defaultValue = $defaultValue;
+
         return $this;
     }
 
@@ -347,11 +352,13 @@ class Attribute extends AbstractEntity
      */
     public function getValue()
     {
-        if ($this->isFalType() ||
+        if (
+            $this->isFalType() ||
             $this->isSelectBoxType()
         ) {
             return $this->arrayValue;
         }
+
         return $this->stringValue;
     }
 
@@ -370,6 +377,7 @@ class Attribute extends AbstractEntity
     public function setStringValue($value)
     {
         $this->stringValue = $value;
+
         return $this;
     }
 
@@ -388,6 +396,7 @@ class Attribute extends AbstractEntity
     public function setArrayValue($value)
     {
         $this->arrayValue = $value;
+
         return $this;
     }
 
@@ -403,14 +412,15 @@ class Attribute extends AbstractEntity
      * @param string $label
      * @return Attribute
      */
-    public function setLabel(string $label): Attribute
+    public function setLabel(string $label): self
     {
         $this->label = $label;
+
         return $this;
     }
 
     /**
-     * Check if attribute type is FAL file
+     * Check if attribute type is FAL file.
      *
      * @return bool
      */
@@ -420,7 +430,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * If simple input
+     * If simple input.
      *
      * @return bool
      */
@@ -430,7 +440,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * Check if is text area
+     * Check if is text area.
      *
      * @return bool
      */
@@ -440,7 +450,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * Date type check
+     * Date type check.
      *
      * @return bool
      */
@@ -450,7 +460,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * Select box type
+     * Select box type.
      * @return bool
      */
     public function isSelectBoxType(): bool
@@ -460,12 +470,13 @@ class Attribute extends AbstractEntity
             [
                 self::ATTRIBUTE_TYPE_MULTISELECT,
                 self::ATTRIBUTE_TYPE_DROPDOWN,
-            ]
+            ],
+            true
         );
     }
 
     /**
-     * Multiple select box
+     * Multiple select box.
      *
      * @return bool
      */
@@ -475,7 +486,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * Checkbox type
+     * Checkbox type.
      *
      * @return bool
      */
@@ -485,7 +496,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * Link type
+     * Link type.
      *
      * @return bool
      */
@@ -495,7 +506,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * Label type
+     * Label type.
      *
      * @return bool
      */
@@ -505,7 +516,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * As string return value
+     * As string return value.
      *
      * @return string
      */

@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2017
@@ -24,7 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use TYPO3\CMS\Core\Database\Connection;
@@ -33,13 +34,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
- * Class AttributeValueRepository
- * @package Pixelant\PxaProductManager\Domain\Repository
+ * Class AttributeValueRepository.
  */
 class AttributeValueRepository extends Repository
 {
     /**
-     * Find all available values for product demand
+     * Find all available values for product demand.
      *
      * @param string $subQuery
      * @return array
@@ -63,7 +63,7 @@ class AttributeValueRepository extends Repository
                 )
             )
             ->where(
-                $queryBuilder->expr()->in('attributevalue.product', "($subQuery)"),
+                $queryBuilder->expr()->in('attributevalue.product', "(${subQuery})"),
                 $queryBuilder->expr()->in(
                     'attributes.type',
                     $queryBuilder->createNamedParameter(
@@ -77,9 +77,8 @@ class AttributeValueRepository extends Repository
             ->fetchAll(\PDO::FETCH_COLUMN);
     }
 
-
     /**
-     * Find raw attribute value
+     * Find raw attribute value.
      *
      * @param int $productUid
      * @param int $attributeUid
@@ -105,9 +104,8 @@ class AttributeValueRepository extends Repository
         return is_array($row) ? $row : null;
     }
 
-
     /**
-     * Find attribute value using product uid and attribute identifier
+     * Find attribute value using product uid and attribute identifier.
      *
      * @param int $productUid
      * @param string $identifier
@@ -142,7 +140,7 @@ class AttributeValueRepository extends Repository
     }
 
     /**
-     * Update value field by uid
+     * Update value field by uid.
      *
      * @param int $uid
      * @param $value
@@ -159,7 +157,7 @@ class AttributeValueRepository extends Repository
     }
 
     /**
-     * Create with value for product and attribute
+     * Create with value for product and attribute.
      *
      * @param int $product
      * @param int $attribute

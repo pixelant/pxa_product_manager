@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\ViewHelpers;
@@ -9,17 +10,14 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
-/**
- * @package Pixelant\PxaProductManager\ViewHelpers
- */
 class PageRendererViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
     /**
-     * View helper arguments
+     * View helper arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('cssLibs', 'array', 'Array of css libs');
         $this->registerArgument('includeJSFooterlibs', 'array', 'Array of custom JavaScript file to be loaded');

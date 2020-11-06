@@ -1,48 +1,52 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Service;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Service\NavigationService;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\Http\ServerRequest;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Service
- */
 class NavigationServiceTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->subject = $this->getMockBuilder(NavigationService::class)->disableOriginalConstructor()->setMethods(null)->getMock();
+        $this->subject = $this
+            ->getMockBuilder(NavigationService::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
     }
 
     /**
      * @test
      */
-    public function getDemandWithParentCloneOriginalDemandAndSetParentCatgory()
+    public function getDemandWithParentCloneOriginalDemandAndSetParentCatgory(): void
     {
-        $parent = createEntity(Category::class, 1);
+        $parent = TestsUtility::createEntity(Category::class, 1);
         $demand = new CategoryDemand();
         $demand->setLimit(200);
-        $demand->setParent(createEntity(Category::class, 199));
+        $demand->setParent(TestsUtility::createEntity(Category::class, 199));
 
         $this->inject($this->subject, 'demandPrototype', $demand);
         $newDemand = $this->callInaccessibleMethod($this->subject, 'getDemandWithParent', $parent);
 
-        $this->assertSame($parent, $newDemand->getParent());
-        $this->assertEquals(200, $newDemand->getLimit());
+        self::assertSame($parent, $newDemand->getParent());
+        self::assertEquals(200, $newDemand->getLimit());
     }
 
     /**
      * @test
      */
-    public function setActiveFromRequestWillSetActiveCategoriesAndCurrentFromRequest()
+    public function setActiveFromRequestWillSetActiveCategoriesAndCurrentFromRequest(): void
     {
         $params = [
             'category' => '14',
@@ -57,7 +61,13 @@ class NavigationServiceTest extends UnitTestCase
 
         $this->callInaccessibleMethod($this->subject, 'setActiveFromRequest');
 
-        $this->assertTrue(14 === getProtectedVarValue($this->subject, 'current'));
-        $this->assertEquals(['category_0' => 10, 'category_1' => 100], getProtectedVarValue($this->subject, 'active'));
+        self::assertTrue(14 === TestsUtility::getProtectedVarValue($this->subject, 'current'));
+        self::assertEquals(
+            [
+                'category_0' => 10,
+                'category_1' => 100,
+            ],
+            TestsUtility::getProtectedVarValue($this->subject, 'active')
+        );
     }
 }

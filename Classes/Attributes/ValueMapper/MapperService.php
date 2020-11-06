@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
@@ -7,9 +8,7 @@ use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * Init values for product attribute
- *
- * @package Pixelant\PxaProductManager\Domain\Service
+ * Init values for product attribute.
  */
 class MapperService implements MapperServiceInterface
 {
@@ -28,9 +27,8 @@ class MapperService implements MapperServiceInterface
         $this->factory = $factory;
     }
 
-
     /**
-     * Take product, fill all attributes with values and return attributes sets
+     * Take product, fill all attributes with values and return attributes sets.
      *
      * @param Product $product
      * @return array
@@ -45,7 +43,7 @@ class MapperService implements MapperServiceInterface
     }
 
     /**
-     * Process all attributes
+     * Process all attributes.
      *
      * @param Product $product
      * @param array $attributesSets

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Event\Product;
@@ -6,9 +7,6 @@ namespace Pixelant\PxaProductManager\Event\Product;
 use NumberFormatter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
-/**
- * @package Pixelant\PxaProductManager\Event\Product
- */
 class FormatPrice
 {
     /**
@@ -65,9 +63,10 @@ class FormatPrice
      * @param string $currency
      * @return FormatPrice
      */
-    public function setCurrency(string $currency): FormatPrice
+    public function setCurrency(string $currency): self
     {
         $this->currency = $currency;
+
         return $this;
     }
 

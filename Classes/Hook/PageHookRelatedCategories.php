@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Hook;
@@ -11,12 +12,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
- * Class PageHookRelatedCategories
- * @package Pixelant\PxaProductManager\Hook
+ * Class PageHookRelatedCategories.
  */
 class PageHookRelatedCategories
 {
-
     /**
      * @param array $params
      * @param PageLayoutController $pageLayoutController
@@ -34,7 +33,7 @@ class PageHookRelatedCategories
         foreach ($categories as $category) {
             $categoriesData[] = [
                 'uri' => $this->editUri($category['uid']),
-                'title' => $category['title']
+                'title' => $category['title'],
             ];
         }
 
@@ -60,7 +59,7 @@ class PageHookRelatedCategories
     }
 
     /**
-     * Edit url
+     * Edit url.
      *
      * @param int $categoryUid
      * @return string
@@ -74,15 +73,15 @@ class PageHookRelatedCategories
         return (string)$uriBuilder->buildUriFromRoute(
             'record_edit',
             [
-                "edit[sys_category][$categoryUid]" => 'edit',
-                'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI')
+                "edit[sys_category][${categoryUid}]" => 'edit',
+                'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI'),
             ],
             UriBuilder::ABSOLUTE_URL
         );
     }
 
     /**
-     * Find categories uids of related page
+     * Find categories uids of related page.
      *
      * @param int $page
      * @return array

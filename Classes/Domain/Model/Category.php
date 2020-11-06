@@ -8,7 +8,7 @@ use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -29,18 +29,15 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class Category extends CategoryExtbase
 {
-    use AbleCacheProperties, CanCreateCollection;
+    use CanCacheProperties;
+    use CanCreateCollection;
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Category
@@ -64,7 +61,7 @@ class Category extends CategoryExtbase
     protected string $metaDescription = '';
 
     /**
-     * Image. Typed property was only fixed in typo3 10 for lazy loading
+     * Image. Typed property was only fixed in typo3 10 for lazy loading.
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -72,25 +69,17 @@ class Category extends CategoryExtbase
     protected $image = null;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected bool $hidden = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected bool $deleted = false;
 
     /**
-     * Attribute sets
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     */
-    protected ObjectStorage $attributesSets;
-
-    /**
-     * Banner Image
+     * Banner Image.
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -98,7 +87,7 @@ class Category extends CategoryExtbase
     protected $bannerImage = null;
 
     /**
-     * @var float $taxRate
+     * @var float
      */
     protected float $taxRate = 0.00;
 
@@ -140,7 +129,7 @@ class Category extends CategoryExtbase
     protected bool $hideSubCategories = false;
 
     /**
-     * __construct
+     * __construct.
      */
     public function __construct()
     {
@@ -150,9 +139,9 @@ class Category extends CategoryExtbase
 
     /**
      * Extbase container doesn't call constructor,
-     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     * which leads to an error "Typed property must not be accessed before initialization" on debug.
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $this->initStorageObjects();
     }
@@ -162,14 +151,13 @@ class Category extends CategoryExtbase
      *
      * @return void
      */
-    protected function initStorageObjects()
+    protected function initStorageObjects(): void
     {
-        /**
+        /*
          * Do not modify this method!
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
          */
-        $this->attributesSets = new ObjectStorage();
         $this->subCategories = new ObjectStorage();
         $this->products = new ObjectStorage();
     }
@@ -183,7 +171,7 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * Get navigation title
+     * Get navigation title.
      *
      * @return string
      */
@@ -196,9 +184,10 @@ class Category extends CategoryExtbase
      * @param string $alternativeTitle
      * @return Category
      */
-    public function setAlternativeTitle(string $alternativeTitle): Category
+    public function setAlternativeTitle(string $alternativeTitle): self
     {
         $this->alternativeTitle = $alternativeTitle;
+
         return $this;
     }
 
@@ -214,9 +203,10 @@ class Category extends CategoryExtbase
      * @param string $keywords
      * @return Category
      */
-    public function setKeywords(string $keywords): Category
+    public function setKeywords(string $keywords): self
     {
         $this->keywords = $keywords;
+
         return $this;
     }
 
@@ -232,9 +222,10 @@ class Category extends CategoryExtbase
      * @param string $metaDescription
      * @return Category
      */
-    public function setMetaDescription(string $metaDescription): Category
+    public function setMetaDescription(string $metaDescription): self
     {
         $this->metaDescription = $metaDescription;
+
         return $this;
     }
 
@@ -254,9 +245,10 @@ class Category extends CategoryExtbase
      * @param FileReference|null $image
      * @return Category
      */
-    public function setImage(?FileReference $image): Category
+    public function setImage(?FileReference $image): self
     {
         $this->image = $image;
+
         return $this;
     }
 
@@ -272,9 +264,10 @@ class Category extends CategoryExtbase
      * @param bool $hidden
      * @return Category
      */
-    public function setHidden(bool $hidden): Category
+    public function setHidden(bool $hidden): self
     {
         $this->hidden = $hidden;
+
         return $this;
     }
 
@@ -290,39 +283,10 @@ class Category extends CategoryExtbase
      * @param bool $deleted
      * @return Category
      */
-    public function setDeleted(bool $deleted): Category
+    public function setDeleted(bool $deleted): self
     {
         $this->deleted = $deleted;
-        return $this;
-    }
 
-    /**
-     * @return ObjectStorage
-     */
-    public function getAttributesSets(): ObjectStorage
-    {
-        return $this->attributesSets;
-    }
-
-    /**
-     * Add attribute set
-     *
-     * @param AttributeSet $attributeSet
-     * @return Category
-     */
-    public function addAttributeSet(AttributeSet $attributeSet): Category
-    {
-        $this->attributesSets->attach($attributeSet);
-        return $this;
-    }
-
-    /**
-     * @param ObjectStorage $attributesSets
-     * @return Category
-     */
-    public function setAttributesSets(ObjectStorage $attributesSets): Category
-    {
-        $this->attributesSets = $attributesSets;
         return $this;
     }
 
@@ -342,9 +306,10 @@ class Category extends CategoryExtbase
      * @param FileReference|null $bannerImage
      * @return Category
      */
-    public function setBannerImage(?FileReference $bannerImage): Category
+    public function setBannerImage(?FileReference $bannerImage): self
     {
         $this->bannerImage = $bannerImage;
+
         return $this;
     }
 
@@ -360,9 +325,10 @@ class Category extends CategoryExtbase
      * @param float $taxRate
      * @return Category
      */
-    public function setTaxRate(float $taxRate): Category
+    public function setTaxRate(float $taxRate): self
     {
         $this->taxRate = $taxRate;
+
         return $this;
     }
 
@@ -378,9 +344,10 @@ class Category extends CategoryExtbase
      * @param ObjectStorage $subCategories
      * @return Category
      */
-    public function setSubCategories(ObjectStorage $subCategories): Category
+    public function setSubCategories(ObjectStorage $subCategories): self
     {
         $this->subCategories = $subCategories;
+
         return $this;
     }
 
@@ -396,9 +363,10 @@ class Category extends CategoryExtbase
      * @param int $contentPage
      * @return Category
      */
-    public function setContentPage(int $contentPage): Category
+    public function setContentPage(int $contentPage): self
     {
         $this->contentPage = $contentPage;
+
         return $this;
     }
 
@@ -414,9 +382,10 @@ class Category extends CategoryExtbase
      * @param int $contentColPos
      * @return Category
      */
-    public function setContentColPos(int $contentColPos): Category
+    public function setContentColPos(int $contentColPos): self
     {
         $this->contentColPos = $contentColPos;
+
         return $this;
     }
 
@@ -432,9 +401,10 @@ class Category extends CategoryExtbase
      * @param bool $hiddenInNavigation
      * @return Category
      */
-    public function setHiddenInNavigation(bool $hiddenInNavigation): Category
+    public function setHiddenInNavigation(bool $hiddenInNavigation): self
     {
         $this->hiddenInNavigation = $hiddenInNavigation;
+
         return $this;
     }
 
@@ -450,9 +420,10 @@ class Category extends CategoryExtbase
      * @param bool $hideProducts
      * @return Category
      */
-    public function setHideProducts(bool $hideProducts): Category
+    public function setHideProducts(bool $hideProducts): self
     {
         $this->hideProducts = $hideProducts;
+
         return $this;
     }
 
@@ -468,9 +439,10 @@ class Category extends CategoryExtbase
      * @param bool $hideSubCategories
      * @return Category
      */
-    public function setHideSubCategories(bool $hideSubCategories): Category
+    public function setHideSubCategories(bool $hideSubCategories): self
     {
         $this->hideSubCategories = $hideSubCategories;
+
         return $this;
     }
 
@@ -486,15 +458,16 @@ class Category extends CategoryExtbase
      * @param ObjectStorage $products
      * @return Category
      */
-    public function setProducts(ObjectStorage $products): Category
+    public function setProducts(ObjectStorage $products): self
     {
         $this->products = $products;
+
         return $this;
     }
 
     /**
      * Return parents root line up till to root category
-     * From bottom to up. Current first
+     * From bottom to up. Current first.
      *
      * @return Category[]
      */
@@ -507,7 +480,7 @@ class Category extends CategoryExtbase
             do {
                 $rootLine[] = $category;
                 $category = $category->getParent();
-            } while ($category !== null && ! in_array($category, $rootLine, true));
+            } while ($category !== null && !in_array($category, $rootLine, true));
 
             return $rootLine;
         });
@@ -515,7 +488,7 @@ class Category extends CategoryExtbase
 
     /**
      * Return parents root line up till to root category
-     * Root category first, current last
+     * Root category first, current last.
      *
      * @return Category[]
      */
@@ -525,7 +498,7 @@ class Category extends CategoryExtbase
     }
 
     /**
-     * Get root line from root category down to current, exclude hidden in navigation
+     * Get root line from root category down to current, exclude hidden in navigation.
      *
      * @return array
      */
@@ -533,7 +506,7 @@ class Category extends CategoryExtbase
     {
         return $this
             ->collection($this->getParentsRootLineReverse())
-            ->filter(fn(Category $category) => ! $category->isHiddenInNavigation())
+            ->filter(fn (Category $category) => !$category->isHiddenInNavigation())
             ->toArray();
     }
 }

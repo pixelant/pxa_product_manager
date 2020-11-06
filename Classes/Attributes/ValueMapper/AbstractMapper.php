@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
@@ -9,14 +10,14 @@ use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * Abstract mapper
+ * Abstract mapper.
  */
 abstract class AbstractMapper implements MapperInterface
 {
     use CanCreateCollection;
 
     /**
-     * Search for attribute value in product values
+     * Search for attribute value in product values.
      *
      * @param Product $product
      * @param Attribute $attribute
@@ -28,7 +29,7 @@ abstract class AbstractMapper implements MapperInterface
             ->searchOneByProperty(
                 'attribute',
                 $attribute->getUid(),
-                fn(Attribute $collectionAttribute) => $collectionAttribute->getUid()
+                fn (Attribute $collectionAttribute) => $collectionAttribute->getUid()
             );
     }
 }

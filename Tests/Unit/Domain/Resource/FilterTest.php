@@ -1,22 +1,24 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Resource;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Resource\Filter as FilterResource;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
- * This is test for abstract class
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
+ * This is test for abstract class.
  */
 class FilterTest extends UnitTestCase
 {
     /**
      * @test
      */
-    public function toArrayWillReturnEntityAsArray()
+    public function toArrayWillReturnEntityAsArray(): void
     {
         $expect = [
             'uid' => 15,
@@ -28,7 +30,9 @@ class FilterTest extends UnitTestCase
             'conjunction' => 'or',
         ];
 
-        $filter = new class extends Filter {
+        /** @codingStandardsIgnoreStart */
+        $filter = new class() extends Filter {
+            /** @codingStandardsIgnoreEnd */
             public function getOptions(): array
             {
                 return ['123'];
@@ -39,6 +43,7 @@ class FilterTest extends UnitTestCase
                 return 1;
             }
         };
+
         $filter->_setProperty('uid', 15);
         $filter
             ->setType(1)
@@ -49,18 +54,22 @@ class FilterTest extends UnitTestCase
         $subject = new FilterResource($filter);
         $subject->injectDispatcher($this->createMock(Dispatcher::class));
 
-        $this->assertEquals($expect, $subject->toArray());
+        self::assertEquals($expect, $subject->toArray());
     }
 
     /**
      * @test
      */
-    public function convertPropertyValueReturnArrayIfObjectStorage()
+    public function convertPropertyValueReturnArrayIfObjectStorage(): void
     {
-        $storage = createObjectStorage(...createMultipleEntities(Filter::class, 3));
+        $storage = TestsUtility::createObjectStorage(...TestsUtility::createMultipleEntities(Filter::class, 3));
 
-        $subject = $this->getMockBuilder(FilterResource::class)->disableOriginalConstructor()->setMethods(null)->getMock();
+        $subject = $this
+            ->getMockBuilder(FilterResource::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
 
-        $this->assertTrue(is_array($this->callInaccessibleMethod($subject, 'convertPropertyValue', $storage)));
+        self::assertIsArray($this->callInaccessibleMethod($subject, 'convertPropertyValue', $storage));
     }
 }

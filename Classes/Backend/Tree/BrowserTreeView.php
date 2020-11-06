@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Backend\Tree;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2017
@@ -23,25 +23,24 @@ namespace Pixelant\PxaProductManager\Backend\Tree;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Backend\Tree\View\ElementBrowserPageTreeView;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
- * Class BrowserTreeView
- *
- * @package Pixelant\PxaProductManager\Backend\Tree
+ * Class BrowserTreeView.
  */
 class BrowserTreeView extends ElementBrowserPageTreeView
 {
     /**
-     * Extend it with folder too
+     * Extend it with folder too.
      * @param int $doktype
      * @param int $uid
      * @return bool
      */
-    // @codingStandardsIgnoreStart
+
+    /** @codingStandardsIgnoreStart */
     public function ext_isLinkable($doktype, $uid)
     {// @codingStandardsIgnoreEnd
         return $uid && $doktype < PageRepository::DOKTYPE_SPACER || $doktype === PageRepository::DOKTYPE_SYSFOLDER;

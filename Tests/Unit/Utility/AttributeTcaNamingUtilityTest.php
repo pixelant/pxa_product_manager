@@ -1,89 +1,95 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Utility;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Utility
- */
 class AttributeTcaNamingUtilityTest extends UnitTestCase
 {
     /**
      * @test
      */
-    public function translateAttributeToTcaFieldNameReturnTcaFieldName()
+    public function translateAttributeToTcaFieldNameReturnTcaFieldName(): void
     {
         $uid = 12;
-        $attribute = createEntity(Attribute::class, $uid);
+        $attribute = TestsUtility::createEntity(Attribute::class, $uid);
 
         $expect = 'tx_pxaproductmanager_attribute_12';
 
-        $this->assertEquals($expect, AttributeTcaNamingUtility::translateToTcaFieldName($attribute));
+        self::assertEquals($expect, AttributeTcaNamingUtility::translateToTcaFieldName($attribute));
     }
 
     /**
      * @test
      */
-    public function translateFileAttributeToTcaFieldNameReturnTcaFieldNameOfFal()
+    public function translateFileAttributeToTcaFieldNameReturnTcaFieldNameOfFal(): void
     {
         $uid = 12;
-        $attribute = createEntity(Attribute::class, ['uid' => $uid, 'type' => Attribute::ATTRIBUTE_TYPE_IMAGE]);
+        $attribute = TestsUtility::createEntity(
+            Attribute::class,
+            [
+                'uid' => $uid,
+                'type' => Attribute::ATTRIBUTE_TYPE_IMAGE,
+            ]
+        );
 
         $expect = 'tx_pxaproductmanager_attribute_fal_12';
 
-        $this->assertEquals($expect, AttributeTcaNamingUtility::translateToTcaFieldName($attribute));
+        self::assertEquals($expect, AttributeTcaNamingUtility::translateToTcaFieldName($attribute));
     }
 
     /**
      * @test
      */
-    public function isAttributeFieldNameReturnTrueIfAttributeField()
+    public function isAttributeFieldNameReturnTrueIfAttributeField(): void
     {
         $field = 'tx_pxaproductmanager_attribute_12';
 
-        $this->assertTrue(AttributeTcaNamingUtility::isAttributeFieldName($field));
+        self::assertTrue(AttributeTcaNamingUtility::isAttributeFieldName($field));
     }
 
     /**
      * @test
      */
-    public function isFileAttributeFieldNameReturnTrueIfFalFieldName()
+    public function isFileAttributeFieldNameReturnTrueIfFalFieldName(): void
     {
         $field = 'tx_pxaproductmanager_attribute_fal_12';
 
-        $this->assertTrue(AttributeTcaNamingUtility::isFileAttributeFieldName($field));
+        self::assertTrue(AttributeTcaNamingUtility::isFileAttributeFieldName($field));
     }
 
     /**
      * @test
      */
-    public function isFileAttributeFieldNameReturnFalseIfNotFalFieldName()
+    public function isFileAttributeFieldNameReturnFalseIfNotFalFieldName(): void
     {
         $field = 'tx_pxaproductmanager_attribute_12';
 
-        $this->assertFalse(AttributeTcaNamingUtility::isFileAttributeFieldName($field));
+        self::assertFalse(AttributeTcaNamingUtility::isFileAttributeFieldName($field));
     }
 
     /**
      * @test
      */
-    public function extractIdFromFieldNameExtractIntIdFromTcaFieldName()
+    public function extractIdFromFieldNameExtractIntIdFromTcaFieldName(): void
     {
         $field = 'tx_pxaproductmanager_attribute_12';
 
-        $this->assertEquals(12, AttributeTcaNamingUtility::extractIdFromFieldName($field));
+        self::assertEquals(12, AttributeTcaNamingUtility::extractIdFromFieldName($field));
     }
 
     /**
      * @test
      */
-    public function extractIdFromFalFieldNameExtractIntIdFromTcaFieldName()
+    public function extractIdFromFalFieldNameExtractIntIdFromTcaFieldName(): void
     {
         $field = 'tx_pxaproductmanager_attribute_fal_1082';
 
-        $this->assertEquals(1082, AttributeTcaNamingUtility::extractIdFromFieldName($field));
+        self::assertEquals(1082, AttributeTcaNamingUtility::extractIdFromFieldName($field));
     }
 }

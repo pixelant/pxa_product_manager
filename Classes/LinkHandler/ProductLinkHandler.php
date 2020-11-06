@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\LinkHandler;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2017
@@ -23,16 +23,15 @@ namespace Pixelant\PxaProductManager\LinkHandler;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- * Class CKEditorProductLinkHandler
- * @package Pixelant\PxaProductManager\LinkHandler
+ * Class CKEditorProductLinkHandler.
  */
 class ProductLinkHandler extends AbstractLinkHandler
 {
     /**
-     * Init var name
+     * Init var name.
      */
     protected function linkName(): string
     {
@@ -40,7 +39,7 @@ class ProductLinkHandler extends AbstractLinkHandler
     }
 
     /**
-     * Init table
+     * Init table.
      */
     protected function tableName(): string
     {

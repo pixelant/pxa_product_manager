@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model\Dto;
@@ -7,48 +8,48 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
- */
 class ProductDemandTest extends UnitTestCase
 {
     /**
      * @test
      *
      * @dataProvider filtersData
+     * @param mixed $filtes
+     * @param mixed $expect
+     * @param mixed $testName
      */
-    public function hasFiltersCategoryFilterReturnTrueIfOneOfTheFiltersIsCategoryType($filtes, $expect, $testName)
+    public function hasFiltersCategoryFilterReturnTrueIfOneOfTheFiltersIsCategoryType($filtes, $expect, $testName): void
     {
         $demand = new ProductDemand();
         $demand->setFilters($filtes);
 
-        $this->assertEquals($expect, $demand->hasFiltersCategoryFilter(), $testName);
+        self::assertEquals($expect, $demand->hasFiltersCategoryFilter(), $testName);
     }
 
     /**
      * @test
      */
-    public function removeFilterWillRemoveFilter()
+    public function removeFilterWillRemoveFilter(): void
     {
         $demand = new ProductDemand();
 
         $demand->setFilters(['1' => 'test', 2 => 'second']);
         $demand->removeFilter(1);
 
-        $this->assertEquals([2 => 'second'], $demand->getFilters());
+        self::assertEquals([2 => 'second'], $demand->getFilters());
     }
 
     /**
      * @test
      */
-    public function removeFilterDoesNothingIfFilterNoSet()
+    public function removeFilterDoesNothingIfFilterNoSet(): void
     {
         $demand = new ProductDemand();
 
         $demand->setFilters(['1' => 'test', 2 => 'second']);
         $demand->removeFilter(3);
 
-        $this->assertEquals(['1' => 'test', 2 => 'second'], $demand->getFilters());
+        self::assertEquals(['1' => 'test', 2 => 'second'], $demand->getFilters());
     }
 
     public function filtersData()
@@ -58,43 +59,43 @@ class ProductDemandTest extends UnitTestCase
                 [
                     10 => [
                         'type' => Filter::TYPE_ATTRIBUTES,
-                        'value' => [10, 20]
+                        'value' => [10, 20],
                     ],
                     30 => [
                         'type' => Filter::TYPE_ATTRIBUTES,
-                        'value' => [10, 30]
+                        'value' => [10, 30],
                     ],
                 ],
                 false,
-                'has_only_attributes'
+                'has_only_attributes',
             ],
             'has_category_but_empty' => [
                 [
                     10 => [
                         'type' => Filter::TYPE_ATTRIBUTES,
-                        'value' => [10, 20]
+                        'value' => [10, 20],
                     ],
                     30 => [
                         'type' => Filter::TYPE_CATEGORIES,
-                        'value' => []
+                        'value' => [],
                     ],
                 ],
                 false,
-                'has_category_but_empty'
+                'has_category_but_empty',
             ],
             'has_category' => [
                 [
                     10 => [
                         'type' => Filter::TYPE_ATTRIBUTES,
-                        'value' => [10, 20]
+                        'value' => [10, 20],
                     ],
                     30 => [
                         'type' => Filter::TYPE_CATEGORIES,
-                        'value' => [21, 22]
+                        'value' => [21, 22],
                     ],
                 ],
                 true,
-                'has_category'
+                'has_category',
             ],
         ];
     }

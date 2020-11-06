@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\ViewHelpers;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -23,7 +23,7 @@ namespace Pixelant\PxaProductManager\ViewHelpers;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -32,23 +32,22 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
- * Class SetPageTitleViewHelper
- * @package Pixelant\PxaProductManager\ViewHelpers
+ * Class SetPageTitleViewHelper.
  */
 class SetPageTitleViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
     /**
-     * Initialize arguments
+     * Initialize arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('title', 'string', 'Optional title', false, '');
     }
 
     /**
-     * Replace page title
+     * Replace page title.
      *
      * @param array $arguments
      * @param \Closure $renderChildrenClosure

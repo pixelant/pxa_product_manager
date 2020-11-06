@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -23,7 +23,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
@@ -34,11 +34,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class ProductRepository extends AbstractDemandRepository
 {
@@ -55,14 +51,14 @@ class ProductRepository extends AbstractDemandRepository
 
         // In case demand has category filter, skip setting categories constraint,
         // since filter already has it's own categories restriction
-        if (! empty($demand->getCategories()) && ! $demand->hasFiltersCategoryFilter()) {
+        if (!empty($demand->getCategories()) && !$demand->hasFiltersCategoryFilter()) {
             $constraints['categories'] = $this->categoriesConstraint($query, $demand);
         }
 
         // If filters are present in demand it mean this is lazy loading request.
         // Categories will be set as filter constraint.
         // Attributes and categories are sharing same conjunction filters settings.
-        if (! empty($demand->getFilters())) {
+        if (!empty($demand->getFilters())) {
             $constraints['filters'] = $this->filtersConstraint($query, $demand);
         }
 
@@ -70,7 +66,7 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
-     * Create categories constraint from demand
+     * Create categories constraint from demand.
      *
      * @param QueryInterface $query
      * @param DemandInterface|ProductDemand $demand
@@ -92,7 +88,7 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
-     * Create categories constraints array
+     * Create categories constraints array.
      *
      * @param QueryInterface $query
      * @param array $categories
@@ -109,7 +105,7 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
-     * Create filters constraint
+     * Create filters constraint.
      *
      * @param QueryInterface $query
      * @param ProductDemand|DemandInterface $demand
@@ -151,7 +147,7 @@ class ProductRepository extends AbstractDemandRepository
     }
 
     /**
-     * Create single filter attribute constraint
+     * Create single filter attribute constraint.
      *
      * @param QueryInterface $query
      * @param int $attribute
@@ -173,7 +169,7 @@ class ProductRepository extends AbstractDemandRepository
         // Add attribute uid constraint to values constraints
         return $query->logicalAnd([
             $query->equals('attributesValues.attribute', $attribute),
-            $this->createConstraintFromConstraintsArray($query, $valueConstraints, $conjunction)
+            $this->createConstraintFromConstraintsArray($query, $valueConstraints, $conjunction),
         ]);
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 	<file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z"
 		  product-name="pxa_product_manager">
 		<header/>
@@ -80,8 +80,8 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_product.assets">
 				<source>Media assets</source>
 			</trans-unit>
-			<trans-unit id="tx_pxaproductmanager_domain_model_product.attributes_sets">
-			    <source>Attributes sets</source>
+			<trans-unit id="tx_pxaproductmanager_domain_model_product.product_type">
+			    <source>Product type</source>
 			</trans-unit>
 			<!--Products TCA:END-->
 
@@ -119,8 +119,8 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.attributes">
 				<source>Attributes</source>
 			</trans-unit>
-			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.categories">
-			    <source>Categories</source>
+			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.product_types">
+			    <source>Product types (included in)</source>
 			</trans-unit>
 			<!--Attributes Set TCA:END-->
 
@@ -248,9 +248,6 @@
 			<trans-unit id="sys_category.pxapm_subcategories">
 				<source>Sub-categories</source>
 			</trans-unit>
-			<trans-unit id="sys_category.pxapm_attributes_sets">
-				<source>Attribute Sets</source>
-			</trans-unit>
 			<trans-unit id="sys_category.pxapm_description">
 				<source>Description</source>
 			</trans-unit>
@@ -300,6 +297,17 @@
 				<source>Navigation</source>
 			</trans-unit>
 			<!--sys_category TCA:END-->
+			<!--tx_pxaproductmanager_domain_model_producttype TCA:START-->
+			<trans-unit id="tx_pxaproductmanager_domain_model_producttype">
+			    <source>Product type</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.name">
+			    <source>Name</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.attribute_sets">
+			    <source>Attribute sets</source>
+			</trans-unit>
+			<!--tx_pxaproductmanager_domain_model_producttype TCA:END-->
 		</body>
 	</file>
 </xliff>

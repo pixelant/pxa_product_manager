@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
@@ -10,11 +13,8 @@ use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Image;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
- */
 class ProductTest extends UnitTestCase
 {
     /**
@@ -22,7 +22,7 @@ class ProductTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -32,7 +32,7 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributesSetsWillValues()
+    public function getAttributesSetsWillValues(): void
     {
         $am = $this->prophesize(MapperService::class);
         $am->map($this->subject)->shouldBeCalled();
@@ -45,7 +45,7 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributesSetCacheValues()
+    public function getAttributesSetCacheValues(): void
     {
         $am = $this->prophesize(MapperService::class);
         $am->map($this->subject)->shouldBeCalledOnce();
@@ -60,47 +60,36 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributesReturnAllAttributesFromAttAttributesSetsWhereKeysAreIdentifierOrUid()
+    public function getAttributesReturnAllAttributesFromAttAttributesSetsWhereKeysAreIdentifierOrUid(): void
     {
-        $attribute1 = createEntity(Attribute::class, ['uid' => 1, 'identifier' => 'first']);
-        $attribute2 = createEntity(Attribute::class, ['uid' => 2, 'identifier' => 'second']);
-        $attribute3 = createEntity(Attribute::class, 3);
+        $attribute1 = TestsUtility::createEntity(Attribute::class, ['uid' => 1, 'identifier' => 'first']);
+        $attribute2 = TestsUtility::createEntity(Attribute::class, ['uid' => 2, 'identifier' => 'second']);
+        $attribute3 = TestsUtility::createEntity(Attribute::class, 3);
 
-        $attributeSet1 = createEntity(AttributeSet::class, 1);
-        $attributeSet2 = createEntity(AttributeSet::class, 2);
+        $attributeSet1 = TestsUtility::createEntity(AttributeSet::class, 1);
+        $attributeSet2 = TestsUtility::createEntity(AttributeSet::class, 2);
 
-        $attributeSet1->setAttributes(createObjectStorage($attribute1));
-        $attributeSet2->setAttributes(createObjectStorage($attribute2, $attribute3));
+        $attributeSet1->setAttributes(TestsUtility::createObjectStorage($attribute1));
+        $attributeSet2->setAttributes(TestsUtility::createObjectStorage($attribute2, $attribute3));
 
         $product = $this->createPartialMock(Product::class, ['getAttributesSets']);
-        $product->expects($this->once())->method('getAttributesSets')->willReturn([$attributeSet1, $attributeSet2]);
+        $product->expects(self::once())->method('getAttributesSets')->willReturn([$attributeSet1, $attributeSet2]);
 
         $expect = [
             'first' => $attribute1,
             'second' => $attribute2,
-            3 => $attribute3
+            3 => $attribute3,
         ];
 
-        $this->assertEquals($expect, $product->getAttributes());
+        self::assertEquals($expect, $product->getAttributes());
     }
 
     /**
      * @test
      */
-    public function getOwnAttributesSetsReturnProductAttributesSets()
+    public function productCanUpdateAttributeValue(): void
     {
-        $sets = createObjectStorage(...createMultipleEntities(AttributeSet::class, 2));
-        $this->subject->setAttributesSets($sets);
-
-        $this->assertSame($sets, $this->subject->getOwnAttributesSets());
-    }
-
-    /**
-     * @test
-     */
-    public function productCanUpdateAttributeValue()
-    {
-        $attribute = createEntity(Attribute::class, 1);
+        $attribute = TestsUtility::createEntity(Attribute::class, 1);
         $newValue = 'new value';
 
         $updater = $this->prophesize(ValueUpdaterService::class);
@@ -114,175 +103,178 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function findImageByTypeReturnMatchedImage()
+    public function findImageByTypeReturnMatchedImage(): void
     {
-        $image1 = createEntity(Image::class, ['uid' => 1]);
-        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
-        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
+        $image1 = TestsUtility::createEntity(Image::class, ['uid' => 1]);
+        $image2 = TestsUtility::createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = TestsUtility::createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        $this->assertSame($image2, $this->callInaccessibleMethod($this->subject, 'findImageByType', Image::MAIN_IMAGE));
+        self::assertSame($image2, $this->callInaccessibleMethod($this->subject, 'findImageByType', Image::MAIN_IMAGE));
     }
 
     /**
      * @test
      */
-    public function findImageByTypeReturnNullIfNoMatchedImage()
+    public function findImageByTypeReturnNullIfNoMatchedImage(): void
     {
-        $image1 = createEntity(Image::class, ['uid' => 1, 'type' => 0]);
-        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
-        $image3 = createEntity(Image::class, ['uid' => 3]);
+        $image1 = TestsUtility::createEntity(Image::class, ['uid' => 1, 'type' => 0]);
+        $image2 = TestsUtility::createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = TestsUtility::createEntity(Image::class, ['uid' => 3]);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        $this->assertNull($this->callInaccessibleMethod($this->subject, 'findImageByType', Image::LISTING_IMAGE));
+        self::assertNull($this->callInaccessibleMethod($this->subject, 'findImageByType', Image::LISTING_IMAGE));
     }
 
     /**
      * @test
      */
-    public function getMainImageReturnMainImage()
+    public function getMainImageReturnMainImage(): void
     {
-        $image1 = createEntity(Image::class, ['uid' => 1]);
-        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
-        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
+        $image1 = TestsUtility::createEntity(Image::class, ['uid' => 1]);
+        $image2 = TestsUtility::createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = TestsUtility::createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        $this->assertSame($image2, $this->subject->getMainImage());
+        self::assertSame($image2, $this->subject->getMainImage());
     }
 
     /**
      * @test
      */
-    public function getMainImageReturnFirstImageIfNotFound()
+    public function getMainImageReturnFirstImageIfNotFound(): void
     {
-        $image1 = createEntity(Image::class, ['uid' => 1]);
-        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => 0]);
-        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
+        $image1 = TestsUtility::createEntity(Image::class, ['uid' => 1]);
+        $image2 = TestsUtility::createEntity(Image::class, ['uid' => 2, 'type' => 0]);
+        $image3 = TestsUtility::createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        $this->assertSame($image1, $this->subject->getMainImage());
+        self::assertSame($image1, $this->subject->getMainImage());
     }
 
     /**
      * @test
      */
-    public function getListImageReturnListImageIfFound()
+    public function getListImageReturnListImageIfFound(): void
     {
-        $image1 = createEntity(Image::class, ['uid' => 1]);
-        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
-        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
+        $image1 = TestsUtility::createEntity(Image::class, ['uid' => 1]);
+        $image2 = TestsUtility::createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image3 = TestsUtility::createEntity(Image::class, ['uid' => 3, 'type' => Image::LISTING_IMAGE]);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        $this->assertSame($image3, $this->subject->getListImage());
+        self::assertSame($image3, $this->subject->getListImage());
     }
 
     /**
      * @test
      */
-    public function getListImageReturnMainImageIfNoListingAndMainExistFound()
+    public function getListImageReturnMainImageIfNoListingAndMainExistFound(): void
     {
-        $image1 = createEntity(Image::class, ['uid' => 1]);
-        $image2 = createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
+        $image1 = TestsUtility::createEntity(Image::class, ['uid' => 1]);
+        $image2 = TestsUtility::createEntity(Image::class, ['uid' => 2, 'type' => Image::MAIN_IMAGE]);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2));
 
-        $this->assertSame($image2, $this->subject->getListImage());
+        self::assertSame($image2, $this->subject->getListImage());
     }
 
     /**
      * @test
      */
-    public function getListImageReturnFisrtImageIfNoFound()
+    public function getListImageReturnFisrtImageIfNoFound(): void
     {
-        $image1 = createEntity(Image::class, 1);
-        $image2 = createEntity(Image::class, 2);
+        $image1 = TestsUtility::createEntity(Image::class, 1);
+        $image2 = TestsUtility::createEntity(Image::class, 2);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2));
 
-        $this->assertSame($image1, $this->subject->getListImage());
+        self::assertSame($image1, $this->subject->getListImage());
     }
 
     /**
      * @test
      */
-    public function getGalleryImagesReturnImagesWhereMainImageIsOnFirstPlace()
+    public function getGalleryImagesReturnImagesWhereMainImageIsOnFirstPlace(): void
     {
-        $image1 = createEntity(Image::class, 1);
-        $image2 = createEntity(Image::class, 2);
-        $image3 = createEntity(Image::class, ['uid' => 3, 'type' => Image::MAIN_IMAGE]);
+        $image1 = TestsUtility::createEntity(Image::class, 1);
+        $image2 = TestsUtility::createEntity(Image::class, 2);
+        $image3 = TestsUtility::createEntity(Image::class, ['uid' => 3, 'type' => Image::MAIN_IMAGE]);
 
-        $this->subject->setImages(createObjectStorage($image1, $image2, $image3));
+        $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
         $expect = [$image3, $image1, $image2];
 
-        $this->assertEquals($expect, $this->subject->getGalleryImages());
+        self::assertEquals($expect, $this->subject->getGalleryImages());
     }
 
     /**
      * @test
      */
-    public function getFirstCategoryReturnFirstCategory()
+    public function getFirstCategoryReturnFirstCategory(): void
     {
-        $cat1 = createEntity(Category::class, 1);
-        $cat2 = createEntity(Category::class, 2);
+        $cat1 = TestsUtility::createEntity(Category::class, 1);
+        $cat2 = TestsUtility::createEntity(Category::class, 2);
 
-        $this->subject->setCategories(createObjectStorage($cat1, $cat2));
+        $this->subject->setCategories(TestsUtility::createObjectStorage($cat1, $cat2));
 
-        $this->assertSame($cat1, $this->subject->getFirstCategory());
+        self::assertSame($cat1, $this->subject->getFirstCategory());
     }
 
     /**
      * @test
      */
-    public function getListingAttributesReturnOnlyAttributesThatAreVisibleInListing()
+    public function getListingAttributesReturnOnlyAttributesThatAreVisibleInListing(): void
     {
-        $attr1 = createEntity(Attribute::class, ['uid' => 1, 'showInAttributeListing' => false]);
-        $attr2 = createEntity(Attribute::class, ['uid' => 2, 'showInAttributeListing' => false]);
-        $attr3 = createEntity(Attribute::class, ['uid' => 3, 'showInAttributeListing' => true]);
+        $attr1 = TestsUtility::createEntity(Attribute::class, ['uid' => 1, 'showInAttributeListing' => false]);
+        $attr2 = TestsUtility::createEntity(Attribute::class, ['uid' => 2, 'showInAttributeListing' => false]);
+        $attr3 = TestsUtility::createEntity(Attribute::class, ['uid' => 3, 'showInAttributeListing' => true]);
 
         $subject = $this->createPartialMock(Product::class, ['getAttributes']);
-        $subject->expects($this->once())->method('getAttributes')->willReturn([1 => $attr1, 2 => $attr2, 3 => $attr3]);
+        $subject->expects(self::once())->method('getAttributes')->willReturn([1 => $attr1, 2 => $attr2, 3 => $attr3]);
 
-        $this->assertEquals([3 => $attr3], $subject->getListingAttributes());
+        self::assertEquals([3 => $attr3], $subject->getListingAttributes());
     }
 
     /**
      * @test
      */
-    public function getNavigationTitleReturnAlternativeTitleIfExist()
+    public function getNavigationTitleReturnAlternativeTitleIfExist(): void
     {
         $this->subject->setAlternativeTitle('title');
 
-        $this->assertEquals('title', $this->subject->getNavigationTitle());
+        self::assertEquals('title', $this->subject->getNavigationTitle());
     }
 
     /**
      * @test
      */
-    public function getNavigationTitleReturnNameIfNoAlternativeTitle()
+    public function getNavigationTitleReturnNameIfNoAlternativeTitle(): void
     {
         $this->subject->setName('name');
 
-        $this->assertEquals('name', $this->subject->getNavigationTitle());
+        self::assertEquals('name', $this->subject->getNavigationTitle());
     }
 
     /**
      * @test
      */
-    public function getAttributesValuesWithValidAttributesReturnAttributesValuesThatHasAttributes()
+    public function getAttributesValuesWithValidAttributesReturnAttributesValuesThatHasAttributes(): void
     {
-        $attributeValue = createEntity(AttributeValue::class, 1);
-        $attributeValue->setAttribute(createEntity(Attribute::class, 100));
+        $attributeValue = TestsUtility::createEntity(AttributeValue::class, 1);
+        $attributeValue->setAttribute(TestsUtility::createEntity(Attribute::class, 100));
 
-        $attributeValue2 = createEntity(AttributeValue::class, 2);
+        $attributeValue2 = TestsUtility::createEntity(AttributeValue::class, 2);
 
         $subject = $this->createPartialMock(Product::class, ['getAttributesValues']);
-        $subject->expects($this->once())->method('getAttributesValues')->willReturn(createObjectStorage($attributeValue, $attributeValue2));
+        $subject
+            ->expects(self::once())
+            ->method('getAttributesValues')
+            ->willReturn(TestsUtility::createObjectStorage($attributeValue, $attributeValue2));
 
-        $this->assertEquals([$attributeValue], array_values($subject->getAttributesValuesWithValidAttributes()));
+        self::assertEquals([$attributeValue], array_values($subject->getAttributesValuesWithValidAttributes()));
     }
 }

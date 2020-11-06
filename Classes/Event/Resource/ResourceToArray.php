@@ -1,12 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Event\Resource;
 
 /**
- * Even data when convert entity to resource array
- *
- * @package Pixelant\PxaProductManager\Event\Resource
+ * Even data when convert entity to resource array.
  */
 class ResourceToArray
 {
@@ -35,9 +34,10 @@ class ResourceToArray
      * @param array $data
      * @return ResourceToArray
      */
-    public function setData(array $data): ResourceToArray
+    public function setData(array $data): self
     {
         $this->data = $data;
+
         return $this;
     }
 }

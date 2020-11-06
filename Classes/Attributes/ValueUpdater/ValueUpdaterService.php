@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ValueUpdater;
@@ -8,9 +9,6 @@ use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 
-/**
- * @package Pixelant\PxaProductManager\Attributes\ValueUpdater
- */
 class ValueUpdaterService implements UpdaterInterface
 {
     /**
@@ -26,7 +24,7 @@ class ValueUpdaterService implements UpdaterInterface
     /**
      * @param AttributeRepository $attributeRepository
      */
-    public function injectAttributeRepository(AttributeRepository $attributeRepository)
+    public function injectAttributeRepository(AttributeRepository $attributeRepository): void
     {
         $this->attributeRepository = $attributeRepository;
     }
@@ -34,33 +32,31 @@ class ValueUpdaterService implements UpdaterInterface
     /**
      * @param AttributeValueRepository $attributeValueRepository
      */
-    public function injectAttributeValueRepository(AttributeValueRepository $attributeValueRepository)
+    public function injectAttributeValueRepository(AttributeValueRepository $attributeValueRepository): void
     {
         $this->attributeValueRepository = $attributeValueRepository;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function update($product, $attribute, $value): void
     {
-        // Prepare value for updating
         $value = $this->convertValue($attribute, $value);
-        
+
         $product = $this->castToInt($product);
         $attribute = $this->castToInt($attribute);
 
-
         $attributeRow = $this->attributeValueRepository->findRawByProductAndAttribute($product, $attribute);
         if ($attributeRow) {
-            $this->attributeValueRepository->updateValue($attributeRow['uid'], $value);
+            $this->attributeValueRepository->updateValue((int)$attributeRow['uid'], $value);
         } else {
             $this->attributeValueRepository->createWithValue($product, $attribute, $value);
         }
     }
 
     /**
-     * Convert given value depending on attribute
+     * Convert given value depending on attribute.
      *
      * @param $attribute
      * @param $value
@@ -74,19 +70,27 @@ class ValueUpdaterService implements UpdaterInterface
         if ($attribute->isSelectBoxType()) {
             return sprintf(',%s,', $value);
         }
+        if ($attribute->isDateType() && !empty($value)) {
+            try {
+                $dt = new \DateTime($value);
+                $value = $dt->getTimestamp();
+            } catch (\Exception $exception) {
+                $value = '';
+            }
+        }
 
         return $value;
     }
 
     /**
-     * If given attribute is uid - find attribute
+     * If given attribute is uid - find attribute.
      *
      * @param $attribute
      * @return Attribute
      */
     protected function getAttributeEntity($attribute): Attribute
     {
-        if (! is_object($attribute)) {
+        if (!is_object($attribute)) {
             return $this->attributeRepository->findByUid((int)$attribute);
         }
 
@@ -94,7 +98,7 @@ class ValueUpdaterService implements UpdaterInterface
     }
 
     /**
-     * Translate parameter to int if object given
+     * Translate parameter to int if object given.
      *
      * @param $value
      * @return int

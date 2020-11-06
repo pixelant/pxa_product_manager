@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\ViewHelpers;
@@ -9,17 +10,14 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
-/**
- * @package Pixelant\PxaProductManager\ViewHelpers
- */
 class MetaTagViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
     /**
-     * Arguments
+     * Arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('type', 'string', 'Type of meta tag', false, 'name');
         $this->registerArgument('content', 'string', 'Content of meta tag', false, null);
@@ -36,7 +34,7 @@ class MetaTagViewHelper extends AbstractViewHelper
         array $arguments,
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
-    ) {
+    ): void {
         $type = $arguments['type'];
         $name = $arguments['name'];
 

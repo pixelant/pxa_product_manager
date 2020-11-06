@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/***************************************************************
+/*
  *
  *  Copyright notice
  *
@@ -25,28 +25,28 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 
 /**
- * Filter
+ * Filter.
  */
 class Filter extends AbstractEntity
 {
     /**
-     * Conjunctions as string
+     * Conjunctions as string.
      */
-    const CONJUNCTION_OR = 'or';
-    const CONJUNCTION_AND = 'and';
+    public const CONJUNCTION_OR = 'or';
+    public const CONJUNCTION_AND = 'and';
 
     /**
-     * Types
+     * Types.
      */
-    const TYPE_CATEGORIES = 1;
-    const TYPE_ATTRIBUTES = 2;
-    const TYPE_ATTRIBUTES_MINMAX = 3;
+    public const TYPE_CATEGORIES = 1;
+    public const TYPE_ATTRIBUTES = 2;
+    public const TYPE_ATTRIBUTES_MINMAX = 3;
 
     /**
      * @var int
@@ -71,7 +71,7 @@ class Filter extends AbstractEntity
     protected $attribute = null;
 
     /**
-     * label
+     * label.
      *
      * @var string
      */
@@ -94,9 +94,10 @@ class Filter extends AbstractEntity
      * @param int $type
      * @return Filter
      */
-    public function setType(int $type): Filter
+    public function setType(int $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -112,9 +113,10 @@ class Filter extends AbstractEntity
      * @param string $name
      * @return Filter
      */
-    public function setName(string $name): Filter
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -134,9 +136,10 @@ class Filter extends AbstractEntity
      * @param Category $category
      * @return Filter
      */
-    public function setCategory(Category $category): Filter
+    public function setCategory(Category $category): self
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -156,9 +159,10 @@ class Filter extends AbstractEntity
      * @param Attribute $attribute
      * @return Filter
      */
-    public function setAttribute(Attribute $attribute): Filter
+    public function setAttribute(Attribute $attribute): self
     {
         $this->attribute = $attribute;
+
         return $this;
     }
 
@@ -174,9 +178,10 @@ class Filter extends AbstractEntity
      * @param string $label
      * @return Filter
      */
-    public function setLabel(string $label): Filter
+    public function setLabel(string $label): self
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -192,9 +197,10 @@ class Filter extends AbstractEntity
      * @param string $conjunction
      * @return Filter
      */
-    public function setConjunction(string $conjunction): Filter
+    public function setConjunction(string $conjunction): self
     {
         $this->conjunction = $conjunction;
+
         return $this;
     }
 
@@ -209,7 +215,7 @@ class Filter extends AbstractEntity
     }
 
     /**
-     * Return array of options for filtering
+     * Return array of options for filtering.
      *
      * @return array
      */
@@ -218,9 +224,11 @@ class Filter extends AbstractEntity
         switch ($this->type) {
             case static::TYPE_CATEGORIES:
                 $entityOptions = $this->getCategory()->getSubCategories();
+
                 break;
             case static::TYPE_ATTRIBUTES:
                 $entityOptions = $this->getAttribute()->getOptions();
+
                 break;
             default:
                 $entityOptions = [];

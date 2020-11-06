@@ -25,8 +25,8 @@ plugin.tx_pxaproductmanager {
         recursive = 0
     }
 
-    # customsubcategory=pxaproductmanager_pids=PIDs settings
     settings {
+        # customsubcategory=pxaproductmanager_pids=PIDs settings
         pids {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pids/010; type=int+; label=Single view page
             singleViewPid = {$plugin.tx_pxaproductmanager.settings.pids.singleViewPid}
@@ -34,10 +34,19 @@ plugin.tx_pxaproductmanager {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pids/020; type=int+; label=With list page
             wishListPid = {$plugin.tx_pxaproductmanager.settings.pids.wishListPid}
         }
-    }
 
-    # customsubcategory=pxaproductmanager_singleview=Single view
-    settings {
+        # customsubcategory=pxaproductmanager_list_view=List view settings
+        listView {
+            images {
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/010; type=string; label=Image max width
+                maxWidth = 265
+
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/020; type=string; label=Image max height
+                maxHeight = 265
+            }
+        }
+
+        # customsubcategory=pxaproductmanager_singleview=Single view
         singleView {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_singleview/010; type=int+; label=Latest visited products limit
             latestVisitedLimit = 5
@@ -45,23 +54,18 @@ plugin.tx_pxaproductmanager {
             images {
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_singleview/020; type=string; label=Main image max image width
                 mainMaxWidth = 600
-
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_singleview/030; type=string; label=Main image max image height
                 mainMaxHeight = 600
             }
         }
-    }
 
-    # customsubcategory=pxaproductmanager_seo=SEO
-    settings {
+        # customsubcategory=pxaproductmanager_seo=SEO
         seo {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_seo/010; type=int+; label=Meta description max length
             metaDescriptionMaxLength = 150
         }
-    }
 
-    # customsubcategory=pxaproductmanager_wishlist=Wish list
-    settings {
+        # customsubcategory=pxaproductmanager_wishlist=Wish list
         wishList {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wishlist/010; type=int+; label=Maximum items in wish list
             limitItems = 5
@@ -74,41 +78,24 @@ plugin.tx_pxaproductmanager {
                 maxHeight = 220
             }
         }
-    }
 
-    # customsubcategory=pxaproductmanager_main=General settings
-    settings {
-        # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/060; type=string; label=Date format
-        attributes.dateFormat = %B %d %Y
-        attributes.imageMaxWidth = 265
-    }
-
-    # customsubcategory=pxaproductmanager_list_view=List view settings
-    settings {
-        listView {
-            images {
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/010; type=string; label=Image max width
-                maxWidth = 265
-
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/020; type=string; label=Image max height
-                maxHeight = 265
-            }
+        # customsubcategory=pxaproductmanager_main=General settings
+        attributes {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/060; type=string; label=Date format
+            dateFormat = %B %d %Y
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/070; type=string; label=Image max width
+            imageMaxWidth = 265
         }
-    }
 
-    # customsubcategory=pxaproductmanager_emails=Email default settings
-    settings {
+        # customsubcategory=pxaproductmanager_emails=Email default settings
         email {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_emails/010; type=string; label=Name of sender
             senderName = Product manager
-
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_emails/020; type=string; label=Email address of sender
             senderEmail = noreply@site.com
         }
-    }
 
-    # customsubcategory=pxaproductmanager_price=Price
-    settings {
+        # customsubcategory=pxaproductmanager_price=Price
         price {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_price/010; type=string; label=Currency
             currency = USD

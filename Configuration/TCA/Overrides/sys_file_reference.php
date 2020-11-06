@@ -1,7 +1,8 @@
 <?php
+
 defined('TYPO3_MODE') || die;
 
-(function () {
+(function (): void {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
 
     $columns = [
@@ -18,7 +19,6 @@ defined('TYPO3_MODE') || die;
             ],
         ],
     ];
-
 
     $columnsForAttribute = [
         'pxa_attribute' => [

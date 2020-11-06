@@ -1,15 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Translate;
 
-/**
- * @package Pixelant\PxaProductManager\Translate
- */
 trait CanTranslateInBackend
 {
     /**
-     * Translate by key
+     * Translate by key.
      *
      * @param string $key
      * @param array $arguments

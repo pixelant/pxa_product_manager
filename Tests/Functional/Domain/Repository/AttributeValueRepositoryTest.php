@@ -7,9 +7,6 @@ use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Functional\Domain\Repository
- */
 class AttributeValueRepositoryTest extends FunctionalTestCase
 {
     /**
@@ -18,10 +15,10 @@ class AttributeValueRepositoryTest extends FunctionalTestCase
     protected $repository;
 
     protected $testExtensionsToLoad = [
-        'typo3conf/ext/pxa_product_manager'
+        'typo3conf/ext/pxa_product_manager',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -31,12 +28,11 @@ class AttributeValueRepositoryTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function canFindAttributeValueByProductAndAttribute()
+    public function canFindAttributeValueByProductAndAttribute(): void
     {
         $this->importDataSet(__DIR__ . '/../../../Fixtures/attributevalue.xml');
 
         $row = $this->repository->findRawByProductAndAttribute(10, 100);
-        $this->assertEquals('passed', $row['value']);
+        self::assertEquals('passed', $row['value']);
     }
-
 }

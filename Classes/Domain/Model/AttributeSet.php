@@ -5,7 +5,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -26,14 +26,10 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- *
- *
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class AttributeSet extends AbstractEntity
 {
@@ -54,8 +50,7 @@ class AttributeSet extends AbstractEntity
     protected ObjectStorage $categories;
 
     /**
-     * __construct
-     *
+     * __construct.
      */
     public function __construct()
     {
@@ -65,9 +60,9 @@ class AttributeSet extends AbstractEntity
 
     /**
      * Extbase container doesn't call constructor,
-     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     * which leads to an error "Typed property must not be accessed before initialization" on debug.
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $this->initStorageObjects();
     }
@@ -77,9 +72,9 @@ class AttributeSet extends AbstractEntity
      *
      * @return void
      */
-    protected function initStorageObjects()
+    protected function initStorageObjects(): void
     {
-        /**
+        /*
          * Do not modify this method!
          * It will be rewritten on each save in the extension builder
          * You may modify the constructor of this class instead
@@ -89,23 +84,23 @@ class AttributeSet extends AbstractEntity
     }
 
     /**
-     * Adds a Attribute
+     * Adds a Attribute.
      *
      * @param Attribute $attribute
      * @return void
      */
-    public function addAttribute(Attribute $attribute)
+    public function addAttribute(Attribute $attribute): void
     {
         $this->attributes->attach($attribute);
     }
 
     /**
-     * Removes a Attribute
+     * Removes a Attribute.
      *
      * @param Attribute $attributeToRemove The Attribute to be removed
      * @return void
      */
-    public function removeAttribute(Attribute $attributeToRemove)
+    public function removeAttribute(Attribute $attributeToRemove): void
     {
         $this->attributes->detach($attributeToRemove);
     }
@@ -122,9 +117,10 @@ class AttributeSet extends AbstractEntity
      * @param string $name
      * @return AttributeSet
      */
-    public function setName(string $name): AttributeSet
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -140,9 +136,10 @@ class AttributeSet extends AbstractEntity
      * @param ObjectStorage $attributes
      * @return AttributeSet
      */
-    public function setAttributes(ObjectStorage $attributes): AttributeSet
+    public function setAttributes(ObjectStorage $attributes): self
     {
         $this->attributes = $attributes;
+
         return $this;
     }
 
@@ -158,9 +155,10 @@ class AttributeSet extends AbstractEntity
      * @param ObjectStorage $categories
      * @return AttributeSet
      */
-    public function setCategories(ObjectStorage $categories): AttributeSet
+    public function setCategories(ObjectStorage $categories): self
     {
         $this->categories = $categories;
+
         return $this;
     }
 }

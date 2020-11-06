@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Tests\Unit\Controller;
@@ -8,11 +9,9 @@ use Pixelant\PxaProductManager\Controller\ProductController;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit
- */
 class ProductControllerTest extends UnitTestCase
 {
     /**
@@ -20,16 +19,20 @@ class ProductControllerTest extends UnitTestCase
      */
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = $this->getMockBuilder(ProductController::class)->disableOriginalConstructor()->setMethods(null)->getMock();
+        $this->subject = $this
+            ->getMockBuilder(ProductController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
     }
 
     /**
      * @test
      */
-    public function readFromSettingsReturnValueOfSettings()
+    public function readFromSettingsReturnValueOfSettings(): void
     {
         $this->inject(
             $this->subject,
@@ -39,13 +42,20 @@ class ProductControllerTest extends UnitTestCase
             ]
         );
 
-        $this->assertEquals('title', $this->callInaccessibleMethod($this->subject, 'readFromSettings', 'categoriesOrderings.orderBy'));
+        self::assertEquals(
+            'title',
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'readFromSettings',
+                'categoriesOrderings.orderBy'
+            )
+        );
     }
 
     /**
      * @test
      */
-    public function readFromSettingsReturnDefaultValueOfSettingsIfNotFound()
+    public function readFromSettingsReturnDefaultValueOfSettingsIfNotFound(): void
     {
         $this->inject(
             $this->subject,
@@ -55,13 +65,21 @@ class ProductControllerTest extends UnitTestCase
             ]
         );
 
-        $this->assertEquals('defaultValue', $this->callInaccessibleMethod($this->subject, 'readFromSettings', 'categoriesOrderings.orderBy.testKey', 'defaultValue'));
+        self::assertEquals(
+            'defaultValue',
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'readFromSettings',
+                'categoriesOrderings.orderBy.testKey',
+                'defaultValue'
+            )
+        );
     }
 
     /**
      * @test
      */
-    public function createDemandFromSettingsCreateDemandFromSettings()
+    public function createDemandFromSettingsCreateDemandFromSettings(): void
     {
         $settings = [
             'limit' => '10',
@@ -82,23 +100,23 @@ class ProductControllerTest extends UnitTestCase
 
         $demand = $this->callInaccessibleMethod($this->subject, 'createProductsDemand', $settings);
 
-        $this->assertInstanceOf(ProductDemand::class, $demand);
+        self::assertInstanceOf(ProductDemand::class, $demand);
 
-        $this->assertEquals(10, $demand->getLimit());
-        $this->assertEquals(100, $demand->getOffSet());
-        $this->assertEquals('test', $demand->getOrderBy());
-        $this->assertEquals('direction', $demand->getOrderDirection());
-        $this->assertEquals('allowedOrderBy', $demand->getOrderByAllowed());
-        $this->assertEquals([1, 2, 3], $demand->getCategories());
-        $this->assertEquals('or', $demand->getCategoryConjunction());
+        self::assertEquals(10, $demand->getLimit());
+        self::assertEquals(100, $demand->getOffSet());
+        self::assertEquals('test', $demand->getOrderBy());
+        self::assertEquals('direction', $demand->getOrderDirection());
+        self::assertEquals('allowedOrderBy', $demand->getOrderByAllowed());
+        self::assertEquals([1, 2, 3], $demand->getCategories());
+        self::assertEquals('or', $demand->getCategoryConjunction());
     }
 
     /**
      * @test
      */
-    public function buildFromSettingsUseSettingsToBuildDemand()
+    public function buildFromSettingsUseSettingsToBuildDemand(): void
     {
-        $parent = createEntity(Category::class, 1);
+        $parent = TestsUtility::createEntity(Category::class, 1);
         $settings = [
             'limit' => '200',
             'parent' => $parent,
@@ -122,15 +140,15 @@ class ProductControllerTest extends UnitTestCase
         /** @var CategoryDemand $demand */
         $demand = $this->callInaccessibleMethod($this->subject, 'createCategoriesDemand', $settings);
 
-        $this->assertInstanceOf(CategoryDemand::class, $demand);
+        self::assertInstanceOf(CategoryDemand::class, $demand);
 
-        $this->assertEquals(200, $demand->getLimit());
-        $this->assertEquals(500, $demand->getOffSet());
-        $this->assertEquals('title', $demand->getOrderBy());
-        $this->assertEquals('asc', $demand->getOrderDirection());
-        $this->assertEquals('allowedOrderBy', $demand->getOrderByAllowed());
-        $this->assertTrue($demand->isOnlyVisibleInNavigation());
-        $this->assertTrue($demand->isHideCategoriesWithoutProducts());
-        $this->assertSame($parent, $demand->getParent());
+        self::assertEquals(200, $demand->getLimit());
+        self::assertEquals(500, $demand->getOffSet());
+        self::assertEquals('title', $demand->getOrderBy());
+        self::assertEquals('asc', $demand->getOrderDirection());
+        self::assertEquals('allowedOrderBy', $demand->getOrderByAllowed());
+        self::assertTrue($demand->isOnlyVisibleInNavigation());
+        self::assertTrue($demand->isHideCategoriesWithoutProducts());
+        self::assertSame($parent, $demand->getParent());
     }
 }

@@ -1,47 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dataset>
-
-	<sys_category>
-		<uid>10</uid>
+	<tx_pxaproductmanager_domain_model_producttype>
+		<uid>100</uid>
 		<pid>1</pid>
-		<title>Category 1</title>
-		<pxapm_attributes_sets>1</pxapm_attributes_sets>
-	</sys_category>
-	<sys_category>
-		<uid>20</uid>
-		<pid>1</pid>
-		<title>Category 2</title>
-		<pxapm_attributes_sets>1</pxapm_attributes_sets>
-	</sys_category>
-	<sys_category>
-		<uid>30</uid>
-		<parent>20</parent>
-		<pid>1</pid>
-		<title>Sub category of Category 2</title>
-		<pxapm_attributes_sets>1</pxapm_attributes_sets>
-	</sys_category>
-
+		<name>Product type 1</name>
+		<attribute_sets>2</attribute_sets>
+	</tx_pxaproductmanager_domain_model_producttype>
 
 	<tx_pxaproductmanager_domain_model_product>
-		<uid>10</uid>
-		<name>Product</name>
-		<attributes_sets>1</attributes_sets>
+		<uid>1000</uid>
+		<name>Product name</name>
+		<sku>theproductsku</sku>
+		<product_type>100</product_type>
 		<categories>2</categories>
 	</tx_pxaproductmanager_domain_model_product>
-
-	<sys_category_record_mm>
-		<uid_local>10</uid_local>
-		<uid_foreign>10</uid_foreign>
-		<tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
-		<fieldname>categories</fieldname>
-	</sys_category_record_mm>
-	<sys_category_record_mm>
-		<uid_local>30</uid_local>
-		<uid_foreign>10</uid_foreign>
-		<tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
-		<fieldname>categories</fieldname>
-	</sys_category_record_mm>
-
 
 	<tx_pxaproductmanager_domain_model_attributeset>
 		<uid>1</uid>
@@ -59,49 +31,21 @@
 		<uid>5</uid>
 	</tx_pxaproductmanager_domain_model_attributeset>
 
-	<tx_pxaproductmanager_attributeset_record_mm>
-		<uid_local>2</uid_local>
-		<uid_foreign>10</uid_foreign>
-		<tablenames>sys_category</tablenames>
-		<fieldname>categories</fieldname>
-	</tx_pxaproductmanager_attributeset_record_mm>
-	<tx_pxaproductmanager_attributeset_record_mm>
-		<uid_local>3</uid_local>
-		<uid_foreign>10</uid_foreign>
-		<tablenames>sys_category</tablenames>
-		<fieldname>categories</fieldname>
-	</tx_pxaproductmanager_attributeset_record_mm>
 
-	<tx_pxaproductmanager_attributeset_record_mm>
-		<uid_local>2</uid_local>
-		<uid_foreign>20</uid_foreign>
-		<tablenames>sys_category</tablenames>
-		<fieldname>categories</fieldname>
-	</tx_pxaproductmanager_attributeset_record_mm>
-	<tx_pxaproductmanager_attributeset_record_mm>
-		<uid_local>4</uid_local>
-		<uid_foreign>20</uid_foreign>
-		<tablenames>sys_category</tablenames>
-		<fieldname>categories</fieldname>
-	</tx_pxaproductmanager_attributeset_record_mm>
-
-	<tx_pxaproductmanager_attributeset_record_mm>
-		<uid_local>5</uid_local>
-		<uid_foreign>30</uid_foreign>
-		<tablenames>sys_category</tablenames>
-		<fieldname>categories</fieldname>
-	</tx_pxaproductmanager_attributeset_record_mm>
-
-	<tx_pxaproductmanager_attributeset_record_mm>
-		<uid_local>4</uid_local>
-		<uid_foreign>10</uid_foreign>
-		<tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
-		<fieldname>products</fieldname>
-	</tx_pxaproductmanager_attributeset_record_mm>
 	<tx_pxaproductmanager_attributeset_record_mm>
 		<uid_local>1</uid_local>
-		<uid_foreign>10</uid_foreign>
-		<tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
-		<fieldname>products</fieldname>
+		<uid_foreign>100</uid_foreign>
+		<tablenames>tx_pxaproductmanager_domain_model_producttype</tablenames>
+		<fieldname>product_type</fieldname>
+		<sorting_foreign>2</sorting_foreign>
 	</tx_pxaproductmanager_attributeset_record_mm>
+
+	<tx_pxaproductmanager_attributeset_record_mm>
+		<uid_local>3</uid_local>
+		<uid_foreign>100</uid_foreign>
+		<tablenames>tx_pxaproductmanager_domain_model_producttype</tablenames>
+		<fieldname>product_type</fieldname>
+		<sorting_foreign>1</sorting_foreign>
+	</tx_pxaproductmanager_attributeset_record_mm>
+
 </dataset>

@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') || die('Access denied.');
 
 return [
@@ -20,7 +21,7 @@ return [
         ],
         'hideTable' => true,
         'searchFields' => 'value,',
-        'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/elipsis.svg'
+        'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/elipsis.svg',
     ],
     'interface' => [
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, value',
@@ -43,11 +44,11 @@ return [
                     [
                         'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                         -1,
-                        'flags-multiple'
+                        'flags-multiple',
                     ],
                 ],
                 'default' => 0,
-            ]
+            ],
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -62,7 +63,7 @@ return [
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_option',
                 'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_option.pid=###CURRENT_PID###' .
                     ' AND tx_pxaproductmanager_domain_model_option.sys_language_uid IN (-1,0)',
-                'default' => 0
+                'default' => 0,
             ],
         ],
         'l10n_diffsource' => [
@@ -80,8 +81,8 @@ return [
                     [
                         0 => '',
                         1 => '',
-                        'invertStateDisplay' => true
-                    ]
+                        'invertStateDisplay' => true,
+                    ],
                 ],
             ],
         ],
@@ -92,13 +93,13 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim',
             ],
         ],
         'attribute' => [
             'config' => [
                 'type' => 'passthrough',
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

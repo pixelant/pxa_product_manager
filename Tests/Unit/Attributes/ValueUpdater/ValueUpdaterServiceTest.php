@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ValueUpdater;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
@@ -7,15 +9,13 @@ use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Attributes\ValueUpdater
- */
 class ValueUpdaterServiceTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->subject = new ValueUpdaterService();
@@ -24,49 +24,59 @@ class ValueUpdaterServiceTest extends UnitTestCase
     /**
      * @test
      */
-    public function castToIntConvertObjectToUid()
+    public function castToIntConvertObjectToUid(): void
     {
-        $object = createEntity(Product::class, ['_localizedUid' => 12]);
+        $object = TestsUtility::createEntity(Product::class, ['_localizedUid' => 12]);
 
-        $this->assertEquals(12, $this->callInaccessibleMethod($this->subject, 'castToInt', $object));
+        self::assertEquals(12, $this->callInaccessibleMethod($this->subject, 'castToInt', $object));
     }
 
     /**
      * @test
      */
-    public function castToIntReturnUidIfIntGiven()
+    public function castToIntReturnUidIfIntGiven(): void
     {
-        $this->assertEquals(10, $this->callInaccessibleMethod($this->subject, 'castToInt', 10));
+        self::assertEquals(10, $this->callInaccessibleMethod($this->subject, 'castToInt', 10));
     }
 
     /**
      * @test
      */
-    public function getAttributeEntityTryToFindAttributeIfNotEntity()
+    public function getAttributeEntityTryToFindAttributeIfNotEntity(): void
     {
         $attribute = 10;
-        $attributeEntity = createEntity(Attribute::class, 20);
+        $attributeEntity = TestsUtility::createEntity(Attribute::class, 20);
 
         $repository = $this->prophesize(AttributeRepository::class);
         $repository->findByUid($attribute)->shouldBeCalled()->willReturn($attributeEntity);
 
         $this->subject->injectAttributeRepository($repository->reveal());
 
-        $this->assertSame($attributeEntity, $this->callInaccessibleMethod($this->subject, 'getAttributeEntity', $attribute));
+        self::assertSame(
+            $attributeEntity,
+            $this->callInaccessibleMethod(
+                $this->subject,
+                'getAttributeEntity',
+                $attribute
+            )
+        );
     }
 
     /**
      * @test
      * @dataProvider selectBoxTypes
+     * @param mixed $value
+     * @param mixed $expect
+     * @param mixed $type
      */
-    public function convertValueReturnCommaWrappedValueForMultipleSelectBox($value, $expect, $type)
+    public function convertValueReturnCommaWrappedValueForMultipleSelectBox($value, $expect, $type): void
     {
-        $attribute = createEntity(Attribute::class, ['uid' => 1, 'type' => $type]);
+        $attribute = TestsUtility::createEntity(Attribute::class, ['uid' => 1, 'type' => $type]);
 
         $subject = $this->getMockBuilder(ValueUpdaterService::class)->setMethods(['getAttributeEntity'])->getMock();
-        $subject->expects($this->once())->method('getAttributeEntity')->willReturn($attribute);
+        $subject->expects(self::once())->method('getAttributeEntity')->willReturn($attribute);
 
-        $this->assertEquals($expect, $this->callInaccessibleMethod($subject, 'convertValue', $attribute, $value));
+        self::assertEquals($expect, $this->callInaccessibleMethod($subject, 'convertValue', $attribute, $value));
     }
 
     public function selectBoxTypes()
@@ -75,13 +85,13 @@ class ValueUpdaterServiceTest extends UnitTestCase
             'single_select_box' => [
                 '101',
                 ',101,',
-                Attribute::ATTRIBUTE_TYPE_DROPDOWN
+                Attribute::ATTRIBUTE_TYPE_DROPDOWN,
             ],
             'multiple_select_box' => [
                 '9,10,11',
                 ',9,10,11,',
                 Attribute::ATTRIBUTE_TYPE_MULTISELECT,
-            ]
+            ],
         ];
     }
 }

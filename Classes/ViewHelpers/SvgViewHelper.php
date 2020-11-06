@@ -1,12 +1,13 @@
 <?php
+
 namespace Pixelant\PxaProductManager\ViewHelpers;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
-/***************************************************************
+/*
  *
  *  Copyright notice
  *
@@ -29,20 +30,20 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 class SvgViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
     /**
-     * Initialize arguments
+     * Initialize arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('source', 'string', 'File path', true);
         $this->registerArgument('class', 'string', 'Specifies an alternate class for the svg', false);
@@ -51,7 +52,7 @@ class SvgViewHelper extends AbstractViewHelper
     }
 
     /**
-     * Prepare svg output
+     * Prepare svg output.
      *
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
@@ -68,7 +69,7 @@ class SvgViewHelper extends AbstractViewHelper
         $sourceAbs = GeneralUtility::getFileAbsFileName($arguments['source']);
 
         if (!file_exists($sourceAbs)) {
-            return 'no SVG file on /'.$arguments['source'];
+            return 'no SVG file on /' . $arguments['source'];
         }
 
         return self::getInlineSvg($sourceAbs, $arguments);

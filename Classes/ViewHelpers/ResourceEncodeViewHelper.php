@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\ViewHelpers;
@@ -12,9 +13,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
-/**
- * @package Pixelant\PxaProductManager\ViewHelpers
- */
 class ResourceEncodeViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
@@ -25,9 +23,9 @@ class ResourceEncodeViewHelper extends AbstractViewHelper
     protected static ?ResourceConverter $converter = null;
 
     /**
-     * View helper arguments
+     * View helper arguments.
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('entity', AbstractEntity::class, 'Entity that should be convert to resource');
         $this->registerArgument('resource', 'string', 'Override resource class name');

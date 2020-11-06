@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller;
@@ -16,9 +17,6 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
-/**
- * @package Pixelant\PxaProductManager\Controller
- */
 abstract class AbstractController extends ActionController
 {
     use CanCreateCollection;
@@ -31,7 +29,7 @@ abstract class AbstractController extends ActionController
     /**
      * @param SettingsReader $settingsReader
      */
-    public function injectSettingsReader(SettingsReader $settingsReader)
+    public function injectSettingsReader(SettingsReader $settingsReader): void
     {
         $this->siteSettings = $settingsReader;
     }
@@ -42,30 +40,30 @@ abstract class AbstractController extends ActionController
     protected Dispatcher $dispatcher;
 
     /**
-     * Override plugin settings with site settings, before resolving view
+     * Override plugin settings with site settings, before resolving view.
      * @return ViewInterface
      */
     protected function resolveView()
     {
-        if ($singleViewPid = $this->siteSettings->getValue('singleViewPid')) {
+        $singleViewPid = $this->siteSettings->getValue('singleViewPid');
+        if ($singleViewPid) {
             $this->settings['pids']['singleViewPid'] = $singleViewPid;
         }
 
         return parent::resolveView();
     }
 
-
     /**
      * @param Dispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher)
+    public function injectDispatcher(Dispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
 
     /**
      * Find records using repository by uids list.
-     * Sort records according to given list
+     * Sort records according to given list.
      *
      * @param string $uidsList
      * @param Repository $repository
@@ -74,8 +72,9 @@ abstract class AbstractController extends ActionController
     protected function findRecordsByList(string $uidsList, Repository $repository): array
     {
         $uids = GeneralUtility::intExplode(',', $uidsList, true);
-        if (! empty($uids)) {
+        if (!empty($uids)) {
             $records = $repository->findByUids($uids)->toArray();
+
             return $this->collection($records)->sortByOrderList($uids, 'uid')->toArray();
         }
 
@@ -83,7 +82,7 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * Create demand object using settings
+     * Create demand object using settings.
      *
      * @param array $settings
      * @param string $className
@@ -94,19 +93,19 @@ abstract class AbstractController extends ActionController
         /** @var DemandInterface $demand */
         $demand = GeneralUtility::makeInstance($className);
 
-        if (! empty($settings['limit'])) {
+        if (!empty($settings['limit'])) {
             $demand->setLimit((int)$settings['limit']);
         }
-        if (! empty($settings['offSet'])) {
+        if (!empty($settings['offSet'])) {
             $demand->setOffSet((int)$settings['offSet']);
         }
-        if (! empty($settings['demand']['orderByAllowed'])) {
+        if (!empty($settings['demand']['orderByAllowed'])) {
             $demand->setOrderByAllowed($settings['demand']['orderByAllowed']);
         }
-        if (! empty($settings['orderBy'])) {
+        if (!empty($settings['orderBy'])) {
             $demand->setOrderBy($settings['orderBy']);
         }
-        if (! empty($settings['orderDirection'])) {
+        if (!empty($settings['orderDirection'])) {
             $demand->setOrderDirection($settings['orderDirection']);
         }
 
@@ -116,7 +115,7 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * Create categories demand
+     * Create categories demand.
      *
      * @param array $settings
      * @param string $className
@@ -130,13 +129,13 @@ abstract class AbstractController extends ActionController
         $className = $this->readFromSettings('demand.objects.categoryDemand', $className);
 
         $demand = $this->createDemandFromSettings($settings, $className);
-        if (! empty($settings['navigation']['hideCategoriesWithoutProducts'])) {
+        if (!empty($settings['navigation']['hideCategoriesWithoutProducts'])) {
             $demand->setHideCategoriesWithoutProducts((bool)$settings['navigation']['hideCategoriesWithoutProducts']);
         }
-        if (! empty($settings['onlyVisibleInNavigation'])) {
+        if (!empty($settings['onlyVisibleInNavigation'])) {
             $demand->setOnlyVisibleInNavigation((bool)$settings['onlyVisibleInNavigation']);
         }
-        if (! empty($settings['parent'])) {
+        if (!empty($settings['parent'])) {
             $demand->setParent($settings['parent']);
         }
 
@@ -144,7 +143,7 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * Create products demand
+     * Create products demand.
      *
      * @param array $settings
      * @param string $className
@@ -158,10 +157,10 @@ abstract class AbstractController extends ActionController
         $className = $this->readFromSettings('demand.objects.productDemand', $className);
 
         $demand = $this->createDemandFromSettings($settings, $className);
-        if (! empty($settings['categories'])) {
+        if (!empty($settings['categories'])) {
             $demand->setCategories($settings['categories']);
         }
-        if (! empty($settings['categoryConjunction'])) {
+        if (!empty($settings['categoryConjunction'])) {
             $demand->setCategoryConjunction($settings['categoryConjunction']);
         }
 
@@ -169,7 +168,7 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * Read from settings by path or return default value
+     * Read from settings by path or return default value.
      *
      * @param string $path
      * @param mixed $default

@@ -20,9 +20,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
     fal_links         int(11) unsigned DEFAULT '0'    NOT NULL,
     assets            int(11) unsigned DEFAULT '0'    NOT NULL,
     attributes_files  int(11) unsigned DEFAULT '0'    NOT NULL,
-    attributes_sets   int(11) unsigned DEFAULT '0'    NOT NULL,
     attributes_values int(11) unsigned DEFAULT '0'    NOT NULL,
-
+    product_type      int(11) unsigned DEFAULT '0'    NOT NULL,
     alternative_title varchar(255)     DEFAULT ''     NOT NULL,
     keywords          text,
     meta_description  text,
@@ -34,9 +33,9 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
 #
 CREATE TABLE tx_pxaproductmanager_domain_model_attributeset
 (
-    name       varchar(255)     DEFAULT ''  NOT NULL,
-    attributes int(11) unsigned DEFAULT '0' NOT NULL,
-    categories int(11) unsigned DEFAULT '0' NOT NULL,
+    name            varchar(255)     DEFAULT ''  NOT NULL,
+    attributes      int(11) unsigned DEFAULT '0' NOT NULL,
+    product_types   int(11) unsigned DEFAULT '0' NOT NULL,
 );
 
 #
@@ -121,7 +120,6 @@ CREATE TABLE sys_category
     pxapm_meta_description     text,
     pxapm_subcategories        int(11) unsigned     DEFAULT '0'    NOT NULL,
     pxapm_products             int(11) unsigned     DEFAULT '0'    NOT NULL,
-    pxapm_attributes_sets      int(11) unsigned     DEFAULT '0'    NOT NULL,
     pxapm_description          text,
     pxapm_banner_image         int(11) unsigned     DEFAULT '0'    NOT NULL,
     pxapm_tax_rate             decimal(11, 2)       DEFAULT '0.00' NOT NULL,
@@ -169,4 +167,13 @@ CREATE TABLE tx_pxaproductmanager_domain_model_filter
     category    int(11) unsigned DEFAULT '0' NOT NULL,
     attribute   int(11) unsigned DEFAULT '0' NOT NULL,
     conjunction varchar(10)      DEFAULT ''  NOT NULL,
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_domain_model_producttype'
+#
+CREATE TABLE tx_pxaproductmanager_domain_model_producttype
+(
+    name                  varchar(255)       DEFAULT ''     NOT NULL,
+    attribute_sets        int(11) unsigned   DEFAULT '0'    NOT NULL,
 );

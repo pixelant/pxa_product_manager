@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller;
@@ -7,7 +8,7 @@ use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Service\NavigationService;
 
 /**
- * Categories controller
+ * Categories controller.
  */
 class CategoryController extends AbstractController
 {
@@ -19,21 +20,21 @@ class CategoryController extends AbstractController
     /**
      * @param CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    public function injectCategoryRepository(CategoryRepository $categoryRepository): void
     {
         $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * List navigation
+     * List navigation.
      */
-    public function listAction()
+    public function listAction(): void
     {
         $this->view->assign('items', $this->getNavigationService()->getItems());
     }
 
     /**
-     * Create navigation service
+     * Create navigation service.
      *
      * @return NavigationService
      */

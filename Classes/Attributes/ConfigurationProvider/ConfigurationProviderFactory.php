@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
@@ -7,16 +8,16 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class AttributeConfigurationProviderFactory
- * @package Pixelant\PxaProductManager\Configuration\AttributesTCA
+ * Class AttributeConfigurationProviderFactory.
  */
 class ConfigurationProviderFactory
 {
     /**
-     * Factory method
+     * Factory method.
      *
      * @param Attribute $attribute
      * @return ProviderInterface
+     * @throws \UnexpectedValueException
      */
     public static function create(Attribute $attribute): ProviderInterface
     {
@@ -40,7 +41,7 @@ class ConfigurationProviderFactory
         }
 
         throw new \UnexpectedValueException(
-            "Attribute with type '{$attribute->getType()}' not supported.",
+            'Attribute with type "' . $attribute->getType() . '" not supported.',
             1568986135545
         );
     }

@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
@@ -23,7 +24,7 @@ return (function () {
             ],
             'searchFields' => 'name,link',
             'hideTable' => 1,
-            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/link.svg'
+            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/link.svg',
         ],
         'interface' => [
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, link, description',
@@ -46,11 +47,11 @@ return (function () {
                         [
                             'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                             -1,
-                            'flags-multiple'
+                            'flags-multiple',
                         ],
                     ],
                     'default' => 0,
-                ]
+                ],
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -65,7 +66,7 @@ return (function () {
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_link',
                     'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_link.pid=###CURRENT_PID###' .
                         ' AND tx_pxaproductmanager_domain_model_link.sys_language_uid IN (-1,0)',
-                    'default' => 0
+                    'default' => 0,
                 ],
             ],
             'l10n_diffsource' => [
@@ -83,8 +84,8 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
                 ],
             ],
@@ -95,8 +96,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
-                ]
+                    'eval' => 'trim,required',
+                ],
             ],
             'link' => [
                 'exclude' => 0,
@@ -107,7 +108,7 @@ return (function () {
                     'max' => 256,
                     'eval' => 'trim,required',
                     'renderType' => 'inputLink',
-                    'softref' => 'typolink'
+                    'softref' => 'typolink',
                 ],
             ],
             'description' => [
@@ -117,14 +118,14 @@ return (function () {
                     'type' => 'text',
                     'cols' => 60,
                     'rows' => 5,
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
             ],
             'product' => [
                 'config' => [
                     'type' => 'passthrough',
-                ]
-            ]
-        ]
+                ],
+            ],
+        ],
     ];
 })();

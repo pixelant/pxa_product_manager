@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
@@ -27,27 +28,27 @@ return (function () {
             ],
             'searchFields' => 'name,sku,teaser,description',
             'thumbnail' => 'images',
-            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/product.svg'
+            'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/product.svg',
         ],
         'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, sku, price, tax_rate, teaser, description, usp,
-            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, attributes_sets',
+            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, product_type, name, sku, price, tax_rate, teaser, description, usp,
+            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug',
         ],
         'types' => [
             '1' => [
-                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;general,
---div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.attributes_sets, attributes_sets,--palette--;;paletteAttributes,
+                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, related_products, sub_products, accessories,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.links, fal_links, links,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.metadata, alternative_title, meta_description, keywords,
---div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, --palette--;;access'
+--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, --palette--;;access',
             ],
         ],
         'palettes' => [
             'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, sku, --linebreak--, price, tax_rate, --linebreak--,  teaser, usp, --linebreak--, description'],
             'access' => ['showitem' => 'hidden, --linebreak--, starttime, endtime'],
             'paletteAttributes' => ['showitem' => ''],
+            'paletteProdyctType' => ['showitem' => 'product_type'],
         ],
         'columns' => [
             'sys_language_uid' => [
@@ -61,11 +62,11 @@ return (function () {
                         [
                             'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
                             -1,
-                            'flags-multiple'
+                            'flags-multiple',
                         ],
                     ],
                     'default' => 0,
-                ]
+                ],
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -80,7 +81,7 @@ return (function () {
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.pid=###CURRENT_PID###' .
                         ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid IN (-1,0)',
-                    'default' => 0
+                    'default' => 0,
                 ],
             ],
             'l10n_diffsource' => [
@@ -93,8 +94,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'max' => 255
-                ]
+                    'max' => 255,
+                ],
             ],
             'hidden' => [
                 'exclude' => true,
@@ -106,8 +107,8 @@ return (function () {
                         [
                             0 => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
                 ],
             ],
@@ -120,8 +121,8 @@ return (function () {
                     'eval' => 'datetime,int',
                     'default' => 0,
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true
-                    ]
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'endtime' => [
@@ -133,11 +134,11 @@ return (function () {
                     'eval' => 'datetime,int',
                     'default' => 0,
                     'range' => [
-                        'upper' => mktime(0, 0, 0, 1, 1, 2038)
+                        'upper' => mktime(0, 0, 0, 1, 1, 2038),
                     ],
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true
-                    ]
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
 
@@ -147,7 +148,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'slug' => [
@@ -159,13 +160,13 @@ return (function () {
                     'generatorOptions' => [
                         'fields' => ['name'],
                         'replacements' => [
-                            '/' => '-'
+                            '/' => '-',
                         ],
                     ],
                     'fallbackCharacter' => '-',
                     'eval' => 'uniqueInPid',
-                    'default' => ''
-                ]
+                    'default' => '',
+                ],
             ],
             'sku' => [
                 'exclude' => false,
@@ -173,7 +174,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 15,
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
             ],
             'price' => [
@@ -213,7 +214,7 @@ return (function () {
                     'cols' => 40,
                     'rows' => 15,
                     'eval' => 'trim',
-                ]
+                ],
             ],
             'attributes_values' => [
                 'exclude' => false,
@@ -228,9 +229,9 @@ return (function () {
                         'levelLinksPosition' => 'top',
                         'showSynchronizationLink' => 1,
                         'showPossibleLocalizationRecords' => 1,
-                        'showAllLocalizationLink' => 1
-                    ]
-                ]
+                        'showAllLocalizationLink' => 1,
+                    ],
+                ],
             ],
             'related_products' => [
                 'exclude' => false,
@@ -254,13 +255,13 @@ return (function () {
                     'enableMultiSelectFilterTextfield' => true,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             'images' => [
                 'exclude' => false,
@@ -277,17 +278,17 @@ return (function () {
                                 \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
                                     'showitem' => '
                                 --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                                --palette--;;filePalette'
+                                --palette--;;filePalette',
                                 ],
                                 \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
                                     'showitem' => '
                                 --palette--;;pxaProductManagerPalette,
                                 --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                                --palette--;;filePalette'
+                                --palette--;;filePalette',
                                 ],
                             ],
                         ],
-                        'maxitems' => 99
+                        'maxitems' => 99,
                     ],
                     $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
                 ),
@@ -299,12 +300,12 @@ return (function () {
                     $falAttributesField,
                     [
                         'appearance' => [
-                            'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference'
+                            'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference',
                         ],
                         'behaviour' => [
                             'allowLanguageSynchronization' => true,
                         ],
-                        'maxitems' => 99
+                        'maxitems' => 99,
                     ]
                 ),
             ],
@@ -324,35 +325,35 @@ return (function () {
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_TEXT => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_AUDIO => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.audioOverlayPalette;audioOverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_VIDEO => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.videoOverlayPalette;videoOverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_APPLICATION => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
-                            ]
+                            --palette--;;filePalette',
+                            ],
                         ],
-                        'maxitems' => 99
+                        'maxitems' => 99,
                     ]
                 ),
             ],
@@ -399,13 +400,13 @@ return (function () {
                     'enableMultiSelectFilterTextfield' => true,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             'keywords' => [
                 'exclude' => true,
@@ -415,9 +416,9 @@ return (function () {
                     'cols' => 30,
                     'rows' => 5,
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true
+                        'allowLanguageSynchronization' => true,
                     ],
-                ]
+                ],
             ],
             'meta_description' => [
                 'exclude' => true,
@@ -427,17 +428,17 @@ return (function () {
                     'cols' => 30,
                     'rows' => 5,
                     'behaviour' => [
-                        'allowLanguageSynchronization' => true
+                        'allowLanguageSynchronization' => true,
                     ],
-                ]
+                ],
             ],
             'alternative_title' => [
                 'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.alternative_title',
                 'config' => [
                     'type' => 'input',
-                    'size' => 30
-                ]
+                    'size' => 30,
+                ],
             ],
             'assets' => [
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.assets',
@@ -455,33 +456,33 @@ return (function () {
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_TEXT => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_AUDIO => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.audioOverlayPalette;audioOverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_VIDEO => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.videoOverlayPalette;videoOverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                             ],
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_APPLICATION => [
                                 'showitem' => '
                             --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.basicoverlayPalette;basicoverlayPalette,
-                            --palette--;;filePalette'
-                            ]
+                            --palette--;;filePalette',
+                            ],
                         ],
                     ],
                 ),
@@ -494,7 +495,7 @@ return (function () {
                     'cols' => 40,
                     'rows' => 5,
                     'eval' => 'trim',
-                ]
+                ],
             ],
             'usp' => [
                 'exclude' => false,
@@ -504,7 +505,22 @@ return (function () {
                     'cols' => 40,
                     'rows' => 5,
                     'eval' => 'trim',
-                ]
+                ],
+            ],
+            'product_type' => [
+                'exclude' => false,
+                'onChange' => 'reload',
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.product_type',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        ['', 0],
+                    ],
+                    'foreign_table' => 'tx_pxaproductmanager_domain_model_producttype',
+                    'minitems' => 0,
+                    'maxitems' => 1,
+                ],
             ],
             'accessories' => [
                 'exclude' => false,
@@ -528,61 +544,32 @@ return (function () {
                     'enableMultiSelectFilterTextfield' => true,
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false
+                            'disabled' => false,
                         ],
                         'addRecord' => [
                             'disabled' => false,
-                        ]
-                    ]
-                ]
-            ],
-            'attributes_sets' => [
-                'exclude' => true,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.attributes_sets',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
-                    'foreign_table' => 'tx_pxaproductmanager_domain_model_attributeset',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAttributesSetsForeignTableWherePid() .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_attributeset.sorting',
-                    'MM' => 'tx_pxaproductmanager_attributeset_record_mm',
-                    'MM_match_fields' => [
-                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
-                        'fieldname' => 'products',
+                        ],
                     ],
-                    'MM_opposite_field' => 'products',
-                    'size' => 10,
-                    'autoSizeMax' => 30,
-                    'maxitems' => 9999,
-                    'multiple' => 0,
-                    'fieldControl' => [
-                        'editPopup' => [
-                            'disabled' => false
-                        ],
-                        'addRecord' => [
-                            'disabled' => false,
-                        ]
-                    ]
-                ]
+                ],
             ],
             'crdate' => [
                 'label' => 'crdate',
                 'config' => [
-                    'type' => 'passthrough'
-                ]
+                    'type' => 'passthrough',
+                ],
             ],
             'tstamp' => [
                 'label' => 'tstamp',
                 'config' => [
-                    'type' => 'passthrough'
-                ]
+                    'type' => 'passthrough',
+                ],
             ],
             'deleted' => [
                 'label' => 'deleted',
                 'config' => [
-                    'type' => 'passthrough'
-                ]
+                    'type' => 'passthrough',
+                ],
             ],
-        ]
+        ],
     ];
 })();

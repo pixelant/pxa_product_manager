@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Event\Repository;
@@ -6,9 +7,6 @@ namespace Pixelant\PxaProductManager\Event\Repository;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
-/**
- * @package Pixelant\PxaProductManager\Event\Product
- */
 class RepositoryDemand
 {
     /**

@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -24,7 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use DateTime;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
@@ -36,11 +37,12 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
- * Product model
+ * Product model.
  */
 class Product extends AbstractEntity
 {
-    use AbleCacheProperties, CanCreateCollection;
+    use CanCacheProperties;
+    use CanCreateCollection;
 
     /**
      * @var MapperServiceInterface
@@ -113,14 +115,19 @@ class Product extends AbstractEntity
     protected bool $deleted = false;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected ?DateTime $crdate = null;
+    protected $crdate;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
-    protected ?DateTime $tstamp = null;
+    protected $tstamp;
+
+    /**
+     * @var \Pixelant\PxaProductManager\Domain\Model\ProductType|null
+     */
+    protected $productType = null;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -187,14 +194,7 @@ class Product extends AbstractEntity
     protected ObjectStorage $attributesValues;
 
     /**
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Cascade("remove")
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\AttributeSet>
-     */
-    protected ObjectStorage $attributesSets;
-
-    /**
-     * __construct
+     * __construct.
      */
     public function __construct()
     {
@@ -204,9 +204,9 @@ class Product extends AbstractEntity
 
     /**
      * Extbase container doesn't call constructor,
-     * which leads to an error "Typed property must not be accessed before initialization" on debug
+     * which leads to an error "Typed property must not be accessed before initialization" on debug.
      */
-    public function initializeObject()
+    public function initializeObject(): void
     {
         $this->initStorageObjects();
     }
@@ -214,7 +214,7 @@ class Product extends AbstractEntity
     /**
      * @param MapperServiceInterface $attributesValuesMapper
      */
-    public function injectAttributesValuesMapper(MapperServiceInterface $attributesValuesMapper)
+    public function injectAttributesValuesMapper(MapperServiceInterface $attributesValuesMapper): void
     {
         $this->attributesValuesMapper = $attributesValuesMapper;
     }
@@ -222,7 +222,7 @@ class Product extends AbstractEntity
     /**
      * @param UpdaterInterface $updaterInterface
      */
-    public function injectUpdaterInterface(UpdaterInterface $updaterInterface)
+    public function injectUpdaterInterface(UpdaterInterface $updaterInterface): void
     {
         $this->attributeValueUpdater = $updaterInterface;
     }
@@ -230,7 +230,7 @@ class Product extends AbstractEntity
     /**
      * @param ObjectManager $objectManager
      */
-    public function injectObjectManager(ObjectManager $objectManager)
+    public function injectObjectManager(ObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
     }
@@ -239,11 +239,11 @@ class Product extends AbstractEntity
      * Initializes all ObjectStorage properties
      * Do not modify this method!
      * It will be rewritten on each save in the extension builder
-     * You may modify the constructor of this class instead
+     * You may modify the constructor of this class instead.
      *
      * @return void
      */
-    protected function initStorageObjects()
+    protected function initStorageObjects(): void
     {
         $this->categories = new ObjectStorage();
         $this->relatedProducts = new ObjectStorage();
@@ -255,7 +255,6 @@ class Product extends AbstractEntity
         $this->falLinks = new ObjectStorage();
         $this->assets = new ObjectStorage();
         $this->attributesValues = new ObjectStorage();
-        $this->attributesSets = new ObjectStorage();
     }
 
     /**
@@ -270,9 +269,10 @@ class Product extends AbstractEntity
      * @param string $name
      * @return Product
      */
-    public function setName(string $name): Product
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -288,9 +288,10 @@ class Product extends AbstractEntity
      * @param string $sku
      * @return Product
      */
-    public function setSku(string $sku): Product
+    public function setSku(string $sku): self
     {
         $this->sku = $sku;
+
         return $this;
     }
 
@@ -303,7 +304,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return formatted price
+     * Return formatted price.
      *
      * @return string
      */
@@ -316,9 +317,10 @@ class Product extends AbstractEntity
      * @param float $price
      * @return Product
      */
-    public function setPrice(float $price): Product
+    public function setPrice(float $price): self
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -334,9 +336,10 @@ class Product extends AbstractEntity
      * @param float $taxRate
      * @return Product
      */
-    public function setTaxRate(float $taxRate): Product
+    public function setTaxRate(float $taxRate): self
     {
         $this->taxRate = $taxRate;
+
         return $this;
     }
 
@@ -352,9 +355,10 @@ class Product extends AbstractEntity
      * @param string $teaser
      * @return Product
      */
-    public function setTeaser(string $teaser): Product
+    public function setTeaser(string $teaser): self
     {
         $this->teaser = $teaser;
+
         return $this;
     }
 
@@ -370,9 +374,10 @@ class Product extends AbstractEntity
      * @param string $description
      * @return Product
      */
-    public function setDescription(string $description): Product
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -388,9 +393,10 @@ class Product extends AbstractEntity
      * @param string $usp
      * @return Product
      */
-    public function setUsp(string $usp): Product
+    public function setUsp(string $usp): self
     {
         $this->usp = $usp;
+
         return $this;
     }
 
@@ -406,9 +412,10 @@ class Product extends AbstractEntity
      * @param string $alternativeTitle
      * @return Product
      */
-    public function setAlternativeTitle(string $alternativeTitle): Product
+    public function setAlternativeTitle(string $alternativeTitle): self
     {
         $this->alternativeTitle = $alternativeTitle;
+
         return $this;
     }
 
@@ -424,9 +431,10 @@ class Product extends AbstractEntity
      * @param string $keywords
      * @return Product
      */
-    public function setKeywords(string $keywords): Product
+    public function setKeywords(string $keywords): self
     {
         $this->keywords = $keywords;
+
         return $this;
     }
 
@@ -442,9 +450,10 @@ class Product extends AbstractEntity
      * @param string $metaDescription
      * @return Product
      */
-    public function setMetaDescription(string $metaDescription): Product
+    public function setMetaDescription(string $metaDescription): self
     {
         $this->metaDescription = $metaDescription;
+
         return $this;
     }
 
@@ -460,9 +469,10 @@ class Product extends AbstractEntity
      * @param bool $deleted
      * @return Product
      */
-    public function setDeleted(bool $deleted): Product
+    public function setDeleted(bool $deleted): self
     {
         $this->deleted = $deleted;
+
         return $this;
     }
 
@@ -478,9 +488,10 @@ class Product extends AbstractEntity
      * @param DateTime $crdate
      * @return Product
      */
-    public function setCrdate(DateTime $crdate): Product
+    public function setCrdate(DateTime $crdate): self
     {
         $this->crdate = $crdate;
+
         return $this;
     }
 
@@ -496,9 +507,10 @@ class Product extends AbstractEntity
      * @param DateTime $tstamp
      * @return Product
      */
-    public function setTstamp(DateTime $tstamp): Product
+    public function setTstamp(DateTime $tstamp): self
     {
         $this->tstamp = $tstamp;
+
         return $this;
     }
 
@@ -511,7 +523,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return first product category
+     * Return first product category.
      *
      * @return Category|null
      */
@@ -530,9 +542,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $categories
      * @return Product
      */
-    public function setCategories(ObjectStorage $categories): Product
+    public function setCategories(ObjectStorage $categories): self
     {
         $this->categories = $categories;
+
         return $this;
     }
 
@@ -548,9 +561,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $relatedProducts
      * @return Product
      */
-    public function setRelatedProducts(ObjectStorage $relatedProducts): Product
+    public function setRelatedProducts(ObjectStorage $relatedProducts): self
     {
         $this->relatedProducts = $relatedProducts;
+
         return $this;
     }
 
@@ -566,9 +580,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $subProducts
      * @return Product
      */
-    public function setSubProducts(ObjectStorage $subProducts): Product
+    public function setSubProducts(ObjectStorage $subProducts): self
     {
         $this->subProducts = $subProducts;
+
         return $this;
     }
 
@@ -584,9 +599,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $accessories
      * @return Product
      */
-    public function setAccessories(ObjectStorage $accessories): Product
+    public function setAccessories(ObjectStorage $accessories): self
     {
         $this->accessories = $accessories;
+
         return $this;
     }
 
@@ -602,9 +618,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $images
      * @return Product
      */
-    public function setImages(ObjectStorage $images): Product
+    public function setImages(ObjectStorage $images): self
     {
         $this->images = $images;
+
         return $this;
     }
 
@@ -620,9 +637,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $attributesFiles
      * @return Product
      */
-    public function setAttributesFiles(ObjectStorage $attributesFiles): Product
+    public function setAttributesFiles(ObjectStorage $attributesFiles): self
     {
         $this->attributesFiles = $attributesFiles;
+
         return $this;
     }
 
@@ -638,9 +656,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $links
      * @return Product
      */
-    public function setLinks(ObjectStorage $links): Product
+    public function setLinks(ObjectStorage $links): self
     {
         $this->links = $links;
+
         return $this;
     }
 
@@ -656,9 +675,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $falLinks
      * @return Product
      */
-    public function setFalLinks(ObjectStorage $falLinks): Product
+    public function setFalLinks(ObjectStorage $falLinks): self
     {
         $this->falLinks = $falLinks;
+
         return $this;
     }
 
@@ -674,9 +694,10 @@ class Product extends AbstractEntity
      * @param ObjectStorage $assets
      * @return Product
      */
-    public function setAssets(ObjectStorage $assets): Product
+    public function setAssets(ObjectStorage $assets): self
     {
         $this->assets = $assets;
+
         return $this;
     }
 
@@ -689,14 +710,14 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return array of attributes values that has valid attributes
+     * Return array of attributes values that has valid attributes.
      *
      * @return array
      */
     public function getAttributesValuesWithValidAttributes(): array
     {
         return $this->collection($this->getAttributesValues())
-            ->filter(fn(AttributeValue $attributeValue) => is_object($attributeValue->getAttribute()))
+            ->filter(fn (AttributeValue $attributeValue) => is_object($attributeValue->getAttribute()))
             ->toArray();
     }
 
@@ -704,45 +725,16 @@ class Product extends AbstractEntity
      * @param ObjectStorage $attributesValues
      * @return Product
      */
-    public function setAttributesValues(ObjectStorage $attributesValues): Product
+    public function setAttributesValues(ObjectStorage $attributesValues): self
     {
         $this->attributesValues = $attributesValues;
-        return $this;
-    }
 
-    /**
-     * Return attributes set that were assigned to only this products
-     *
-     * @return ObjectStorage
-     */
-    public function getOwnAttributesSets(): ObjectStorage
-    {
-        return $this->attributesSets;
-    }
-
-    /**
-     * @param AttributeSet $attributeSet
-     * @return Product
-     */
-    public function addAttributesSet(AttributeSet $attributeSet): Product
-    {
-        $this->attributesSets->attach($attributeSet);
-        return $this;
-    }
-
-    /**
-     * @param ObjectStorage $attributesSets
-     * @return Product
-     */
-    public function setAttributesSets(ObjectStorage $attributesSets): Product
-    {
-        $this->attributesSets = $attributesSets;
         return $this;
     }
 
     /**
      * Will return all attributes sets of all categories rootline.
-     * Init attribute values at same time
+     * Init attribute values at same time.
      *
      * @return AttributeSet[]
      */
@@ -771,7 +763,7 @@ class Product extends AbstractEntity
                 ->toArray();
 
             $keys = array_map(
-                fn(Attribute $attribute) => $attribute->getIdentifier() ?: $attribute->getUid(),
+                fn (Attribute $attribute) => $attribute->getIdentifier() ?: $attribute->getUid(),
                 $attributes
             );
 
@@ -780,19 +772,38 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return attributes that are visible in listing only
+     * Return attributes that are visible in listing only.
      *
      * @return array
      */
     public function getListingAttributes(): array
     {
         return $this->collection($this->getAttributes())
-            ->filter(fn(Attribute $attribute) => $attribute->isShowInAttributeListing())
+            ->filter(fn (Attribute $attribute) => $attribute->isShowInAttributeListing())
             ->toArray();
     }
 
     /**
-     * Get all products categories including parents
+     * @return ProductType
+     */
+    public function getProductType(): ProductType
+    {
+        return $this->productType;
+    }
+
+    /**
+     * @param string $productType
+     * @return Product
+     */
+    public function setProductType(string $productType): self
+    {
+        $this->productType = $productType;
+
+        return $this;
+    }
+
+    /**
+     * Get all products categories including parents.
      *
      * @return Category[]
      */
@@ -800,7 +811,7 @@ class Product extends AbstractEntity
     {
         // Fetch all parents and merge
         $all = array_merge(...array_map(
-            fn(Category $category) => $category->getParentsRootLine(),
+            fn (Category $category) => $category->getParentsRootLine(),
             $this->categories->toArray()
         ));
 
@@ -808,7 +819,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Will update attribute value record with new value for given attribute
+     * Will update attribute value record with new value for given attribute.
      *
      * @param Attribute $attribute
      * @param $value
@@ -819,7 +830,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return listing image if found
+     * Return listing image if found.
      *
      * @return Image|null
      */
@@ -829,7 +840,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return main image if found
+     * Return main image if found.
      *
      * @return Image|null
      */
@@ -839,7 +850,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return images where main image is on first place
+     * Return images where main image is on first place.
      *
      * @return array
      */
@@ -848,9 +859,8 @@ class Product extends AbstractEntity
         $mainImage = $this->getMainImage();
         if ($mainImage !== null) {
             $sorted = $this->collection($this->images)
-                ->filter(fn(Image $image) => $image !== $mainImage)
-                ->unshift($mainImage)
-                ->toArray();
+                ->filter(fn (Image $image) => $image !== $mainImage)
+                ->unshift($mainImage)->toArray();
 
             return array_values($sorted);
         }
@@ -859,7 +869,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Get navigation title
+     * Get navigation title.
      *
      * @return string
      */
@@ -869,30 +879,31 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return all attributes sets.
+     * Return all attributes sets from choosen productType.
      * It fetch every attribute set of every category from parents tree
-     * + product own attributes sets
+     * + product own attributes sets.
      *
      * @return AttributeSet[]
      * @internal Use in BE in order to get all attributes for edit form rendering. Do not use on FE
      * @see getAttributes
      */
-    // @codingStandardsIgnoreStart
+
+    /** @codingStandardsIgnoreStart */
     public function _getAllAttributesSets(): array // @codingStandardsIgnoreEnd
     {
-        $attributesSets = $this->collection($this->getOwnAttributesSets());
+        if (empty($this->productType)) {
+            return [];
+        }
 
-        $categoriesAttributeSets = $this->collection($this->getCategoriesWithParents())
-            ->pluck('attributesSets')
-            ->shiftLevel();
+        $attributesSets = $this->productType->getAttributeSets();
 
         return array_values(
-            $attributesSets->unionUniqueProperty($categoriesAttributeSets, 'uid')->toArray()
+            $attributesSets->toArray()
         );
     }
 
     /**
-     * Find image by type
+     * Find image by type.
      *
      * @return Image|null
      */

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Resource;
@@ -11,9 +12,7 @@ use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
- * Base resource to array
- *
- * @package Pixelant\PxaProductManager\Domain\Resource
+ * Base resource to array.
  */
 abstract class AbstractResource implements ResourceInterface
 {
@@ -38,13 +37,13 @@ abstract class AbstractResource implements ResourceInterface
     /**
      * @param Dispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher)
+    public function injectDispatcher(Dispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
 
     /**
-     * Convert entity to array
+     * Convert entity to array.
      *
      * @return array
      */
@@ -60,7 +59,7 @@ abstract class AbstractResource implements ResourceInterface
 
     /**
      * Extract properties from entity. Allow to pass additional values from child object
-     * when override this method
+     * when override this method.
      *
      * @param array|null $additionalProperties
      * @return array
@@ -83,7 +82,7 @@ abstract class AbstractResource implements ResourceInterface
     }
 
     /**
-     * Process property value
+     * Process property value.
      *
      * @param $value
      * @return mixed
@@ -98,7 +97,7 @@ abstract class AbstractResource implements ResourceInterface
     }
 
     /**
-     * Properties that will be extracted to array
+     * Properties that will be extracted to array.
      *
      * @return array
      */

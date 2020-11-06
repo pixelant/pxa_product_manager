@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller\Api;
@@ -7,9 +8,6 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Service\Resource\ResourceConverter;
 
-/**
- * @package Pixelant\PxaProductManager\Controller\Api
- */
 class LazyLoadingController extends AbstractBaseLazyLoadingController
 {
     /**
@@ -25,7 +23,7 @@ class LazyLoadingController extends AbstractBaseLazyLoadingController
     /**
      * @param ProductRepository $productRepository
      */
-    public function injectProductRepository(ProductRepository $productRepository)
+    public function injectProductRepository(ProductRepository $productRepository): void
     {
         $this->productRepository = $productRepository;
     }
@@ -33,17 +31,17 @@ class LazyLoadingController extends AbstractBaseLazyLoadingController
     /**
      * @param ResourceConverter $resourceConverter
      */
-    public function injectResourceConverter(ResourceConverter $resourceConverter)
+    public function injectResourceConverter(ResourceConverter $resourceConverter): void
     {
         $this->resourceConverter = $resourceConverter;
     }
 
     /**
-     * Lazy list loading
+     * Lazy list loading.
      *
      * @param ProductDemand $demand
      */
-    public function listAction(ProductDemand $demand)
+    public function listAction(ProductDemand $demand): void
     {
         $demand->setOrderByAllowed($this->settings['demand']['orderByAllowed'] ?? '');
         $products = $this->productRepository->findDemanded($demand)->toArray();

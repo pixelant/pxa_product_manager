@@ -1,13 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Model
- */
 abstract class AbstractFileReference extends FileReference
 {
     /**
@@ -37,9 +35,10 @@ abstract class AbstractFileReference extends FileReference
      * @param string $alternative
      * @return AbstractFileReference
      */
-    public function setAlternative(string $alternative): AbstractFileReference
+    public function setAlternative(string $alternative): self
     {
         $this->alternative = $alternative;
+
         return $this;
     }
 
@@ -55,9 +54,10 @@ abstract class AbstractFileReference extends FileReference
      * @param string $title
      * @return AbstractFileReference
      */
-    public function setTitle(string $title): AbstractFileReference
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -73,9 +73,10 @@ abstract class AbstractFileReference extends FileReference
      * @param string $description
      * @return AbstractFileReference
      */
-    public function setDescription(string $description): AbstractFileReference
+    public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 }

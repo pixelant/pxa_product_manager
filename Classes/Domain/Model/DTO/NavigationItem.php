@@ -1,13 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model\DTO;
 
 use Pixelant\PxaProductManager\Domain\Model\Category;
 
-/**
- * @package Pixelant\PxaProductManager\Domain\Model\DTO
- */
 class NavigationItem
 {
     /**
@@ -54,9 +52,10 @@ class NavigationItem
      * @param Category $category
      * @return NavigationItem
      */
-    public function setCategory(Category $category): NavigationItem
+    public function setCategory(Category $category): self
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -72,9 +71,10 @@ class NavigationItem
      * @param NavigationItem[] $subItems
      * @return NavigationItem
      */
-    public function setSubItems(array $subItems): NavigationItem
+    public function setSubItems(array $subItems): self
     {
         $this->subItems = $subItems;
+
         return $this;
     }
 
@@ -90,9 +90,10 @@ class NavigationItem
      * @param bool $isActive
      * @return NavigationItem
      */
-    public function setIsActive(bool $isActive): NavigationItem
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
         return $this;
     }
 
@@ -108,9 +109,10 @@ class NavigationItem
      * @param bool $isCurrent
      * @return NavigationItem
      */
-    public function setIsCurrent(bool $isCurrent): NavigationItem
+    public function setIsCurrent(bool $isCurrent): self
     {
         $this->isCurrent = $isCurrent;
+
         return $this;
     }
 }

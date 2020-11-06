@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2014
@@ -23,20 +23,18 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 /**
- * @package pxa_product_manager
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class Image extends AbstractFileReference
 {
     /**
-     * Types
+     * Types.
      */
-    const LISTING_IMAGE = 2;
-    const MAIN_IMAGE = 1;
+    public const LISTING_IMAGE = 2;
+    public const MAIN_IMAGE = 1;
 
     /**
      * @var int
@@ -55,14 +53,15 @@ class Image extends AbstractFileReference
      * @param int $type
      * @return Image
      */
-    public function setType(int $type): Image
+    public function setType(int $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -72,7 +71,7 @@ class Image extends AbstractFileReference
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -82,7 +81,7 @@ class Image extends AbstractFileReference
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */

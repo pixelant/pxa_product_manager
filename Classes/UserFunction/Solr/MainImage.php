@@ -1,18 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction\Solr;
 
 use Pixelant\PxaProductManager\Domain\Model\Image;
 
-/**
- * @package Pixelant\PxaProductManager\UserFunction\Solr
- */
 class MainImage extends AbstractImage
 {
-
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function type(): int
     {

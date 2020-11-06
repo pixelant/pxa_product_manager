@@ -1,29 +1,32 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Image;
 use TYPO3\CMS\Core\Resource\FileReference;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Unit\Domain\Model
- */
 class ImageTest extends UnitTestCase
 {
     protected $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->subject = $this->getMockBuilder(Image::class)->disableOriginalConstructor()->setMethods(['getOriginalResource'])->getMock();
+        $this->subject = $this
+            ->getMockBuilder(Image::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOriginalResource'])
+            ->getMock();
     }
 
     /**
      * @test
      */
-    public function getTitleWithEmptyTitleReturnTitleOfOriginalResource()
+    public function getTitleWithEmptyTitleReturnTitleOfOriginalResource(): void
     {
         $title = 'test';
 
@@ -32,15 +35,15 @@ class ImageTest extends UnitTestCase
         $fileReference = $this->prophesize(FileReference::class);
         $fileReference->getTitle()->shouldBeCalled()->willReturn($title);
 
-        $this->subject->expects($this->once())->method('getOriginalResource')->willReturn($fileReference->reveal());
+        $this->subject->expects(self::once())->method('getOriginalResource')->willReturn($fileReference->reveal());
 
-        $this->assertEquals($title, $this->subject->getTitle());
+        self::assertEquals($title, $this->subject->getTitle());
     }
 
     /**
      * @test
      */
-    public function getDescriptionWithEmptyDescriptionReturnDescriptionOfOriginalResource()
+    public function getDescriptionWithEmptyDescriptionReturnDescriptionOfOriginalResource(): void
     {
         $description = 'testdescription';
 
@@ -49,15 +52,15 @@ class ImageTest extends UnitTestCase
         $fileReference = $this->prophesize(FileReference::class);
         $fileReference->getDescription()->shouldBeCalled()->willReturn($description);
 
-        $this->subject->expects($this->once())->method('getOriginalResource')->willReturn($fileReference->reveal());
+        $this->subject->expects(self::once())->method('getOriginalResource')->willReturn($fileReference->reveal());
 
-        $this->assertEquals($description, $this->subject->getDescription());
+        self::assertEquals($description, $this->subject->getDescription());
     }
 
     /**
      * @test
      */
-    public function getAlternativeWithEmptyAlternativeReturnAlternativeOfOriginalResource()
+    public function getAlternativeWithEmptyAlternativeReturnAlternativeOfOriginalResource(): void
     {
         $value = 'test';
 
@@ -66,8 +69,8 @@ class ImageTest extends UnitTestCase
         $fileReference = $this->prophesize(FileReference::class);
         $fileReference->getAlternative()->shouldBeCalled()->willReturn($value);
 
-        $this->subject->expects($this->once())->method('getOriginalResource')->willReturn($fileReference->reveal());
+        $this->subject->expects(self::once())->method('getOriginalResource')->willReturn($fileReference->reveal());
 
-        $this->assertEquals($value, $this->subject->getAlternative());
+        self::assertEquals($value, $this->subject->getAlternative());
     }
 }

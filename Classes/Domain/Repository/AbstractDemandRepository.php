@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2017
@@ -24,7 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Event\Repository\RepositoryDemand as RepositoryDemandEvent;
@@ -37,8 +38,7 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use UnexpectedValueException;
 
 /**
- * Class AbstractDemandRepository
- * @package Pixelant\PxaProductManager\Domain\Repository
+ * Class AbstractDemandRepository.
  */
 abstract class AbstractDemandRepository extends Repository implements DemandRepositoryInterface
 {
@@ -50,7 +50,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     /**
      * @param Dispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher)
+    public function injectDispatcher(Dispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
@@ -65,7 +65,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Count results for demand
+     * Count results for demand.
      *
      * @param DemandInterface $demand
      * @return int
@@ -76,7 +76,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Prepare query
+     * Prepare query.
      *
      * @param DemandInterface $demand
      * @return QueryInterface
@@ -103,7 +103,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
 
         $this->fireDemandEvent('afterDemandCreateConstraints', $demand, $query);
 
-        if (! empty($constraints)) {
+        if (!empty($constraints)) {
             $query->matching(
                 $this->createConstraintFromConstraintsArray(
                     $query,
@@ -123,14 +123,16 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      * @param DemandInterface $demand
      * @return void
      */
-    protected function setOrderings(QueryInterface $query, DemandInterface $demand)
+    protected function setOrderings(QueryInterface $query, DemandInterface $demand): void
     {
-        if ($demand->getOrderBy()
+        if (
+            $demand->getOrderBy()
             && GeneralUtility::inList($demand->getOrderByAllowed(), $demand->getOrderBy())
         ) {
             switch (strtolower($demand->getOrderDirection())) {
                 case 'desc':
                     $orderDirection = QueryInterface::ORDER_DESCENDING;
+
                     break;
                 default:
                     $orderDirection = QueryInterface::ORDER_ASCENDING;
@@ -141,12 +143,13 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Check if array consist from more than one constraint
+     * Check if array consist from more than one constraint.
      *
      * @param QueryInterface $query
      * @param array $constraints
      * @param string $conjunction
      * @return ConstraintInterface
+     * @throws UnexpectedValueException
      */
     protected function createConstraintFromConstraintsArray(
         QueryInterface $query,
@@ -161,20 +164,25 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
             return array_shift($constraints);
         }
 
-        return $this->isOrConjunction($conjunction)
-            ? $query->logicalOr($constraints)
-            : $query->logicalAnd($constraints);
+        if ($this->isOrConjunction($conjunction)) {
+            $constraintInterface = $query->logicalOr($constraints);
+        } else {
+            $constraintInterface = $query->logicalAnd($constraints);
+        }
+
+        return $constraintInterface;
     }
 
     /**
-     * Set storage if set
+     * Set storage if set.
      *
      * @param QueryInterface $query
      * @param DemandInterface $demand
      */
-    protected function setStorage(QueryInterface $query, DemandInterface $demand)
+    protected function setStorage(QueryInterface $query, DemandInterface $demand): void
     {
-        if ($storage = $demand->getStoragePid()) {
+        $storage = $demand->getStoragePid();
+        if ($storage) {
             $storage = array_map('intval', $storage);
 
             $query->getQuerySettings()->setStoragePageIds($storage);

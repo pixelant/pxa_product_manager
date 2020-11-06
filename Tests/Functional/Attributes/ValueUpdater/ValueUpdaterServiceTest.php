@@ -7,13 +7,11 @@ use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
+use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * @package Pixelant\PxaProductManager\Tests\Functional\Attributes\ValueUpdater
- */
 class ValueUpdaterServiceTest extends FunctionalTestCase
 {
     /**
@@ -22,10 +20,10 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
     protected $subject;
 
     protected $testExtensionsToLoad = [
-        'typo3conf/ext/pxa_product_manager'
+        'typo3conf/ext/pxa_product_manager',
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,30 +34,32 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function updateWillUpdateExistingValue()
+    public function updateWillUpdateExistingValue(): void
     {
-        $product = createEntity(Product::class, ['_localizedUid' => 10]);
-        $attribute = createEntity(Attribute::class, ['_localizedUid' => 101]);
+        $product = TestsUtility::createEntity(Product::class, ['_localizedUid' => 10]);
+        $attribute = TestsUtility::createEntity(Attribute::class, ['_localizedUid' => 101]);
 
         $newValue = 'here new value';
 
         $this->subject->update($product, $attribute, $newValue);
 
-        $attributeValue = GeneralUtility::makeInstance(ObjectManager::class)->get(AttributeValueRepository::class)->findByUid(20);
+        $attributeValue = GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(AttributeValueRepository::class)
+            ->findByUid(20);
 
-        $this->assertEquals($newValue, $attributeValue->getValue());
+        self::assertEquals($newValue, $attributeValue->getValue());
     }
 
     /**
      * @test
      */
-    public function updateWillCreateAttributeValueIfDoesnotExist()
+    public function updateWillCreateAttributeValueIfDoesnotExist(): void
     {
         $productUid = 200;
         $attributeUid = 202;
 
-        $product = createEntity(Product::class, ['_localizedUid' => $productUid]);
-        $attribute = createEntity(Attribute::class, ['_localizedUid' => $attributeUid]);
+        $product = TestsUtility::createEntity(Product::class, ['_localizedUid' => $productUid]);
+        $attribute = TestsUtility::createEntity(Attribute::class, ['_localizedUid' => $attributeUid]);
 
         $newValue = 'new created value';
 
@@ -76,24 +76,30 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
             ->execute()
             ->fetch();
 
-        $this->assertEquals($newValue, $attributeValueRow['value']);
-        $this->assertEquals($productUid, $attributeValueRow['product']);
-        $this->assertEquals($attributeUid, $attributeValueRow['attribute']);
+        self::assertEquals($newValue, $attributeValueRow['value']);
+        self::assertEquals($productUid, $attributeValueRow['product']);
+        self::assertEquals($attributeUid, $attributeValueRow['attribute']);
     }
 
     /**
      * @test
      */
-    public function updateWillCreateAttributeValueWithCommaWrapIfIsSelectBox()
+    public function updateWillCreateAttributeValueWithCommaWrapIfIsSelectBox(): void
     {
         $productUid = 1;
         $attributeUid = 2;
 
-        $product = createEntity(Product::class, ['_localizedUid' => $productUid]);
-        $attribute = createEntity(Attribute::class, ['_localizedUid' => $attributeUid, 'type' => Attribute::ATTRIBUTE_TYPE_DROPDOWN]);
+        $product = TestsUtility::createEntity(Product::class, ['_localizedUid' => $productUid]);
+        $attribute = TestsUtility::createEntity(
+            Attribute::class,
+            [
+                '_localizedUid' => $attributeUid,
+                'type' => Attribute::ATTRIBUTE_TYPE_DROPDOWN,
+            ]
+        );
 
         $newValue = '2';
-        $expectValue = ",$newValue,";
+        $expectValue = ",${newValue},";
 
         $this->subject->update($product, $attribute, $newValue);
 
@@ -108,8 +114,8 @@ class ValueUpdaterServiceTest extends FunctionalTestCase
             ->execute()
             ->fetch();
 
-        $this->assertEquals($expectValue, $attributeValueRow['value'], 'given value: ' . $attributeValueRow['value']);
-        $this->assertEquals($productUid, $attributeValueRow['product']);
-        $this->assertEquals($attributeUid, $attributeValueRow['attribute']);
+        self::assertEquals($expectValue, $attributeValueRow['value'], 'given value: ' . $attributeValueRow['value']);
+        self::assertEquals($productUid, $attributeValueRow['product']);
+        self::assertEquals($attributeUid, $attributeValueRow['attribute']);
     }
 }

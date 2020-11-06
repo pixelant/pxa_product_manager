@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service;
@@ -17,9 +18,6 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Typolink\AbstractTypolinkBuilder;
 
-/**
- * @package Pixelant\PxaProductManager\Service
- */
 class TypolinkBuilderService extends AbstractTypolinkBuilder
 {
     /**
@@ -47,9 +45,8 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
         $this->checkExtbaseMappings();
     }
 
-
     /**
-     * Generates link to product single view
+     * Generates link to product single view.
      *
      * @param array $linkDetails
      * @param string $linkText
@@ -78,7 +75,7 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
     }
 
     /**
-     * Get URL builder
+     * Get URL builder.
      *
      * @return UrlBuilderServiceInterface
      */
@@ -91,34 +88,36 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
     }
 
     /**
-     * Find record
+     * Find record.
      *
      * @param array $linkDetails
      * @return AbstractEntity|null
      */
     protected function findRecord(array $linkDetails): ?AbstractEntity
     {
-        $id = intval($linkDetails['product'] ?? $linkDetails['category']);
+        $id = (int) ($linkDetails['product'] ?? $linkDetails['category']);
 
-        $repository = isset($linkDetails['product'])
-            ? $this->objectManager->get(ProductRepository::class)
-            : $this->objectManager->get(CategoryRepository::class);
+        if (isset($linkDetails['product'])) {
+            $repository = $this->objectManager->get(ProductRepository::class);
+        } else {
+            $repository = $this->objectManager->get(CategoryRepository::class);
+        }
 
         return $repository->findByUid($id);
     }
 
     /**
-     * Try to get product single view pid
+     * Try to get product single view pid.
      *
      * @return int
      */
     protected function getSingleViewPageUid(): int
     {
-        return intval($this->getPidFromSettings() ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
+        return (int) ($this->getPidFromSettings() ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
     }
 
     /**
-     * Get pid from settings
+     * Get pid from settings.
      *
      * @return int
      */
@@ -133,11 +132,11 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
             'Pi1'
         );
 
-        return intval($settings['pids']['singleViewPid'] ?? 0);
+        return (int) ($settings['pids']['singleViewPid'] ?? 0);
     }
 
     /**
-     * Checks if extbase mapping is set for mappings in ext_typoscript_setup.txt
+     * Checks if extbase mapping is set for mappings in ext_typoscript_setup.txt.
      *
      * Workaround to prevent the wrong tablename getting written
      * in cf_extbase_datamapfactory_datamap for identifier
@@ -147,7 +146,7 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
      *
      * Since extbase ts configuration isn't loaded when TypolinkBuilderService
      *
-     * TODO: check progress of https://forge.typo3.org/issues/75399
+     * check progress of https://forge.typo3.org/issues/75399
      *
      * @return void
      */

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction;
@@ -15,9 +16,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 /**
- * Create breadcrumbs array for UserFunc
- *
- * @package Pixelant\PxaProductManager\Navigation
+ * Create breadcrumbs array for UserFunc.
  */
 class Breadcrumbs
 {
@@ -39,7 +38,7 @@ class Breadcrumbs
     protected CategoryRepository $categoryRepository;
 
     /**
-     * Initialize repositories
+     * Initialize repositories.
      *
      * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
@@ -61,7 +60,7 @@ class Breadcrumbs
     protected array $items = [];
 
     /**
-     * Build array of breadcrumbs for TypoScript user function
+     * Build array of breadcrumbs for TypoScript user function.
      *
      * @return array
      */
@@ -76,12 +75,12 @@ class Breadcrumbs
     }
 
     /**
-     * Add product breadcrumbs if exist in arguments
+     * Add product breadcrumbs if exist in arguments.
      */
     protected function addProduct(): void
     {
         $arguments = $this->getArguments();
-        if (! isset($arguments['product'])) {
+        if (!isset($arguments['product'])) {
             return;
         }
 
@@ -89,18 +88,19 @@ class Breadcrumbs
         $uid = (int)$arguments['product'];
 
         /** @var Product $product */
-        if ($product = $this->productRepository->findByUid($uid)) {
+        $product = $this->productRepository->findByUid($uid);
+        if ($product) {
             $this->items[] = [
                 'title' => $product->getNavigationTitle(),
                 'sys_language_uid' => $product->_getProperty('_languageUid'),
                 '_OVERRIDE_HREF' => $this->url($arguments),
-                'ITEM_STATE' => 'CUR'
+                'ITEM_STATE' => 'CUR',
             ];
         }
     }
 
     /**
-     * Add categories breadcrumbs
+     * Add categories breadcrumbs.
      */
     protected function addCategories(): void
     {
@@ -124,7 +124,8 @@ class Breadcrumbs
                     'title' => $category->getNavigationTitle(),
                     'sys_language_uid' => $category->_getProperty('_languageUid'),
                     '_OVERRIDE_HREF' => $this->url($this->renameCategoriesArguments($arguments)),
-                    'ITEM_STATE' => empty($this->items) ? 'CUR' : 'NO', // Could be current only if last
+                    // Could be current only if last
+                    'ITEM_STATE' => empty($this->items) ? 'CUR' : 'NO',
                 ];
 
                 // Remove first argument
@@ -134,7 +135,7 @@ class Breadcrumbs
     }
 
     /**
-     * Rename categories argument for each breadcrumbs item url
+     * Rename categories argument for each breadcrumbs item url.
      *
      * @param array $arguments
      * @return array
@@ -147,15 +148,16 @@ class Breadcrumbs
 
         $i = 0;
         foreach ($arguments as $argument) {
-            $name = UrlBuilderService::CATEGORY_ARGUMENT_START_WITH . $i++;
+            $name = UrlBuilderService::CATEGORY_ARGUMENT_START_WITH . $i;
             $newArguments[$name] = $argument;
+            $i++;
         }
 
         return $newArguments;
     }
 
     /**
-     * Return only categories arguments from arguments
+     * Return only categories arguments from arguments.
      *
      * @param array $arguments
      * @return array
@@ -168,7 +170,7 @@ class Breadcrumbs
     }
 
     /**
-     * Return arguments of product manager
+     * Return arguments of product manager.
      *
      * @return array
      */
@@ -178,7 +180,7 @@ class Breadcrumbs
     }
 
     /**
-     * Check if product manager get parameters exist
+     * Check if product manager get parameters exist.
      *
      * @return bool
      */
@@ -188,7 +190,7 @@ class Breadcrumbs
     }
 
     /**
-     * Generate breadcrumbs URL for given arguments
+     * Generate breadcrumbs URL for given arguments.
      *
      * @param array $arguments
      * @return string

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
@@ -7,16 +8,17 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 /**
- * General mapper for string values
+ * General mapper for string values.
  */
 class GeneralMapper extends AbstractMapper
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function map(Product $product, Attribute $attribute): void
     {
-        if ($attributeValue = $this->searchAttributeValue($product, $attribute)) {
+        $attributeValue = $this->searchAttributeValue($product, $attribute);
+        if ($attributeValue) {
             $attribute->setStringValue($attributeValue->getValue());
         }
     }

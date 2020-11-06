@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Configuration\Site;
@@ -6,13 +7,10 @@ namespace Pixelant\PxaProductManager\Configuration\Site;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Site\Entity\Site;
 
-/**
- * @package Pixelant\PxaProductManager\Configuration\Site
- */
 class SettingsReader
 {
     /**
-     * Prefix of settings
+     * Prefix of settings.
      *
      * @var string
      */
@@ -38,7 +36,7 @@ class SettingsReader
     }
 
     /**
-     * Read value from settings by key
+     * Read value from settings by key.
      *
      * @param string $key
      * @return mixed|null
@@ -53,11 +51,12 @@ class SettingsReader
     }
 
     /**
-     * Init settings
+     * Init settings.
      */
     protected function init(): void
     {
-        if (($site = $this->request->getAttribute('site')) && ($site instanceof Site)) {
+        $site = $this->request->getAttribute('site');
+        if ($site && ($site instanceof Site)) {
             $this->settings = $site->getConfiguration();
         }
     }

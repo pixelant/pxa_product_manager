@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaProductManager\LinkHandler;
 
-/***************************************************************
+/*
  *  Copyright notice
  *
  *  (c) 2017
@@ -23,15 +23,13 @@ namespace Pixelant\PxaProductManager\LinkHandler;
  *  GNU General Public License for more details.
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ */
 
 use TYPO3\CMS\Core\LinkHandling\LinkHandlingInterface;
 
 class LinkHandling implements LinkHandlingInterface
 {
     /**
-     *
-     *
      * @param array $parameters
      * @return string
      */
@@ -49,7 +47,7 @@ class LinkHandling implements LinkHandlingInterface
     }
 
     /**
-     * resolveHandlerData
+     * resolveHandlerData.
      *
      * @param array $data
      * @return array

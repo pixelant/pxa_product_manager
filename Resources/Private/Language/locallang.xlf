@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z"
           product-name="pxa_product_manager">
         <header/>
@@ -171,12 +171,6 @@
             </trans-unit>
             <trans-unit id="fe.please_select">
                 <source>Please select...</source>
-            </trans-unit>
-            <trans-unit id="fe.checkbox.1">
-                <source>Yes</source>
-            </trans-unit>
-            <trans-unit id="fe.checkbox.no">
-                <source>No</source>
             </trans-unit>
 
             <trans-unit id="fe.userEmail.orderForm.subject">

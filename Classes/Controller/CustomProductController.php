@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Controller;
@@ -10,9 +11,6 @@ use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-/**
- * @package Pixelant\PxaProductManager\Controller
- */
 class CustomProductController extends AbstractController
 {
     use CanCreateCollection;
@@ -30,7 +28,7 @@ class CustomProductController extends AbstractController
     /**
      * @param ProductRepository $productRepository
      */
-    public function injectProductRepository(ProductRepository $productRepository)
+    public function injectProductRepository(ProductRepository $productRepository): void
     {
         $this->productRepository = $productRepository;
     }
@@ -38,15 +36,15 @@ class CustomProductController extends AbstractController
     /**
      * @param CategoryRepository $categoryRepository
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository)
+    public function injectCategoryRepository(CategoryRepository $categoryRepository): void
     {
         $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * Selection of products
+     * Selection of products.
      */
-    public function listAction()
+    public function listAction(): void
     {
         switch ($this->settings['customProductsList']['mode']) {
             case 'products':
@@ -54,19 +52,22 @@ class CustomProductController extends AbstractController
                     $this->settings['customProductsList']['products'],
                     $this->productRepository
                 );
+
                 break;
             case 'category':
                 $categories = $this->customCategoriesWithProducts();
+
                 break;
             default:
-                $products = $categories = [];
+                $categories = [];
+                $products = $categories;
         }
 
         $this->view->assignMultiple(compact('products', 'categories'));
     }
 
     /**
-     * Find selected categories for custom view and set products
+     * Find selected categories for custom view and set products.
      *
      * @return Category[]
      */

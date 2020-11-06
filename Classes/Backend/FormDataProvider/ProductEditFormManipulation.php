@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
@@ -10,24 +11,25 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Exception\NotImplementedException;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
 /**
- * Form data provider hook, add TCA on a fly
- *
- * @package Pixelant\PxaProductManager\Backend\FormDataProvider
+ * Form data provider hook, add TCA on a fly.
  */
 class ProductEditFormManipulation implements FormDataProviderInterface
 {
-    use CanTranslateInBackend, CanCreateCollection;
+    use CanTranslateInBackend;
+    use CanCreateCollection;
 
     /**
      * @var DataMapper
@@ -47,7 +49,6 @@ class ProductEditFormManipulation implements FormDataProviderInterface
         $this->flashMessage = $flashMessage ?? GeneralUtility::makeInstance(BackendFlashMessage::class);
     }
 
-
     /**
      * @param array $result
      * @return array
@@ -63,8 +64,11 @@ class ProductEditFormManipulation implements FormDataProviderInterface
 
         if (!$isNew) {
             $this->init();
+            // Fetch product raw data with getRecord instead of using $result['databaseRow']
+            // the "rawRow" is different in databaseRow and can throw errors when mapped
+            $record = BackendUtility::getRecord($result['tableName'], $row['uid']);
+            $product = $this->rawRowToProduct($record);
 
-            $product = $this->rawRowToProduct($row);
             // Save result. This is not cached
             $attributesSets = $product->_getAllAttributesSets();
 
@@ -97,15 +101,15 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Init
+     * Init.
      */
-    protected function init()
+    protected function init(): void
     {
         $this->dataMapper = GeneralUtility::makeInstance(ObjectManager::class)->get(DataMapper::class);
     }
 
     /**
-     * DB row to model
+     * DB row to model.
      *
      * @param array $row
      * @return Product
@@ -116,7 +120,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Configuration provider to given attribute
+     * Configuration provider to given attribute.
      *
      * @param Attribute $attribute
      * @return ProviderInterface
@@ -127,7 +131,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Add attributes configuration to TCA
+     * Add attributes configuration to TCA.
      *
      * @param array $attributesSets
      * @param array &$tca
@@ -181,7 +185,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Generate TCA tabs string with dynamic attributes
+     * Generate TCA tabs string with dynamic attributes.
      *
      * @param array $dynamicAttributesSets
      * @return string
@@ -202,7 +206,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Simulate DB data for attributes
+     * Simulate DB data for attributes.
      *
      * @param Product $product
      * @param array $attributesSets
@@ -214,12 +218,12 @@ class ProductEditFormManipulation implements FormDataProviderInterface
         $attributes = $this->collection($attributesSets)
             ->pluck('attributes')
             ->shiftLevel()
-            ->filter(fn(Attribute $attribute) => $attribute->isFalType() === false)
+            ->filter(fn (Attribute $attribute) => $attribute->isFalType() === false)
             ->toArray();
 
         /** @var AttributeValue[] $values */
         $values = $this->collection($product->getAttributesValuesWithValidAttributes())
-            ->mapWithKeysOfProperty('attribute', fn(Attribute $valueAttribute) => $valueAttribute->getUid())
+            ->mapWithKeysOfProperty('attribute', fn (Attribute $valueAttribute) => $valueAttribute->getUid())
             ->toArray();
 
         /** @var Attribute $attribute */
@@ -230,9 +234,11 @@ class ProductEditFormManipulation implements FormDataProviderInterface
                 /** @var AttributeValue $value */
                 $value = $values[$attribute->getUid()];
 
-                $dbRow[$field] = $attribute->isSelectBoxType()
-                    ? GeneralUtility::trimExplode(',', $value->getValue(), true)
-                    : $value->getValue();
+                if ($attribute->isSelectBoxType()) {
+                    $dbRow[$field] = GeneralUtility::trimExplode(',', $value->getValue(), true);
+                } else {
+                    $dbRow[$field] = $value->getValue();
+                }
             } elseif (!$attribute->isSelectBoxType()) {
                 $dbRow[$field] = $attribute->getDefaultValue();
             }
@@ -240,16 +246,15 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Set difference between translated and original product attribute values
+     * Set difference between translated and original product attribute values.
      *
      * @param array $diffRow
      * @param array $defaultLanguageRow
+     * @throws NotImplementedException
      */
-    protected function setDiffData(array &$diffRow, array &$defaultLanguageRow)
+    protected function setDiffData(array &$diffRow, array &$defaultLanguageRow): void
     {
-        // TODO implementation
-        die(__METHOD__);
-
+        /*
         $attributeUidToValues = [];
 
         if (!empty($diffRow['serialized_attributes_values'])) {
@@ -261,10 +266,15 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             $diffRow[$field] = $attributeValue;
             $defaultLanguageRow[$field] = $attributeValue;
         }
+        */
+        throw new NotImplementedException(
+            'Method ' . __METHOD__ . ' is not implemented yet',
+            1604650670
+        );
     }
 
     /**
-     * Show notification message for user
+     * Show notification message for user.
      *
      * @param string $label
      */

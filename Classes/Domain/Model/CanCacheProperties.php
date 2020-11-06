@@ -1,25 +1,24 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
 /**
  * Use in models that can cache their properties on heave calculations/operations
- * For example categories root line should be fetched only once
- *
- * @package Pixelant\PxaProductManager\Domain\Model
+ * For example categories root line should be fetched only once.
  */
-trait AbleCacheProperties
+trait CanCacheProperties
 {
     /**
-     * Cached properties
+     * Cached properties.
      *
      * @var array
      */
     protected array $cacheProperties = [];
 
     /**
-     * Get cached property or init it and save in cache
+     * Get cached property or init it and save in cache.
      * @param string $key Property or getter method name
      * @param callable $closure Should do the logic of property initialization and return result
      * @return mixed
@@ -31,6 +30,7 @@ trait AbleCacheProperties
         }
 
         $this->cacheProperties[$key] = $closure();
+
         return $this->cacheProperties[$key];
     }
 }

@@ -35,7 +35,6 @@
 	<tx_pxaproductmanager_domain_model_product>
 		<uid>10</uid>
 		<name>Product</name>
-		<attributes_sets>1</attributes_sets>
 		<categories>2</categories>
 	</tx_pxaproductmanager_domain_model_product>
 
