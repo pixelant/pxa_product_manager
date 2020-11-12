@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository as CorePageRepository;
 class PageRepository extends CorePageRepository
 {
     /**
-     * Named constants for "magic numbers" of the field doktype
+     * Named constants for "magic numbers" of the field doktype.
      */
     public const DOKTYPE_PRODUCT_DISPLAY = 9;
 }

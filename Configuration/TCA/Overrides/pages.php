@@ -3,7 +3,6 @@
 defined('TYPO3_MODE') || die;
 
 (function (): void {
-
     $pdDokType = \Pixelant\PxaProductManager\Domain\Repository\PageRepository::DOKTYPE_PRODUCT_DISPLAY;
     // Add new page type as possible select item:
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
@@ -12,11 +11,12 @@ defined('TYPO3_MODE') || die;
         [
             'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:be.product_display_page_type',
             $pdDokType,
-            'EXT:pxa_product_manager/Resources/Public/Icons/ProductListPage.svg'
+            'EXT:pxa_product_manager/Resources/Public/Icons/ProductListPage.svg',
         ],
         '1',
         'after'
     );
+
     \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
         $GLOBALS['TCA']['pages'],
         [
@@ -30,10 +30,9 @@ defined('TYPO3_MODE') || die;
             // add all page standard fields and tabs to your new page type
             'types' => [
                 (string)$pdDokType => [
-                    'showitem' => $GLOBALS['TCA']['pages']['types'][\TYPO3\CMS\Core\Domain\Repository\PageRepository::DOKTYPE_DEFAULT]['showitem']
-                ]
-            ]
+                    'showitem' => $GLOBALS['TCA']['pages']['types'][\TYPO3\CMS\Core\Domain\Repository\PageRepository::DOKTYPE_DEFAULT]['showitem'],
+                ],
+            ],
         ]
     );
-
 })();
