@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg10"
+   sodipodi:docname="apps-pagetree-productdisplay-default.svg"
+   inkscape:version="1.0.1 (0767f8302a, 2020-10-17)">
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     id="namedview12"
+     showgrid="false"
+     inkscape:zoom="54.375"
+     inkscape:cx="10.020648"
+     inkscape:cy="8.3541733"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <path
+     fill="#EFEFEF"
+     d="M2 0v16h12V4l-4-4H2z"
+     id="path2" />
+  <path
+     opacity=".65"
+     fill="#FFF"
+     d="M10 3.98V0l4 4-4-.02z"
+     id="path4" />
+  <path
+     opacity=".2"
+     d="M13 5v5L9 5h4z"
+     id="path6" />
+  <path
+     fill="#999"
+     d="M2 0v16h12V4h-.012l.004-.008L10.008.006 10 .014V0H2zm1 1h6v4h4v10H3V1zm7 .412L12.586 4H10V1.412z"
+     id="path8" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="pm">
+    <g
+       id="g12"
+       transform="matrix(0.01591536,0,0,0.01591526,3.2149961,6.4416865)">
+      <polygon
+         fill="#414751"
+         points="171.098,3.664 15.603,111.046 66.727,188.033 252.356,83.527 "
+         id="polygon2" />
+      <polygon
+         fill="#414751"
+         points="66.727,188.966 5.341,249.654 171.703,377.173 252.356,293.467 "
+         id="polygon4" />
+      <polygon
+         fill="#414751"
+         points="168.21,406.649 62.527,334.889 63.312,401.822 251.642,508.337 437.258,400.204 437.258,340.216 331.1,406.937 253.315,330.309 "
+         id="polygon6" />
+      <polygon
+         fill="#414751"
+         points="332.146,377.727 494.026,255.138 439.906,188.966 254.276,293.467 "
+         id="polygon8" />
+      <polygon
+         fill="#414751"
+         points="355.551,3.664 254.276,83.527 439.906,188.033 508,116.016 "
+         id="polygon10" />
+    </g>
+  </g>
+</svg>

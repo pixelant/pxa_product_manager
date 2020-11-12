@@ -299,6 +299,10 @@
 			<trans-unit id="be.page_is_used_for_categories_content">
 				<source>This page is used as a content source in theses categories</source>
 			</trans-unit>
+
+			<trans-unit id="be.product_display_page_type">
+				<source>Product Display</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
