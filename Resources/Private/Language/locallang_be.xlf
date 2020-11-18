@@ -303,6 +303,24 @@
 			<trans-unit id="be.product_display_page_type">
 				<source>Product Display</source>
 			</trans-unit>
+
+            <!--BE layout for product sample:START-->
+			<trans-unit id="be.layout.product_display_sample">
+				<source>Product Display Sample</source>
+			</trans-unit>
+			<trans-unit id="be.layout.columns.top">
+				<source>Top content (after site header/before breadcrumbs)</source>
+			</trans-unit>
+			<trans-unit id="be.layout.columns.placeholder">
+				<source>Placeholder without colPos</source>
+			</trans-unit>
+			<trans-unit id="be.layout.columns.content">
+				<source>Content</source>
+			</trans-unit>
+			<trans-unit id="be.layout.columns.bottom">
+				<source>Additional content (after main content/before site footer)</source>
+			</trans-unit>
+			<!--BE layout for product sample:END-->
 		</body>
 	</file>
 </xliff>
