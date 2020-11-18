@@ -83,6 +83,9 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_product.product_type">
 			    <source>Product type</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_product.singleview_page">
+			    <source>Single view page</source>
+			</trans-unit>
 			<!--Products TCA:END-->
 
 			<!--Filter TCA:START-->

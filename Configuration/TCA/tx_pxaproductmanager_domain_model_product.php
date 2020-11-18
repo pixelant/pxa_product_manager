@@ -32,7 +32,7 @@ return (function () {
         ],
         'interface' => [
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, product_type, name, sku, price, tax_rate, teaser, description, usp,
-            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug',
+            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, singleview_page',
         ],
         'types' => [
             '1' => [
@@ -45,7 +45,7 @@ return (function () {
             ],
         ],
         'palettes' => [
-            'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, sku, --linebreak--, price, tax_rate, --linebreak--,  teaser, usp, --linebreak--, description'],
+            'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, singleview_page, --linebreak--, sku, --linebreak--, price, tax_rate, --linebreak--,  teaser, usp, --linebreak--, description'],
             'access' => ['showitem' => 'hidden, --linebreak--, starttime, endtime'],
             'paletteAttributes' => ['showitem' => ''],
             'paletteProdyctType' => ['showitem' => 'product_type'],
@@ -517,9 +517,26 @@ return (function () {
                     'items' => [
                         ['', 0],
                     ],
+                    'default' => 0,
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_producttype',
                     'minitems' => 0,
                     'maxitems' => 1,
+                ],
+            ],
+            'singleview_page' => [
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.singleview_page',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'pages',
+                    'foreign_table_where' => 'pages.doktype = 9 ORDER BY pages.sorting',
+                    'treeConfig' => [
+                        'parentField' => 'pid',
+                        'appearance' => [
+                            'expandAll' => true,
+                            'showHeader' => true,
+                        ],
+                    ],
                 ],
             ],
             'accessories' => [
