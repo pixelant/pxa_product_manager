@@ -42,5 +42,4 @@ defined('TYPO3_MODE') || die;
         'Configuration/TSconfig/Page/Mod/WebLayout/BackendLayouts.tsconfig',
         'All BE layouts'
     );
-
 })();
