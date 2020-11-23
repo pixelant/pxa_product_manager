@@ -11,7 +11,7 @@ class ProductRenderController extends AbstractController
      */
     public function initAction(int $productId = null): void
     {
-        if (is_null($productId)) {
+        if ($productId === null) {
             $this->view->assign('view', 'list');
         } else {
             $this->view->assignMultiple(['view' => 'single', 'productId' => $productId]);
