@@ -1,0 +1,17 @@
+[page["doktype"] == 9]
+  lib.contentRender.45 = USER
+  lib.contentRender.45 {
+    stdWrap.if.value = 7501
+    stdWrap.if.isInList = {register:colPos}
+    stdWrap.if.isInList.insertData = 1
+    userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+    extensionName = PxaProductManager
+    pluginName = ProductRender
+    vendorName = Pixelant
+	settings < plugin.tx_pxaproductmanager.settings
+    view < plugin.tx_pxaproductmanager.view
+    features {
+      requireCHashArgumentForActionArguments = 0
+    }
+  }
+[end]

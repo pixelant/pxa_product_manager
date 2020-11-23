@@ -32,6 +32,18 @@ defined('TYPO3_MODE') || die;
         ]
     );
 
+    // Configure plugin render
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'ProductRender',
+        [
+            'ProductRender' => 'init'
+        ],
+        // non-cacheable actions
+        [
+        ]
+    );
+
 
     // Register field control for identifier attribute
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [

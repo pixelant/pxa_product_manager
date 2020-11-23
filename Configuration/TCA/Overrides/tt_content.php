@@ -9,6 +9,12 @@ defined('TYPO3_MODE') || die;
         'Product Manager'
     );
 
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+        'pxa_product_manager',
+        'ProductRender',
+        'Product Render'
+    );
+
     $pluginSignature = 'pxaproductmanager_pi1';
     $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
 

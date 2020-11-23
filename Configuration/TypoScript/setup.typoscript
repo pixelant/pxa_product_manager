@@ -114,3 +114,4 @@ page.includeCSS.product_manager_basic = EXT:pxa_product_manager/Resources/Public
 
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Library/" extensions="typoscript">
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Api/" extensions="typoscript">
+<INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/TempPluginRenderer/" extensions="typoscript">
