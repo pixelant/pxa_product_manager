@@ -44,6 +44,7 @@ mod.web_layout.BackendLayouts.product_display_sample {
         1 {
           name = LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:be.layout.columns.placeholder
           colspan = 4
+          colPos = 2502
         }
         2 {
           name = LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:be.layout.columns.content

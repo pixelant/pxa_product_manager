@@ -3,7 +3,7 @@
     lib.contentRender.45 {
         stdWrap {
             if {
-                value = 7501
+                value = 2502
                 isInList = {register:colPos}
                 isInList {
                     insertData = 1
