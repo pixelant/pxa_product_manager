@@ -529,7 +529,7 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'pages',
-                    'foreign_table_where' => 'pages.doktype = 9 ORDER BY pages.sorting',
+                    // 'foreign_table_where' => 'pages.doktype = 9 ORDER BY pages.sorting',
                     'MM' => 'tx_pxaproductmanager_product_pages_mm',
                     'MM_match_fields' => [
                         'tablenames' => 'pages',

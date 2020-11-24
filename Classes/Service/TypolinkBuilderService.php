@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Service;
 
 use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
-use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -65,9 +63,7 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
             $urlBuilder = $this->getUrlBuilder();
 
             if ($record instanceof Product) {
-                $finalUrl = $urlBuilder->url($pageUid, $record->getFirstCategory(), $record);
-            } elseif ($record instanceof Category) {
-                $finalUrl = $urlBuilder->url($pageUid, $record);
+                $finalUrl = $urlBuilder->url($record);
             }
         }
 
@@ -95,15 +91,15 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
      */
     protected function findRecord(array $linkDetails): ?AbstractEntity
     {
-        $id = (int) ($linkDetails['product'] ?? $linkDetails['category']);
+        $id = (int)($linkDetails['product'] ?? 0);
 
         if (isset($linkDetails['product'])) {
             $repository = $this->objectManager->get(ProductRepository::class);
-        } else {
-            $repository = $this->objectManager->get(CategoryRepository::class);
+
+            return $repository->findByUid($id);
         }
 
-        return $repository->findByUid($id);
+        return null;
     }
 
     /**

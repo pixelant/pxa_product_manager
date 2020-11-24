@@ -32,6 +32,54 @@ defined('TYPO3_MODE') || die;
         ]
     );
 
+    // Configure plugin
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'LazyLoading',
+        [
+            'Api\\LazyLoading' => 'list',
+        ],
+        [
+            'Api\\LazyLoading' => 'list',
+        ]
+    );
+
+    // Configure plugin
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'LazyAvailableFilters',
+        [
+            'Api\\LazyAvailableFilters' => 'list',
+        ],
+        [
+            'Api\\LazyAvailableFilters' => 'list',
+        ]
+    );
+
+    // Configure plugin render
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'ProductShow',
+        [
+            'ProductShow' => 'show'
+        ],
+        // non-cacheable actions
+        [
+        ]
+    );
+
+    // Configure plugin render
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'ProductList',
+        [
+            'LazyProduct' => 'list'
+        ],
+        // non-cacheable actions
+        [
+        ]
+    );
+
     // Configure plugin render
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'Pixelant.pxa_product_manager',

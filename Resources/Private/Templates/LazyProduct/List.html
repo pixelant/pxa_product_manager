@@ -20,7 +20,7 @@
             </f:for>
         </div>
 
-        <lazy-loading :settings="{settingsJson}" endpoint="{f:uri.page(pageType: '201701')}" inline-template>
+        <lazy-loading :settings="{settingsJson}" list-endpoint="{f:uri.page(pageType: '1606131593')}" filter-endpoint="{f:uri.page(pageType: '1606131725')}" inline-template>
             <div class="lazy-loading-wrapper" :class="{loading: loading}">
                 <h4 v-cloak>{{ 'total_results' | trans }} {{ countAllLabel }}</h4>
 

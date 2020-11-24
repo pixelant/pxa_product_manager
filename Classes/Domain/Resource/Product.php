@@ -98,8 +98,6 @@ class Product extends AbstractResource
         $pageUid = (int) ($tsPid ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
 
         return $this->urlBuilderService->url(
-            $pageUid,
-            $this->entity->getFirstCategory(),
             $this->entity
         );
     }

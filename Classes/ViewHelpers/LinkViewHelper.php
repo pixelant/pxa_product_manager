@@ -61,14 +61,10 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
 
         $content = (string)$this->renderChildren();
 
-        if ($page && ($product !== null || $category !== null)) {
+        if ($product !== null) {
             $this->urlBuilder->absolute($absolute);
 
-            if ($excludeCategories || $category === null) {
-                $url = $this->urlBuilder->productUrl($page, $product);
-            } else {
-                $url = $this->urlBuilder->url($page, $category, $product);
-            }
+            $url = $this->urlBuilder->url($product);
 
             if (!empty($target)) {
                 $this->tag->addAttribute('target', $target);

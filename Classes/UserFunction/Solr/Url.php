@@ -57,7 +57,7 @@ class Url
             return '';
         }
 
-        return $this->urlBuilder->url($page, $product->getFirstCategory(), $product);
+        return $this->urlBuilder->url($product);
     }
 
     /**

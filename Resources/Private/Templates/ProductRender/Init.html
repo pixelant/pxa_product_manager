@@ -4,7 +4,7 @@
 
 <f:section name="main">
     <f:link.action action="init">List view</f:link.action>
-    <f:link.action action="init" arguments="{productId: 20}">Single view</f:link.action>
+    <f:link.action action="init" arguments="{productId: 6}">Single view</f:link.action>
 
     <f:if condition="{view}">
         <f:if condition="{view} == list">
@@ -12,7 +12,9 @@
                 <p>{view}</p>
             </f:then>
             <f:else>
-                <p>{view} id:{productId}</p>
+                <p>{view}</p>
+                <p>name: {product.name}</p>
+                <p>singleviewPage: {product.firstSingleviewPage.uid}</p>
             </f:else>
         </f:if>
     </f:if>
