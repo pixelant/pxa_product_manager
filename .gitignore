@@ -21,3 +21,7 @@ package-lock.json
 /Build/testing-docker/.env
 
 .php_cs.cache
+
+# Documentation
+/Documentation-GENERATED-temp
+/tempfile.sh
