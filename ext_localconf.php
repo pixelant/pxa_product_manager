@@ -32,6 +32,66 @@ defined('TYPO3_MODE') || die;
         ]
     );
 
+    // Configure plugin
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'LazyLoading',
+        [
+            'Api\\LazyLoading' => 'list',
+        ],
+        [
+            'Api\\LazyLoading' => 'list',
+        ]
+    );
+
+    // Configure plugin
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'LazyAvailableFilters',
+        [
+            'Api\\LazyAvailableFilters' => 'list',
+        ],
+        [
+            'Api\\LazyAvailableFilters' => 'list',
+        ]
+    );
+
+    // Configure plugin render
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'ProductShow',
+        [
+            'ProductShow' => 'show'
+        ],
+        // non-cacheable actions
+        [
+        ]
+    );
+
+    // Configure plugin render
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'ProductList',
+        [
+            'LazyProduct' => 'list'
+        ],
+        // non-cacheable actions
+        [
+        ]
+    );
+
+    // Configure plugin render
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'ProductRender',
+        [
+            'ProductRender' => 'init'
+        ],
+        // non-cacheable actions
+        [
+        ]
+    );
+
 
     // Register field control for identifier attribute
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
@@ -53,7 +113,9 @@ defined('TYPO3_MODE') || die;
         \Pixelant\PxaProductManager\Hook\FlexFormDataStructureHook::class;
 
     // Register default plugin actions with flexform settings
-    \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Pixelant\PxaProductManager\Configuration\Flexform\Registry::class)->registerDefaultActions();
+    \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        \Pixelant\PxaProductManager\Configuration\Flexform\Registry::class
+    )->registerDefaultActions();
 
     // Register hook to show plugin flexform settings preview
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['pxaproductmanager_pi1']['pxa_product_manager'] =
@@ -68,17 +130,22 @@ defined('TYPO3_MODE') || die;
     // t3://pxappm?product=[product_id]
     // t3://pxappm?category=[category_id]
     $linkType = 'pxappm';
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['linkHandler'][$linkType] = \Pixelant\PxaProductManager\LinkHandler\LinkHandling::class;
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['linkHandler'][$linkType] = \Pixelant\PxaProductManager\LinkHandler\LinkHandlingFormData::class;
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['typolinkBuilder'][$linkType] = \Pixelant\PxaProductManager\Service\TypolinkBuilderService::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['linkHandler'][$linkType]
+        = \Pixelant\PxaProductManager\LinkHandler\LinkHandling::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['linkHandler'][$linkType]
+        = \Pixelant\PxaProductManager\LinkHandler\LinkHandlingFormData::class;
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['typolinkBuilder'][$linkType]
+        = \Pixelant\PxaProductManager\Service\TypolinkBuilderService::class;
 
     // Draw header hook
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/db_layout.php']['drawHeaderHook']['pxa_product_manager'] =
-        \Pixelant\PxaProductManager\Hook\PageHookRelatedCategories::class . '->render';
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/db_layout.php']['drawHeaderHook']['pxa_product_manager']
+        = \Pixelant\PxaProductManager\Hook\PageHookRelatedCategories::class . '->render';
 
     // Register icons
     $icons = [
         'ext-pxa-product-manager-wizard-icon' => 'package.svg',
+        'apps-pagetree-productdisplay-default' => 'T3Icons/apps/apps-pagetree-productdisplay-default.svg',
+        'apps-pagetree-productdisplay-hideinmenu' => 'T3Icons/apps/apps-pagetree-productdisplay-hideinmenu.svg',
     ];
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
         \TYPO3\CMS\Core\Imaging\IconRegistry::class
@@ -98,12 +165,22 @@ defined('TYPO3_MODE') || die;
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] = [];
     }
     if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend'])) {
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend'] = \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class;
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend']
+            = \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class;
     }
     if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'])) {
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'] = ['defaultLifetime' => 0];
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options']
+            = ['defaultLifetime' => 0];
     }
     if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['groups'])) {
-        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['groups'] = ['pages', 'system'];
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['groups']
+            = ['pages', 'system'];
     }
+
+    // Allow backend users to drag and drop the new page type:
+    $pdDokType = \Pixelant\PxaProductManager\Domain\Repository\PageRepository::DOKTYPE_PRODUCT_DISPLAY;
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
+        'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $pdDokType . ')'
+    );
+
 })();

@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Tests\Unit\Controller;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Controller\ProductController;
+use Pixelant\PxaProductManager\Controller\ProductShowController;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
-class ProductControllerTest extends UnitTestCase
+class ProductShowControllerTest extends UnitTestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|ProductController
+     * @var \PHPUnit\Framework\MockObject\MockObject|ProductShowController
      */
     protected $subject;
 
@@ -23,7 +23,7 @@ class ProductControllerTest extends UnitTestCase
     {
         parent::setUp();
         $this->subject = $this
-            ->getMockBuilder(ProductController::class)
+            ->getMockBuilder(ProductShowController::class)
             ->disableOriginalConstructor()
             ->setMethods(null)
             ->getMock();

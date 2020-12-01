@@ -136,8 +136,6 @@ class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvider
         $product = $data['product'];
 
         $data['loc'] = $this->urlBuilder->url(
-            $this->pageId,
-            $product->getFirstCategory(),
             $product
         );
 

@@ -194,6 +194,12 @@ class Product extends AbstractEntity
     protected ObjectStorage $attributesValues;
 
     /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Page>
+     */
+    protected ObjectStorage $singleviewPage;
+
+    /**
      * __construct.
      */
     public function __construct()
@@ -255,6 +261,7 @@ class Product extends AbstractEntity
         $this->falLinks = new ObjectStorage();
         $this->assets = new ObjectStorage();
         $this->attributesValues = new ObjectStorage();
+        $this->singleviewPage = new ObjectStorage();
     }
 
     /**
@@ -916,5 +923,40 @@ class Product extends AbstractEntity
         $this->images->rewind();
 
         return $image;
+    }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getSingleviewPage(): ObjectStorage
+    {
+        return $this->singleviewPage;
+    }
+
+    /**
+     * Return first product singleviewPage.
+     *
+     * @return Page|null
+     */
+    public function getFirstSingleviewPage(): ?Page
+    {
+        if ($this->singleviewPage->count() > 0) {
+            $this->singleviewPage->rewind();
+
+            return $this->singleviewPage->current();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param ObjectStorage $singleviewPage
+     * @return Product
+     */
+    public function setSingleviewPage(ObjectStorage $singleviewPage): self
+    {
+        $this->singleviewPage = $singleviewPage;
+
+        return $this;
     }
 }

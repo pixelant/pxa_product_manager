@@ -29,4 +29,12 @@ defined('TYPO3_MODE') || die;
 
     // Register Datahandler hook in order to save attributes values
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['pxa_product_manager'] = \Pixelant\PxaProductManager\Hook\AttributesValuesUpdate::class;
+
+    // Add new page type:
+    $pdDokType = \Pixelant\PxaProductManager\Domain\Repository\PageRepository::DOKTYPE_PRODUCT_DISPLAY;
+    $GLOBALS['PAGES_TYPES'][$pdDokType] = [
+        'type' => 'web',
+        'allowedTables' => '*',
+    ];
+
 })();

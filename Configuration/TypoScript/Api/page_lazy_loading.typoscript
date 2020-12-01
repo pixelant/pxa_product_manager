@@ -1,6 +1,6 @@
 PAGE_LAZY_LOADING = PAGE
 PAGE_LAZY_LOADING {
-    typeNum = 201701
+    typeNum = 1606131593
 
     config {
         disableAllHeaderCode = 1
@@ -19,21 +19,13 @@ PAGE_LAZY_LOADING {
     10 {
         userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
         extensionName = PxaProductManager
-        pluginName = Pi1
+        pluginName = LazyLoading
         vendorName = Pixelant
-
-        features {
-            requireCHashArgumentForActionArguments = 0
-        }
-
-        switchableControllerActions {
-            Api\LazyLoading {
-                1 = list
-            }
-
-            Api\LazyAvailableFilters {
-                1 = list
-            }
-        }
     }
+}
+
+PAGE_LAZY_FILTERS < PAGE_LAZY_LOADING
+PAGE_LAZY_FILTERS {
+    typeNum = 1606131725
+    10.pluginName = LazyAvailableFilters
 }

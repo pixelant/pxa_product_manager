@@ -14,7 +14,11 @@
         name: "LazyLoading",
 
         props: {
-            endpoint: {
+            listEndpoint: {
+                type: String,
+                required: true,
+            },
+            filterEndpoint: {
                 type: String,
                 required: true,
             },
@@ -33,7 +37,7 @@
 
             return {
                 demand: new Demand(querySettings || this.settings),
-                request: new LazyLoadingRequest(this.endpoint),
+                request: new LazyLoadingRequest(this.listEndpoint, this.filterEndpoint),
                 initialOffSet: parseInt(querySettings ? querySettings.offSet : 0),
 
                 loading: true,

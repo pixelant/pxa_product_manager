@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Service\Url;
 
-use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -19,7 +18,26 @@ class UrlBuilderService implements UrlBuilderServiceInterface
      * Link constants.
      */
     public const CATEGORY_ARGUMENT_START_WITH = 'category_';
-    public const NAMESPACES = 'tx_pxaproductmanager_pi1';
+
+    public const NAMESPACES = [
+        1 => 'tx_pxaproductmanager_productshow',
+        9 => 'tx_pxaproductmanager_productrender',
+    ];
+
+    public const NAMESPACE_PARAMS = [
+        'tx_pxaproductmanager_productshow' => [
+            'controller' => 'ProductShow',
+            'action' => 'show',
+            'pluginName' => 'ProductShow',
+            'extensionName' => 'PxaProductManager',
+        ],
+        'tx_pxaproductmanager_productrender' => [
+            'controller' => 'ProductRender',
+            'action' => 'init',
+            'pluginName' => 'ProductRender',
+            'extensionName' => 'PxaProductManager',
+        ],
+    ];
 
     /**
      * @var TypoScriptFrontendController
@@ -44,31 +62,27 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     }
 
     /**
-     * URL for product and category.
+     * URL for product.
      *
-     * @param int $pageUid
-     * @param Category|null $category
-     * @param Product|null $product
-     * @return string
-     */
-    public function url(int $pageUid, ?Category $category, Product $product = null): string
-    {
-        $params = $this->createParams($category, $product);
-
-        return $this->buildUri($pageUid, $params);
-    }
-
-    /**
-     * URL only with product parameter.
-     *
-     * @param int $pageUid
      * @param Product $product
      * @return string
      */
-    public function productUrl(int $pageUid, Product $product): string
+    public function url(Product $product): string
     {
-        $category = null;
-        $params = $this->createParams($category, $product);
+        $pageUid = 0;
+        $params = [];
+
+        if (!empty($product)) {
+            $dokType = $product->getFirstSingleviewPage()->getDoktype() ?? 1;
+            $namespace = static::NAMESPACES[$dokType];
+            $params = static::NAMESPACE_PARAMS[$namespace];
+            $params['product'] = $product->getUid();
+            $params = GeneralUtility::implodeArrayForUrl(
+                $namespace,
+                $params
+            );
+            $pageUid = $product->getFirstSingleviewPage()->getUid() ?? 0;
+        }
 
         return $this->buildUri($pageUid, $params);
     }
@@ -82,47 +96,19 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     }
 
     /**
-     * Generate parameters for URL.
-     *
-     * @param Category|null $category
-     * @param Product|null $product
-     * @return array
-     */
-    protected function createParams(?Category $category, ?Product $product): array
-    {
-        $params = [
-            'controller' => 'Product',
-            'action' => 'list',
-        ];
-        if ($category !== null) {
-            $params += $this->getCategoriesArguments($category);
-        }
-        if ($product !== null) {
-            $params['product'] = $product->getUid();
-            $params['action'] = 'show';
-        }
-
-        return $params;
-    }
-
-    /**
      * Generate link.
      *
      * @param int $pageUid
-     * @param array $params
+     * @param int $dokType
+     * @param string $additionalParams
      * @return string
      */
-    protected function buildUri(int $pageUid, array $params): string
+    protected function buildUri(int $pageUid, string $additionalParams): string
     {
-        $parameters = GeneralUtility::implodeArrayForUrl(
-            static::NAMESPACES,
-            $params
-        );
-
         $typolink = [
             'parameter' => $pageUid,
             'useCacheHash' => true,
-            'additionalParams' => $parameters,
+            'additionalParams' => $additionalParams,
             'forceAbsoluteUrl' => $this->absolute,
         ];
 
@@ -133,32 +119,5 @@ class UrlBuilderService implements UrlBuilderServiceInterface
         );
 
         return $contentObjectRenderer->typolink_URL($typolink);
-    }
-
-    /**
-     * Get category tree arguments.
-     *
-     * @param Category $category
-     * @return array
-     */
-    protected function getCategoriesArguments(Category $category): array
-    {
-        $arguments = [];
-        $i = 0;
-
-        // If tree is not empty
-        $treeLine = $category->getNavigationRootLine();
-        if ($treeLine) {
-            // Last category doesn't have prefix
-            $lastCategory = array_pop($treeLine);
-
-            foreach ($treeLine as $categoryItem) {
-                $arguments[static::CATEGORY_ARGUMENT_START_WITH . $i] = $categoryItem->getUid();
-                $i++;
-            }
-            $arguments['category'] = $lastCategory->getUid();
-        }
-
-        return $arguments;
     }
 }

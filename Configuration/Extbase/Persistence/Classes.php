@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 return [
+    \Pixelant\PxaProductManager\Domain\Model\Page::class => [
+        'tableName' => 'pages',
+    ],
     \Pixelant\PxaProductManager\Domain\Model\Image::class => [
         'tableName' => 'sys_file_reference',
         'properties' => [

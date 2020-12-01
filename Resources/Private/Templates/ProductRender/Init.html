@@ -1,0 +1,21 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:layout name="Default" />
+
+<f:section name="main">
+    <f:link.action action="init">List view</f:link.action>
+    <f:link.action action="init" arguments="{productId: 6}">Single view</f:link.action>
+
+    <f:if condition="{view}">
+        <f:if condition="{view} == list">
+            <f:then>
+                <p>{view}</p>
+            </f:then>
+            <f:else>
+                <p>{view}</p>
+                <p>name: {product.name}</p>
+                <p>singleviewPage: {product.firstSingleviewPage.uid}</p>
+            </f:else>
+        </f:if>
+    </f:if>
+</f:section>
