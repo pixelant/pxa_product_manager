@@ -13,8 +13,9 @@
     }
   ],
   "require": {
-    "typo3/cms-core": "^10.4.6",
-    "php": "^7.4"
+    "php": "^7.4",
+    "evoweb/extender": "^7.0",
+    "typo3/cms-core": "^10.4.6"
   },
   "require-dev": {
     "codeception/codeception": "^4.1.5",

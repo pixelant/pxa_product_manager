@@ -9,4 +9,5 @@ Developers
   :maxdepth: 2
   :titlesonly:
 
+  ModelExtender/Index
   PhpApi/Index
