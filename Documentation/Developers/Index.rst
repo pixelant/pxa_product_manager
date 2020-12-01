@@ -10,6 +10,13 @@ Target group: **Developers**
 
 Use this section for *providing code examples* or any **useful** information code wise.
 
+**Table of Contents**
+
+.. toctree::
+  :maxdepth: 2
+  :titlesonly:
+
+  ModelExtender/Index
 
 .. _developer-hooks:
 
