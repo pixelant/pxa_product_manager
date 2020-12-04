@@ -108,9 +108,6 @@ defined('TYPO3_MODE') || die;
         ]
     ];
 
-    $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['t3kit']['extender'][\T3k\t3kit\Controller\TestyController::class]['pxa_product_manager'] =
-        'EXT:pxa_product_manager/Classes/Controller/TestController.php';
-
     // Modify data structure of flexform. Hook will dynamically load flexform parts for selected action
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['pxa_product_manager'] =
         \Pixelant\PxaProductManager\Hook\FlexFormDataStructureHook::class;
