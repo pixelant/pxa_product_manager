@@ -15,15 +15,23 @@ class ExtensionUtility extends \TYPO3\CMS\Extbase\Utility\ExtensionUtility
      * @param array $actions
      * @throws \UnexpectedValueException
      */
-    public static function addControllerAction(string $extensionName, string $pluginName, string $controllerClassName, array $actions): void
-    {
+    public static function addControllerAction(
+        string $extensionName,
+        string $pluginName,
+        string $controllerClassName,
+        array $actions
+    ): void {
+        /** @codingStandardsIgnoreStart */
         $config = &$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$pluginName]['controllers'][$controllerClassName];
+        // @codingStandardsIgnoreEnd
 
         foreach ($actions as $action) {
             if (gettype($action) === 'string') {
                 $config['actions'][] = $action;
             } else {
-                throw new \UnexpectedValueException('Actions value must be type of string, but type of ' . gettype($action) . ' is given');
+                throw new \UnexpectedValueException(
+                    'Actions value must be type of string, but type of ' . gettype($action) . ' is given'
+                );
             }
         }
 
