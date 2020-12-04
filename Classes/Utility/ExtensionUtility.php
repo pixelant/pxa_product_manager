@@ -13,6 +13,7 @@ class ExtensionUtility extends \TYPO3\CMS\Extbase\Utility\ExtensionUtility
      * @param string $pluginName
      * @param string $controllerClassName
      * @param array $actions
+     * @throws \UnexpectedValueException
      */
     public static function addControllerAction(string $extensionName, string $pluginName, string $controllerClassName, array $actions): void
     {
