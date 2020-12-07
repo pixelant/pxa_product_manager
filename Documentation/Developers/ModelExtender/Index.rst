@@ -5,6 +5,12 @@
 Model extender
 ================
 
+.. toctree::
+  :maxdepth: 2
+  :titlesonly:
+
+  ControllerExtending/Index
+
 .. _developer-hooks-model-extender-api-overview:
 
 API overview
