@@ -163,6 +163,9 @@ abstract class AbstractController extends ActionController
         if (!empty($settings['categoryConjunction'])) {
             $demand->setCategoryConjunction($settings['categoryConjunction']);
         }
+        $demand->setPageTreeStartingPoint(
+            (int)$settings['pageTreeStartingPoint'] ?? $this->getTypoScriptFrontendController()->id
+        );
 
         return $demand;
     }
@@ -183,5 +186,13 @@ abstract class AbstractController extends ActionController
         }
 
         return $value ?: $default;
+    }
+
+    /**
+     * @return TypoScriptFrontendController
+     */
+    protected function getTypoScriptFrontendController()
+    {
+        return $GLOBALS['TSFE'];
     }
 }

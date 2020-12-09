@@ -4,8 +4,8 @@
 class Demand
 {
     constructor(settings) {
-        this.categories = settings.categories;
         this.storagePid = settings.storagePid;
+        this.pageTreeStartingPoint = settings.pageTreeStartingPoint;
         this.orderBy = settings.orderBy;
         this.orderDirection = settings.orderDirection;
         this.filterConjunction = settings.filterConjunction;

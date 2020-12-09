@@ -10,7 +10,6 @@ use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 
 class ProductsQueryDispatcher
 {
@@ -18,11 +17,6 @@ class ProductsQueryDispatcher
      * @var AttributeValueRepository
      */
     protected AttributeValueRepository $attributeValueRepository;
-
-    /**
-     * @var Typo3DbQueryParser
-     */
-    protected Typo3DbQueryParser $queryParser;
 
     /**
      * @var QueryBuilder
@@ -64,14 +58,6 @@ class ProductsQueryDispatcher
     }
 
     /**
-     * @param Typo3DbQueryParser $typo3DbQueryParser
-     */
-    public function injectTypo3DbQueryParser(Typo3DbQueryParser $typo3DbQueryParser): void
-    {
-        $this->queryParser = $typo3DbQueryParser;
-    }
-
-    /**
      * Prepare extbase query for further processing.
      *
      * @param DemandInterface $demand
@@ -82,9 +68,7 @@ class ProductsQueryDispatcher
         $demand->setLimit(0);
         $demand->setOffSet(0);
 
-        $this->queryBuilder = $this->queryParser->convertQueryToDoctrineQueryBuilder(
-            $this->productRepository->createDemandQuery($demand)
-        );
+        $this->queryBuilder = $this->productRepository->createDemandQueryBuilder($demand);
     }
 
     /**
@@ -146,14 +130,26 @@ class ProductsQueryDispatcher
      */
     protected function queryBuilderToSql(QueryBuilder $queryBuilder): string
     {
-        $queryParameters = [];
+        $sql = $queryBuilder->getSQL();
+        $parameters = $queryBuilder->getParameters();
+        foreach ($parameters as $key => $parameter) {
+            switch ($queryBuilder->getParameterType($key)) {
+                case 1:
+                    $stringParams[':' . $key] = (int)$parameter;
 
-        foreach ($queryBuilder->getParameters() as $key => $value) {
-            // prefix array keys with ':'
-            //all non numeric values have to be quoted
-            $queryParameters[':' . $key] = is_numeric($value) ? $value : '\'' . $value . '\'';
+                    break;
+                case 101:
+                    $stringParams[':' . $key] = implode(',', $parameter);
+
+                    break;
+                default:
+                    $stringParams[':' . $key] = $queryBuilder->quote($parameter);
+
+                    break;
+            }
         }
+        $statement = strtr($sql, $stringParams);
 
-        return strtr($queryBuilder->getSQL(), $queryParameters);
+        return $statement;
     }
 }

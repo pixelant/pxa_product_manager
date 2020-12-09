@@ -85,8 +85,7 @@ class ProductShowControllerTest extends UnitTestCase
             'limit' => '10',
             'offSet' => '100',
             'demand' => ['orderByAllowed' => 'allowedOrderBy'],
-            'categories' => [1, 2, 3],
-            'categoryConjunction' => 'or',
+            'pageTreeStartingPoint' => 1,
         ];
 
         $this->subject->injectDispatcher($this->createMock(Dispatcher::class));
@@ -107,8 +106,7 @@ class ProductShowControllerTest extends UnitTestCase
         self::assertEquals('test', $demand->getOrderBy());
         self::assertEquals('direction', $demand->getOrderDirection());
         self::assertEquals('allowedOrderBy', $demand->getOrderByAllowed());
-        self::assertEquals([1, 2, 3], $demand->getCategories());
-        self::assertEquals('or', $demand->getCategoryConjunction());
+        self::assertEquals(1, $demand->getPageTreeStartingPoint());
     }
 
     /**

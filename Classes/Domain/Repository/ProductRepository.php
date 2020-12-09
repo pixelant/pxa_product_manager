@@ -29,6 +29,8 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Event\Repository\FilterConstraints;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -39,6 +41,263 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 class ProductRepository extends AbstractDemandRepository
 {
     use AbleFindByUidList;
+
+    public function getObjectClassName(): string
+    {
+        return \Pixelant\PxaProductManager\Domain\Model\Product::class;
+    }
+
+    /**
+     * Create Demand QueryBuilder.
+     *
+     * @param DemandInterface $demand
+     * @return QueryBuilder
+     */
+    public function createDemandQueryBuilder(DemandInterface $demand): QueryBuilder
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_product');
+
+        $queryBuilder
+            ->select(
+                'tx_pxaproductmanager_domain_model_product.uid',
+                'tx_pxaproductmanager_domain_model_product.name',
+                'tx_pxaproductmanager_domain_model_product.sku',
+                'tx_pxaproductmanager_domain_model_product.price',
+                'tx_pxaproductmanager_domain_model_product.singleview_page',
+                'tx_pxaproductmanager_domain_model_product.images',
+            )
+            ->from('tx_pxaproductmanager_domain_model_product');
+
+        $this->fireDemandEvent('afterDemandQueryBuilderInitialize', $demand, $queryBuilder);
+
+        $this->addStorageExpression($queryBuilder, $demand);
+
+        $this->addProductPagesExpression($queryBuilder, $demand);
+
+        $this->fireDemandEvent('beforeDemandQueryBuilderFilters', $demand, $queryBuilder);
+
+        $this->addFilters($queryBuilder, $demand);
+
+        $this->fireDemandEvent('afterDemandQueryBuilderFilters', $demand, $queryBuilder);
+
+        $this->addLimit($queryBuilder, $demand);
+
+        $this->addOffset($queryBuilder, $demand);
+
+        $this->addOrderings($queryBuilder, $demand);
+
+        $this->fireDemandEvent('afterDemandQueryBuilder', $demand, $queryBuilder);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Add product pages expression if set.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param DemandInterface $demand
+     */
+    protected function addProductPagesExpression(QueryBuilder $queryBuilder, DemandInterface $demand): void
+    {
+        $pageTreeStartingPoint = $demand->getPageTreeStartingPoint();
+        if ($pageTreeStartingPoint) {
+            $pageRepository = $this->objectManager->get(PageRepository::class);
+            $childPages = $pageRepository->getMenu($pageTreeStartingPoint);
+            $childUids = array_keys($childPages);
+            $singleViewPages = array_merge([$pageTreeStartingPoint], $childUids);
+
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    'uid',
+                    $this->getProductPagesSubQuery($singleViewPages, $queryBuilder)
+                )
+            );
+        }
+    }
+
+    protected function getProductPagesSubQuery($singleViewPageIds, $parentQueryBuilder)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('pages');
+
+        return $queryBuilder->select('tpppm.uid_local')
+            ->from('pages')
+            ->join(
+                'pages',
+                'tx_pxaproductmanager_product_pages_mm',
+                'tpppm',
+                $queryBuilder->expr()->eq(
+                    'tpppm.uid_foreign',
+                    $queryBuilder->quoteIdentifier('pages.uid')
+                ) .
+                ' AND tpppm.tablenames = \'pages\'' .
+                ' AND tpppm.fieldname = \'doktype\''
+            )
+            ->where(
+                $queryBuilder->expr()->in(
+                    'pages.uid',
+                    $parentQueryBuilder->createNamedParameter(
+                        $singleViewPageIds,
+                        \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY
+                    )
+                )
+            )
+            ->groupBy('tpppm.uid_local')
+            ->getSQL();
+    }
+
+    protected function getAttributeSubQuery($attributeId, $values, $parentQueryBuilder, $conjunction)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attribute');
+
+        $expressionBuilder = $queryBuilder->expr();
+
+        if ($conjunction === 'and') {
+            $function = 'andX';
+        } else {
+            $function = 'orX';
+        }
+
+        $conditions = $expressionBuilder->{$function}();
+
+        foreach ($values as $value) {
+            $conditions->add(
+                $expressionBuilder->like(
+                    'tpdmav.value',
+                    $parentQueryBuilder->createNamedParameter(
+                        '%,' . $queryBuilder->escapeLikeWildcards($value) . ',%'
+                    )
+                )
+            );
+        }
+
+        $subQuery = $queryBuilder->select('tpdmav.product')
+            ->from('tx_pxaproductmanager_domain_model_attribute', 'tpdma')
+            ->join(
+                'tpdma',
+                'tx_pxaproductmanager_domain_model_attributevalue',
+                'tpdmav',
+                $queryBuilder->expr()->eq(
+                    'tpdmav.attribute',
+                    $queryBuilder->quoteIdentifier('tpdma.uid')
+                )
+            )
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'tpdma.uid',
+                    $parentQueryBuilder->createNamedParameter($attributeId, \PDO::PARAM_INT)
+                ),
+            )
+            ->andWhere($conditions)
+            ->groupBy('tpppm.uid_local');
+
+        return $subQuery->getSQL();
+    }
+
+    protected function getCategoriesSubQuery($categoryId, $values, $parentQueryBuilder, $conjunction)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('sys_category');
+
+        $expressionBuilder = $queryBuilder->expr();
+
+        if ($conjunction === 'and') {
+            $function = 'andX';
+        } else {
+            $function = 'orX';
+        }
+
+        $conditions = $expressionBuilder->{$function}();
+
+        foreach ($values as $value) {
+            $conditions->add(
+                $expressionBuilder->eq(
+                    'sc.uid',
+                    $parentQueryBuilder->createNamedParameter((int)$value, \PDO::PARAM_INT)
+                )
+            );
+        }
+
+        $subQuery = $queryBuilder->select('scrm.uid_foreign')
+            ->from('sys_category', 'sc')
+            ->join(
+                'sc',
+                'sys_category_record_mm',
+                'scrm',
+                $queryBuilder->expr()->eq(
+                    'scrm.uid_local',
+                    $queryBuilder->quoteIdentifier('sc.uid')
+                )
+            )
+            ->where(
+                $conditions
+            )
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    'scrm.tablenames',
+                    $parentQueryBuilder->createNamedParameter(
+                        'tx_pxaproductmanager_domain_model_product',
+                        \PDO::PARAM_STR
+                    )
+                ),
+                $queryBuilder->expr()->eq(
+                    'scrm.fieldname',
+                    $parentQueryBuilder->createNamedParameter(
+                        'categories',
+                        \PDO::PARAM_STR
+                    )
+                )
+            )
+            ->groupBy('tpppm.uid_local');
+
+        return $subQuery->getSQL();
+    }
+
+    protected function addFilters(QueryBuilder $queryBuilder, DemandInterface $demand): void
+    {
+        $filters = $demand->getFilters();
+        if (empty($filters)) {
+            return;
+        }
+
+        $conjunction = $demand->getFilterConjunction();
+
+        if ($conjunction === 'and') {
+            $function = 'andX';
+        } else {
+            $function = 'orX';
+        }
+
+        $expressionBuilder = $queryBuilder->expr();
+
+        $conditions = $expressionBuilder->{$function}();
+
+        foreach ($filters as $filterData) {
+            $type = (int)$filterData['type'];
+            $conjunction = $filterData['conjunction'];
+            $value = $filterData['value'];
+
+            if ($type === Filter::TYPE_CATEGORIES) {
+                $conditions->add(
+                    $queryBuilder->expr()->in(
+                        'uid',
+                        $this->getCategoriesSubQuery((int)$filterData['attribute'], $value, $queryBuilder, $conjunction)
+                    )
+                );
+            } elseif ($type === Filter::TYPE_ATTRIBUTES) {
+                $conditions->add(
+                    $queryBuilder->expr()->in(
+                        'uid',
+                        $this->getAttributeSubQuery((int)$filterData['attribute'], $value, $queryBuilder, $conjunction)
+                    )
+                );
+            }
+        }
+
+        $queryBuilder->andWhere($conditions);
+    }
 
     /**
      * @param QueryInterface $query

@@ -35,18 +35,11 @@ use Pixelant\PxaProductManager\Domain\Model\Filter;
 class ProductDemand extends AbstractDemand
 {
     /**
-     * Array of uids or objects.
+     * Page Tree Starting Point.
      *
-     * @var array
+     * @var int
      */
-    protected array $categories = [];
-
-    /**
-     * Category conjunction.
-     *
-     * @var string
-     */
-    protected string $categoryConjunction = 'or';
+    protected int $pageTreeStartingPoint = 0;
 
     /**
      * Lazy loading filter conjunction.
@@ -66,44 +59,6 @@ class ProductDemand extends AbstractDemand
      * @var array
      */
     protected array $filters = [];
-
-    /**
-     * @return array
-     */
-    public function getCategories(): array
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @param array $categories
-     * @return ProductDemand
-     */
-    public function setCategories(array $categories): self
-    {
-        $this->categories = $categories;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCategoryConjunction(): string
-    {
-        return $this->categoryConjunction;
-    }
-
-    /**
-     * @param string $categoryConjunction
-     * @return ProductDemand
-     */
-    public function setCategoryConjunction(string $categoryConjunction): self
-    {
-        $this->categoryConjunction = $categoryConjunction;
-
-        return $this;
-    }
 
     /**
      * @return array
@@ -191,5 +146,28 @@ class ProductDemand extends AbstractDemand
         }
 
         return false;
+    }
+
+    /**
+     * Get page Tree Starting Point.
+     *
+     * @return int
+     */
+    public function getPageTreeStartingPoint()
+    {
+        return $this->pageTreeStartingPoint;
+    }
+
+    /**
+     * Set page Tree Starting Point.
+     *
+     * @param int  $pageTreeStartingPoint  Page Tree Starting Point.
+     * @return ProductDemand
+     */
+    public function setPageTreeStartingPoint(int $pageTreeStartingPoint)
+    {
+        $this->pageTreeStartingPoint = $pageTreeStartingPoint;
+
+        return $this;
     }
 }

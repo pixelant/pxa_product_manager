@@ -59,6 +59,9 @@
 			<trans-unit id="flexform.sheet_title">
 				<source>General settings</source>
 			</trans-unit>
+			<trans-unit id="flexform.page_tree_starting_point">
+				<source>Page Tree Starting Point</source>
+			</trans-unit>
 
 			<!--FlexForm:Plugin modes:START-->
 			<trans-unit id="flexform.mode">
@@ -207,7 +210,6 @@
 				<source>Sorting</source>
 			</trans-unit>
 			<!--FlexForm:Sorting:END-->
-
 
 			<!--FlexForm:SingleView:START-->
 			<trans-unit id="flexform.single_view_title">

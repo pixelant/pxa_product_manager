@@ -29,13 +29,12 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Event\Repository\RepositoryDemand as RepositoryDemandEvent;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
-use UnexpectedValueException;
 
 /**
  * Class AbstractDemandRepository.
@@ -57,11 +56,17 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
 
     /**
      * @param DemandInterface $demand
-     * @return QueryResultInterface
+     * @return array
      */
-    public function findDemanded(DemandInterface $demand): QueryResultInterface
+    public function findDemanded(DemandInterface $demand): array
     {
-        return $this->createDemandQuery($demand)->execute();
+        $result = $this->createDemandQueryBuilder($demand)->execute();
+        $dataMapper = $this->objectManager->get(DataMapper::class);
+
+        return $dataMapper->map(
+            $this->getObjectClassName(),
+            $result->fetchAll()
+        );
     }
 
     /**
@@ -72,58 +77,67 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
      */
     public function countByDemand(DemandInterface $demand): int
     {
+        $queryBuilder = $this->createDemandQueryBuilder($demand);
+
         return $this->createDemandQuery($demand)->count();
     }
 
     /**
-     * Prepare query.
+     * Add storage expression if set.
      *
+     * @param QueryBuilder $queryBuilder
      * @param DemandInterface $demand
-     * @return QueryInterface
      */
-    public function createDemandQuery(DemandInterface $demand): QueryInterface
+    protected function addStorageExpression(QueryBuilder $queryBuilder, DemandInterface $demand): void
     {
-        $query = $this->createQuery();
+        $storage = $demand->getStoragePid();
+        if ($storage) {
+            $storage = array_map('intval', $storage);
 
-        $this->fireDemandEvent('afterDemandQueryInitialize', $demand, $query);
-
-        $this->setStorage($query, $demand);
-        $this->setOrderings($query, $demand);
-
-        if ($demand->getLimit()) {
-            $query->setLimit($demand->getLimit());
-        }
-        if ($demand->getOffSet()) {
-            $query->setOffset($demand->getOffSet());
-        }
-
-        $this->fireDemandEvent('beforeDemandCreateConstraints', $demand, $query);
-
-        $constraints = $this->createConstraints($query, $demand);
-
-        $this->fireDemandEvent('afterDemandCreateConstraints', $demand, $query);
-
-        if (!empty($constraints)) {
-            $query->matching(
-                $this->createConstraintFromConstraintsArray(
-                    $query,
-                    $constraints,
-                    'and'
+            $queryBuilder->where(
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter(
+                        $storage,
+                        \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY
+                    )
                 )
             );
         }
-
-        $this->fireDemandEvent('beforeReturnDemandQuery', $demand, $query);
-
-        return $query;
     }
 
     /**
-     * @param QueryInterface $query
+     * Add limit if set.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param DemandInterface $demand
+     */
+    protected function addLimit(QueryBuilder $queryBuilder, DemandInterface $demand): void
+    {
+        if ($demand->getLimit()) {
+            $queryBuilder->setMaxResults($demand->getLimit());
+        }
+    }
+
+    /**
+     * Add offset if set.
+     *
+     * @param QueryBuilder $queryBuilder
+     * @param DemandInterface $demand
+     */
+    protected function addOffset(QueryBuilder $queryBuilder, DemandInterface $demand): void
+    {
+        if ($demand->getOffSet()) {
+            $queryBuilder->setFirstResult($demand->getOffSet());
+        }
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
      * @param DemandInterface $demand
      * @return void
      */
-    protected function setOrderings(QueryInterface $query, DemandInterface $demand): void
+    protected function addOrderings(QueryBuilder $queryBuilder, DemandInterface $demand): void
     {
         if (
             $demand->getOrderBy()
@@ -136,41 +150,11 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
                     break;
                 default:
                     $orderDirection = QueryInterface::ORDER_ASCENDING;
+
+                    break;
             }
-
-            $query->setOrderings([$demand->getOrderBy() => $orderDirection]);
+            $queryBuilder->orderBy($demand->getOrderBy(), $orderDirection);
         }
-    }
-
-    /**
-     * Check if array consist from more than one constraint.
-     *
-     * @param QueryInterface $query
-     * @param array $constraints
-     * @param string $conjunction
-     * @return ConstraintInterface
-     * @throws UnexpectedValueException
-     */
-    protected function createConstraintFromConstraintsArray(
-        QueryInterface $query,
-        array $constraints,
-        string $conjunction
-    ): ConstraintInterface {
-        if (empty($constraints)) {
-            throw new UnexpectedValueException('Constraints array could not be empty', 1501051836879);
-        }
-
-        if (count($constraints) === 1) {
-            return array_shift($constraints);
-        }
-
-        if ($this->isOrConjunction($conjunction)) {
-            $constraintInterface = $query->logicalOr($constraints);
-        } else {
-            $constraintInterface = $query->logicalAnd($constraints);
-        }
-
-        return $constraintInterface;
     }
 
     /**
@@ -190,29 +174,13 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * @param string $conjunction
-     * @return bool
-     */
-    protected function isOrConjunction(string $conjunction): bool
-    {
-        return $conjunction === 'or';
-    }
-
-    /**
      * @param string $name
      * @param DemandInterface $demand
-     * @param QueryInterface $query
+     * @param QueryBuilder $queryBuilder
      */
-    protected function fireDemandEvent(string $name, DemandInterface $demand, QueryInterface $query): void
+    protected function fireDemandEvent(string $name, DemandInterface $demand, QueryBuilder $queryBuilder): void
     {
-        $event = GeneralUtility::makeInstance(RepositoryDemandEvent::class, $demand, $query);
+        $event = GeneralUtility::makeInstance(RepositoryDemandEvent::class, $demand, $queryBuilder);
         $this->dispatcher->dispatch(get_class($this), $name, [$event]);
     }
-
-    /**
-     * @param QueryInterface $query
-     * @param DemandInterface $demand
-     * @return array
-     */
-    abstract protected function createConstraints(QueryInterface $query, DemandInterface $demand): array;
 }
