@@ -70,19 +70,6 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Count results for demand.
-     *
-     * @param DemandInterface $demand
-     * @return int
-     */
-    public function countByDemand(DemandInterface $demand): int
-    {
-        $queryBuilder = $this->createDemandQueryBuilder($demand);
-
-        return $this->createDemandQuery($demand)->count();
-    }
-
-    /**
      * Add storage expression if set.
      *
      * @param QueryBuilder $queryBuilder
