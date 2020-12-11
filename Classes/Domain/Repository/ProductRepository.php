@@ -102,10 +102,8 @@ class ProductRepository extends AbstractDemandRepository
     {
         $pageTreeStartingPoint = $demand->getPageTreeStartingPoint();
         if ($pageTreeStartingPoint) {
-            $pageRepository = $this->objectManager->get(PageRepository::class);
-            $childPages = $pageRepository->getMenu($pageTreeStartingPoint);
-            $childUids = array_keys($childPages);
-            $singleViewPages = array_merge([$pageTreeStartingPoint], $childUids);
+            $pids = $GLOBALS['TSFE']->cObj->getTreeList($pageTreeStartingPoint * -1, 5);
+            $singleViewPages = GeneralUtility::intExplode(',', $pids, true);
 
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in(

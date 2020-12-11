@@ -76,8 +76,11 @@ class LazyProductController extends AbstractController
      */
     protected function lazyListSettings(): array
     {
-        $pageTreeStartingPoint
-            = $this->settings['pageTreeStartingPoint'] ?? $this->getTypoScriptFrontendController()->id;
+        if (!empty($this->settings['pageTreeStartingPoint'])) {
+            $pageTreeStartingPoint = $this->settings['pageTreeStartingPoint'];
+        } else {
+            $pageTreeStartingPoint = $this->getTypoScriptFrontendController()->id;
+        }
 
         return [
             'storagePid' => $this->storagePid(),
