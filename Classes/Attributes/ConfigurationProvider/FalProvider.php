@@ -94,12 +94,7 @@ class FalProvider implements ProviderInterface
                         'columns' => [
                             'pxa_attribute' => [
                                 'config' => [
-                                    'items' => [
-                                        [
-                                            $this->attribute->getName(),
-                                            $this->attribute->getUid(),
-                                        ],
-                                    ],
+                                    'default' => $this->attribute->getUid(),
                                 ],
                             ],
                         ],

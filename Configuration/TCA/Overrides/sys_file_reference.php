@@ -27,7 +27,10 @@ defined('TYPO3_MODE') || die;
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'foreign_table' => 'tx_pxaproductmanager_domain_model_attribute',
-                'items' => [],
+                'items' => [
+                    ['', 0],
+                ],
+                'default' => 0,
             ],
         ],
     ];
