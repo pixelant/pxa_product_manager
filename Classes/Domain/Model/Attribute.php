@@ -390,6 +390,18 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * @return array
+     */
+    public function getTextToArray(): array
+    {
+        if ($this->type === self::ATTRIBUTE_TYPE_TEXT) {
+            return explode(LF, $this->stringValue);
+        }
+
+        return [];
+    }
+
+    /**
      * @param array $value
      * @return Attribute
      */
