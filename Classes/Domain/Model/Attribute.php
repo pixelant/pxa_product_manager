@@ -25,6 +25,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -448,7 +449,7 @@ class Attribute extends AbstractEntity
     public function getTextToArray(): array
     {
         if ($this->type === self::ATTRIBUTE_TYPE_TEXT) {
-            return explode(LF, $this->stringValue);
+            return GeneralUtility::trimExplode(LF, $this->stringValue, true);
         }
 
         return [];
