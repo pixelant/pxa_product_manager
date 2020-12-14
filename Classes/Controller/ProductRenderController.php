@@ -11,6 +11,8 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 class ProductRenderController extends AbstractController
 {
     /**
+     * Init action, forward to proper action.
+     *
      * @param Product|null $product
      */
     public function initAction(Product $product = null): void

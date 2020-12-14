@@ -120,6 +120,8 @@ class Attribute extends AbstractEntity
     protected array $arrayValue = [];
 
     /**
+     * Attribute label
+     *
      * @var string
      */
     protected string $label = '';
@@ -158,6 +160,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the attribute name.
+     *
      * @return string
      */
     public function getName(): string
@@ -166,6 +170,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the attribute name.
+     *
      * @param string $name
      * @return Attribute
      */
@@ -177,6 +183,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the attribute type.
+     *
      * @return int
      */
     public function getType(): int
@@ -185,6 +193,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the attribute type.
+     *
      * @param int $type
      * @return Attribute
      */
@@ -196,6 +206,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns if attribute is required.
+     *
      * @return bool
      */
     public function isRequired(): bool
@@ -204,6 +216,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets if attribute is required.
+     *
      * @param bool $required
      * @return Attribute
      */
@@ -215,6 +229,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns if attribute should be included in attribute listings.
+     *
      * @return bool
      */
     public function isShowInAttributeListing(): bool
@@ -223,6 +239,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets if attribute should be included in attribute listings.
+     *
      * @param bool $showInAttributeListing
      * @return Attribute
      */
@@ -234,6 +252,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns if attribute should be included in compare view.
+     *
      * @return bool
      */
     public function isShowInCompare(): bool
@@ -242,6 +262,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets if attribute should be included in compare view.
+     *
      * @param bool $showInCompare
      * @return Attribute
      */
@@ -253,6 +275,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the attribute identifier.
+     *
      * @return string
      */
     public function getIdentifier(): string
@@ -261,6 +285,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the attribute identifier.
+     *
      * @param string $identifier
      * @return Attribute
      */
@@ -272,6 +298,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the attribute options.
+     *
      * @return ObjectStorage
      */
     public function getOptions(): ObjectStorage
@@ -280,6 +308,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the attribute options.
+     *
      * @param ObjectStorage $options
      * @return Attribute
      */
@@ -291,6 +321,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the attribute label for checked.
+     *
      * @return string
      */
     public function getLabelChecked(): string
@@ -299,6 +331,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the attribute label for checked.
+     *
      * @param string $labelChecked
      * @return Attribute
      */
@@ -310,6 +344,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the attribute label for unchecked.
+     *
      * @return string
      */
     public function getLabelUnchecked(): string
@@ -318,6 +354,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the attribute label for unchecked.
+     *
      * @param string $labelUnchecked
      * @return Attribute
      */
@@ -329,6 +367,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the default valule.
+     *
      * @return string
      */
     public function getDefaultValue(): string
@@ -337,6 +377,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the default valule.
+     *
      * @param string $defaultValue
      * @return Attribute
      */
@@ -348,6 +390,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the valule depending of the attribute type.
+     *
      * @return mixed
      */
     public function getValue()
@@ -363,6 +407,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the string value.
+     *
      * @return string
      */
     public function getStringValue(): string
@@ -371,6 +417,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the string value.
+     *
      * @param string $value
      * @return Attribute
      */
@@ -382,6 +430,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the array value.
+     *
      * @return array
      */
     public function getArrayValue(): array
@@ -390,6 +440,9 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns text as array split by lines.
+     * Only for attribute of type text.
+     *
      * @return array
      */
     public function getTextToArray(): array
@@ -402,6 +455,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the array value.
+     *
      * @param array $value
      * @return Attribute
      */
@@ -413,6 +468,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Returns the attribute label.
+     *
      * @return string
      */
     public function getLabel(): string
@@ -421,6 +478,8 @@ class Attribute extends AbstractEntity
     }
 
     /**
+     * Sets the attribute label.
+     *
      * @param string $label
      * @return Attribute
      */

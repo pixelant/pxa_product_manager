@@ -189,6 +189,8 @@ abstract class AbstractController extends ActionController
     }
 
     /**
+     * Get Typoscript frontend controller.
+     *
      * @return TypoScriptFrontendController
      */
     protected function getTypoScriptFrontendController()

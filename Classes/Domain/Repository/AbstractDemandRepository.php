@@ -55,6 +55,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
+     * Returns the demanded records.
+     *
      * @param DemandInterface $demand
      * @return array
      */
@@ -70,7 +72,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Add storage expression if set.
+     * Add storage to querybuilder expression if set.
      *
      * @param QueryBuilder $queryBuilder
      * @param DemandInterface $demand
@@ -94,7 +96,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Add limit if set.
+     * Add limit to querybuilder if set.
      *
      * @param QueryBuilder $queryBuilder
      * @param DemandInterface $demand
@@ -107,7 +109,7 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Add offset if set.
+     * Add offset to querybuilder if set.
      *
      * @param QueryBuilder $queryBuilder
      * @param DemandInterface $demand
@@ -120,6 +122,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
+     * Add orderings to querybuilder if set.
+     *
      * @param QueryBuilder $queryBuilder
      * @param DemandInterface $demand
      * @return void
@@ -145,22 +149,8 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     }
 
     /**
-     * Set storage if set.
+     * Fire demand event.
      *
-     * @param QueryInterface $query
-     * @param DemandInterface $demand
-     */
-    protected function setStorage(QueryInterface $query, DemandInterface $demand): void
-    {
-        $storage = $demand->getStoragePid();
-        if ($storage) {
-            $storage = array_map('intval', $storage);
-
-            $query->getQuerySettings()->setStoragePageIds($storage);
-        }
-    }
-
-    /**
      * @param string $name
      * @param DemandInterface $demand
      * @param QueryBuilder $queryBuilder

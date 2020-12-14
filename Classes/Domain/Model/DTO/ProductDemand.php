@@ -61,6 +61,8 @@ class ProductDemand extends AbstractDemand
     protected array $filters = [];
 
     /**
+     * Returns the filters.
+     *
      * @return array
      */
     public function getFilters(): array
@@ -69,6 +71,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Sets the filters.
+     *
      * @param array $filters
      * @return ProductDemand
      */
@@ -95,6 +99,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Returns the filter conjunction.
+     *
      * @return string
      */
     public function getFilterConjunction(): string
@@ -103,6 +109,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Sets the filter conjunction.
+     *
      * @param string $filterConjunction
      * @return ProductDemand
      */
@@ -114,6 +122,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Returns if filter options without result should be hidden.
+     *
      * @return bool
      */
     public function isHideFilterOptionsNoResult(): bool
@@ -122,6 +132,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Sets if filter options without result should be hidden.
+     *
      * @param bool $hideFilterOptionsNoResult
      * @return ProductDemand
      */
