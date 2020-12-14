@@ -120,7 +120,7 @@ class Attribute extends AbstractEntity
     protected array $arrayValue = [];
 
     /**
-     * Attribute label
+     * Attribute label.
      *
      * @var string
      */
