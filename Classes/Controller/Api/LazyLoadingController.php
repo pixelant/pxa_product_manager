@@ -44,7 +44,7 @@ class LazyLoadingController extends AbstractBaseLazyLoadingController
     public function listAction(ProductDemand $demand): void
     {
         $demand->setOrderByAllowed($this->settings['demand']['orderByAllowed'] ?? '');
-        $products = $this->productRepository->findDemanded($demand)->toArray();
+        $products = $this->productRepository->findDemanded($demand);
 
         $response = [
             'products' => $this->resourceConverter->covertMany($products),

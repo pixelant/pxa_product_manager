@@ -63,14 +63,9 @@ class LazyProductController extends AbstractController
     {
         // Selected filters
         $filters = $this->findRecordsByList($this->settings['filtering']['filters'], $this->filterRepository);
-        // Selected categories
-        $categories = $this->findRecordsByList(
-            $this->settings['lazyList']['entryCategories'],
-            $this->categoryRepository
-        );
 
         $this->view->assign('filters', $filters);
-        $this->view->assign('settingsJson', json_encode($this->lazyListSettings($categories)));
+        $this->view->assign('settingsJson', json_encode($this->lazyListSettings()));
     }
 
     /**
@@ -79,14 +74,20 @@ class LazyProductController extends AbstractController
      * @param array $categories
      * @return array
      */
-    protected function lazyListSettings(array $categories): array
+    protected function lazyListSettings(): array
     {
+        if (!empty($this->settings['pageTreeStartingPoint'])) {
+            $pageTreeStartingPoint = $this->settings['pageTreeStartingPoint'];
+        } else {
+            $pageTreeStartingPoint = $this->getTypoScriptFrontendController()->id;
+        }
+
         return [
             'storagePid' => $this->storagePid(),
+            'pageTreeStartingPoint' => $pageTreeStartingPoint,
             'limit' => (int)$this->settings['limit'],
             'filterConjunction' => $this->settings['filtering']['conjunction'],
             'hideFilterOptionsNoResult' => (int)$this->settings['filtering']['hideFilterOptionsNoResult'],
-            'categories' => $this->categoryTree->childrenIdsRecursiveAndCache($categories),
         ] + $this->settings['productOrderings'];
     }
 

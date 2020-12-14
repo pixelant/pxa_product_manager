@@ -35,18 +35,11 @@ use Pixelant\PxaProductManager\Domain\Model\Filter;
 class ProductDemand extends AbstractDemand
 {
     /**
-     * Array of uids or objects.
+     * Page Tree Starting Point.
      *
-     * @var array
+     * @var int
      */
-    protected array $categories = [];
-
-    /**
-     * Category conjunction.
-     *
-     * @var string
-     */
-    protected string $categoryConjunction = 'or';
+    protected int $pageTreeStartingPoint = 0;
 
     /**
      * Lazy loading filter conjunction.
@@ -68,44 +61,8 @@ class ProductDemand extends AbstractDemand
     protected array $filters = [];
 
     /**
-     * @return array
-     */
-    public function getCategories(): array
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @param array $categories
-     * @return ProductDemand
-     */
-    public function setCategories(array $categories): self
-    {
-        $this->categories = $categories;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCategoryConjunction(): string
-    {
-        return $this->categoryConjunction;
-    }
-
-    /**
-     * @param string $categoryConjunction
-     * @return ProductDemand
-     */
-    public function setCategoryConjunction(string $categoryConjunction): self
-    {
-        $this->categoryConjunction = $categoryConjunction;
-
-        return $this;
-    }
-
-    /**
+     * Returns the filters.
+     *
      * @return array
      */
     public function getFilters(): array
@@ -114,6 +71,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Sets the filters.
+     *
      * @param array $filters
      * @return ProductDemand
      */
@@ -140,6 +99,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Returns the filter conjunction.
+     *
      * @return string
      */
     public function getFilterConjunction(): string
@@ -148,6 +109,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Sets the filter conjunction.
+     *
      * @param string $filterConjunction
      * @return ProductDemand
      */
@@ -159,6 +122,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Returns if filter options without result should be hidden.
+     *
      * @return bool
      */
     public function isHideFilterOptionsNoResult(): bool
@@ -167,6 +132,8 @@ class ProductDemand extends AbstractDemand
     }
 
     /**
+     * Sets if filter options without result should be hidden.
+     *
      * @param bool $hideFilterOptionsNoResult
      * @return ProductDemand
      */
@@ -191,5 +158,28 @@ class ProductDemand extends AbstractDemand
         }
 
         return false;
+    }
+
+    /**
+     * Get page Tree Starting Point.
+     *
+     * @return int
+     */
+    public function getPageTreeStartingPoint()
+    {
+        return $this->pageTreeStartingPoint;
+    }
+
+    /**
+     * Set page Tree Starting Point.
+     *
+     * @param int  $pageTreeStartingPoint  Page Tree Starting Point.
+     * @return ProductDemand
+     */
+    public function setPageTreeStartingPoint(int $pageTreeStartingPoint)
+    {
+        $this->pageTreeStartingPoint = $pageTreeStartingPoint;
+
+        return $this;
     }
 }

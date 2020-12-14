@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Event\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 
 class RepositoryDemand
 {
@@ -15,18 +15,18 @@ class RepositoryDemand
     protected DemandInterface $demand;
 
     /**
-     * @var QueryInterface
+     * @var QueryBuilder
      */
-    protected QueryInterface $query;
+    protected QueryBuilder $queryBuilder;
 
     /**
      * @param DemandInterface $demand
-     * @param QueryInterface $query
+     * @param QueryBuilder $queryBuilder
      */
-    public function __construct(DemandInterface $demand, QueryInterface $query)
+    public function __construct(DemandInterface $demand, QueryBuilder $queryBuilder)
     {
         $this->demand = $demand;
-        $this->query = $query;
+        $this->queryBuilder = $queryBuilder;
     }
 
     /**
@@ -38,10 +38,10 @@ class RepositoryDemand
     }
 
     /**
-     * @return QueryInterface
+     * @return QueryBuilder
      */
-    public function getQuery(): QueryInterface
+    public function getQueryBuilder(): QueryBuilder
     {
-        return $this->query;
+        return $this->queryBuilder;
     }
 }

@@ -25,18 +25,17 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
-use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
-use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class CategoryRepository extends AbstractDemandRepository
+class CategoryRepository extends Repository
 {
     use AbleFindByUidList;
 
@@ -98,26 +97,5 @@ class CategoryRepository extends AbstractDemandRepository
             ->groupBy('category.uid')
             ->execute()
             ->fetchAll(\PDO::FETCH_COLUMN);
-    }
-
-    /**
-     * @param QueryInterface $query
-     * @param DemandInterface|CategoryDemand $demand
-     * @return array
-     */
-    protected function createConstraints(QueryInterface $query, DemandInterface $demand): array
-    {
-        $constraints = [];
-        if ($demand->isOnlyVisibleInNavigation()) {
-            $constraints['onlyVisibleInNav'] = $query->equals('hiddenInNavigation', false);
-        }
-        if ($demand->getParent()) {
-            $constraints['parent'] = $query->equals('parent', $demand->getParent());
-        }
-        if ($demand->isHideCategoriesWithoutProducts()) {
-            $constraints['hasProducts'] = $query->greaterThan('products.uid', 0);
-        }
-
-        return $constraints;
     }
 }
