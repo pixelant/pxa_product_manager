@@ -2,6 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -33,6 +34,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class AttributeSet extends AbstractEntity
 {
+    use CanCreateCollection;
+
     /**
      * @var string
      */
@@ -130,6 +133,18 @@ class AttributeSet extends AbstractEntity
     public function getAttributes(): ObjectStorage
     {
         return $this->attributes;
+    }
+
+    /**
+     * Return attributes included in listings
+     *
+     * @return array
+     */
+    public function getListingAttributes(): array
+    {
+        return $this->collection($this->getAttributes())
+            ->filter(fn (Attribute $attribute) => $attribute->isShowInAttributeListing())
+            ->toArray();
     }
 
     /**

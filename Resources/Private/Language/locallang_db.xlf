@@ -158,6 +158,9 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_attribute.options">
 				<source>Options</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_attribute.image">
+				<source>Image</source>
+			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_attribute.label_checked">
 				<source>Label for checked box</source>
 			</trans-unit>

@@ -128,6 +128,14 @@ class Attribute extends AbstractEntity
     protected string $label = '';
 
     /**
+     * Image
+     *
+     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected $image;
+
+    /**
      * __construct.
      */
     public function __construct()
@@ -489,6 +497,31 @@ class Attribute extends AbstractEntity
         $this->label = $label;
 
         return $this;
+    }
+
+    /**
+     * Sets the image.
+     *
+     * @api
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
+     * @return Attribute
+     */
+    public function setImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Gets the image.
+     *
+     * @api
+     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 
     /**

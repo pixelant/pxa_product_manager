@@ -45,7 +45,7 @@ return (function () {
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
             'common' => ['showitem' => 'name, --linebreak--, label, --linebreak--, type'],
-            'options' => ['showitem' => 'required, show_in_attribute_listing, show_in_compare, --linebreak--, icon'],
+            'options' => ['showitem' => 'required, show_in_attribute_listing, show_in_compare, --linebreak--, image'],
             'checkbox_values' => ['showitem' => 'label_checked, label_unchecked'],
         ],
         'columns' => [
@@ -329,6 +329,51 @@ return (function () {
                         'useSortable' => true,
                     ],
                 ],
+            ],
+            'image' => [
+                'exclude' => 1,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.image',
+                'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
+                    'image',
+                    [
+                        'appearance' => [
+                            'createNewRelationLinkTitle' =>
+                                'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
+                            'showPossibleLocalizationRecords' => false,
+                            'showRemovedLocalizationRecords' => true,
+                            'showAllLocalizationLink' => false,
+                            'showSynchronizationLink' => false
+                        ],
+                        'foreign_match_fields' => [
+                            'fieldname' => 'image',
+                            'tablenames' => 'tx_pxaproductmanager_domain_model_attribute',
+                            'table_local' => 'sys_file',
+                        ],
+                        'maxitems' => 1,
+                        // @codingStandardsIgnoreStart
+                        'overrideChildTca' => [
+                            'types' => [
+                                '0' => [
+                                    'showitem' => '
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                            --palette--;;filePalette'
+                                ],
+                                \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                                    'showitem' => '
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
+                            --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                            --palette--;;filePalette'
+                                ]
+                            ]
+                        ],
+                        // @codingStandardsIgnoreEnd
+                        'behaviour' => [
+                            'allowLanguageSynchronization' => true
+                        ],
+                    ],
+                    'jpeg,jpg,svg'
+                ),
             ],
         ],
     ];
