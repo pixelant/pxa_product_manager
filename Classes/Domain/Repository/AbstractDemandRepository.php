@@ -30,11 +30,11 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Event\Repository\RepositoryDemand as RepositoryDemandEvent;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class AbstractDemandRepository.
@@ -42,14 +42,14 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 abstract class AbstractDemandRepository extends Repository implements DemandRepositoryInterface
 {
     /**
-     * @var Dispatcher
+     * @var EventDispatcher
      */
-    protected Dispatcher $dispatcher;
+    protected EventDispatcher $dispatcher;
 
     /**
-     * @param Dispatcher $dispatcher
+     * @param EventDispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher): void
+    public function injectDispatcher(EventDispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
@@ -151,13 +151,13 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     /**
      * Fire demand event.
      *
-     * @param string $name
      * @param DemandInterface $demand
      * @param QueryBuilder $queryBuilder
      */
-    protected function fireDemandEvent(string $name, DemandInterface $demand, QueryBuilder $queryBuilder): void
+    protected function fireDemandEvent(DemandInterface $demand, QueryBuilder $queryBuilder): void
     {
-        $event = GeneralUtility::makeInstance(RepositoryDemandEvent::class, $demand, $queryBuilder);
-        $this->dispatcher->dispatch(get_class($this), $name, [$event]);
+        $this->dispatcher->dispatch(
+            GeneralUtility::makeInstance(RepositoryDemandEvent::class, $demand, $queryBuilder)
+        );
     }
 }

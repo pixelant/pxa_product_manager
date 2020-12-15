@@ -70,17 +70,17 @@ class ProductRepository extends AbstractDemandRepository
             )
             ->from('tx_pxaproductmanager_domain_model_product');
 
-        $this->fireDemandEvent('afterDemandQueryBuilderInitialize', $demand, $queryBuilder);
+        $this->fireDemandEvent($demand, $queryBuilder);
 
         $this->addStorageExpression($queryBuilder, $demand);
 
         $this->addProductPagesExpression($queryBuilder, $demand);
 
-        $this->fireDemandEvent('beforeDemandQueryBuilderFilters', $demand, $queryBuilder);
+        $this->fireDemandEvent($demand, $queryBuilder);
 
         $this->addFilters($queryBuilder, $demand);
 
-        $this->fireDemandEvent('afterDemandQueryBuilderFilters', $demand, $queryBuilder);
+        $this->fireDemandEvent($demand, $queryBuilder);
 
         $this->addLimit($queryBuilder, $demand);
 
@@ -88,7 +88,7 @@ class ProductRepository extends AbstractDemandRepository
 
         $this->addOrderings($queryBuilder, $demand);
 
-        $this->fireDemandEvent('afterDemandQueryBuilder', $demand, $queryBuilder);
+        $this->fireDemandEvent($demand, $queryBuilder);
 
         return $queryBuilder;
     }

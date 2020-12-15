@@ -9,13 +9,14 @@ use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
+use Pixelant\PxaProductManager\Event\Model\DTO\DemandEvent;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 abstract class AbstractController extends ActionController
 {
@@ -35,9 +36,9 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * @var Dispatcher
+     * @var EventDispatcher
      */
-    protected Dispatcher $dispatcher;
+    protected EventDispatcher $dispatcher;
 
     /**
      * Override plugin settings with site settings, before resolving view.
@@ -54,9 +55,9 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * @param Dispatcher $dispatcher
+     * @param EventDispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher): void
+    public function injectDispatcher(EventDispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
@@ -109,9 +110,11 @@ abstract class AbstractController extends ActionController
             $demand->setOrderDirection($settings['orderDirection']);
         }
 
-        $this->dispatcher->dispatch(__CLASS__, 'AfterDemandCreationBeforeReturn', [$demand, $settings]);
+        $event = $this->dispatcher->dispatch(
+            GeneralUtility::makeInstance(DemandEvent::class, $demand, $settings)
+        );
 
-        return $demand;
+        return $event->getDemand();
     }
 
     /**

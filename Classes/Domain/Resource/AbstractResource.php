@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Domain\Resource;
 
 use Pixelant\PxaProductManager\Event\Resource\ResourceToArray;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Base resource to array.
@@ -22,9 +22,9 @@ abstract class AbstractResource implements ResourceInterface
     protected AbstractEntity $entity;
 
     /**
-     * @var Dispatcher
+     * @var EventDispatcher
      */
-    protected Dispatcher $dispatcher;
+    protected EventDispatcher $dispatcher;
 
     /**
      * @param AbstractEntity $entity
@@ -35,9 +35,9 @@ abstract class AbstractResource implements ResourceInterface
     }
 
     /**
-     * @param Dispatcher $dispatcher
+     * @param EventDispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher): void
+    public function injectDispatcher(EventDispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
@@ -51,8 +51,9 @@ abstract class AbstractResource implements ResourceInterface
     {
         $result = $this->extractProperties();
 
-        $eventData = GeneralUtility::makeInstance(ResourceToArray::class, $result);
-        $this->dispatcher->dispatch(get_class($this), 'resourceToArray', [$eventData, $this->entity]);
+        $eventData = $this->dispatcher->dispatch(
+            GeneralUtility::makeInstance(ResourceToArray::class, $result)
+        );
 
         return $eventData->getData();
     }
