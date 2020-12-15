@@ -7,12 +7,12 @@ namespace Pixelant\PxaProductManager\Formatter;
 use NumberFormatter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Event\Product\FormatPrice;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 class PriceFormatter implements SingletonInterface
 {
@@ -37,9 +37,9 @@ class PriceFormatter implements SingletonInterface
     protected ServerRequest $request;
 
     /**
-     * @var Dispatcher
+     * @var EventDispatcher
      */
-    protected Dispatcher $dispatcher;
+    protected EventDispatcher $dispatcher;
 
     /**
      * @param ServerRequest $request
@@ -59,9 +59,9 @@ class PriceFormatter implements SingletonInterface
     }
 
     /**
-     * @param Dispatcher $dispatcher
+     * @param EventDispatcher $dispatcher
      */
-    public function injectDispatcher(Dispatcher $dispatcher): void
+    public function injectDispatcher(EventDispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
@@ -90,8 +90,11 @@ class PriceFormatter implements SingletonInterface
 
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
-        $event = GeneralUtility::makeInstance(FormatPrice::class, $formatter, $currency, $locale, $product);
-        $this->dispatcher->dispatch(__CLASS__, 'beforeFormatPrice', [$event]);
+        $event = $this->dispatcher->dispatch(
+            GeneralUtility::makeInstance(FormatPrice::class, $formatter, $currency, $locale, $product)
+        );
+
+        $formatter = $event->getFormatter();
 
         return $formatter->formatCurrency($product->getPrice(), $event->getCurrency());
     }
