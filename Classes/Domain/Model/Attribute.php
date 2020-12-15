@@ -128,7 +128,7 @@ class Attribute extends AbstractEntity
     protected string $label = '';
 
     /**
-     * Image
+     * Image.
      *
      * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy

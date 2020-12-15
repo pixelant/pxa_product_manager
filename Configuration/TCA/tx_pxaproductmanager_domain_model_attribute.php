@@ -337,12 +337,11 @@ return (function () {
                     'image',
                     [
                         'appearance' => [
-                            'createNewRelationLinkTitle' =>
-                                'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
+                            'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
                             'showPossibleLocalizationRecords' => false,
                             'showRemovedLocalizationRecords' => true,
                             'showAllLocalizationLink' => false,
-                            'showSynchronizationLink' => false
+                            'showSynchronizationLink' => false,
                         ],
                         'foreign_match_fields' => [
                             'fieldname' => 'image',
@@ -357,19 +356,19 @@ return (function () {
                                     'showitem' => '
                             --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
                             --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
+                            --palette--;;filePalette',
                                 ],
                                 \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
                                     'showitem' => '
                             --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;pxaProductManagerPalette,
                             --palette--;LLL:EXT:lang/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                            --palette--;;filePalette'
-                                ]
-                            ]
+                            --palette--;;filePalette',
+                                ],
+                            ],
                         ],
                         // @codingStandardsIgnoreEnd
                         'behaviour' => [
-                            'allowLanguageSynchronization' => true
+                            'allowLanguageSynchronization' => true,
                         ],
                     ],
                     'jpeg,jpg,svg'

@@ -136,7 +136,7 @@ class AttributeSet extends AbstractEntity
     }
 
     /**
-     * Return attributes included in listings
+     * Return attributes included in listings.
      *
      * @return array
      */
