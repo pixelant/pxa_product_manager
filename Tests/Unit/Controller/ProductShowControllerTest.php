@@ -10,7 +10,7 @@ use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 
 class ProductShowControllerTest extends UnitTestCase
 {
@@ -88,7 +88,7 @@ class ProductShowControllerTest extends UnitTestCase
             'pageTreeStartingPoint' => 1,
         ];
 
-        $this->subject->injectDispatcher($this->createMock(Dispatcher::class));
+        $this->subject->injectDispatcher($this->createMock(EventDispatcher::class));
         $this->inject(
             $this->subject,
             'settings',
@@ -126,7 +126,7 @@ class ProductShowControllerTest extends UnitTestCase
             'onlyVisibleInNavigation' => true,
         ];
 
-        $this->subject->injectDispatcher($this->createMock(Dispatcher::class));
+        $this->subject->injectDispatcher($this->createMock(EventDispatcher::class));
         $this->inject(
             $this->subject,
             'settings',

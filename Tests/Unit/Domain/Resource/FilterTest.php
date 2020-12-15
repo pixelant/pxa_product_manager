@@ -8,7 +8,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Resource\Filter as FilterResource;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 
 /**
  * This is test for abstract class.
@@ -52,7 +52,7 @@ class FilterTest extends UnitTestCase
             ->setLabel('label');
 
         $subject = new FilterResource($filter);
-        $subject->injectDispatcher($this->createMock(Dispatcher::class));
+        $subject->injectDispatcher($this->createMock(EventDispatcher::class));
 
         self::assertEquals($expect, $subject->toArray());
     }
