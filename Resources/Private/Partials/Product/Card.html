@@ -1,0 +1,22 @@
+<f:comment><!-- Allow both vue product object, conditions decide if template should render vue specific attributes --></f:comment>
+<div class="item">
+    <div class="item-img">
+        <f:if condition="{product}">
+            <f:then>
+                <f:render partial="Product/ListImage"
+                    arguments="{image: product.listImage, title: product.name}" />
+            </f:then>
+            <f:else>
+                <img :src="product.listImage"
+                    :title="product.name"
+                    :alt="product.name"
+                    v-if="product.listImage">
+            </f:else>
+        </f:if>
+    </div>
+    <div class="item-body">
+        <div class="item-title">
+            <span {f:if(condition: '!{product}', then: 'v-text="product.name"')}><f:if condition="{product}">{product.name}</f:if></span>
+        </div>
+    </div>
+</div>
