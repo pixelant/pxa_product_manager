@@ -143,7 +143,7 @@ class AttributeSet extends AbstractEntity
     public function getListingAttributes(): array
     {
         return $this->collection($this->getAttributes())
-            ->filter(fn (Attribute $attribute) => $attribute->isShowInAttributeListing())
+            ->filter(fn (Attribute $attribute) => $attribute->getShowInAttributeListing())
             ->toArray();
     }
 

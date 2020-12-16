@@ -412,7 +412,7 @@ class Product extends AbstractEntity
      * Returns Usp as array split by lines.
      * @return array
      */
-    public function getUspList(): array
+    public function getUspArray(): array
     {
         if (!empty($this->usp)) {
             return GeneralUtility::trimExplode(LF, $this->usp, true);
@@ -800,7 +800,7 @@ class Product extends AbstractEntity
     public function getListingAttributes(): array
     {
         return $this->collection($this->getAttributes())
-            ->filter(fn (Attribute $attribute) => $attribute->isShowInAttributeListing())
+            ->filter(fn (Attribute $attribute) => $attribute->getShowInAttributeListing())
             ->toArray();
     }
 
