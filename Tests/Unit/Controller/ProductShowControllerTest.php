@@ -11,6 +11,7 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
 
 class ProductShowControllerTest extends UnitTestCase
 {
@@ -19,6 +20,16 @@ class ProductShowControllerTest extends UnitTestCase
      */
     protected $subject;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|ListenerProvider
+     */
+    protected $listenerProviderMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|EventDispatcher
+     */
+    protected $eventDispatcherMock;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,6 +37,18 @@ class ProductShowControllerTest extends UnitTestCase
             ->getMockBuilder(ProductShowController::class)
             ->disableOriginalConstructor()
             ->setMethods(null)
+            ->getMock();
+
+        $this->listenerProviderMock = $this
+            ->getMockBuilder(ListenerProvider::class)
+            ->disableOriginalConstructor()
+            ->setMethodsExcept(['getListenersForEvent'])
+            ->getMock();
+
+        $this->eventDispatcherMock = $this
+            ->getMockBuilder(EventDispatcher::class)
+            ->setConstructorArgs([$this->listenerProviderMock])
+            ->setMethodsExcept(['dispatch'])
             ->getMock();
     }
 
@@ -88,7 +111,8 @@ class ProductShowControllerTest extends UnitTestCase
             'pageTreeStartingPoint' => 1,
         ];
 
-        $this->subject->injectDispatcher($this->createMock(EventDispatcher::class));
+        $this->subject->injectDispatcher($this->eventDispatcherMock);
+
         $this->inject(
             $this->subject,
             'settings',
@@ -126,7 +150,7 @@ class ProductShowControllerTest extends UnitTestCase
             'onlyVisibleInNavigation' => true,
         ];
 
-        $this->subject->injectDispatcher($this->createMock(EventDispatcher::class));
+        $this->subject->injectDispatcher($this->eventDispatcherMock);
         $this->inject(
             $this->subject,
             'settings',
