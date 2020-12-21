@@ -42,6 +42,11 @@ class AttributeSet extends AbstractEntity
     protected string $name = '';
 
     /**
+     * @var string
+     */
+    protected string $layout = '';
+
+    /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Attribute>
      */
     protected ObjectStorage $attributes;
@@ -144,6 +149,7 @@ class AttributeSet extends AbstractEntity
     {
         return $this->collection($this->getAttributes())
             ->filter(fn (Attribute $attribute) => $attribute->getShowInAttributeListing())
+            ->filter(fn (Attribute $attribute) => $attribute->getHasNonEmptyValue())
             ->toArray();
     }
 
@@ -173,6 +179,30 @@ class AttributeSet extends AbstractEntity
     public function setCategories(ObjectStorage $categories): self
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of layout.
+     *
+     * @return string
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * Set the value of layout.
+     *
+     * @param string  $layout
+     *
+     * @return AttributeSet
+     */
+    public function setLayout(string $layout): self
+    {
+        $this->layout = $layout;
 
         return $this;
     }

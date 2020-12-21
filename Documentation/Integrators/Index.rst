@@ -14,6 +14,7 @@ Integrators
 
     Installation/Index
     Configuration/Index
+    Customizations/Index
 
 Target group: **Administrators**
 
