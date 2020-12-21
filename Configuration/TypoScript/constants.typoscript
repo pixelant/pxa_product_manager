@@ -83,8 +83,16 @@ plugin.tx_pxaproductmanager {
         attributes {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/060; type=string; label=Date format
             dateFormat = %B %d %Y
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/070; type=string; label=Image max width
-            imageMaxWidth = 265
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/080; type=boolean; label=Divide attributes by sets
+            divideAttributesBySets = 1
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/080; type=string; label=Attribute image max size
+            imageMaxSize = 50
+            types {
+                image {
+                    # cat=plugin.tx_pxaproductmanager/pxaproductmanager_main/070; type=string; label=Image Attribute max width
+                    maxWidth = 265
+                }
+            }
         }
 
         # customsubcategory=pxaproductmanager_emails=Email default settings

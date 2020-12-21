@@ -11,16 +11,7 @@
         <f:for each="{relatedProducts}" as="product">
             <div class="col-md-3">
                 <ppm:link page="{settings.pids.singleViewPid}" category="{product.firstCategory}" product="{product}">
-                    <div class="item">
-                        <f:render partial="Product/ListImage"
-                                  arguments="{image: product.thumbnail, title: product.name}" />
-
-                        <div class="item-body">
-                            <div class="item-title">
-                                <h4>{product.name}</h4>
-                            </div>
-                        </div>
-                    </div>
+                    <f:render partial="Product/Card" arguments="{product: product}" />
                 </ppm:link>
             </div>
         </f:for>

@@ -82,6 +82,7 @@ class Product extends AbstractResource
         $resource = [
             'listImage' => $this->getProcessedImageUri($this->entity->getListImage()),
             'url' => $this->getUrl(),
+            // 'cardView' => $this->entity->getProductType()->getName(),
         ];
 
         return parent::extractProperties($resource + ($additional ?? []));
@@ -136,6 +137,8 @@ class Product extends AbstractResource
             'sku',
             'price',
             'formattedPrice',
+            'teaser',
+            'productType',
         ];
     }
 

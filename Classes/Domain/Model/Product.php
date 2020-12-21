@@ -32,6 +32,7 @@ use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Formatter\PriceFormatter;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -405,6 +406,19 @@ class Product extends AbstractEntity
         $this->usp = $usp;
 
         return $this;
+    }
+
+    /**
+     * Returns Usp as array split by lines.
+     * @return array
+     */
+    public function getUspArray(): array
+    {
+        if (!empty($this->usp)) {
+            return GeneralUtility::trimExplode(LF, $this->usp, true);
+        }
+
+        return [];
     }
 
     /**
@@ -786,7 +800,7 @@ class Product extends AbstractEntity
     public function getListingAttributes(): array
     {
         return $this->collection($this->getAttributes())
-            ->filter(fn (Attribute $attribute) => $attribute->isShowInAttributeListing())
+            ->filter(fn (Attribute $attribute) => $attribute->getShowInAttributeListing())
             ->toArray();
     }
 

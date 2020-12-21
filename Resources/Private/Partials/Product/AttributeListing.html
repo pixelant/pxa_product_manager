@@ -4,29 +4,62 @@
         <f:translate key="fe.attributes"/>
     </h3>
 
-    <table class="table">
-        <f:if condition="{product.sku}">
-            <tr>
-                <th>
-                    <f:translate key="fe.sku"/>
-                </th>
-                <td>
-                    {product.sku}
-                </td>
-            </tr>
-        </f:if>
+    <f:if condition="{settings.attributes.divideAttributesBySets}">
+        <f:then>
+            <f:for each="{product.attributesSets}" as="attributeset">
+                <f:if condition="{attributeset.listingAttributes}">
+                    <h4>{attributeset.name}</h4>
+                    <table class="table">
+                        <f:for each="{attributeset.listingAttributes}" as="attribute">
+                            <f:if condition="{attribute.hasNonEmptyValue}">
+                                <tr>
+                                    <th>
+                                        <f:if condition="{attribute.image}">
+                                            <f:image image="{attribute.image}"
+                                                     maxWidth="{settings.attributes.imageMaxSize}"
+                                                     maxHeight="{settings.attributes.imageMaxSize}"
+                                                     alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
+                                        </f:if>
+                                        <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
+                                    </th>
+                                    <td>
+                                        <f:render partial="Product/Attribute/Type{attribute.type}"
+                                                  arguments="{attribute: attribute}"/>
+                                    </td>
+                                </tr>
+                            </f:if>
+                        </f:for>
+                    </table>
+                </f:if>
+            </f:for>
+        </f:then>
+        <f:else>
+            <table class="table">
+                <f:if condition="{product.sku}">
+                    <tr>
+                        <th>
+                            <f:translate key="fe.sku"/>
+                        </th>
+                        <td>
+                            {product.sku}
+                        </td>
+                    </tr>
+                </f:if>
 
-        <f:for each="{product.listingAttributes}" as="attribute">
-            <tr>
-                <th>
-                    <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
-                </th>
-                <td>
-                    <f:render partial="Product/Attribute/Type{attribute.type}"
-                              arguments="{attribute: attribute}"/>
-                </td>
-            </tr>
-        </f:for>
-    </table>
+                <f:for each="{product.listingAttributes}" as="attribute">
+                    <tr>
+                        <th>
+                            <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
+                        </th>
+                        <td>
+                            <f:render partial="Product/Attribute/Type{attribute.type}"
+                                      arguments="{attribute: attribute}"/>
+                        </td>
+                    </tr>
+                </f:for>
+            </table>
+        </f:else>
+    </f:if>
 </f:if>
+
 </html>

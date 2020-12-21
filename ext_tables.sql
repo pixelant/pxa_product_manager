@@ -55,7 +55,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attribute
     options                   int(11) unsigned     DEFAULT '0' NOT NULL,
     label_checked             varchar(255)         DEFAULT ''  NOT NULL,
     label_unchecked           varchar(255)         DEFAULT ''  NOT NULL,
-    icon                      int(11) unsigned     DEFAULT '0' NOT NULL
+    image                      int(11) unsigned     DEFAULT '0' NOT NULL
 );
 
 #

@@ -63,10 +63,12 @@ class ProductRepository extends AbstractDemandRepository
             ->select(
                 'tx_pxaproductmanager_domain_model_product.uid',
                 'tx_pxaproductmanager_domain_model_product.name',
+                'tx_pxaproductmanager_domain_model_product.teaser',
                 'tx_pxaproductmanager_domain_model_product.sku',
                 'tx_pxaproductmanager_domain_model_product.price',
                 'tx_pxaproductmanager_domain_model_product.singleview_page',
                 'tx_pxaproductmanager_domain_model_product.images',
+                'tx_pxaproductmanager_domain_model_product.product_type',
             )
             ->from('tx_pxaproductmanager_domain_model_product');
 

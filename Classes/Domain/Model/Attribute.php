@@ -25,6 +25,8 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -33,6 +35,8 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  */
 class Attribute extends AbstractEntity
 {
+    use CanCreateCollection;
+
     /**
      * Attributes types.
      */
@@ -125,6 +129,14 @@ class Attribute extends AbstractEntity
      * @var string
      */
     protected string $label = '';
+
+    /**
+     * Image.
+     *
+     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected $image;
 
     /**
      * __construct.
@@ -233,7 +245,7 @@ class Attribute extends AbstractEntity
      *
      * @return bool
      */
-    public function isShowInAttributeListing(): bool
+    public function getShowInAttributeListing(): bool
     {
         return $this->showInAttributeListing;
     }
@@ -256,7 +268,7 @@ class Attribute extends AbstractEntity
      *
      * @return bool
      */
-    public function isShowInCompare(): bool
+    public function getShowInCompare(): bool
     {
         return $this->showInCompare;
     }
@@ -390,7 +402,7 @@ class Attribute extends AbstractEntity
     }
 
     /**
-     * Returns the valule depending of the attribute type.
+     * Returns the value depending of the attribute type.
      *
      * @return mixed
      */
@@ -404,6 +416,28 @@ class Attribute extends AbstractEntity
         }
 
         return $this->stringValue;
+    }
+
+    /**
+     * Returns if attribute have any none empty value.
+     *
+     * @return mixed
+     */
+    public function getHasNonEmptyValue()
+    {
+        if ($this->isFalType()) {
+            return !empty($this->arrayValue);
+        }
+
+        if ($this->isSelectBoxType()) {
+            $options = $this->collection($this->arrayValue)
+                ->filter(fn (Option $option) => $option->getValue() !== '')
+                ->toArray();
+
+            return count($options) > 0;
+        }
+
+        return strlen($this->stringValue) > 0;
     }
 
     /**
@@ -448,7 +482,7 @@ class Attribute extends AbstractEntity
     public function getTextToArray(): array
     {
         if ($this->type === self::ATTRIBUTE_TYPE_TEXT) {
-            return explode(LF, $this->stringValue);
+            return GeneralUtility::trimExplode(LF, $this->stringValue, true);
         }
 
         return [];
@@ -488,6 +522,31 @@ class Attribute extends AbstractEntity
         $this->label = $label;
 
         return $this;
+    }
+
+    /**
+     * Sets the image.
+     *
+     * @api
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
+     * @return Attribute
+     */
+    public function setImage(\TYPO3\CMS\Extbase\Domain\Model\FileReference $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Gets the image.
+     *
+     * @api
+     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 
     /**
