@@ -1,70 +1,99 @@
 .. include:: ../../Includes.txt
 
-
 .. _product-attribute:
 
+.. include:: ../../Includes.txt
+
+.. _product-attribute-sets:
+
+=======================
 Product Attributes
-===================
+=======================
 
-.. toctree::
-  :maxdepth: 2
-  :titlesonly:
+Attributes are used as additions to the standard product information (mainly name, article number, description and images)
+and shown in a table below the general product information. Attributes can for example be available colors, sizes, measurements etc.
 
-  ProductAttributeSets/Index
+Add new attribute
+=======================
 
-Attributes are used as additions to the standard product information (mainly name, article number, description and images) and shown in a table below the general product information.
-Attributes can for example be available colors, sizes, measurements etc.
+To create a new attribute, go to List view and select the product manager (or equivalent) folder in the page tree.
+Either click "Create new record" in top of page or "New record" in the Attributes section.
 
-Adding attributes
------------------
+Fields
+=======================
 
-The attributes are created and can be added to the category through an attribute set, and then displayed on the products connected to that category. This means that products belonging to a particular category, can have their own set of attributes.
+This is a short explanation of the "non standard" TYPO3 fields.
 
-To create an attribute, go to List view and select the product manager (or equivalent) folder in the page tree. In the attribute section, select to create new record. (1.1)
+.. container:: table-row
 
-.. figure:: ../../Images/Editors/1.1.png
+   Field
+        Name
+   Description
+        Name of attribute, displayed in FE if no Label exist.
 
-  Add attributes (1.1)
+.. container:: table-row
 
-Setting attribute type
------------------------
-On the 'General' tab you will find the hide function (1) and here you can also add the name of the attribute (2). The name will be shown as a label in filter view and/or as label for product information.
+   Field
+        Label
+   Description
+        Label of attribute, displayed in FE if set.
 
-After adding the name, we need to select the type of attribute (3). In this manual we will focus on a multi select type (please see descriptions of all types further down).
+.. container:: table-row
 
-If you wish for the attribute to be required, when adding information to the product in backend, check the box (4). This means that the product can not be saved without filling out this attribute field.
+   Field
+        Type
+   Description
+        Used to select of what type the attribute is.
 
-Next you need to decide if the attribute should be shown in the listing in frontend, or if it should only be used for internal specification in the backend (5).
+.. container:: table-row
 
-The last checkbox is to set if the product should be available in product comparison (6). (1.2)
+   Field
+        Required
+   Description
+        Set if the attribute is mandatory when editing products.
 
-.. figure:: ../../Images/Editors/1.2.png
+.. container:: table-row
 
-  Setting attribute type (1.2)
+   Field
+        Show In Attribute Listing
+   Description
+        When enabled attribute will be included in attribute listings in product FE single view.
 
-Further down, you can find the options for the attribute. The identifier field is only used by developers (1). You can create new options at the bottom (2) and each option includes a hide function (4) and the value (5) that will be shown on the frontend as a label. The added options will show in a dropdown selection in the product creation of the backend, and selected option in the product will be displayed on the frontend. In the case that you have language layers on your website, you will see selected language for the option at the top of each option (3).
+.. container:: table-row
 
-Each option has a section on the right hand side, containing functions to handle the option (6). From left to right; Hide/un-hide, Delete, Information, Add new option after this, Move option up in list, Move option down in list, Drag 'n drop item to change order. (1.3)
+   Field
+        Show In Compare
+   Description
+        TBD, will probably be included from a separat addon module.
 
-.. figure:: ../../Images/Editors/1.3.png
+.. container:: table-row
 
-  (1.3)
+   Field
+        Image
+   Description
+        Option to add a image or a svg to be included in attribute listings in product FE single view.
 
+.. container:: table-row
 
-Both the attribute and each opion has an 'Access' tab allowing you to set start and stop dates for publishing. (1.4 + 1.5)
+   Field
+        Identifier
+   Description
+        A unique attribute identifier, primarily used in templates to be able to fetch and render attributes in FE.
 
-.. figure:: ../../Images/Editors/1.4.png
+.. container:: table-row
 
-  (1.4)
+   Field
+        Options
+   Description
+        Options for dropdown and multiselect attribute types.
 
-.. figure:: ../../Images/Editors/1.5.png
-
-  (1.5)
 
 The different types of attributes
-----------------------------------
+==============================================
 
-The different types of attributes apply to how the information is filled out in the product, and then shown in the frontend. The field type options for attributes, indicate how they will be presented in the backend of the product, when creating it.
+The different types of attributes apply to how the information is filled out in the product,
+and then shown in the frontend. The field type options for attributes,
+indicate how they will be presented in the backend of the product, when creating it.
 
 **Here is a list of the different types, and what they are used for:**
 
@@ -75,6 +104,9 @@ The different types of attributes apply to how the information is filled out in 
   - Multiselect - options are added in the attribute, and in the product, multiple options can be selected (type to use for filter function).
   - Checkbox - like the multiselect, this allows you to select more than one option, but the options are shown as checkboxes instead in the backend of the product.
   - Link - adds a link field in the product backend, and a link on the frontend.
-  - Image - an image can be added in the table of product information. Note that this is not the image that will be shown in the box for product listing views.  
+  - Image - an image can be added in the table of product information. Note that this is not the image that will be shown in the box for product listing views.
 
-**NOTE!** If the attribute is to be used as a filter, the attribute needs to use the dropdown or multiselect options and not for example a free text field.
+.. important::
+
+  **NOTE!** If the attribute is to be used as a filter, the attribute needs to use the dropdown or multiselect options
+  and not for example a free text field.
