@@ -347,6 +347,12 @@
 				<source>Additional content (after main content/before site footer)</source>
 			</trans-unit>
 			<!--BE layout for product sample:END-->
+
+			<!--ParentValueFieldWizard:START-->
+			<trans-unit id="formengine.parentvalue.label">
+				<source>Parent value</source>
+			</trans-unit>
+			<!--ParentValueFieldWizard:START-->
 		</body>
 	</file>
 </xliff>

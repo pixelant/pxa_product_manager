@@ -149,6 +149,11 @@ return (function () {
                     'type' => 'input',
                     'size' => 30,
                     'eval' => 'trim,required',
+                    'fieldWizard' => [
+                        'productParentValue' => [
+                            'renderType' => 'productParentValue'
+                        ]
+                    ]
                 ],
             ],
             'slug' => [
