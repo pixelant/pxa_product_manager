@@ -252,11 +252,18 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getNavigationTitleReturnNameIfNoAlternativeTitle(): void
+    public function getUspArrayReturnsArray(): void
     {
-        $this->subject->setName('name');
+        $usp = [
+            'Line 1',
+            'Line 2',
+            'Line 3',
+            'Line 4'
+        ];
 
-        self::assertEquals('name', $this->subject->getNavigationTitle());
+        $this->subject->setUsp(implode(PHP_EOL, $usp));
+
+        self::assertEquals($usp, $this->subject->getUspArray());
     }
 
     /**
