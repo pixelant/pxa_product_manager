@@ -1,101 +1,100 @@
 plugin.tx_solr {
-  index.queue {
-    products = 1
-    products {
-      table = tx_pxaproductmanager_domain_model_product
+    index.queue {
+        products = 1
+        products {
+            table = tx_pxaproductmanager_domain_model_product
+            fields {
+                title = name
+                title_textEdgeNgramS = name
+                title_textNgramS = name
 
-      fields {
-        title = name
-        title_textEdgeNgramS = name
-        title_textNgramS = name
+                navTitle = alternative_title
 
-        navTitle = alternative_title
+                content = SOLR_CONTENT
+                content {
+                    field = description
+                }
 
-        content = SOLR_CONTENT
-        content {
-          field = description
+                abstract = teaser
+
+                description = meta_description
+
+                keywords = SOLR_MULTIVALUE
+                keywords {
+                    field = keywords
+                }
+
+                product_name_textS = TEXT
+                product_name_textS.field = name
+
+                product_sku_textS = TEXT
+                product_sku_textS.field = sku
+
+                url = USER
+                url {
+                    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\Url->generate
+                }
+
+                main_image_stringS = USER
+                main_image_stringS {
+                    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\MainImage->getUrl
+                }
+
+                thumbnail_image_stringS = USER
+                thumbnail_image_stringS {
+                    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\ThumbnailImage->getUrl
+                }
+
+                attribute_values_stringM = SOLR_RELATION
+                attribute_values_stringM {
+                    localField = attribute_values
+                    multiValue = 1
+                }
+
+                /*
+                # Index attribute value example.
+                #attribute_rsk_stringS = USER
+                #attribute_rsk_stringS {
+                #  userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue->value
+                #  identifier = rsk
+                #}
+                */
+
+                category_stringM = SOLR_RELATION
+                category_stringM {
+                    localField = categories
+                    multiValue = 1
+                }
+
+                attachments = 1
+                attachments {
+                    fields = fal_links
+                    fileExtensions = *
+                }
+            }
         }
-
-        abstract = teaser
-
-        description = meta_description
-
-        keywords = SOLR_MULTIVALUE
-        keywords {
-          field = keywords
-        }
-
-        product_name_textS = TEXT
-        product_name_textS.field = name
-
-        product_sku_textS = TEXT
-        product_sku_textS.field = sku
-
-        url = USER
-        url {
-          userFunc = Pixelant\PxaProductManager\UserFunction\Solr\Url->generate
-        }
-
-        main_image_stringS = USER
-        main_image_stringS {
-          userFunc = Pixelant\PxaProductManager\UserFunction\Solr\MainImage->getUrl
-        }
-
-        thumbnail_image_stringS = USER
-        thumbnail_image_stringS {
-          userFunc = Pixelant\PxaProductManager\UserFunction\Solr\ThumbnailImage->getUrl
-        }
-
-        attribute_values_stringM = SOLR_RELATION
-        attribute_values_stringM {
-          localField = attribute_values
-          multiValue = 1
-        }
-
-        /*
-        # Index attribute value example.
-        #attribute_rsk_stringS = USER
-        #attribute_rsk_stringS {
-        #  userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue->value
-        #  identifier = rsk
-        #}
-        */
-
-        category_stringM = SOLR_RELATION
-        category_stringM {
-          localField = categories
-          multiValue = 1
-        }
-
-        attachments = 1
-        attachments {
-          fields = fal_links
-          fileExtensions = *
-        }
-      }
     }
-  }
-  search {
-    faceting.facets.type {
-      renderingInstruction = CASE
-      renderingInstruction {
-        key.field = optionValue
+    search {
+        faceting.facets.type {
+            renderingInstruction = CASE
+            renderingInstruction {
+                key.field = optionValue
 
-        default = TEXT
-        default {
-          value = {LLL:EXT:core/Resources/Private/Language/locallang_common.xlf:pages}
-          insertData = 1
-        }
+                default = TEXT
+                default {
+                    value = {LLL:EXT:core/Resources/Private/Language/locallang_common.xlf:pages}
+                    insertData = 1
+                }
 
-        tx_pxaproductmanager_domain_model_product = TEXT
-        tx_pxaproductmanager_domain_model_product {
-          value = {LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf:fe.solr.type_facet_name}
-          insertData = 1
+                tx_pxaproductmanager_domain_model_product = TEXT
+                tx_pxaproductmanager_domain_model_product {
+                    value = {LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf:fe.solr.type_facet_name}
+                    insertData = 1
+                }
+            }
         }
-      }
+        query {
+            queryFields := addToList(product_sku_textS^80.0, product_name_textS^60.0, title_textEdgeNgramS^50.0, title_textNgramS^50.0, navTitle^1.0)
+        }
     }
-    query {
-      queryFields := addToList(product_sku_textS^80.0, product_name_textS^60.0, title_textEdgeNgramS^50.0, title_textNgramS^50.0, navTitle^1.0)
-    }
-  }
 }
