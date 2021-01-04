@@ -242,30 +242,29 @@ return (function () {
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.related_products',
                 'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
+                    'type' => 'group',
+                    'internal_type' => 'db',
+                    'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
-                        ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    'suggestOptions' => [
+                        'tx_pxaproductmanager_domain_model_product' =>
+                            \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
+                            ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
+                            ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    ],
                     'MM' => 'tx_pxaproductmanager_product_product_mm',
                     'MM_match_fields' => [
                         'tablenames' => 'tx_pxaproductmanager_domain_model_product',
                         'fieldname' => 'related_products',
                     ],
+                    'MM_opposite_field' => 'related_products',
+                    'MM_oppositeUsage' => [
+                        'tx_pxaproductmanager_domain_model_product' => ['accessories'],
+                    ],
                     'size' => 10,
-                    'autoSizeMax' => 30,
+                    'minitems' => 0,
                     'maxitems' => 9999,
                     'multiple' => 0,
-                    'enableMultiSelectFilterTextfield' => true,
-                    'fieldControl' => [
-                        'editPopup' => [
-                            'disabled' => false,
-                        ],
-                        'addRecord' => [
-                            'disabled' => false,
-                        ],
-                    ],
                 ],
             ],
             'images' => [
@@ -546,30 +545,29 @@ return (function () {
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.accessories',
                 'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
+                    'type' => 'group',
+                    'internal_type' => 'db',
+                    'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAccessoriesForeignTableWherePid() .
-                        ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    'suggestOptions' => [
+                        'tx_pxaproductmanager_domain_model_product' =>
+                            \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
+                            ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
+                            ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    ],
                     'MM' => 'tx_pxaproductmanager_product_product_mm',
                     'MM_match_fields' => [
                         'tablenames' => 'tx_pxaproductmanager_domain_model_product',
                         'fieldname' => 'accessories',
                     ],
+                    'MM_opposite_field' => 'accessories',
+                    'MM_oppositeUsage' => [
+                        'tx_pxaproductmanager_domain_model_product' => ['accessories'],
+                    ],
                     'size' => 10,
-                    'autoSizeMax' => 30,
+                    'minitems' => 0,
                     'maxitems' => 9999,
                     'multiple' => 0,
-                    'enableMultiSelectFilterTextfield' => true,
-                    'fieldControl' => [
-                        'editPopup' => [
-                            'disabled' => false,
-                        ],
-                        'addRecord' => [
-                            'disabled' => false,
-                        ],
-                    ],
                 ],
             ],
             'crdate' => [
