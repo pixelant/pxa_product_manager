@@ -32,13 +32,13 @@ return (function () {
         ],
         'interface' => [
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, product_type, name, sku, price, tax_rate, teaser, description, usp,
-            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, singleview_page',
+            parent, related_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, singleview_page',
         ],
         'types' => [
             '1' => [
                 'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
---div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, related_products, sub_products, accessories,
+--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, parent, related_products, accessories,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.links, fal_links, links,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.metadata, alternative_title, meta_description, keywords,
 --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, --palette--;;access',
@@ -383,32 +383,25 @@ return (function () {
                     ],
                 ],
             ],
-            'sub_products' => [
+            'parent' => [
                 'exclude' => false,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.sub_products',
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.parent',
                 'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
+                    'type' => 'group',
+                    'internal_type' => 'db',
+                    'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getSubProductsForeignTableWherePid() .
-                        ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
-                    'MM' => 'tx_pxaproductmanager_product_product_mm',
-                    'MM_match_fields' => [
-                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
-                        'fieldname' => 'sub_products',
-                    ],
-                    'size' => 10,
-                    'autoSizeMax' => 30,
-                    'maxitems' => 9999,
-                    'multiple' => 0,
-                    'enableMultiSelectFilterTextfield' => true,
+                    'size' => 1,
+                    'maxitems' => 1,
+                    'minitems' => 0,
+                    'default' => 0,
+                    'eval' => 'int',
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false,
+                            'disabled' => true,
                         ],
                         'addRecord' => [
-                            'disabled' => false,
+                            'disabled' => true,
                         ],
                     ],
                 ],

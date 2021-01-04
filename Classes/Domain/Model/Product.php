@@ -138,15 +138,21 @@ class Product extends AbstractEntity
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
+     * @var Product
      */
-    protected ObjectStorage $relatedProducts;
+    protected Product $parent;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
-    protected ObjectStorage $subProducts;
+    protected ObjectStorage $children;
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
+     */
+    protected ObjectStorage $relatedProducts;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -571,6 +577,38 @@ class Product extends AbstractEntity
     }
 
     /**
+     * @return Product
+     */
+    public function getParent(): Product
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param Product $parent
+     */
+    public function setParent(Product $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getChildren(): ObjectStorage
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param ObjectStorage $children
+     */
+    public function setChildren(ObjectStorage $children)
+    {
+        $this->children = $children;
+    }
+
+    /**
      * @return ObjectStorage
      */
     public function getRelatedProducts(): ObjectStorage
@@ -585,25 +623,6 @@ class Product extends AbstractEntity
     public function setRelatedProducts(ObjectStorage $relatedProducts): self
     {
         $this->relatedProducts = $relatedProducts;
-
-        return $this;
-    }
-
-    /**
-     * @return ObjectStorage
-     */
-    public function getSubProducts(): ObjectStorage
-    {
-        return $this->subProducts;
-    }
-
-    /**
-     * @param ObjectStorage $subProducts
-     * @return Product
-     */
-    public function setSubProducts(ObjectStorage $subProducts): self
-    {
-        $this->subProducts = $subProducts;
 
         return $this;
     }
