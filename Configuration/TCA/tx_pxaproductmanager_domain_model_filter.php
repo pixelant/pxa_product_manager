@@ -105,13 +105,13 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => [
-                        ['Categories', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_CATEGORIES],
                         ['Attribute', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_ATTRIBUTES],
+                        ['Categories', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_CATEGORIES],
                         ['Attribute min-max (if applicable, require only numeric attribute values)', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_ATTRIBUTES_MINMAX],
                     ],
                     'size' => 1,
+                    'minitems' => 1,
                     'maxitems' => 1,
-                    'eval' => '',
                 ],
             ],
             'name' => [
@@ -151,6 +151,7 @@ return (function () {
                     'size' => 20,
                     'minitems' => 1,
                     'maxitems' => 1,
+                    'default' => 0,
                 ],
             ],
             'attribute' => [

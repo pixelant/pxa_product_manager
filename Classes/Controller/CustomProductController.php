@@ -7,9 +7,8 @@ namespace Pixelant\PxaProductManager\Controller;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
-use Pixelant\PxaProductManager\Domain\Repository\CategoryRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use Pixelant\PxaProductManager\Service\Resource\ResourceConverter;
 
 class CustomProductController extends AbstractController
 {
@@ -21,9 +20,9 @@ class CustomProductController extends AbstractController
     protected ProductRepository $productRepository;
 
     /**
-     * @var CategoryRepository
+     * @var ResourceConverter
      */
-    protected $categoryRepository;
+    protected ResourceConverter $resourceConverter;
 
     /**
      * @param ProductRepository $productRepository
@@ -34,11 +33,11 @@ class CustomProductController extends AbstractController
     }
 
     /**
-     * @param CategoryRepository $categoryRepository
+     * @param ResourceConverter $resourceConverter
      */
-    public function injectCategoryRepository(CategoryRepository $categoryRepository): void
+    public function injectResourceConverter(ResourceConverter $resourceConverter): void
     {
-        $this->categoryRepository = $categoryRepository;
+        $this->resourceConverter = $resourceConverter;
     }
 
     /**
@@ -54,46 +53,25 @@ class CustomProductController extends AbstractController
                 );
 
                 break;
-            case 'category':
-                $categories = $this->customCategoriesWithProducts();
+            default:
+                $products = $this->getProductsByDemand();
 
                 break;
-            default:
-                $categories = [];
-                $products = $categories;
         }
 
-        $this->view->assignMultiple(compact('products', 'categories'));
+        $this->view->assignMultiple(compact('products'));
     }
 
     /**
-     * Find selected categories for custom view and set products.
+     * Get products based on demand.
      *
      * @return Category[]
      */
-    protected function customCategoriesWithProducts(): array
+    protected function getProductsByDemand(): array
     {
-        $categories = $this->findRecordsByList(
-            $this->settings['customProductsList']['categories'],
-            $this->categoryRepository
-        );
-
         /** @var ProductDemand $demand */
         $demand = $this->createProductsDemand($this->settings);
 
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $demand->setCategories([$category]);
-
-            $productsStorage = new ObjectStorage();
-            foreach ($this->productRepository->findDemanded($demand) as $product) {
-                $productsStorage->attach($product);
-            }
-
-            // Set category products, but from demand result
-            $category->setProducts($productsStorage);
-        }
-
-        return $categories;
+        return $this->productRepository->findDemanded($demand);
     }
 }
