@@ -11,6 +11,30 @@
 			<trans-unit id="be.extension.description">
 				<source>Product management system</source>
 			</trans-unit>
+			<trans-unit id="be.extension.customproductlist.name">
+				<source>Product Manager Custom Product List Plugin</source>
+			</trans-unit>
+			<trans-unit id="be.extension.customproductlist.description">
+				<source>Plugin to display a list of manually selected products or based on product pages.</source>
+			</trans-unit>
+			<trans-unit id="be.extension.productlist.name">
+				<source>Product Manager Lazy List Plugin</source>
+			</trans-unit>
+			<trans-unit id="be.extension.productlist.description">
+				<source>Plugin to display a list of products with filters.</source>
+			</trans-unit>
+			<trans-unit id="be.extension.productrender.name">
+				<source>Product Manager Render Plugin (list/show)</source>
+			</trans-unit>
+			<trans-unit id="be.extension.productrender.description">
+				<source>Plugin to display list of products or a single product, depending on url parameters.</source>
+			</trans-unit>
+			<trans-unit id="be.extension.productshow.name">
+				<source>Product Manager Single View Plugin</source>
+			</trans-unit>
+			<trans-unit id="be.extension.productshow.description">
+				<source>Plugin to display a single product.</source>
+			</trans-unit>
 			<!--New content element wizard labels:END-->
 
 			<!--TCA notifications:START-->
@@ -231,16 +255,16 @@
 				<source>Custom products list mode</source>
 			</trans-unit>
 			<trans-unit id="flexform.custom_products_list.mode.products">
-				<source>Defined by products list</source>
+				<source>Manually select products</source>
 			</trans-unit>
-			<trans-unit id="flexform.custom_products_list.mode.category">
-				<source>Defined by categories</source>
+			<trans-unit id="flexform.custom_products_list.mode.pagetree">
+				<source>Dynamic selection by product page tree</source>
 			</trans-unit>
 			<trans-unit id="flexform.custom_products_list.products">
 				<source>Select products</source>
 			</trans-unit>
-			<trans-unit id="flexform.custom_products_list.categories">
-				<source>Select categories</source>
+			<trans-unit id="flexform.custom_products_list.pagetree">
+				<source>Select Page Tree Starting Point</source>
 			</trans-unit>
 			<trans-unit id="flexform.limit">
 				<source>Limit</source>

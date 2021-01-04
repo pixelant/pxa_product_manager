@@ -1,9 +1,12 @@
 <?php
+
 defined('TYPO3_MODE') || die;
 
 (function () {
     // Extbase
-    $extbaseContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\Container\Container::class);
+    $extbaseContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        \TYPO3\CMS\Extbase\Object\Container\Container::class
+    );
     $extbaseContainer->registerImplementation(
         \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface::class,
         \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService::class
@@ -13,26 +16,7 @@ defined('TYPO3_MODE') || die;
         \Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService::class
     );
 
-    // Configure plugin
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-        'Pixelant.pxa_product_manager',
-        'Pi1',
-        [
-            'Product' => 'list, show',
-            'Category' => 'list',
-            'CustomProduct' => 'list',
-            'LazyProduct' => 'list',
-            'Api\\LazyLoading' => 'list',
-            'Api\\LazyAvailableFilters' => 'list',
-        ],
-        // non-cacheable actions
-        [
-            'Api\\LazyLoading' => 'list',
-            'Api\\LazyAvailableFilters' => 'list',
-        ]
-    );
-
-    // Configure plugin
+    // Configure plugins
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'Pixelant.pxa_product_manager',
         'LazyLoading',
@@ -44,7 +28,6 @@ defined('TYPO3_MODE') || die;
         ]
     );
 
-    // Configure plugin
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'Pixelant.pxa_product_manager',
         'LazyAvailableFilters',
@@ -56,39 +39,35 @@ defined('TYPO3_MODE') || die;
         ]
     );
 
-    // Configure plugin render
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'Pixelant.pxa_product_manager',
         'ProductShow',
         [
             'ProductShow' => 'show'
-        ],
-        // non-cacheable actions
-        [
         ]
     );
 
-    // Configure plugin render
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'Pixelant.pxa_product_manager',
         'ProductList',
         [
             'LazyProduct' => 'list'
-        ],
-        // non-cacheable actions
-        [
         ]
     );
 
-    // Configure plugin render
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
         'Pixelant.pxa_product_manager',
         'ProductRender',
         [
             'ProductRender' => 'init'
-        ],
-        // non-cacheable actions
+        ]
+    );
+
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'Pixelant.pxa_product_manager',
+        'CustomProductList',
         [
+            'CustomProduct' => 'list'
         ]
     );
 
@@ -182,5 +161,4 @@ defined('TYPO3_MODE') || die;
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
         'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $pdDokType . ')'
     );
-
 })();
