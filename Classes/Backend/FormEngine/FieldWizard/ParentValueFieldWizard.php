@@ -12,9 +12,16 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
+/**
+ * Implements a field wizard that displays the parent product's field values
+ */
 class ParentValueFieldWizard extends AbstractNode
 {
-
+    /**
+     *
+     *
+     * @return array
+     */
     public function render(): array
     {
         $fieldName = $this->data['fieldName'];
@@ -25,6 +32,8 @@ class ParentValueFieldWizard extends AbstractNode
         if ($fieldConfig['config']['type'] === 'inline'
             || $fieldConfig['config']['type'] === 'flex'
         ) {
+            // TODO: Don't return, but render items as record labels using BackendUtility::getRecordTitle
+            // TODO: and record icon.
             return $result;
         }
 

@@ -41,8 +41,11 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_product.fal_links.add_button">
 				<source>Add file</source>
 			</trans-unit>
-			<trans-unit id="tx_pxaproductmanager_domain_model_product.sub_products">
-				<source>Sub Products</source>
+			<trans-unit id="tx_pxaproductmanager_domain_model_product.parent">
+				<source>Parent product</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_product.children">
+				<source>Child products</source>
 			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_product.tab.images">
 				<source>Images / Media</source>
