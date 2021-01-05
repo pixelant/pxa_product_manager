@@ -31,6 +31,7 @@ use DateTime;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Formatter\PriceFormatter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -143,10 +144,10 @@ class Product extends AbstractEntity
     protected Product $parent;
 
     /**
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Transient
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\Pixelant\PxaProductManager\Domain\Model\Product>
      */
-    protected ObjectStorage $children;
+    protected ?ObjectStorage $children = null;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
@@ -260,7 +261,6 @@ class Product extends AbstractEntity
     {
         $this->categories = new ObjectStorage();
         $this->relatedProducts = new ObjectStorage();
-        $this->subProducts = new ObjectStorage();
         $this->accessories = new ObjectStorage();
         $this->images = new ObjectStorage();
         $this->attributesFiles = new ObjectStorage();
@@ -577,17 +577,17 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @return Product
+     * @return Product|null
      */
-    public function getParent(): Product
+    public function getParent(): ?Product
     {
         return $this->parent;
     }
 
     /**
-     * @param Product $parent
+     * @param Product|null $parent
      */
-    public function setParent(Product $parent)
+    public function setParent(?Product $parent)
     {
         $this->parent = $parent;
     }
@@ -597,15 +597,46 @@ class Product extends AbstractEntity
      */
     public function getChildren(): ObjectStorage
     {
+        if ($this->children === null) {
+            /** @var ProductRepository $productRepository */
+            $productRepository = GeneralUtility::makeInstance(ProductRepository::class);
+            $query = $productRepository->createQuery();
+            $children = $query->matching($query->equals('parent'), $this)->execute();
+
+            $this->children = new ObjectStorage();
+
+            foreach ($children as $child) {
+                $this->children->attach($child);
+            }
+        }
+
         return $this->children;
     }
 
     /**
-     * @param ObjectStorage $children
+     * Remove the parent
      */
-    public function setChildren(ObjectStorage $children)
+    public function removeParent()
     {
-        $this->children = $children;
+        $this->setParent(null);
+    }
+
+    /**
+     * @param Product $childProduct
+     */
+    public function addChild(Product $childProduct)
+    {
+        $childProduct->setParent($this);
+    }
+
+    /**
+     * @param Product $childProduct
+     */
+    public function removeChild(Product $childProduct)
+    {
+        if ($childProduct->getParent() !== null && $this->getUid() === $childProduct->getParent()->getUid()) {
+            $childProduct->setParent(null);
+        }
     }
 
     /**
