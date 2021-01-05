@@ -26,9 +26,6 @@ return (function () {
             'hideTable' => 1,
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/link.svg',
         ],
-        'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, link, description',
-        ],
         'types' => [
             '1' => ['showitem' => 'hidden, name, link, description'],
         ],

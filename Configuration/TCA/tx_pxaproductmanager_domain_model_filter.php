@@ -28,9 +28,6 @@ return (function () {
             'searchFields' => 'name,category,attribute',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg',
         ],
-        'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, category, attribute, conjunction',
-        ],
         'types' => [
             '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories,'],
             '2' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;attributes,'],

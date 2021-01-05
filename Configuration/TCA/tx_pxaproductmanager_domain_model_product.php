@@ -30,10 +30,6 @@ return (function () {
             'thumbnail' => 'images',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/product.svg',
         ],
-        'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, product_type, name, sku, price, tax_rate, teaser, description, usp,
-            parent, related_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, singleview_page',
-        ],
         'types' => [
             '1' => [
                 'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,

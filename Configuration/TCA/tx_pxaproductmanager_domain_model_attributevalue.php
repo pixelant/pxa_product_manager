@@ -19,9 +19,6 @@ return [
         'searchFields' => 'value,attribute,',
         'hideTable' => true,
     ],
-    'interface' => [
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, value, attribute',
-    ],
     'types' => [
         '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, --palette--;;1, value, attribute'],
     ],
