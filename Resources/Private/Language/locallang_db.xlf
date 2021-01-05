@@ -322,6 +322,9 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.attribute_sets">
 			    <source>Attribute sets</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.inherit_fields">
+			    <source>Fields inherited by child products</source>
+			</trans-unit>
 			<!--tx_pxaproductmanager_domain_model_producttype TCA:END-->
 		</body>
 	</file>

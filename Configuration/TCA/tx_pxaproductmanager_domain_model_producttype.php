@@ -24,11 +24,8 @@ return (function () {
             'searchFields' => 'name',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg',
         ],
-        'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets, ',
-        ],
         'types' => [
-            '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets,'],
+            '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets, inherit_fields, '],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -124,6 +121,20 @@ return (function () {
                         ],
                     ],
                 ],
+            ],
+            'inherit_fields' => [
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_producttype.inherit_fields',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectCheckBox',
+                    'itemsProcFunc' => \Pixelant\PxaProductManager\Hook\ItemsProcFunc::class . '->getFieldsForTable',
+                    'itemsProcConfig' => [
+                        'table' => 'tx_pxaproductmanager_domain_model_product',
+                        'excludeItems' => '',
+                    ],
+                    'size' => 10,
+                    'autoSizeMax' => 30,
+                ]
             ],
         ],
     ];
