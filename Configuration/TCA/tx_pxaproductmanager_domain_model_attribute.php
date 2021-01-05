@@ -31,10 +31,6 @@ return (function () {
             'searchFields' => 'name, label, label_checked, label_unchecked',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/tag.svg',
         ],
-
-        'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, label, type, required, show_in_attribute_listing, show_in_compare, identifier, default_value, options, label_checked, label_unchecked, starttime, endtime',
-        ],
         'types' => [
             '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
             '4' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;' . $ll . 'palette.options;options, identifier, default_value, options, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'],
