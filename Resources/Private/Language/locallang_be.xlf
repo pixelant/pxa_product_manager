@@ -328,7 +328,13 @@
 			<trans-unit id="formengine.parentvalue.label">
 				<source>Parent value</source>
 			</trans-unit>
-			<!--ParentValueFieldWizard:START-->
+			<!--ParentValueFieldWizard:END-->
+
+			<!--InheritedProductDataFieldWizard:START-->
+			<trans-unit id="formengine.inheritedfield">
+				<source>Inherited from parent product.</source>
+			</trans-unit>
+			<!--InheritedProductDataFieldWizard:END-->
 		</body>
 	</file>
 </xliff>

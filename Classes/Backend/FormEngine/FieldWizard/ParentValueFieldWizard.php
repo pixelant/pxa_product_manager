@@ -7,6 +7,7 @@ namespace Pixelant\PxaProductManager\Backend\FormEngine\FieldWizard;
 
 
 use TYPO3\CMS\Backend\Form\AbstractNode;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -24,18 +25,14 @@ class ParentValueFieldWizard extends AbstractNode
      */
     public function render(): array
     {
-        $fieldName = $this->data['fieldName'];
-        $fieldConfig = $this->data['processedTca']['columns'][$fieldName];
-
         $result = $this->initializeResultArray();
 
-        if ($fieldConfig['config']['type'] === 'inline'
-            || $fieldConfig['config']['type'] === 'flex'
-        ) {
-            // TODO: Don't return, but render items as record labels using BackendUtility::getRecordTitle
-            // TODO: and record icon.
+        if (!$this->data['databaseRow']['parent'][0]) {
             return $result;
         }
+
+        $fieldName = $this->data['fieldName'];
+        $fieldConfig = $this->data['processedTca']['columns'][$fieldName];
 
         $label = LocalizationUtility::translate(
             'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:formengine.parentvalue.label'
@@ -47,12 +44,16 @@ class ParentValueFieldWizard extends AbstractNode
             Icon::SIZE_SMALL
         );
 
-        // TODO: Get parent record
-        $parentRecord = $this->data['databaseRow'];
-        $parentValue = $parentRecord[$fieldName];
+        $parentRecord = $this->data['databaseRow']['parent'][0]['row'];
+
+        $processedParentValue = BackendUtility::getProcessedValueExtra(
+            $this->data['tableName'],
+            $this->data['fieldName'],
+            $parentRecord[$fieldName]
+        );
 
         $html = '<div class="bg-info" style="padding: .2em" title="' . htmlspecialchars($label) . '">';
-        $html .= $icon . ' ' . htmlspecialchars(strip_tags($parentValue));
+        $html .= $icon . ' <strong>' . htmlspecialchars($label) . ':</strong> ' . htmlspecialchars((string)$processedParentValue);
         $html .= '</div>';
 
         $result['html'] = $html;
