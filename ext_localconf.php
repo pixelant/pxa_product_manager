@@ -85,6 +85,12 @@ defined('TYPO3_MODE') || die;
         'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldWizard\ParentValueFieldWizard::class,
     ];
 
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1609921375] = [
+        'nodeName' => 'inheritedProductField',
+        'priority' => '30',
+        'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldInformation\InheritedProductFieldInformation::class,
+    ];
+
     // Add attributes fields to Product edit form
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\ProductEditFormManipulation::class] = [
         'depends' => [

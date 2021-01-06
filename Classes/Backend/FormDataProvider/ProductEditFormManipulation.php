@@ -15,6 +15,7 @@ use Pixelant\PxaProductManager\Exception\NotImplementedException;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
+use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -60,7 +61,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
         }
 
         $result = $this->handleAttributesData($result);
-        $result = $this->handleFieldInheritance($result);
+        $result = $this->handleInheritedFields($result);
 
         return $result;
     }
@@ -71,26 +72,27 @@ class ProductEditFormManipulation implements FormDataProviderInterface
      * @param array $result
      * @return array
      */
-    protected function handleFieldInheritance(array $result)
+    protected function handleInheritedFields(array $result)
     {
-        if (!$result['databaseRow']['product_type']) {
+        $parentRow = $result['databaseRow']['parent'][0]['row'];
+
+        if (!$result['databaseRow']['product_type'] || !$parentRow) {
             return $result;
         }
 
-        $productType = BackendUtility::getRecord(
-            'tx_pxaproductmanager_domain_model_producttype',
-            $result['databaseRow']['product_type'],
-            'inherit_fields'
+        $inheritFields = DataInheritanceUtility::getInheritedFieldsForProductType(
+            (int)$result['databaseRow']['product_type']
         );
-
-        $inheritFields = GeneralUtility::trimExplode(',', $productType['inherit_fields']);
 
         foreach ($result['processedTca']['columns'] as $fieldName => &$configuration) {
             if (!in_array($fieldName, $inheritFields)) {
+                $configuration['config']['fieldWizard']['productParentValue']['renderType'] = 'productParentValue';
                 continue;
             }
 
             $configuration['config']['readOnly'] = true;
+
+            $configuration['config']['fieldInformation']['inheritedProductField']['renderType'] = 'inheritedProductField';
         }
 
         return $result;
