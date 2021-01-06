@@ -59,6 +59,51 @@ class ProductEditFormManipulation implements FormDataProviderInterface
             return $result;
         }
 
+        $result = $this->handleAttributesData($result);
+        $result = $this->handleFieldInheritance($result);
+
+        return $result;
+    }
+
+    /**
+     * Disable inherited fields.
+     *
+     * @param array $result
+     * @return array
+     */
+    protected function handleFieldInheritance(array $result)
+    {
+        if (!$result['databaseRow']['product_type']) {
+            return $result;
+        }
+
+        $productType = BackendUtility::getRecord(
+            'tx_pxaproductmanager_domain_model_producttype',
+            $result['databaseRow']['product_type'],
+            'inherit_fields'
+        );
+
+        $inheritFields = GeneralUtility::trimExplode(',', $productType['inherit_fields']);
+
+        foreach ($result['processedTca']['columns'] as $fieldName => &$configuration) {
+            if (!in_array($fieldName, $inheritFields)) {
+                continue;
+            }
+
+            $configuration['config']['readOnly'] = true;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Handle data related to attributes
+     *
+     * @param array $result
+     * @return array
+     */
+    protected function handleAttributesData(array $result)
+    {
         $row = $result['databaseRow'];
         $isNew = StringUtility::beginsWith($row['uid'], 'NEW');
 
