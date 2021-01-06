@@ -335,6 +335,12 @@
 				<source>Inherited from parent product.</source>
 			</trans-unit>
 			<!--InheritedProductDataFieldWizard:END-->
+
+			<!--ProductInheritanceProcessDatamap:START-->
+			<trans-unit id="formengine.productinheritance.updatedcount">
+				<source>%s products were updated with data inherited from parent products.</source>
+			</trans-unit>
+			<!--ProductInheritanceProcessDatamap:END-->
 		</body>
 	</file>
 </xliff>
