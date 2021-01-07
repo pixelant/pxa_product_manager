@@ -23,7 +23,9 @@ class InheritedProductFieldInformation extends AbstractNode
         if (
             !in_array(
                 $this->data['fieldName'],
-                DataInheritanceUtility::getInheritedFieldsForProductType((int)$this->data['databaseRow']['product_type']),
+                DataInheritanceUtility::getInheritedFieldsForProductType(
+                    (int)$this->data['databaseRow']['product_type']
+                ),
                 true
             )
         ) {
