@@ -150,7 +150,7 @@ class ProductType extends AbstractEntity
     /**
      * @param array $inheritFields
      */
-    public function setInheritFields(array $inheritFields)
+    public function setInheritFields(array $inheritFields): void
     {
         $this->inheritFields = $inheritFields;
     }

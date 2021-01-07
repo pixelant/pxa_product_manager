@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\PxaProductManager\Utility;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Convenience methods for handling inheritance of product properties and parent/child relations
+ * Convenience methods for handling inheritance of product properties and parent/child relations.
  */
 class DataInheritanceUtility
 {
     protected static array $productTypeInheritedFields = [];
 
     /**
-     * Get an array of field names that are specified as inherited from parent products for this product type
+     * Get an array of field names that are specified as inherited from parent products for this product type.
      *
      * @param int $productType ProductType UID
      * @return array

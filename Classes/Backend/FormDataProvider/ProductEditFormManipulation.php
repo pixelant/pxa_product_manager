@@ -85,8 +85,9 @@ class ProductEditFormManipulation implements FormDataProviderInterface
         );
 
         foreach ($result['processedTca']['columns'] as $fieldName => &$configuration) {
-            if (!in_array($fieldName, $inheritFields)) {
+            if (!in_array($fieldName, $inheritFields, true)) {
                 $configuration['config']['fieldWizard']['productParentValue']['renderType'] = 'productParentValue';
+
                 continue;
             }
 
@@ -99,7 +100,7 @@ class ProductEditFormManipulation implements FormDataProviderInterface
     }
 
     /**
-     * Handle data related to attributes
+     * Handle data related to attributes.
      *
      * @param array $result
      * @return array
@@ -137,10 +138,9 @@ class ProductEditFormManipulation implements FormDataProviderInterface
                         );
                     }
                 }
-            } else {
-                // TODO: Call this somewhere else. Data inheritance processing makes this message appear multiple times.
-                // $this->showNotificationMessage('tca.notification_no_attributes_available');
             }
+            // TODO: Call this somewhere else. Data inheritance processing makes this message appear multiple times.
+                // $this->showNotificationMessage('tca.notification_no_attributes_available');
         } else {
             $this->showNotificationMessage('tca.notification_first_save');
         }

@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\PxaProductManager\Backend\FormEngine\FieldWizard;
-
 
 use TYPO3\CMS\Backend\Form\AbstractNode;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -14,13 +12,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
- * Implements a field wizard that displays the parent product's field values
+ * Implements a field wizard that displays the parent product's field values.
  */
 class ParentValueFieldWizard extends AbstractNode
 {
     /**
-     *
-     *
      * @return array
      */
     public function render(): array
@@ -60,5 +56,4 @@ class ParentValueFieldWizard extends AbstractNode
 
         return $result;
     }
-
 }

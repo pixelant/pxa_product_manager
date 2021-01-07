@@ -238,8 +238,7 @@ return (function () {
                     'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
                     'suggestOptions' => [
-                        'tx_pxaproductmanager_domain_model_product' =>
-                            \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
+                        'tx_pxaproductmanager_domain_model_product' => \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
                             ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                             ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
                     ],
@@ -541,8 +540,7 @@ return (function () {
                     'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
                     'suggestOptions' => [
-                        'tx_pxaproductmanager_domain_model_product' =>
-                            \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
+                        'tx_pxaproductmanager_domain_model_product' => \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
                             ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
                             ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
                     ],
