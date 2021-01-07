@@ -20,19 +20,19 @@ class InheritedProductFieldInformation extends AbstractNode
     {
         $result = $this->initializeResultArray();
 
-        if (!in_array(
-            $this->data['fieldName'],
-            DataInheritanceUtility::getInheritedFieldsForProductType((int)$this->data['databaseRow']['product_type']),
-            true
-        )) {
+        if (
+            !in_array(
+                $this->data['fieldName'],
+                DataInheritanceUtility::getInheritedFieldsForProductType((int)$this->data['databaseRow']['product_type']),
+                true
+            )
+        ) {
             return $result;
         }
 
         $result['html'] = htmlspecialchars(LocalizationUtility::translate(
             'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:formengine.inheritedfield'
         ));
-
-        $result['html'] = '<div>' . $result['html'] . '</div>';
 
         return $result;
     }

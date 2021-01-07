@@ -81,7 +81,8 @@ class ProductInheritanceProcessDatamap
                     FlashMessage::class,
                     sprintf(
                         $this->getLanguageService()->sL(
-                            'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:formengine.productinheritance.updatedcount'
+                            'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf'
+                            . ':formengine.productinheritance.updatedcount'
                         ),
                         $this->productsWithInheritedDataCount
                     ),
@@ -119,12 +120,11 @@ class ProductInheritanceProcessDatamap
         }
 
         if ($row['parent']) {
-            $productType = $row['product_type']
-                ?? BackendUtility::getRecord(
-                    self::TABLE,
-                    $parentId,
-                    'product_type'
-                )['product_type'];
+            $productType = $row['product_type'] ?? BackendUtility::getRecord(
+                self::TABLE,
+                $parentId,
+                'product_type'
+            )['product_type'];
 
             if ($productType) {
                 $this->productDatamap[$identifier] = $row + $this->getParentOverlayData($parentId, $productType);
