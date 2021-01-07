@@ -2,20 +2,16 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\PxaProductManager\Hook;
 
 use Doctrine\DBAL\FetchMode;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
-use TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew;
-use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -31,7 +27,7 @@ class ProductInheritanceProcessDatamap
     protected const TABLE = 'tx_pxaproductmanager_domain_model_product';
 
     /**
-     * The DataHandler object supplied when calling this class
+     * The DataHandler object supplied when calling this class.
      *
      * @var DataHandler
      */
@@ -43,7 +39,7 @@ class ProductInheritanceProcessDatamap
     protected array $productDatamap = [];
 
     /**
-     * Cache of fields to inherit from a product with a specific product type. Key is: [productId]-[productTypeId]
+     * Cache of fields to inherit from a product with a specific product type. Key is: [productId]-[productTypeId].
      *
      * @var array
      */
@@ -68,8 +64,8 @@ class ProductInheritanceProcessDatamap
      */
 
     /** @codingStandardsIgnoreStart */
-    public function processDatamap_beforeStart(DataHandler $dataHandler)
-    {/** @codingStandardsIgnoreEnd */
+    public function processDatamap_beforeStart(DataHandler $dataHandler): void
+    {// @codingStandardsIgnoreEnd
         if (isset($dataHandler->datamap[self::TABLE])) {
             $this->dataHandler = $dataHandler;
             $this->productDatamap = $dataHandler->datamap[self::TABLE];
@@ -105,7 +101,7 @@ class ProductInheritanceProcessDatamap
      *
      * @param $identifier
      */
-    protected function processRecordOverlays($identifier)
+    protected function processRecordOverlays($identifier): void
     {
         $row = $this->productDatamap[$identifier];
 
@@ -200,7 +196,7 @@ class ProductInheritanceProcessDatamap
             $formDataCompilerInput = [
                 'tableName' => self::TABLE,
                 'vanillaUid' => $parent,
-                'command' => 'edit'
+                'command' => 'edit',
             ];
 
             $parentRecord = $formDataCompiler->compile($formDataCompilerInput)['databaseRow'];
@@ -238,7 +234,7 @@ class ProductInheritanceProcessDatamap
     }
 
     /**
-     * Get the LanguageService
+     * Get the LanguageService.
      *
      * @return LanguageService
      */

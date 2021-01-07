@@ -134,7 +134,7 @@ return (function () {
                     ],
                     'size' => 10,
                     'autoSizeMax' => 30,
-                ]
+                ],
             ],
         ],
     ];

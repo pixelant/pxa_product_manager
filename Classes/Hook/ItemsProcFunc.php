@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\PxaProductManager\Hook;
 
-use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Miscellaneous methods to provide data to the TCA
+ * Miscellaneous methods to provide data to the TCA.
  */
 class ItemsProcFunc
 {
@@ -31,7 +29,7 @@ class ItemsProcFunc
 
         $columns = array_filter(
             $columns,
-            fn($column) => $column['config']['type'] != 'passthrough'
+            fn ($column) => $column['config']['type'] !== 'passthrough'
         );
 
         $excludeFields = [
@@ -41,7 +39,7 @@ class ItemsProcFunc
             $GLOBALS['TCA'][$tableName]['ctrl']['type'],
         ];
 
-        if ($configuration['config']['itemsProcConfig']['exclude'] ?? '' != '') {
+        if ($configuration['config']['itemsProcConfig']['exclude'] ?? '' !== '') {
             $excludeFields = array_merge($excludeFields, GeneralUtility::trimExplode(
                 ',',
                 $configuration['config']['itemsProcConfig']['exclude'],
@@ -51,12 +49,12 @@ class ItemsProcFunc
 
         $columns = array_filter(
             $columns,
-            fn($key) => !in_array($key, $excludeFields),
+            fn ($key) => !in_array($key, $excludeFields, true),
             ARRAY_FILTER_USE_KEY
         );
 
         $configuration['items'] = array_map(
-            fn($label, $fieldName) => [$label, $fieldName],
+            fn ($label, $fieldName) => [$label, $fieldName],
             array_column($columns, 'label'),
             array_keys($columns),
         );

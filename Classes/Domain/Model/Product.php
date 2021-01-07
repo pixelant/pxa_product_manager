@@ -579,7 +579,7 @@ class Product extends AbstractEntity
     /**
      * @return Product|null
      */
-    public function getParent(): ?Product
+    public function getParent(): ?self
     {
         return $this->parent;
     }
@@ -587,7 +587,7 @@ class Product extends AbstractEntity
     /**
      * @param Product|null $parent
      */
-    public function setParent(?Product $parent)
+    public function setParent(?self $parent): void
     {
         $this->parent = $parent;
     }
@@ -614,9 +614,9 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Remove the parent
+     * Remove the parent.
      */
-    public function removeParent()
+    public function removeParent(): void
     {
         $this->setParent(null);
     }
@@ -624,7 +624,7 @@ class Product extends AbstractEntity
     /**
      * @param Product $childProduct
      */
-    public function addChild(Product $childProduct)
+    public function addChild(self $childProduct): void
     {
         $childProduct->setParent($this);
     }
@@ -632,7 +632,7 @@ class Product extends AbstractEntity
     /**
      * @param Product $childProduct
      */
-    public function removeChild(Product $childProduct)
+    public function removeChild(self $childProduct): void
     {
         if ($childProduct->getParent() !== null && $this->getUid() === $childProduct->getParent()->getUid()) {
             $childProduct->setParent(null);
