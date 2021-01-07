@@ -93,7 +93,8 @@ class ProductEditFormManipulation implements FormDataProviderInterface
 
             $configuration['config']['readOnly'] = true;
 
-            $configuration['config']['fieldInformation']['inheritedProductField']['renderType'] = 'inheritedProductField';
+            $configuration['config']['fieldInformation']['inheritedProductField']['renderType']
+                = 'inheritedProductField';
         }
 
         return $result;
@@ -139,8 +140,8 @@ class ProductEditFormManipulation implements FormDataProviderInterface
                     }
                 }
             }
-            // TODO: Call this somewhere else. Data inheritance processing makes this message appear multiple times.
-                // $this->showNotificationMessage('tca.notification_no_attributes_available');
+            // Call this somewhere else. Data inheritance processing makes this message appear multiple times.
+            // $this->showNotificationMessage('tca.notification_no_attributes_available');
         } else {
             $this->showNotificationMessage('tca.notification_first_save');
         }

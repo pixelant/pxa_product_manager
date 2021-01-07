@@ -36,8 +36,8 @@ class DataInheritanceUtility
             'inherit_fields'
         );
 
-        self::$productTypeInheritedFields[$productType] =
-            GeneralUtility::trimExplode(',', $productTypeRecord['inherit_fields'], true);
+        self::$productTypeInheritedFields[$productType]
+            = GeneralUtility::trimExplode(',', $productTypeRecord['inherit_fields'], true);
 
         return self::$productTypeInheritedFields[$productType];
     }

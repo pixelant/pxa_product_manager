@@ -49,7 +49,8 @@ class ParentValueFieldWizard extends AbstractNode
         );
 
         $html = '<div class="bg-info" style="padding: .2em" title="' . htmlspecialchars($label) . '">';
-        $html .= $icon . ' <strong>' . htmlspecialchars($label) . ':</strong> ' . htmlspecialchars((string)$processedParentValue);
+        $html .= $icon . ' <strong>' . htmlspecialchars($label) . ':</strong> ';
+        $html .= htmlspecialchars((string)$processedParentValue);
         $html .= '</div>';
 
         $result['html'] = $html;
