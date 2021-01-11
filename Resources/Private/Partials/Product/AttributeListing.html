@@ -6,7 +6,7 @@
 
     <f:if condition="{settings.attributes.divideAttributesBySets}">
         <f:then>
-            <f:for each="{product.attributesSets}" as="attributeset">
+            <f:for each="{product.listingAttributeSets}" as="attributeset">
                 <f:if condition="{attributeset.listingAttributes}">
                     <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
                 </f:if>
@@ -32,7 +32,7 @@
                         </th>
                         <td>
                             <f:render partial="Product/Attribute/Type{attribute.type}"
-                                      arguments="{attribute: attribute}"/>
+                                      arguments="{attribute: attribute, product: product}"/>
                         </td>
                     </tr>
                 </f:for>

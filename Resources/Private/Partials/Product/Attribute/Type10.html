@@ -1,8 +1,8 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:comment>Files</f:comment>
-<f:if condition="{attribute.value}">
+<f:if condition="{product.attributeValue.{attribute.identifier}.renderValue}">
     <f:then>
-        <f:for each="{attribute.value}" as="file">
+        <f:for each="{product.attributeValue.{attribute.identifier}.renderValue}" as="file">
             <div>
                 <f:switch expression="{file.originalResource.type}">
                     <f:case value="2">

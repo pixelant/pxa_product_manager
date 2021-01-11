@@ -26,7 +26,6 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  */
 
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -108,20 +107,6 @@ class Attribute extends AbstractEntity
      * @var string
      */
     protected string $defaultValue = '';
-
-    /**
-     * String value for current product.
-     *
-     * @var string
-     */
-    protected string $stringValue = '';
-
-    /**
-     * Array value for current product.
-     *
-     * @var array
-     */
-    protected array $arrayValue = [];
 
     /**
      * Attribute label.
@@ -293,7 +278,7 @@ class Attribute extends AbstractEntity
      */
     public function getIdentifier(): string
     {
-        return $this->identifier;
+        return $this->identifier ?: $this->uid;
     }
 
     /**
@@ -397,106 +382,6 @@ class Attribute extends AbstractEntity
     public function setDefaultValue(string $defaultValue): self
     {
         $this->defaultValue = $defaultValue;
-
-        return $this;
-    }
-
-    /**
-     * Returns the value depending of the attribute type.
-     *
-     * @return mixed
-     */
-    public function getValue()
-    {
-        if (
-            $this->isFalType() ||
-            $this->isSelectBoxType()
-        ) {
-            return $this->arrayValue;
-        }
-
-        return $this->stringValue;
-    }
-
-    /**
-     * Returns if attribute have any none empty value.
-     *
-     * @return mixed
-     */
-    public function getHasNonEmptyValue()
-    {
-        if ($this->isFalType()) {
-            return !empty($this->arrayValue);
-        }
-
-        if ($this->isSelectBoxType()) {
-            $options = $this->collection($this->arrayValue)
-                ->filter(fn (Option $option) => $option->getValue() !== '')
-                ->toArray();
-
-            return count($options) > 0;
-        }
-
-        return strlen($this->stringValue) > 0;
-    }
-
-    /**
-     * Returns the string value.
-     *
-     * @return string
-     */
-    public function getStringValue(): string
-    {
-        return $this->stringValue;
-    }
-
-    /**
-     * Sets the string value.
-     *
-     * @param string $value
-     * @return Attribute
-     */
-    public function setStringValue($value)
-    {
-        $this->stringValue = $value;
-
-        return $this;
-    }
-
-    /**
-     * Returns the array value.
-     *
-     * @return array
-     */
-    public function getArrayValue(): array
-    {
-        return $this->arrayValue;
-    }
-
-    /**
-     * Returns text as array split by lines.
-     * Only for attribute of type text.
-     *
-     * @return array
-     */
-    public function getTextToArray(): array
-    {
-        if ($this->type === self::ATTRIBUTE_TYPE_TEXT) {
-            return GeneralUtility::trimExplode(LF, $this->stringValue, true);
-        }
-
-        return [];
-    }
-
-    /**
-     * Sets the array value.
-     *
-     * @param array $value
-     * @return Attribute
-     */
-    public function setArrayValue($value)
-    {
-        $this->arrayValue = $value;
 
         return $this;
     }

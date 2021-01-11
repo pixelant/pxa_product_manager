@@ -23,7 +23,7 @@ class MapperServiceServiceTest extends UnitTestCase
         $sets = TestsUtility::createMultipleEntities(AttributeSet::class, 3);
 
         $product = $this->createMock(Product::class);
-        $product->expects(self::once())->method('_getAllAttributesSets')->willReturn($sets);
+        $product->expects(self::once())->method('getAttributesValuesWithValidAttributes')->willReturn($sets);
 
         self::assertEquals($sets, $service->map($product));
     }

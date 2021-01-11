@@ -1,8 +1,7 @@
-
 <h4>{attributeset.name}</h4>
 <table class="table">
     <f:for each="{attributeset.listingAttributes}" as="attribute">
-        <f:if condition="{attribute.hasNonEmptyValue}">
+        <f:if condition="{product.attributeValue.{attribute.identifier}.hasNonEmptyValue}">
             <tr>
                 <th>
                     <f:if condition="{attribute.image}">
@@ -15,7 +14,7 @@
                 </th>
                 <td>
                     <f:render partial="Product/Attribute/Type{attribute.type}"
-                              arguments="{attribute: attribute}"/>
+                              arguments="{attribute: attribute, product: product}"/>
                 </td>
             </tr>
         </f:if>

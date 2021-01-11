@@ -149,7 +149,6 @@ class AttributeSet extends AbstractEntity
     {
         return $this->collection($this->getAttributes())
             ->filter(fn (Attribute $attribute) => $attribute->getShowInAttributeListing())
-            ->filter(fn (Attribute $attribute) => $attribute->getHasNonEmptyValue())
             ->toArray();
     }
 
