@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 
-use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 
 interface MapperInterface
@@ -15,7 +15,7 @@ interface MapperInterface
      * read value and set in given attribute value property.
      *
      * @param Product $product
-     * @param Attribute $attribute
+     * @param AttributeValue $attributeValue
      */
-    public function map(Product $product, Attribute $attribute): void;
+    public function map(Product $product, AttributeValue $attributeValue): void;
 }
