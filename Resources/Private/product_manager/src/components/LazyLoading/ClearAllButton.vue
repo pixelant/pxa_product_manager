@@ -1,26 +1,6 @@
 <template>
-    <div id="filterCheckbox">
-    <!--
-        <div class="checkbox" v-for="option in options" v-bind:key="option.value">
-            <input type="checkbox"
-            v-model="value"
-            :name="placeholder"
-            :value="option.value"
-            @input="emitUpdate"
-            :id="option.value">
-            <label for="label" :options="option.label" v-text="option.label"></label><br>
-
-        </div>
-        -->
-            <h2>{{placeholder}}</h2>
-
-        <div v-for="option in options" v-bind:key="option.value">
-            <input type="radio" :value="option" @change="emitUpdate" v-model="value" />
-            <label for="label" :options="option.label" v-text="option.label"></label><br>
-        </div>
-
-        <button @click="clearChecked"> CLEAR </button>
-
+    <div id="clearAllButton">
+        <button> CLEAR  ALL</button>
     </div>
 </template>
 
@@ -28,7 +8,7 @@
     import EventHandler from "../../event/EventHandler";
 
     export default {
-        name: "FilterRadioButton",
+        name: "ClearAllButton",
 
         props: {
             filter: Object,
@@ -42,9 +22,6 @@
         },
 
         computed: {
-            checkedFilter() {
-                return this.value;
-            },
             placeholder() {
                 return this.filter.label || this.$options.filters.trans('please_select');
             }
@@ -56,20 +33,11 @@
         },
 
         methods: {
-            clearChecked: function() {
-                this.value = [];
-
+            emitUpdate() {
                 EventHandler.emit('filterUpdate', {
                     filter: this.filter,
                     options: this.value,
                 });
-            },
-            emitUpdate(event) {
-                EventHandler.emit('filterUpdate', {
-                    filter: this.filter,
-                    options: [this.value],
-                });
-                console.log(event.target.value);
             },
 
             preselectOptions(filters) {
@@ -95,6 +63,7 @@
 
                 this.options = this.filter.options.filter(option => available.includes(option.value));
             },
+
         }
     }
 </script>
