@@ -29,7 +29,7 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg',
         ],
         'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, category, attribute, conjunction',
+            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, name, label, gui_type, gui_state, category, attribute, conjunction',
         ],
         'types' => [
             '1' => ['showitem' => '--palette--;;core, --palette--;;common, --palette--;;categories,'],
@@ -38,7 +38,7 @@ return (function () {
         ],
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
-            'common' => ['showitem' => 'type, --linebreak--, name, label'],
+            'common' => ['showitem' => 'type, --linebreak--, name, label, gui_type, gui_state'],
             'categories' => ['showitem' => 'conjunction, --linebreak--, category'],
             'attributes' => ['showitem' => 'conjunction, --linebreak--, attribute'],
         ],
@@ -105,8 +105,8 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => [
-                        ['Attribute', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_ATTRIBUTES],
                         ['Categories', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_CATEGORIES],
+                        ['Attribute', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_ATTRIBUTES],
                         ['Attribute min-max (if applicable, require only numeric attribute values)', \Pixelant\PxaProductManager\Domain\Model\Filter::TYPE_ATTRIBUTES_MINMAX],
                     ],
                     'size' => 1,
@@ -114,6 +114,41 @@ return (function () {
                     'maxitems' => 1,
                 ],
             ],
+
+            'gui_type' => [
+                'exclude' => true,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.gui_type',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [$ll . 'tx_pxaproductmanager_domain_model_filter.gui_type.checkbox', 'checkbox'],
+                        [$ll . 'tx_pxaproductmanager_domain_model_filter.gui_type.option', 'option'],
+                        [$ll . 'tx_pxaproductmanager_domain_model_filter.gui_type.select', 'select'],
+                    ],
+                    'size' => 1,
+                    'minitems' => 1,
+                    'maxitems' => 1,
+                ],
+            ],
+
+            'gui_state' => [
+                'exclude' => true,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.gui_state',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [$ll . 'tx_pxaproductmanager_domain_model_filter.gui_state.collapsed', 'collapsed'],
+                        [$ll . 'tx_pxaproductmanager_domain_model_filter.gui_state.expanded', 'expanded'],
+                        [$ll . 'tx_pxaproductmanager_domain_model_filter.gui_state.plain', 'plain'],
+                    ],
+                    'size' => 1,
+                    'minitems' => 1,
+                    'maxitems' => 1,
+                ],
+            ],
+
             'name' => [
                 'exclude' => true,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_filter.name',

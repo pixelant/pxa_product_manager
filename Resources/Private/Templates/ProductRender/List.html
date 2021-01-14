@@ -15,7 +15,17 @@
         <div class="row">
             <f:for as="filter" each="{filters}">
                 <div class="col-md-3">
-                    <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
+                    <f:switch expression="{filter.guiType}">
+                        <f:case value="checkbox">
+                            <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
+                        </f:case>
+                        <f:case value="option">
+                            <lazy-radio-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
+                        </f:case>
+                        <f:defaultCase>
+                            <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
+                        </f:defaultCase>
+                    </f:switch>
                 </div>
             </f:for>
         </div>
