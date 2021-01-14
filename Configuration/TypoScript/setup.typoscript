@@ -109,7 +109,7 @@ plugin.tx_pxaproductmanager {
             imageMaxSize = {$plugin.tx_pxaproductmanager.settings.attributes.imageMaxSize}
             types {
                 image {
-                    imageMaxWidth = {$plugin.tx_pxaproductmanager.settings.attributes.types.image.maxWidth}
+                    maxWidth = {$plugin.tx_pxaproductmanager.settings.attributes.types.image.maxWidth}
                 }
             }
         }
