@@ -99,6 +99,7 @@ plugin.tx_pxaproductmanager {
 
         price {
             currency = {$plugin.tx_pxaproductmanager.settings.price.currency}
+            fractionDigits = {$plugin.tx_pxaproductmanager.settings.price.fractionDigits}
         }
 
         attributes {

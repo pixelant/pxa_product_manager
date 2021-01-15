@@ -69,12 +69,39 @@ Sets image max size of attribute images/icons in FE rendering.
 
 .. _ts-plugin-tx-pxaproductmanager-types-image-imagemaxwidth:
 
-settings.attributes.types.image.imageMaxWidth
+settings.attributes.types.image.maxWidth
 """""""""""""""""""""""""""""""""""""""""""""
 
-:typoscript:`plugin.tx_pxaproductmanager.settings.attributes.types.image.imageMaxWidth = 265`
+:typoscript:`plugin.tx_pxaproductmanager.settings.attributes.types.image.maxWidth = 265`
 
 Sets image max width in FE rendering attributes of type datetime.
+
+Property details price
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. only:: html
+
+	.. contents::
+		:local:
+		:depth: 1
+
+settings.price.currency
+"""""""""""""""""""""""""""""""""""""""""""""
+
+.. _ts-plugin-tx-pxaproductmanager-currency:
+
+:typoscript:`plugin.tx_pxaproductmanager.settings.price.currency = USD`
+
+The 3-letter ISO 4217 currency code indicating the currency to use.
+
+settings.price.fractionDigits
+"""""""""""""""""""""""""""""""""""""""""""""
+
+.. _ts-plugin-tx-pxaproductmanager-fractionDigits:
+
+:typoscript:`plugin.tx_pxaproductmanager.settings.price.fractionDigits = 2`
+
+Number of fraction digits in formatted price. Note, using 0 fraction digits might round rendered price!
 
 
 .. _configuration-faq:

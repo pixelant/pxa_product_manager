@@ -27,6 +27,11 @@ class PriceFormatter implements SingletonInterface
     protected string $currency = 'USD';
 
     /**
+     * @var int
+     */
+    protected int $fractionDigits = 2;
+
+    /**
      * @var ConfigurationManagerInterface
      */
     protected ConfigurationManagerInterface $configurationManager;
@@ -71,8 +76,8 @@ class PriceFormatter implements SingletonInterface
      */
     public function initializeObject(): void
     {
-        $this->setCurrencyFromSettings();
-        $this->setCurrencyFromRequest();
+        $this->setCurrencyAndFractionDigitsFromSettings();
+        $this->setLocaleFromRequest();
     }
 
     /**
@@ -89,6 +94,7 @@ class PriceFormatter implements SingletonInterface
         $currency ??= $this->currency;
 
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $this->fractionDigits);
 
         $event = $this->dispatcher->dispatch(
             GeneralUtility::makeInstance(FormatPrice::class, $formatter, $currency, $locale, $product)
@@ -102,7 +108,7 @@ class PriceFormatter implements SingletonInterface
     /**
      * Set currency from plugin settings.
      */
-    protected function setCurrencyFromSettings(): void
+    protected function setCurrencyAndFractionDigitsFromSettings(): void
     {
         $settings = $this->configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
@@ -113,12 +119,16 @@ class PriceFormatter implements SingletonInterface
         if (!empty($settings['price']['currency'])) {
             $this->currency = $settings['price']['currency'];
         }
+
+        if (is_numeric($settings['price']['fractionDigits'])) {
+            $this->fractionDigits = (int)$settings['price']['fractionDigits'];
+        }
     }
 
     /**
      * Set locale from site settings.
      */
-    protected function setCurrencyFromRequest(): void
+    protected function setLocaleFromRequest(): void
     {
         $siteLanguage = $this->request->getAttribute('language', null);
         if ($siteLanguage instanceof SiteLanguage) {
