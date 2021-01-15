@@ -19,6 +19,7 @@
 
 <script>
     import EventHandler from "../../event/EventHandler";
+
     export default {
         name: "FilterCheckbox",
 
@@ -29,7 +30,7 @@
             return {
                 value: [],
                 options: this.filter.options,
-                isOpen: true
+                isOpen: null
             }
         },
 
@@ -49,11 +50,19 @@
         created() {
             EventHandler.on('filterPreSelect', filters => this.preselectOptions(filters));
             EventHandler.on('filterOptionsUpdate', options => this.updateAvailableOptions(options));
+            this.checkAccordionCollapsed();
         },
 
         methods: {
             toggleAccordion() {
                 this.isOpen = !this.isOpen;
+            },
+            checkAccordionCollapsed() {
+                if (this.filter.gui_state == 'collapsed') {
+                    this.isOpen = false;
+                } else {
+                    this.isOpen = true;
+                }
             },
             clearChecked() {
                 this.value = [];
