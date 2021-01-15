@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Formatter;
 
-use NumberFormatter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Event\Product\FormatPrice;
+use Pixelant\PxaProductManager\Event\Product\FormatPriceEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -42,9 +42,9 @@ class PriceFormatter implements SingletonInterface
     protected ServerRequest $request;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
-    protected EventDispatcher $dispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
     /**
      * @param ServerRequest $request
@@ -64,11 +64,11 @@ class PriceFormatter implements SingletonInterface
     }
 
     /**
-     * @param EventDispatcher $dispatcher
+     * @param EventDispatcher $eventDispatcher
      */
-    public function injectDispatcher(EventDispatcher $dispatcher): void
+    public function injectDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
-        $this->dispatcher = $dispatcher;
+        $this->eventDispatcher = $eventDispatcher ?? GeneralUtility::makeInstance(EventDispatcher::class);
     }
 
     /**
@@ -76,8 +76,15 @@ class PriceFormatter implements SingletonInterface
      */
     public function initializeObject(): void
     {
-        $this->setCurrencyAndFractionDigitsFromSettings();
-        $this->setLocaleFromRequest();
+        $settings = $this->readSettings();
+
+        if (!empty($settings['price']['currency'])) {
+            $this->setCurrency($settings['price']['currency']);
+        }
+
+        if (is_numeric($settings['price']['fractionDigits'])) {
+            $this->setFractionDigits((int)$settings['price']['fractionDigits']);
+        }
     }
 
     /**
@@ -86,29 +93,32 @@ class PriceFormatter implements SingletonInterface
      * @param Product $product
      * @param string|null $locale
      * @param string|null $currency
+     * @param int|null    $fractionDigits
      * @return string
      */
-    public function format(Product $product, string $locale = null, string $currency = null): string
-    {
-        $locale ??= $this->locale;
-        $currency ??= $this->currency;
+    public function format(
+        Product $product,
+        string $locale = null,
+        string $currency = null,
+        int $fractionDigits = null
+    ): string {
+        $locale ??= $this->getLocale();
+        $currency ??= $this->getCurrency();
+        $fractionDigits ??= $this->getFractionDigits();
 
-        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $this->fractionDigits);
-
-        $event = $this->dispatcher->dispatch(
-            GeneralUtility::makeInstance(FormatPrice::class, $formatter, $currency, $locale, $product)
-        );
-
+        $event = new FormatPriceEvent($currency, $locale, $fractionDigits);
+        $this->eventDispatcher->dispatch($event);
         $formatter = $event->getFormatter();
 
         return $formatter->formatCurrency($product->getPrice(), $event->getCurrency());
     }
 
     /**
-     * Set currency from plugin settings.
+     * Read settings from typoscript
+     *
+     * @return array
      */
-    protected function setCurrencyAndFractionDigitsFromSettings(): void
+    protected function readSettings(): array
     {
         $settings = $this->configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
@@ -116,13 +126,7 @@ class PriceFormatter implements SingletonInterface
             'Pi1'
         );
 
-        if (!empty($settings['price']['currency'])) {
-            $this->currency = $settings['price']['currency'];
-        }
-
-        if (is_numeric($settings['price']['fractionDigits'])) {
-            $this->fractionDigits = (int)$settings['price']['fractionDigits'];
-        }
+        return $settings ?? [];
     }
 
     /**
@@ -134,5 +138,77 @@ class PriceFormatter implements SingletonInterface
         if ($siteLanguage instanceof SiteLanguage) {
             [$this->locale] = explode('.', $siteLanguage->getLocale());
         }
+    }
+
+    /**
+     * Get the value of locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Set the value of locale.
+     *
+     * @param string  $locale
+     *
+     * @return PriceFormatter
+     */
+    public function setLocale(string $locale): self
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of currency.
+     *
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * Set the value of currency.
+     *
+     * @param string  $currency
+     *
+     * @return PriceFormatter
+     */
+    public function setCurrency(string $currency): self
+    {
+        $this->currency = $currency;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fractionDigits.
+     *
+     * @return int
+     */
+    public function getFractionDigits()
+    {
+        return $this->fractionDigits;
+    }
+
+    /**
+     * Set the value of fractionDigits.
+     *
+     * @param int  $fractionDigits
+     *
+     * @return PriceFormatter
+     */
+    public function setFractionDigits(int $fractionDigits): self
+    {
+        $this->fractionDigits = $fractionDigits;
+
+        return $this;
     }
 }

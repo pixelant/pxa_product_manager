@@ -70,14 +70,14 @@ Sets image max size of attribute images/icons in FE rendering.
 .. _ts-plugin-tx-pxaproductmanager-types-image-imagemaxwidth:
 
 settings.attributes.types.image.maxWidth
-"""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""
 
 :typoscript:`plugin.tx_pxaproductmanager.settings.attributes.types.image.maxWidth = 265`
 
 Sets image max width in FE rendering attributes of type datetime.
 
 Property details price
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. only:: html
 
@@ -86,7 +86,7 @@ Property details price
 		:depth: 1
 
 settings.price.currency
-"""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""
 
 .. _ts-plugin-tx-pxaproductmanager-currency:
 
@@ -95,7 +95,7 @@ settings.price.currency
 The 3-letter ISO 4217 currency code indicating the currency to use.
 
 settings.price.fractionDigits
-"""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""
 
 .. _ts-plugin-tx-pxaproductmanager-fractionDigits:
 
