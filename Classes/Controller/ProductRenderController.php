@@ -57,6 +57,7 @@ class ProductRenderController extends AbstractController
         }
 
         $this->view->assign('filters', $filters);
+        $this->view->assign('orderBy', json_encode($this->createOrderByArray()));
         $this->view->assign('settingsJson', json_encode($this->lazyListSettings()));
     }
 
