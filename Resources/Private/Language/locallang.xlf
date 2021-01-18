@@ -208,6 +208,16 @@
             <trans-unit id="js.loading">
                 <source>Loading...</source>
             </trans-unit>
+            <trans-unit id="js.clear">
+                <source>Clear</source>
+            </trans-unit>
+            <trans-unit id="js.clear_all">
+                <source>Clear all</source>
+            </trans-unit>
+
+            <trans-unit id="js.sort_by">
+                <source>Sort by</source>
+            </trans-unit>
 
             <trans-unit id="fe.orderBy.name_asc">
                 <source>Name A-Z</source>

@@ -2,7 +2,7 @@
     <div id="filterCheckbox">
         <div class="checkbox-filter-wrapper" :class="accordionClasses">
             <div class="checkbox-filter-header" @click="toggleAccordion">
-                <span class="placeholder">{{placeholder}}</span>
+                <span class="placeholder">{{ placeholder }}</span>
             </div>
             <div class="checkbox-filter-body">
                 <div class="checkbox-filter-content">
@@ -10,7 +10,7 @@
                         <input class="checkbox-filter-check" type="checkbox" :value="option" @change="emitUpdate" v-model="value" />
                         <label class="checkbox-filter-label" for="label" :options="option.label" v-text="option.label"></label><br>
                     </div>
-                    <button class="btn btn-clear" @click="clearChecked"> CLEAR </button>
+                    <button class="btn-clear" @click="clearChecked"> {{ 'clear' | trans }} </button>
                 </div>
             </div>
         </div>
@@ -50,6 +50,7 @@
         created() {
             EventHandler.on('filterPreSelect', filters => this.preselectOptions(filters));
             EventHandler.on('filterOptionsUpdate', options => this.updateAvailableOptions(options));
+            EventHandler.on('clear-all', () => this.clearAllChecked())
             this.checkAccordionCollapsed();
         },
 
@@ -70,6 +71,14 @@
                     filter: this.filter,
                     options: this.value,
                 });
+            },
+            clearAllChecked() {
+                this.value = [];
+                EventHandler.emit('filterUpdateDemand', {
+                    filter: this.filter,
+                    options: this.value,
+                });
+                
             },
             emitUpdate() {
                 EventHandler.emit('filterUpdate', {
@@ -105,11 +114,11 @@
     }
 </script>
 
-<style>
+<style scoped>
   .placeholder {
     text-transform: uppercase;
     font-size: 12px;
-    margin: 20px 0;
+    margin: 20px 0 0;
     display: block;
   }
 

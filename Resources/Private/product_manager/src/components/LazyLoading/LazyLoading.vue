@@ -75,6 +75,30 @@
                 // With activated filters update query string
                 this.updateQueryString();
             })
+
+            EventHandler.on('filterUpdateDemand', data => {
+                this.demand.updateFilter(data.filter, data.options);
+            })
+            
+            EventHandler.on('filtersCleared', () => {
+                // Reset offset
+                this.demand.offSet = 0;
+                this.initLoad();
+
+                // With activated filters update query string
+                this.updateQueryString();
+            })
+
+            EventHandler.on('sortingUpdate', data => {
+                this.demand.updateOrderby(data.orderBy, data.orderDirection)
+                // Reset offset
+                this.demand.offSet = 0;
+                this.initLoad();
+
+                // With activated filters update query string
+                this.updateQueryString();
+            });
+
         },
 
         methods: {
@@ -82,10 +106,17 @@
                 const hash = window.location.hash;
                 if (hash !== '') {
                     let settings = queryString.parse(hash, queryStringOptions);
+
+                    if (typeof settings.filters === 'undefined'){
+                        return null
+                    }
+
                     settings.filters = JSON.parse(settings.filters);
 
                     // Emit preselect even, so filters will read data
                     EventHandler.emit('filterPreSelect', settings.filters);
+
+                    EventHandler.emit('sortingPreSelect', [settings.orderBy, settings.orderDirection]);
 
                     return settings;
                 }
@@ -112,12 +143,15 @@
                 const availableOptionsRequest = this.request.loadAvailableOptions(demand);
 
                 // Only load products
+                EventHandler.emit('totalCountUpdated', '');
+
                 this.request.loadProducts(demand)
                     .then(({data}) => {
                         this.products = data.products;
                         this.loading = false;
 
                         this.updateAvailableOptions(availableOptionsRequest);
+
                     })
                     .catch(error => console.error('Error while request products:', error));
             },
@@ -132,6 +166,8 @@
                         this.countAll = data.countAll;
 
                         EventHandler.emit('filterOptionsUpdate', data.options);
+                        EventHandler.emit('totalCountUpdated', data.countAll);
+
                     })
                     .catch(error => console.error('Error while request filter options:', error));
             },
@@ -157,7 +193,7 @@
              * Set demand state to query string
              */
             updateQueryString() {
-                let hash = '';
+                let hash = '-';
 
                 if (this.demand.hasQueryStringChanges()) {
                     hash = queryString.stringify(

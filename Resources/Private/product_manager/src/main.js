@@ -8,6 +8,8 @@ Vue.component('lazy-filter', require('./components/LazyLoading/Filter').default)
 Vue.component('lazy-checkbox-filter', require('./components/LazyLoading/FilterCheckbox').default);
 Vue.component('lazy-radio-filter', require('./components/LazyLoading/FilterRadioButton').default);
 Vue.component('clear-all', require('./components/LazyLoading/ClearAllButton').default);
+Vue.component('sorting', require('./components/LazyLoading/Sorting').default);
+Vue.component('counter', require('./components/LazyLoading/Counter').default);
 
 Vue.filter('trans', key => {
     if (!key) {

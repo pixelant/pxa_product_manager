@@ -1,26 +1,19 @@
 <template>
-    <div id="filterCheckbox">
-    <!--
-        <div class="checkbox" v-for="option in options" v-bind:key="option.value">
-            <input type="checkbox"
-            v-model="value"
-            :name="placeholder"
-            :value="option.value"
-            @input="emitUpdate"
-            :id="option.value">
-            <label for="label" :options="option.label" v-text="option.label"></label><br>
-
+    <div id="filterRadioButton">
+        <div class="radiobutton-filter-wrapper" :class="accordionClasses">
+            <div class="radiobutton-filter-header" @click="toggleAccordion">
+                <span class="placeholder">{{placeholder}}</span>
+            </div>
+            <div class="radiobutton-filter-body">
+                <div class="radiobutton-filter-content">
+                    <div v-for="option in options" v-bind:key="option.value">
+                        <input class="radiobutton-filter-check" type="radio" :value="option" @change="emitUpdate" v-model="value" />
+                        <label class="radiobutton-filter-label" for="label" :options="option.label" v-text="option.label"></label><br>
+                    </div>
+                    <button class="btn-clear" @click="clearChecked"> {{ 'clear' | trans }}</button>
+                </div>
+            </div>
         </div>
-        -->
-            <h2>{{placeholder}}</h2>
-
-        <div v-for="option in options" v-bind:key="option.value">
-            <input type="radio" :value="option" @change="emitUpdate" v-model="value" />
-            <label for="label" :options="option.label" v-text="option.label"></label><br>
-        </div>
-
-        <button @click="clearChecked"> CLEAR </button>
-
     </div>
 </template>
 
@@ -38,38 +31,61 @@
             return {
                 value: [],
                 options: this.filter.options,
+                isOpen: null
             }
         },
 
         computed: {
-            checkedFilter() {
-                return this.value;
-            },
             placeholder() {
                 return this.filter.label || this.$options.filters.trans('please_select');
+            },
+            accordionClasses() {
+                return {
+                    'is-closed': !this.isOpen,
+                    'is-primary': this.isOpen,
+                    'is-dark': !this.isOpen
+                };
             }
         },
 
         created() {
             EventHandler.on('filterPreSelect', filters => this.preselectOptions(filters));
             EventHandler.on('filterOptionsUpdate', options => this.updateAvailableOptions(options));
+            EventHandler.on('clear-all', () => this.clearAllChecked())
+            this.checkAccordionCollapsed();
         },
 
         methods: {
-            clearChecked: function() {
+            toggleAccordion() {
+                this.isOpen = !this.isOpen;
+            },
+            checkAccordionCollapsed() {
+                if (this.filter.gui_state == 'collapsed') {
+                    this.isOpen = false;
+                } else {
+                    this.isOpen = true;
+                }
+            },
+            clearChecked() {
                 this.value = [];
-
                 EventHandler.emit('filterUpdate', {
                     filter: this.filter,
                     options: this.value,
                 });
             },
-            emitUpdate(event) {
+            clearAllChecked() {
+                this.value = [];
+                EventHandler.emit('filterUpdateDemand', {
+                    filter: this.filter,
+                    options: this.value,
+                });
+
+            },
+            emitUpdate() {
                 EventHandler.emit('filterUpdate', {
                     filter: this.filter,
                     options: [this.value],
                 });
-                console.log(event.target.value);
             },
 
             preselectOptions(filters) {
