@@ -6,7 +6,6 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Formatter;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Event\Product\FormatPriceEvent;
 use Pixelant\PxaProductManager\Formatter\PriceFormatter;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
@@ -15,7 +14,7 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 class PriceFormatterTest extends UnitTestCase
 {
     /**
-     * test
+     * Test number of fraction digits.
      */
     public function testPriceFormatterReturnsCorrectNumberOfFractionDigits(): void
     {
@@ -29,7 +28,7 @@ class PriceFormatterTest extends UnitTestCase
             Product::class,
             [
                 'uid' => 1,
-                'price' => 123456.78
+                'price' => 123456.78,
             ]
         );
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Event\Product;
 
 use NumberFormatter;
-use Pixelant\PxaProductManager\Domain\Model\Product;
 
 class FormatPriceEvent
 {
@@ -29,7 +28,6 @@ class FormatPriceEvent
      */
     protected int $fractionDigits;
 
-
     /**
      * @param string $currency
      * @param string $locale
@@ -49,6 +47,7 @@ class FormatPriceEvent
     {
         $formatter = new NumberFormatter($this->getLocale(), NumberFormatter::CURRENCY);
         $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $this->getFractionDigits());
+
         return $formatter;
     }
 

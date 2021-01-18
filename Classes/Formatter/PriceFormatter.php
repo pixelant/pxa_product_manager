@@ -114,7 +114,7 @@ class PriceFormatter implements SingletonInterface
     }
 
     /**
-     * Read settings from typoscript
+     * Read settings from typoscript.
      *
      * @return array
      */
