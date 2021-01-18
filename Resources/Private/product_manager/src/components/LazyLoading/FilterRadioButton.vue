@@ -2,13 +2,13 @@
     <div id="filterRadioButton">
         <div class="radiobutton-filter-wrapper" :class="accordionClasses">
             <div class="radiobutton-filter-header" @click="toggleAccordion">
-                <span class="placeholder">{{placeholder}}</span>
+                <span class="placeholder">{{ placeholder }}</span>
             </div>
             <div class="radiobutton-filter-body">
                 <div class="radiobutton-filter-content">
                     <div v-for="option in options" v-bind:key="option.value">
-                        <input class="radiobutton-filter-check" type="radio" :value="option" @change="emitUpdate" v-model="value" />
-                        <label class="radiobutton-filter-label" for="label" :options="option.label" v-text="option.label"></label><br>
+                        <input class="radiobutton-filter-check" :id="option.value + option.label" type="radio" :value="option" @change="emitUpdate" v-model="value" />
+                        <label class="radiobutton-filter-label" :for="option.value + option.label" :options="option.label" v-text="option.label"></label><br>
                     </div>
                     <button class="btn-clear" @click="clearChecked"> {{ 'clear' | trans }}</button>
                 </div>

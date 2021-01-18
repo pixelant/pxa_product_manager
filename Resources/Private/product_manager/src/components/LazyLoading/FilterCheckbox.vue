@@ -7,8 +7,8 @@
             <div class="checkbox-filter-body">
                 <div class="checkbox-filter-content">
                     <div v-for="option in options" v-bind:key="option.value">
-                        <input class="checkbox-filter-check" type="checkbox" :value="option" @change="emitUpdate" v-model="value" />
-                        <label class="checkbox-filter-label" for="label" :options="option.label" v-text="option.label"></label><br>
+                        <input class="checkbox-filter-check" :id="option.value + option.label" type="checkbox" :value="option" @change="emitUpdate" v-model="value" />
+                        <label class="checkbox-filter-label" :for="option.value + option.label" :options="option.label" v-text="option.label"></label><br>
                     </div>
                     <button class="btn-clear" @click="clearChecked"> {{ 'clear' | trans }} </button>
                 </div>
