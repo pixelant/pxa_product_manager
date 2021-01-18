@@ -172,7 +172,7 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * Create order by options from settings
+     * Create order by options from settings.
      *
      * @return void
      */
