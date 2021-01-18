@@ -52,6 +52,7 @@ class ProductRenderController extends AbstractController
     {
         $filters = [];
         $filterIds = $this->settings['filtering']['filters'] ?? [];
+
         if ($filterIds) {
             $filters = $this->findRecordsByList($this->settings['filtering']['filters'], $this->filterRepository);
         }
@@ -85,10 +86,12 @@ class ProductRenderController extends AbstractController
             $pageTreeStartingPoint = $this->getTypoScriptFrontendController()->id;
         }
 
-        $this->settings['productOrderings'] = [
-            'orderBy' => 'name',
-            'orderDirection' => 'asc',
-        ];
+        if (empty($this->settings['productOrderings'])) {
+            $this->settings['productOrderings'] = [
+                'orderBy' => 'name',
+                'orderDirection' => 'asc',
+            ];
+        }
 
         return [
             'storagePid' => $this->storagePid(),
