@@ -42,7 +42,8 @@
             accordionClasses() {
                 return {
                     'is-closed': !this.isOpen,
-                    'is-open': this.isOpen
+                    'is-open': this.isOpen,
+                    'is-static': this.filter.gui_state == 'plain'
                 };
             }
         },
@@ -56,7 +57,9 @@
 
         methods: {
             toggleAccordion() {
-                this.isOpen = !this.isOpen;
+                if (this.filter.gui_state !== 'plain'){
+                    this.isOpen = !this.isOpen;
+                }
             },
             checkAccordionCollapsed() {
                 if (this.filter.gui_state == 'collapsed') {
@@ -121,10 +124,13 @@
   .is-closed .checkbox-filter-body {
     max-height: 0;
   }
-  .checkbox-filter-wrapper.is-closed .toggle-icon {
+  .checkbox-filter-wrapper.is-closed .toggle-icon:before {
       content: "+";
   }
-  .checkbox-filter-wrapper.is-open .toggle-icon {
+  .checkbox-filter-wrapper.is-open .toggle-icon:before {
       content: "-";
+  }
+  .checkbox-filter-wrapper.is-open.is-static .toggle-icon:before {
+      content: "";
   }
 </style>
