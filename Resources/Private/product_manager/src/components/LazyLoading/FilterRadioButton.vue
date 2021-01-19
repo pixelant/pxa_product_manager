@@ -2,7 +2,7 @@
     <div id="filterRadioButton">
         <div class="radiobutton-filter-wrapper" :class="accordionClasses">
             <div class="radiobutton-filter-header" @click="toggleAccordion">
-                <span class="placeholder">{{ placeholder }}</span>
+                <span class="toggle-icon"></span><span class="filter-name">{{ placeholder }}</span>
             </div>
             <div class="radiobutton-filter-body">
                 <div class="radiobutton-filter-content">
@@ -42,8 +42,7 @@
             accordionClasses() {
                 return {
                     'is-closed': !this.isOpen,
-                    'is-primary': this.isOpen,
-                    'is-dark': !this.isOpen
+                    'is-open': this.isOpen
                 };
             }
         },
@@ -87,30 +86,46 @@
                     options: [this.value],
                 });
             },
-
             preselectOptions(filters) {
                 const filterId = this.filter.uid;
                 if (typeof filters[filterId] === 'undefined') {
                     return;
                 }
-
                 const preselectValue = filters[filterId].value;
                 if (preselectValue) {
                     this.value = this.filter.options.filter(option => preselectValue.includes(option.value));
                 }
             },
-
             updateAvailableOptions(options) {
                 // If all is available
                 if (options === null) {
                     this.options = this.filter.options;
                     return;
                 }
-
                 const available = options[this.filter.uid] || options['and'];
-
                 this.options = this.filter.options.filter(option => available.includes(option.value));
             },
         }
     }
 </script>
+
+<style scoped>
+  .radiobutton-filter-header {
+    cursor: pointer;
+  }
+  .radiobutton-filter-body {
+    padding: 0;
+    max-height: 1000px;
+    overflow: hidden;
+    transition: 0.3s ease all;
+  }
+  .is-closed .radiobutton-filter-body {
+    max-height: 0;
+  }
+  .radiobutton-filter-wrapper.is-closed .toggle-icon {
+      content: "+";
+  }
+  .radiobutton-filter-wrapper.is-open .toggle-icon {
+      content: "-";
+  }
+</style>
