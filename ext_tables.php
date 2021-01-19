@@ -28,7 +28,7 @@ defined('TYPO3_MODE') || die;
     );
 
     // Register Datahandler hook in order to save attributes values
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['pxa_product_manager_attributes'] = \Pixelant\PxaProductManager\Hook\AttributesValuesUpdate::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['pxa_product_manager_attributes'] = \Pixelant\PxaProductManager\Hook\UpdateAttributeValuesProcessDatamap::class;
 
     // Register Datahandler hook to handle product inheritance
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['pxa_product_manager_productInheritance'] = \Pixelant\PxaProductManager\Hook\ProductInheritanceProcessDatamap::class;
