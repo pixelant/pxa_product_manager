@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Hook;
+namespace Pixelant\PxaProductManager\Hook\ItemsProcFunc;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Miscellaneous methods to provide data to the TCA.
  */
-class ItemsProcFunc
+class GeneralItemsProcFunc
 {
     /**
      * Returns an array of ["field_name", "LLL:field label"] pairs from a table.

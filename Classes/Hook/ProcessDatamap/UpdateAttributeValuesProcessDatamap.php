@@ -1,6 +1,6 @@
 <?php
 
-namespace Pixelant\PxaProductManager\Hook;
+namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;

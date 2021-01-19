@@ -95,6 +95,7 @@ return (function () {
             ],
             'attribute_sets' => [
                 'exclude' => true,
+                'onChange' => 'reload',
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_producttype.attribute_sets',
                 'config' => [
                     'type' => 'select',
@@ -127,7 +128,7 @@ return (function () {
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectCheckBox',
-                    'itemsProcFunc' => \Pixelant\PxaProductManager\Hook\ItemsProcFunc::class . '->getFieldsForTable',
+                    'itemsProcFunc' => \Pixelant\PxaProductManager\Hook\ItemsProcFunc\GeneralItemsProcFunc::class . '->getFieldsForTable',
                     'itemsProcConfig' => [
                         'table' => 'tx_pxaproductmanager_domain_model_product',
                         'excludeItems' => '',
