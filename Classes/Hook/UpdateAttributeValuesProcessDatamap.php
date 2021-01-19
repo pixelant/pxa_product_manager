@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * TCA hook that will update attributes values table before product save.
  */
-class AttributesValuesUpdate
+class UpdateAttributeValuesProcessDatamap
 {
     /**
      * Save attributes values and remove from fields array.
