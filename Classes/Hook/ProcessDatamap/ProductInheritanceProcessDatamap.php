@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pixelant\PxaProductManager\Hook;
+namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
