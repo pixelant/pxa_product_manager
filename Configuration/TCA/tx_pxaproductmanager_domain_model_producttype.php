@@ -128,10 +128,9 @@ return (function () {
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectCheckBox',
-                    'itemsProcFunc' => \Pixelant\PxaProductManager\Hook\ItemsProcFunc\GeneralItemsProcFunc::class . '->getFieldsForTable',
+                    'itemsProcFunc' => \Pixelant\PxaProductManager\Hook\ItemsProcFunc\ProductItemsProcFunc::class . '->getProductFields',
                     'itemsProcConfig' => [
-                        'table' => 'tx_pxaproductmanager_domain_model_product',
-                        'excludeItems' => '',
+                        'exclude' => '',
                     ],
                     'size' => 10,
                     'autoSizeMax' => 30,

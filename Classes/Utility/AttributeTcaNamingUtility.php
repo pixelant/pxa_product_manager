@@ -20,10 +20,27 @@ class AttributeTcaNamingUtility
      */
     public static function translateToTcaFieldName(Attribute $attribute): string
     {
+        return self::translateUidAndTypeToFieldName($attribute->getUid(), $attribute->getType());
+    }
+
+    /**
+     * Get name of TCA form field.
+     *
+     * @param int $uid The attribute UID
+     * @param int $type Attribute::ATTRIBUTE_TYPE_*
+     * @return string
+     */
+    public static function translateUidAndTypeToFieldName(int $uid, int $type) {
+        $prefix = self::TCA_PREFIX;
+
+        if ($type === Attribute::ATTRIBUTE_TYPE_FILE || $type === Attribute::ATTRIBUTE_TYPE_IMAGE) {
+            $prefix = self::TCA_FAL_PREFIX;
+        }
+
         return sprintf(
             '%s%d',
-            $attribute->isFalType() ? self::TCA_FAL_PREFIX : self::TCA_PREFIX,
-            $attribute->getUid()
+            $prefix,
+            $uid
         );
     }
 

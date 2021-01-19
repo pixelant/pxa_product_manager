@@ -20,8 +20,9 @@ class GeneralItemsProcFunc
      *     `exclude` comma separated list of fields to exclude
      *
      * @param array $configuration
+     * @return array
      */
-    public function getFieldsForTable(array $configuration)
+    public function getFieldsForTable(array $configuration): array
     {
         $tableName = $configuration['config']['itemsProcConfig']['table'];
 
@@ -54,7 +55,7 @@ class GeneralItemsProcFunc
         );
 
         $configuration['items'] = array_map(
-            fn ($label, $fieldName) => [$label, $fieldName],
+            fn ($label, $fieldName) => [$label, $fieldName, $GLOBALS['TCA'][$tableName]['ctrl']['iconfile']],
             array_column($columns, 'label'),
             array_keys($columns),
         );

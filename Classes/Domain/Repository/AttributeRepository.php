@@ -32,4 +32,5 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class AttributeRepository extends Repository
 {
+    public const TABLE_NAME = 'tx_pxaproductmanager_domain_model_attribute';
 }
