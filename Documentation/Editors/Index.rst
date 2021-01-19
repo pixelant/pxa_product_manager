@@ -17,7 +17,9 @@ Editors
   ProductTypes/Index
   CategoryManagement/Index
   ProductManagement/Index
+  PluginFIlters/Index
   ProductPluginSettings/Index
+
 
 Target group: **Editors**
 
@@ -53,7 +55,7 @@ Step 4. :ref:`Product page structure <product-pages>`.
 
 Step 5. :ref:`Products <product-management>`.
 
-Step 6. Filters (only used in filter view, and attributes must be of certain type).
+Step 6. :ref:`Filters <plugin-filters>` (only used in filter view, and attributes must be of certain type).
 
 With the product module main features you can:
 
