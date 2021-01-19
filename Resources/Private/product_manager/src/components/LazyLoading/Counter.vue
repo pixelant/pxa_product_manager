@@ -1,6 +1,6 @@
 <template>
     <div id="counter">
-        <h4 v-cloak>{{ 'total_results' | trans }} {{ countAllLabel }}</h4>
+        <span class="counter" v-cloak>{{ 'total_results' | trans }} {{ countAllLabel }}</span>
     </div>
 </template>
 
