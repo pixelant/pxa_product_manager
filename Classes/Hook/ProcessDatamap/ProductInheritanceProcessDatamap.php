@@ -127,7 +127,7 @@ class ProductInheritanceProcessDatamap
             )['product_type'];
 
             if ($productType) {
-                $this->productDatamap[$identifier] = $row + $this->getParentOverlayData($parentId, $productType);
+                $this->productDatamap[$identifier] = $row + $this->getParentOverlayData((int)$parentId, (int)$productType);
             }
         }
 
