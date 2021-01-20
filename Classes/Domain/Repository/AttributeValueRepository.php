@@ -38,6 +38,8 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class AttributeValueRepository extends Repository
 {
+    public const TABLE_NAME = 'tx_pxaproductmanager_domain_model_attributevalue';
+
     /**
      * Find all available values for product demand.
      *
