@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Event\Product;
 
 use NumberFormatter;
-use Pixelant\PxaProductManager\Domain\Model\Product;
 
-class FormatPrice
+class FormatPriceEvent
 {
     /**
      * @var NumberFormatter
@@ -25,22 +24,20 @@ class FormatPrice
     protected string $locale;
 
     /**
-     * @var Product
+     * @var int
      */
-    protected Product $product;
+    protected int $fractionDigits;
 
     /**
-     * @param NumberFormatter $formatter
      * @param string $currency
      * @param string $locale
-     * @param Product $product
+     * @param int $fractionDigits
      */
-    public function __construct(NumberFormatter $formatter, string $currency, string $locale, Product $product)
+    public function __construct(string $currency, string $locale, int $fractionDigits)
     {
-        $this->formatter = $formatter;
         $this->currency = $currency;
         $this->locale = $locale;
-        $this->product = $product;
+        $this->fractionDigits = $fractionDigits;
     }
 
     /**
@@ -48,7 +45,10 @@ class FormatPrice
      */
     public function getFormatter(): NumberFormatter
     {
-        return $this->formatter;
+        $formatter = new NumberFormatter($this->getLocale(), NumberFormatter::CURRENCY);
+        $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $this->getFractionDigits());
+
+        return $formatter;
     }
 
     /**
@@ -79,10 +79,10 @@ class FormatPrice
     }
 
     /**
-     * @return Product
+     * @return int
      */
-    public function getProduct(): Product
+    public function getFractionDigits(): int
     {
-        return $this->product;
+        return $this->fractionDigits;
     }
 }
