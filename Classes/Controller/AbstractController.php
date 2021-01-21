@@ -16,6 +16,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 abstract class AbstractController extends ActionController
 {
@@ -168,6 +169,27 @@ abstract class AbstractController extends ActionController
         );
 
         return $demand;
+    }
+
+    /**
+     * Create order by options from settings.
+     *
+     * @return void
+     */
+    protected function createOrderByArray()
+    {
+        $orderBy = [];
+        $listOrderBy = $this->settings['listView']['orderBy'];
+
+        foreach ($listOrderBy as $listOrderByItem) {
+            $text = LocalizationUtility::translate($listOrderByItem['key'], 'PxaProductManager');
+            $orderBy[] = [
+                'value' => $listOrderByItem['value'],
+                'text' => $text,
+            ];
+        }
+
+        return $orderBy;
     }
 
     /**

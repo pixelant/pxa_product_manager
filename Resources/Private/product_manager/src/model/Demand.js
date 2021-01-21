@@ -69,6 +69,11 @@ class Demand
 
         return params;
     }
+
+    updateOrderby(orderBy, orderDirection) {
+        this.orderBy = orderBy;
+        this.orderDirection = orderDirection;
+    }
 }
 
 export default Demand;

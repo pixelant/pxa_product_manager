@@ -110,6 +110,30 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_filter.conjunction">
 				<source>Conjunction</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_type">
+				<source>Render type</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_type.checkbox">
+				<source>Checkboxes</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_type.option">
+				<source>Options</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_type.select">
+				<source>Dropdown</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_state">
+				<source>State</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_state.collapsed">
+				<source>Collapsible - collapsed</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_state.expanded">
+				<source>Collapsible - expanded</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_filter.gui_state.plain">
+				<source>Not collapsible</source>
+			</trans-unit>
 			<!--Filter TCA:END-->
 
 			<!--Attributes Set TCA:START-->

@@ -16,6 +16,8 @@ class Filter extends AbstractResource
             'name',
             'label',
             'type',
+            'gui_type',
+            'gui_state',
             'options',
             'attributeUid',
             'conjunction',

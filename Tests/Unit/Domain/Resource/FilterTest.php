@@ -25,6 +25,8 @@ class FilterTest extends UnitTestCase
             'name' => 'name',
             'label' => 'label',
             'type' => 1,
+            'gui_type' => 'checkbox',
+            'gui_state' => 'expanded',
             'options' => ['123'],
             'attributeUid' => 1,
             'conjunction' => 'or',
@@ -49,7 +51,9 @@ class FilterTest extends UnitTestCase
             ->setType(1)
             ->setConjunction('or')
             ->setName('name')
-            ->setLabel('label');
+            ->setLabel('label')
+            ->setGuiType('checkbox')
+            ->setGuiState('expanded');
 
         $subject = new FilterResource($filter);
         $subject->injectDispatcher($this->createMock(Dispatcher::class));
