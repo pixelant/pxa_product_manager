@@ -17,7 +17,7 @@ Editors
   ProductTypes/Index
   CategoryManagement/Index
   ProductManagement/Index
-  PluginFIlters/Index
+  PluginFilters/Index
   ProductPluginSettings/Index
 
 
