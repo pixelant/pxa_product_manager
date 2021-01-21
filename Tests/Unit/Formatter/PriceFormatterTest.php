@@ -32,8 +32,8 @@ class PriceFormatterTest extends UnitTestCase
             ]
         );
 
-        self::assertEquals('$123,456.78', $priceFormatter->format($product, '', 'USD', 2));
-        self::assertEquals('$123,456.8', $priceFormatter->format($product, '', 'USD', 1));
-        self::assertEquals('$123,457', $priceFormatter->format($product, '', 'USD', 0));
+        self::assertEquals('$123,456.78', $priceFormatter->format($product, 'en_US', 'USD', 2));
+        self::assertEquals('$123,456.8', $priceFormatter->format($product, 'en_US', 'USD', 1));
+        self::assertEquals('$123,457', $priceFormatter->format($product, 'en_US', 'USD', 0));
     }
 }
