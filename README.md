@@ -37,7 +37,7 @@ Then install the composer dependencies:
 ## Workflow
 
 It's not allowed to push directly to master branch.
-All feature implementing and bugs fixing should be done using pull request.  
+All feature implementing and bugs fixing should be done using pull request.
 
 ### Test
 
@@ -54,11 +54,11 @@ To run the PHP Unit tests run the following command:
 To run the PHP Functional tests run the following command:
 
     npm run php:functionaltests
-    
+
 To simulate the build process without functional tests locally, then run this packaged command:
-    
+
     npm run build:suite_no_functional --silent
-    
+
 To simulate the full build process locally, then run this packaged command:
 
     npm run build:suite --silent
@@ -75,7 +75,7 @@ When using t3kit and themes with the less compiler, three variables needs to be 
 ### Products preview
 
 Example of Page TS that allow to enable preview function of product.
- 
+
 ```typo3_typoscript
 TCEMAIN.preview {
     tx_pxaproductmanager_domain_model_product {
