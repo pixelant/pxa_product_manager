@@ -11,6 +11,34 @@ plugin.tx_pxaproductmanager {
         layoutRootPaths {
             10 = {$plugin.tx_pxaproductmanager.view.layoutRootPath}
         }
+
+        renderingStacks {
+            productLayoutShow {
+                10 {
+                    template = Stacks/Layout/Show
+                }
+            }
+            productName {
+                10 {
+                    template = Stacks/Product/Name
+                }
+            }
+            productPrice {
+                10 {
+                    template = Stacks/Product/Price
+                }
+            }
+            productTeaser {
+                10 {
+                    template = Stacks/Product/Teaser
+                }
+            }
+            productDescription {
+                10 {
+                    template = Stacks/Product/Description
+                }
+            }
+        }
     }
 
     backend {

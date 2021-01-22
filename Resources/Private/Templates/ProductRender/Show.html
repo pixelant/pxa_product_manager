@@ -5,6 +5,11 @@
 <f:section name="main">
     <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
 
+    <pxa:renderMultiple key="productLayoutShow" arguments="{_all}">
+
+    </pxa:renderMultiple>
+
+
     <div class="row">
         <div class="col-md-12">
             <div class="single-product-wrapper">
@@ -12,26 +17,19 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-sm-6">
-                                <h1>{product.name}</h1>
+                                <pxa:renderMultiple key="productName" arguments="{_all}"></pxa:renderMultiple>
+                                <pxa:renderMultiple key="productPrice" arguments="{_all}"></pxa:renderMultiple>
 
-                                <f:if condition="{product.price}">
-                                    <h5>{product.price}</h5>
-                                </f:if>
                             </div>
                         </div>
 
-                        <f:if condition="{product.teaser}">
-                            <div class="product-teaser">
-                                <f:format.html>{product.teaser}</f:format.html>
-                            </div>
-                        </f:if>
+                        <pxa:renderMultiple key="productTeaser" arguments="{_all}"></pxa:renderMultiple>
+
 
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="content">
-                                    <f:if condition="{product.description}">
-                                        <f:format.html>{product.description}</f:format.html>
-                                    </f:if>
+                                    <pxa:renderMultiple key="productDescription" arguments="{_all}"></pxa:renderMultiple>
 
                                     <f:if condition="{product.usp}">
                                         <p class="usp">{product.usp -> f:format.nl2br()}</p>

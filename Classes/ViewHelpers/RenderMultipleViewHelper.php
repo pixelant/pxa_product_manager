@@ -38,16 +38,19 @@ class RenderMultipleViewHelper extends AbstractViewHelper
         $output = '';
         $childContentMatch = false;
 
-        foreach ($config as $key => $renderingStack) {
-            if ($key === $this->arguments['key']) {
-                foreach ($renderingStack as $renderingParts) {
-                    $partOutput = htmlspecialchars_decode(
-                        $this->getView($renderingParts['template'], $this->arguments)
-                    );
-                    $output = $output . $partOutput;
+        if (is_array($config)) {
+            foreach ($config as $key => $renderingStack) {
+                if ($key === $this->arguments['key']) {
+                    ksort($renderingStack, SORT_NUMERIC);
+                    foreach ($renderingStack as $renderingParts) {
+                        $partOutput = htmlspecialchars_decode(
+                            $this->getView($renderingParts['template'], $this->arguments)
+                        );
+                        $output = $output . $partOutput;
 
-                    if (preg_match('/' . $childContent . '/', $partOutput)) {
-                        $childContentMatch = true;
+                        if (preg_match('/' . $childContent . '/', $partOutput)) {
+                            $childContentMatch = true;
+                        }
                     }
                 }
             }
