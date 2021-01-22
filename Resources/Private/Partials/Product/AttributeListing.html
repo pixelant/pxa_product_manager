@@ -6,30 +6,9 @@
 
     <f:if condition="{settings.attributes.divideAttributesBySets}">
         <f:then>
-            <f:for each="{product.attributesSets}" as="attributeset">
+            <f:for each="{product.listingAttributeSets}" as="attributeset">
                 <f:if condition="{attributeset.listingAttributes}">
-                    <h4>{attributeset.name}</h4>
-                    <table class="table">
-                        <f:for each="{attributeset.listingAttributes}" as="attribute">
-                            <f:if condition="{attribute.hasNonEmptyValue}">
-                                <tr>
-                                    <th>
-                                        <f:if condition="{attribute.image}">
-                                            <f:image image="{attribute.image}"
-                                                     maxWidth="{settings.attributes.imageMaxSize}"
-                                                     maxHeight="{settings.attributes.imageMaxSize}"
-                                                     alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
-                                        </f:if>
-                                        <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
-                                    </th>
-                                    <td>
-                                        <f:render partial="Product/Attribute/Type{attribute.type}"
-                                                  arguments="{attribute: attribute}"/>
-                                    </td>
-                                </tr>
-                            </f:if>
-                        </f:for>
-                    </table>
+                    <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
                 </f:if>
             </f:for>
         </f:then>
@@ -53,7 +32,7 @@
                         </th>
                         <td>
                             <f:render partial="Product/Attribute/Type{attribute.type}"
-                                      arguments="{attribute: attribute}"/>
+                                      arguments="{attribute: attribute, product: product}"/>
                         </td>
                     </tr>
                 </f:for>

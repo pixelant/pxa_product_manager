@@ -1,0 +1,136 @@
+<T3DataStructure>
+	<sheets>
+		<sDEF>
+			<ROOT>
+				<el>
+					<settings.limit>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.limit</label>
+							<displayCond>FIELD:sDEF.settings.customProductsList.mode:=:pagetree</displayCond>
+							<config>
+								<type>input</type>
+								<size>5</size>
+								<eval>int</eval>
+							</config>
+						</TCEforms>
+					</settings.limit>
+
+					<settings.customProductsList.mode>
+						<TCEforms>
+							<onChange>reload</onChange>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode</label>
+							<config>
+								<type>select</type>
+								<renderType>selectSingle</renderType>
+								<items type="array">
+									<numIndex index="0" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode.products</numIndex>
+										<numIndex index="1">products</numIndex>
+									</numIndex>
+									<numIndex index="1" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.mode.pagetree</numIndex>
+										<numIndex index="1">pagetree</numIndex>
+									</numIndex>
+								</items>
+							</config>
+						</TCEforms>
+					</settings.customProductsList.mode>
+
+					<settings.customProductsList.products>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.custom_products_list.products</label>
+							<displayCond>FIELD:sDEF.settings.customProductsList.mode:=:products</displayCond>
+							<config>
+								<type>group</type>
+								<internal_type>db</internal_type>
+								<allowed>tx_pxaproductmanager_domain_model_product</allowed>
+								<size>10</size>
+								<minitems>0</minitems>
+								<maxitems>50</maxitems>
+								<show_thumbs>1</show_thumbs>
+								<wizards>
+									<suggest>
+										<type>suggest</type>
+									</suggest>
+								</wizards>
+							</config>
+						</TCEforms>
+					</settings.customProductsList.products>
+
+					<settings.pageTreeStartingPoint>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.page_tree_starting_point</label>
+							<displayCond>FIELD:sDEF.settings.customProductsList.mode:=:pagetree</displayCond>
+							<config>
+								<type>group</type>
+								<internal_type>db</internal_type>
+								<allowed>pages</allowed>
+								<size>1</size>
+								<maxitems>1</maxitems>
+								<minitems>0</minitems>
+								<show_thumbs>1</show_thumbs>
+								<wizards>
+									<suggest>
+										<type>suggest</type>
+									</suggest>
+								</wizards>
+							</config>
+						</TCEforms>
+					</settings.pageTreeStartingPoint>
+					<settings.productOrderings.orderBy>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.product_orderings.order_by</label>
+							<displayCond>FIELD:sDEF.settings.customProductsList.mode:=:pagetree</displayCond>
+							<config>
+								<type>select</type>
+								<renderType>selectSingle</renderType>
+								<items type="array">
+									<numIndex index="0" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_name</numIndex>
+										<numIndex index="1">name</numIndex>
+									</numIndex>
+									<numIndex index="1" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_tstamp</numIndex>
+										<numIndex index="1">tstamp</numIndex>
+									</numIndex>
+									<numIndex index="2" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_crdate</numIndex>
+										<numIndex index="1">crdate</numIndex>
+									</numIndex>
+									<!--<numIndex index="3" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_categories</numIndex>
+										<numIndex index="1">categories</numIndex>
+									</numIndex>-->
+									<numIndex index="4" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sortby_sorting</numIndex>
+										<numIndex index="1">sorting</numIndex>
+									</numIndex>
+								</items>
+							</config>
+						</TCEforms>
+					</settings.productOrderings.orderBy>
+
+					<settings.productOrderings.orderDirection>
+						<TCEforms>
+							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.product_orderings.order_direction</label>
+							<config>
+								<type>select</type>
+								<renderType>selectSingle</renderType>
+								<items type="array">
+									<numIndex index="0" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_asc</numIndex>
+										<numIndex index="1">asc</numIndex>
+									</numIndex>
+									<numIndex index="1" type="array">
+										<numIndex index="0">LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.sort_direction_desc</numIndex>
+										<numIndex index="1">desc</numIndex>
+									</numIndex>
+								</items>
+							</config>
+						</TCEforms>
+					</settings.productOrderings.orderDirection>
+				</el>
+			</ROOT>
+		</sDEF>
+	</sheets>
+</T3DataStructure>

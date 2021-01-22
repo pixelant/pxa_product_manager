@@ -83,6 +83,16 @@ class Filter extends AbstractEntity
     protected string $conjunction = 'and';
 
     /**
+     * @var string
+     */
+    protected string $guiType = '';
+
+    /**
+     * @var string
+     */
+    protected string $guiState = '';
+
+    /**
      * @return int
      */
     public function getType(): int
@@ -244,5 +254,53 @@ class Filter extends AbstractEntity
         }
 
         return $options;
+    }
+
+    /**
+     * Get the value of guiType.
+     *
+     * @return string
+     */
+    public function getGuiType()
+    {
+        return $this->guiType;
+    }
+
+    /**
+     * Set the value of guiType.
+     *
+     * @param string  $guiType
+     *
+     * @return Filter
+     */
+    public function setGuiType(string $guiType): self
+    {
+        $this->guiType = $guiType;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of guiState.
+     *
+     * @return string
+     */
+    public function getGuiState()
+    {
+        return $this->guiState;
+    }
+
+    /**
+     * Set the value of guiState.
+     *
+     * @param string  $guiState
+     *
+     * @return Filter
+     */
+    public function setGuiState(string $guiState): self
+    {
+        $this->guiState = $guiState;
+
+        return $this;
     }
 }

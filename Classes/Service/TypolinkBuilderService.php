@@ -57,9 +57,8 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
         $finalUrl = '';
 
         $record = $this->findRecord($linkDetails);
-        $pageUid = $this->getSingleViewPageUid();
 
-        if ($pageUid > 0 && $record) {
+        if ($record) {
             $urlBuilder = $this->getUrlBuilder();
 
             if ($record instanceof Product) {
@@ -100,35 +99,6 @@ class TypolinkBuilderService extends AbstractTypolinkBuilder
         }
 
         return null;
-    }
-
-    /**
-     * Try to get product single view pid.
-     *
-     * @return int
-     */
-    protected function getSingleViewPageUid(): int
-    {
-        return (int) ($this->getPidFromSettings() ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
-    }
-
-    /**
-     * Get pid from settings.
-     *
-     * @return int
-     */
-    protected function getPidFromSettings(): int
-    {
-        /** @var ConfigurationManagerInterface $configurationManager */
-        $configurationManager = $this->objectManager->get(ConfigurationManagerInterface::class);
-
-        $settings = $configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-            'PxaProductManager',
-            'Pi1'
-        );
-
-        return (int) ($settings['pids']['singleViewPid'] ?? 0);
     }
 
     /**

@@ -13,9 +13,13 @@ Editors
   :titlesonly:
 
   ProductAttributes/Index
+  ProductAttributeSets/Index
+  ProductTypes/Index
   CategoryManagement/Index
   ProductManagement/Index
+  PluginFilters/Index
   ProductPluginSettings/Index
+
 
 Target group: **Editors**
 
@@ -36,7 +40,7 @@ The pages containing products are using the :ref:`product module plugin <product
 
 .. figure:: ../Images/Editors/img3.png
   :width: 500px
-  
+
   (Img. 3)
 
 The order to create the different components are:
@@ -45,13 +49,13 @@ Step 1. :ref:`Attributes <product-attribute>`.
 
 Step 2. :ref:`Attribute sets <product-attribute-sets>`.
 
-Step 3. :ref:`Categories <product-category>`.
+Step 3. :ref:`Product Types <product-type>`.
 
-Step 4. Subcategories
+Step 4. :ref:`Product page structure <product-pages>`.
 
 Step 5. :ref:`Products <product-management>`.
 
-Step 6. Filters (only used in filter view, and attributes must be of certain type).
+Step 6. :ref:`Filters <plugin-filters>` (only used in filter view, and attributes must be of certain type).
 
 With the product module main features you can:
 

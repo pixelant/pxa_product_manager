@@ -107,6 +107,8 @@ plugin.tx_pxaproductmanager {
         price {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_price/010; type=string; label=Currency
             currency = USD
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_price/020; type=int; label=Fraction digits
+            fractionDigits = 2
         }
     }
 }

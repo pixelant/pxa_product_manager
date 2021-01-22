@@ -58,6 +58,9 @@ class AttributesValuesUpdate
                 if (AttributeTcaNamingUtility::isAttributeFieldName($fieldName)) {
                     // Save files to separate array
                     if (AttributeTcaNamingUtility::isFileAttributeFieldName($fieldName)) {
+                        $attributeId = AttributeTcaNamingUtility::extractIdFromFieldName($fieldName);
+                        $attributeFiles = GeneralUtility::trimExplode(',', $value, true);
+                        $updater->update($id, $attributeId, count($attributeFiles));
                         $files[] = $value;
                     } else {
                         $attributeId = AttributeTcaNamingUtility::extractIdFromFieldName($fieldName);

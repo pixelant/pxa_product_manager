@@ -22,35 +22,14 @@ TypoScript Reference
 --------------------
 
 Possible subsections: Reference of TypoScript options.
-The construct below show the recommended structure for
-TypoScript properties listing and description.
-
-Properties should be listed in the order in which they
-are executed by your extension, but the first should be
-alphabetical for easier access.
-
-When detailing data types or standard TypoScript
-features, don't hesitate to cross-link to the TypoScript
-Reference as shown below. See the :file:`Settings.yml`
-file for the declaration of cross-linking keys.
 
 
 Properties
 ^^^^^^^^^^
 
-.. container:: ts-properties
 
-	=========================== ===================================== ======================= ====================
-	Property                    Data type                             :ref:`t3tsref:stdwrap`  Default
-	=========================== ===================================== ======================= ====================
-	allWrap_                    :ref:`t3tsref:data-type-wrap`         yes                     :code:`<div>|</div>`
-	`subst\_elementUid`_        :ref:`t3tsref:data-type-boolean`      no                      0
-	wrapItemAndSub_             :ref:`t3tsref:data-type-wrap`
-	=========================== ===================================== ======================= ====================
-
-
-Property details
-^^^^^^^^^^^^^^^^
+Property details attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. only:: html
 
@@ -59,38 +38,70 @@ Property details
 		:depth: 1
 
 
-.. _ts-plugin-tx-extensionkey-stdwrap:
+.. _ts-plugin-tx-pxaproductmanager-dateformat:
 
-allWrap
-"""""""
+settings.attributes.dateFormat
+""""""""""""""""""""""""""""""
 
-:typoscript:`plugin.tx_extensionkey.allWrap =` :ref:`t3tsref:data-type-wrap`
+:typoscript:`plugin.tx_pxaproductmanager.settings.attributes.dateFormat = %B %d %Y`
 
-Wraps the whole item.
-
-
-.. _ts-plugin-tx-extensionkey-wrapitemandsub:
-
-wrapItemAndSub
-""""""""""""""
-
-:typoscript:`plugin.tx_extensionkey.wrapItemAndSub =` :ref:`t3tsref:data-type-wrap`
-
-Wraps the whole item and any submenu concatenated to it.
+Sets date format in FE rendering of attributes of type datetime.
 
 
-.. _ts-plugin-tx-extensionkey-substelementUid:
+.. _ts-plugin-tx-pxaproductmanager-divideattributesbysets:
 
-subst_elementUid
-""""""""""""""""
+settings.attributes.divideAttributesBySets
+""""""""""""""""""""""""""""""""""""""""""
 
-:typoscript:`plugin.tx_extensionkey.subst_elementUid =` :ref:`t3tsref:data-type-boolean`
+:typoscript:`plugin.tx_pxaproductmanager.settings.attributes.divideAttributesBySets = 1`
 
-If set, all appearances of the string ``{elementUid}`` in the total
-element html-code (after wrapped in allWrap_) are substituted with the
-uid number of the menu item. This is useful if you want to insert an
-identification code in the HTML in order to manipulate properties with
-JavaScript.
+Sets if attributes will be divided by attribute sets in frontend rendering of attributes.
+
+
+.. _ts-plugin-tx-pxaproductmanager-imagemaxsize:
+
+settings.attributes.imageMaxSize
+""""""""""""""""""""""""""""""""
+
+:typoscript:`plugin.tx_pxaproductmanager.settings.attributes.imageMaxSize = 50`
+
+Sets image max size of attribute images/icons in FE rendering.
+
+.. _ts-plugin-tx-pxaproductmanager-types-image-imagemaxwidth:
+
+settings.attributes.types.image.maxWidth
+""""""""""""""""""""""""""""""""""""""""
+
+:typoscript:`plugin.tx_pxaproductmanager.settings.attributes.types.image.maxWidth = 265`
+
+Sets image max width in FE rendering attributes of type datetime.
+
+Property details price
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. only:: html
+
+	.. contents::
+		:local:
+		:depth: 1
+
+settings.price.currency
+"""""""""""""""""""""""
+
+.. _ts-plugin-tx-pxaproductmanager-currency:
+
+:typoscript:`plugin.tx_pxaproductmanager.settings.price.currency = USD`
+
+The 3-letter ISO 4217 currency code indicating the currency to use.
+
+settings.price.fractionDigits
+"""""""""""""""""""""""""""""
+
+.. _ts-plugin-tx-pxaproductmanager-fractionDigits:
+
+:typoscript:`plugin.tx_pxaproductmanager.settings.price.fractionDigits = 2`
+
+Number of fraction digits in formatted price. Note, using 0 fraction digits might round rendered price!
 
 
 .. _configuration-faq:

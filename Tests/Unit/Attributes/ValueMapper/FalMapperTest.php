@@ -8,6 +8,7 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\FalMapper;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeFile;
+use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
@@ -34,14 +35,17 @@ class FalMapperTest extends UnitTestCase
         $attribute = TestsUtility::createEntity(Attribute::class, 10);
         $attribute->setType(Attribute::ATTRIBUTE_TYPE_FILE);
 
+        $attributeValue = TestsUtility::createEntity(AttributeValue::class, 10);
+        $attributeValue->setAttribute($attribute);
+
         /** @var Product $product */
         $product = TestsUtility::createEntity(Product::class, 1);
         $product->setAttributesFiles(
             TestsUtility::createObjectStorage($attributeFile1, $attributeFile2, $attributeFile3)
         );
 
-        $this->subject->map($product, $attribute);
+        $this->subject->map($product, $attributeValue);
 
-        self::assertEquals([$attributeFile1, $attributeFile2], $attribute->getValue());
+        self::assertEquals([$attributeFile1, $attributeFile2], $attributeValue->getArrayValue());
     }
 }

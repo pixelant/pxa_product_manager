@@ -71,6 +71,20 @@ plugin.tx_pxaproductmanager {
                 maxWidth = {$plugin.tx_pxaproductmanager.settings.listView.images.maxWidth}
                 maxHeight = {$plugin.tx_pxaproductmanager.settings.listView.images.maxHeight}
             }
+            orderBy {
+                10 {
+                    key = fe.orderBy.name_asc
+                    value = name,asc
+                }
+                20 {
+                    key = fe.orderBy.name_desc
+                    value = name,desc
+                }
+                30 {
+                    key = fe.orderBy.tstamp_desc
+                    value = tstamp,desc
+                }
+            }
         }
 
         wishList {
@@ -99,6 +113,7 @@ plugin.tx_pxaproductmanager {
 
         price {
             currency = {$plugin.tx_pxaproductmanager.settings.price.currency}
+            fractionDigits = {$plugin.tx_pxaproductmanager.settings.price.fractionDigits}
         }
 
         attributes {
@@ -109,7 +124,7 @@ plugin.tx_pxaproductmanager {
             imageMaxSize = {$plugin.tx_pxaproductmanager.settings.attributes.imageMaxSize}
             types {
                 image {
-                    imageMaxWidth = {$plugin.tx_pxaproductmanager.settings.attributes.types.image.maxWidth}
+                    maxWidth = {$plugin.tx_pxaproductmanager.settings.attributes.types.image.maxWidth}
                 }
             }
         }

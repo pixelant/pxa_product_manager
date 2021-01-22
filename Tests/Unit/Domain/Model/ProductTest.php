@@ -32,29 +32,29 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAttributesSetsWillValues(): void
+    public function getAttributeValueWillMapValues(): void
     {
         $am = $this->prophesize(MapperService::class);
         $am->map($this->subject)->shouldBeCalled();
 
         $this->subject->injectAttributesValuesMapper($am->reveal());
 
-        $this->subject->getAttributesSets();
+        $this->subject->getAttributeValue();
     }
 
     /**
      * @test
      */
-    public function getAttributesSetCacheValues(): void
+    public function getAttributeValueSetCacheValues(): void
     {
         $am = $this->prophesize(MapperService::class);
         $am->map($this->subject)->shouldBeCalledOnce();
 
         $this->subject->injectAttributesValuesMapper($am->reveal());
 
-        $this->subject->getAttributesSets();
-        $this->subject->getAttributesSets();
-        $this->subject->getAttributesSets();
+        $this->subject->getAttributeValue();
+        $this->subject->getAttributeValue();
+        $this->subject->getAttributeValue();
     }
 
     /**
@@ -227,16 +227,72 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getListingAttributesReturnOnlyAttributesThatAreVisibleInListing(): void
+    public function getListingAttributesSetsReturnAttributesSetsWithThatHaveAttributesThatAreVisibleInListing(): void
     {
-        $attr1 = TestsUtility::createEntity(Attribute::class, ['uid' => 1, 'showInAttributeListing' => false]);
-        $attr2 = TestsUtility::createEntity(Attribute::class, ['uid' => 2, 'showInAttributeListing' => false]);
-        $attr3 = TestsUtility::createEntity(Attribute::class, ['uid' => 3, 'showInAttributeListing' => true]);
+        $attr1 = TestsUtility::createEntity(
+            Attribute::class,
+            [
+                'uid' => 1,
+                'type' => 1,
+                'showInAttributeListing' => false,
+            ]
+        );
+        $attr2 = TestsUtility::createEntity(
+            Attribute::class,
+            [
+                'uid' => 2,
+                'type' => 1,
+                'showInAttributeListing' => false,
+            ]
+        );
+        $attr3 = TestsUtility::createEntity(
+            Attribute::class,
+            [
+                'uid' => 3,
+                'type' => 1,
+                'showInAttributeListing' => true,
+            ]
+        );
 
-        $subject = $this->createPartialMock(Product::class, ['getAttributes']);
-        $subject->expects(self::once())->method('getAttributes')->willReturn([1 => $attr1, 2 => $attr2, 3 => $attr3]);
+        $attrSet1 = TestsUtility::createEntity(
+            AttributeSet::class,
+            ['uid' => 10, 'attributes' => TestsUtility::createObjectStorage($attr1)]
+        );
+        $attrSet2 = TestsUtility::createEntity(
+            AttributeSet::class,
+            ['uid' => 20, 'attributes' => TestsUtility::createObjectStorage($attr2)]
+        );
+        $attrSet3 = TestsUtility::createEntity(
+            AttributeSet::class,
+            ['uid' => 30, 'attributes' => TestsUtility::createObjectStorage($attr3)]
+        );
 
-        self::assertEquals([3 => $attr3], $subject->getListingAttributes());
+        $attributeProperties = [
+            'uid' => 100,
+            'attribute' => $attr3,
+            'value' => 'testvalue',
+            'stringValue' => 'testvalue',
+        ];
+        $attributeValue = TestsUtility::createEntity(AttributeValue::class, $attributeProperties);
+
+        $subject = $this->createPartialMock(
+            Product::class,
+            [
+                '_getAllAttributesSets',
+                'getAttributeValue',
+            ]
+        );
+        $subject->expects(self::once())->method('_getAllAttributesSets')->willReturn(
+            [
+                10 => $attrSet1,
+                20 => $attrSet2,
+                30 => $attrSet3,
+            ]
+        );
+
+        $subject->method('getAttributeValue')->willReturn([3 => $attributeValue]);
+
+        self::assertEquals([0 => $attrSet3], $subject->getListingAttributeSets());
     }
 
     /**
@@ -252,11 +308,18 @@ class ProductTest extends UnitTestCase
     /**
      * @test
      */
-    public function getNavigationTitleReturnNameIfNoAlternativeTitle(): void
+    public function getUspArrayReturnsArray(): void
     {
-        $this->subject->setName('name');
+        $usp = [
+            'Line 1',
+            'Line 2',
+            'Line 3',
+            'Line 4',
+        ];
 
-        self::assertEquals('name', $this->subject->getNavigationTitle());
+        $this->subject->setUsp(implode(PHP_EOL, $usp));
+
+        self::assertEquals($usp, $this->subject->getUspArray());
     }
 
     /**

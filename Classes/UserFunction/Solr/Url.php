@@ -46,12 +46,6 @@ class Url
      */
     public function generate($_, array $params): string
     {
-        $page = (int)$params['singleViewPid'] ?? 0;
-        // Require valid page for link generation
-        if ($page <= 0) {
-            return '';
-        }
-
         $product = $this->mapProduct();
         if ($product === null) {
             return '';

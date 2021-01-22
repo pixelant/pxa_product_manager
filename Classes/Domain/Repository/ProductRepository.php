@@ -59,17 +59,22 @@ class ProductRepository extends AbstractDemandRepository
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_product');
 
+        $selectFields = [
+            'tx_pxaproductmanager_domain_model_product.uid',
+            'tx_pxaproductmanager_domain_model_product.name',
+            'tx_pxaproductmanager_domain_model_product.teaser',
+            'tx_pxaproductmanager_domain_model_product.sku',
+            'tx_pxaproductmanager_domain_model_product.price',
+            'tx_pxaproductmanager_domain_model_product.singleview_page',
+            'tx_pxaproductmanager_domain_model_product.images',
+            'tx_pxaproductmanager_domain_model_product.product_type',
+        ];
+
+        // fireEvent AfterSelectFieldsEvent table fields
+
         $queryBuilder
-            ->select(
-                'tx_pxaproductmanager_domain_model_product.uid',
-                'tx_pxaproductmanager_domain_model_product.name',
-                'tx_pxaproductmanager_domain_model_product.teaser',
-                'tx_pxaproductmanager_domain_model_product.sku',
-                'tx_pxaproductmanager_domain_model_product.price',
-                'tx_pxaproductmanager_domain_model_product.singleview_page',
-                'tx_pxaproductmanager_domain_model_product.images',
-                'tx_pxaproductmanager_domain_model_product.product_type',
-            )
+            ->select(...$selectFields)
+            ->addSelect()
             ->from('tx_pxaproductmanager_domain_model_product');
 
         $this->fireDemandEvent($demand, $queryBuilder);

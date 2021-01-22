@@ -37,6 +37,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attributeset
     name            varchar(255)     DEFAULT ''  NOT NULL,
     attributes      int(11) unsigned DEFAULT '0' NOT NULL,
     product_types   int(11) unsigned DEFAULT '0' NOT NULL,
+    layout          varchar(60)      DEFAULT 'Default' NOT NULL,
 );
 
 #
@@ -168,6 +169,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_filter
     category    int(11) unsigned DEFAULT '0' NOT NULL,
     attribute   int(11) unsigned DEFAULT '0' NOT NULL,
     conjunction varchar(10)      DEFAULT ''  NOT NULL,
+    gui_type    varchar(25)      DEFAULT ''  NOT NULL,
+    gui_state   varchar(25)      DEFAULT ''  NOT NULL,
 );
 
 #

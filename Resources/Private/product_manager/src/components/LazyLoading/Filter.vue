@@ -41,9 +41,17 @@
         created() {
             EventHandler.on('filterPreSelect', filters => this.preselectOptions(filters));
             EventHandler.on('filterOptionsUpdate', options => this.updateAvailableOptions(options));
+            EventHandler.on('clear-all', () => this.clearAllChecked())
         },
 
         methods: {
+            clearAllChecked() {
+                this.value = [];
+                EventHandler.emit('filterUpdateDemand', {
+                    filter: this.filter,
+                    options: this.value,
+                });
+            },
             emitUpdate() {
                 EventHandler.emit('filterUpdate', {
                     filter: this.filter,

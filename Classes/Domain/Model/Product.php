@@ -731,6 +731,23 @@ class Product extends AbstractEntity
     }
 
     /**
+     * @return array
+     */
+    public function getAttributeValue(): array
+    {
+        return $this->getCachedProperty('attributeValue', function () {
+            $attributeValues = $this->attributesValuesMapper->map($this);
+
+            $keys = array_map(
+                fn (AttributeValue $attributeValue) => $attributeValue->getAttribute()->getIdentifier(),
+                $attributeValues
+            );
+
+            return array_combine($keys, $attributeValues);
+        });
+    }
+
+    /**
      * Return array of attributes values that has valid attributes.
      *
      * @return array
@@ -762,7 +779,9 @@ class Product extends AbstractEntity
     public function getAttributesSets(): array
     {
         return $this->getCachedProperty('attributesSets', function () {
-            return $this->attributesValuesMapper->map($this);
+            return array_values(
+                $this->_getAllAttributesSets()
+            );
         });
     }
 
@@ -793,15 +812,42 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return attributes that are visible in listing only.
+     * Return attribute sets that have at least one attribute with show in listing.
      *
      * @return array
      */
-    public function getListingAttributes(): array
+    public function getListingAttributeSets(): array
     {
-        return $this->collection($this->getAttributes())
-            ->filter(fn (Attribute $attribute) => $attribute->getShowInAttributeListing())
-            ->toArray();
+        return $this->getCachedProperty('listingAttributeSets', function () {
+            $attributesSets = $this->getAttributesSets();
+            $listingAttributeSets = [];
+
+            foreach ($attributesSets as $attributesSet) {
+                $attributeSetHaveNoneEmptyValues = false;
+
+                $attributes = $this->collection($attributesSet->getAttributes())
+                    ->filter(fn (Attribute $attribute) => $attribute->getShowInAttributeListing())
+                    ->toArray();
+
+                foreach ($attributes as $attribute) {
+                    $attributeKey = $attribute->getIdentifier();
+
+                    if (!empty($this->getAttributeValue()[$attributeKey])) {
+                        if ($this->getAttributeValue()[$attributeKey]->getHasNonEmptyValue()) {
+                            $attributeSetHaveNoneEmptyValues = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if ($attributeSetHaveNoneEmptyValues) {
+                    $listingAttributeSets[] = $attributesSet;
+                }
+            }
+
+            return $listingAttributeSets;
+        });
     }
 
     /**
@@ -920,6 +966,28 @@ class Product extends AbstractEntity
 
         return array_values(
             $attributesSets->toArray()
+        );
+    }
+
+    /**
+     * Return all attributes sets from choosen productType.
+     * It fetch every attribute set of every category from parents tree
+     * + product own attributes sets.
+     *
+     * @return AttributeValues[]
+     * @internal Use internally to map all attribute values for frontend rendering.
+     * @see getAttributesValues
+     */
+
+    /** @codingStandardsIgnoreStart */
+    public function _getAllAttributeValues(): array // @codingStandardsIgnoreEnd
+    {
+        if (empty($this->attributesValues)) {
+            return [];
+        }
+
+        return array_values(
+            $this->attributesValues->toArray()
         );
     }
 

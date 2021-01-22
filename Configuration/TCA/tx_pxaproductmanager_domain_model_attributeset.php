@@ -23,10 +23,10 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg',
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, attributes, product_types',
+            'showRecordFieldList' => 'hidden, name, layout, attributes, product_types',
         ],
         'types' => [
-            '1' => ['showitem' => 'name, attributes, product_types, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
+            '1' => ['showitem' => 'name, layout, attributes, product_types, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -80,6 +80,18 @@ return (function () {
                             'disabled' => false,
                         ],
                     ],
+                ],
+            ],
+            'layout' => [
+                'exclude' => true,
+                'label' => $ll . '.layout',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [$ll . '.layout.default', 'Default'],
+                    ],
+                    'default' => 'Default',
                 ],
             ],
             'product_types' => [

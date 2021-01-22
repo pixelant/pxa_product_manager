@@ -3,31 +3,37 @@ plugin.tx_solr {
         products = 1
         products {
             table = tx_pxaproductmanager_domain_model_product
-
             fields {
                 title = name
-                subTitle = sku
+                title_textEdgeNgramS = name
+                title_textNgramS = name
+
+                navTitle = alternative_title
 
                 content = SOLR_CONTENT
                 content {
                     field = description
                 }
 
-                description < .content
-
                 abstract = teaser
 
-                url = USER
-                url {
-                    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\Url->generate
-                    singleViewPid = {$plugin.tx_pxaproductmanager.settings.pids.singleViewPid}
+                description = meta_description
+
+                keywords = SOLR_MULTIVALUE
+                keywords {
+                    field = keywords
                 }
 
                 product_name_textS = TEXT
                 product_name_textS.field = name
 
-                product_sku_textS < .product_name_textS
+                product_sku_textS = TEXT
                 product_sku_textS.field = sku
+
+                url = USER
+                url {
+                    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\Url->generate
+                }
 
                 main_image_stringS = USER
                 main_image_stringS {
@@ -49,8 +55,8 @@ plugin.tx_solr {
                 # Index attribute value example.
                 #attribute_rsk_stringS = USER
                 #attribute_rsk_stringS {
-                #    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue->value
-                #    identifier = rsk
+                #  userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue->value
+                #  identifier = rsk
                 #}
                 */
 
@@ -70,8 +76,16 @@ plugin.tx_solr {
     }
     search {
         faceting.facets.type {
+            renderingInstruction = CASE
             renderingInstruction {
-                # Products
+                key.field = optionValue
+
+                default = TEXT
+                default {
+                    value = {LLL:EXT:core/Resources/Private/Language/locallang_common.xlf:pages}
+                    insertData = 1
+                }
+
                 tx_pxaproductmanager_domain_model_product = TEXT
                 tx_pxaproductmanager_domain_model_product {
                     value = {LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf:fe.solr.type_facet_name}
@@ -80,7 +94,7 @@ plugin.tx_solr {
             }
         }
         query {
-            queryFields := addToList(product_name_textS^60.0, product_sku_textS^60.0)
+            queryFields := addToList(product_sku_textS^80.0, product_name_textS^60.0, title_textEdgeNgramS^50.0, title_textNgramS^50.0, navTitle^1.0)
         }
     }
 }
