@@ -75,7 +75,6 @@ class ProductRepository extends AbstractDemandRepository
             ->addSelect()
             ->from('tx_pxaproductmanager_domain_model_product');
 
-
         $this->addStorageExpression($queryBuilder, $demand);
 
         $this->addProductPagesExpression($queryBuilder, $demand);

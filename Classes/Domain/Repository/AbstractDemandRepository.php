@@ -28,7 +28,6 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  */
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
-use Pixelant\PxaProductManager\Event\Repository\RepositoryDemand as RepositoryDemandEvent;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
