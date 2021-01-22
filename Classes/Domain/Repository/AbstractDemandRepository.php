@@ -147,17 +147,4 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
             $queryBuilder->orderBy($demand->getOrderBy(), $orderDirection);
         }
     }
-
-    /**
-     * Fire demand event.
-     *
-     * @param DemandInterface $demand
-     * @param QueryBuilder $queryBuilder
-     */
-    protected function fireDemandEvent(DemandInterface $demand, QueryBuilder $queryBuilder): void
-    {
-        $this->dispatcher->dispatch(
-            GeneralUtility::makeInstance(RepositoryDemandEvent::class, $demand, $queryBuilder)
-        );
-    }
 }
