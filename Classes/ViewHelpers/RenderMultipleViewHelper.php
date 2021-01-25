@@ -79,7 +79,7 @@ class RenderMultipleViewHelper extends AbstractViewHelper
         $extbaseConfiguration = $configurationManager
             ->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_FRAMEWORK);
         $templateRootPaths = $extbaseConfiguration['view']['templateRootPaths'];
-
+        krsort($templateRootPaths, SORT_NUMERIC);
         foreach ($templateRootPaths as $rootPath) {
             $absFilePath = GeneralUtility::getFileAbsFileName($rootPath);
             $view->setTemplatePathAndFilename($absFilePath . $path . '.html');

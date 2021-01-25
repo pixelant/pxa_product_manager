@@ -37,12 +37,12 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
         parent::initializeArguments();
         $this->registerUniversalTagAttributes();
 
-        $this->registerArgument('page', 'int', 'Target page uid', true);
-        $this->registerArgument('product', Product::class, 'Product', false, null);
+        $this->registerArgument('product', Product::class, 'Product', true, null);
         $this->registerArgument('category', Category::class, 'Category', false, null);
-        $this->registerArgument('excludeCategories', 'bool', 'Exclude categories from path', false, false);
+        $this->registerArgument('returnUrl', 'bool', 'Just return url', false, false);
         $this->registerArgument('target', 'string', 'Link target', false, null);
         $this->registerArgument('absolute', 'string', 'Force absolute link', false, false);
+        $this->registerArgument('page', 'int', 'Target page uid', false);
     }
 
     /**
@@ -56,7 +56,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
         $product = $this->arguments['product'];
         $category = $this->arguments['category'];
         $target = $this->arguments['target'];
-        $excludeCategories = (bool)$this->arguments['excludeCategories'];
+        $returnUrl = (bool)$this->arguments['returnUrl'];
         $absolute = (bool)$this->arguments['absolute'];
 
         $content = (string)$this->renderChildren();
@@ -66,14 +66,18 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
 
             $url = $this->urlBuilder->url($product);
 
-            if (!empty($target)) {
-                $this->tag->addAttribute('target', $target);
-            }
-            $this->tag->addAttribute('href', $url);
-            $this->tag->setContent($content);
-            $this->tag->forceClosingTag(true);
+            if (!$returnUrl) {
+                if (!empty($target)) {
+                    $this->tag->addAttribute('target', $target);
+                }
+                $this->tag->addAttribute('href', $url);
+                $this->tag->setContent($content);
+                $this->tag->forceClosingTag(true);
 
-            return $this->tag->render();
+                return $this->tag->render();
+            } else {
+                return $url;
+            }
         }
 
         return $content;

@@ -5,68 +5,37 @@
 <f:section name="main">
     <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
 
-    <pxa:renderMultiple key="productLayoutShow" arguments="{_all}">
-
-    </pxa:renderMultiple>
-
-
     <div class="row">
         <div class="col-md-12">
             <div class="single-product-wrapper">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <pxa:renderMultiple key="productName" arguments="{_all}"></pxa:renderMultiple>
-                                <pxa:renderMultiple key="productPrice" arguments="{_all}"></pxa:renderMultiple>
-
                             </div>
                         </div>
-
-                        <pxa:renderMultiple key="productTeaser" arguments="{_all}"></pxa:renderMultiple>
-
-
                         <div class="row">
-                            <div class="col-md-8">
-                                <div class="content">
-                                    <pxa:renderMultiple key="productDescription" arguments="{_all}"></pxa:renderMultiple>
-
-                                    <f:if condition="{product.usp}">
-                                        <p class="usp">{product.usp -> f:format.nl2br()}</p>
-                                    </f:if>
-                                </div>
+                            <div class="col-md-4">
+                                <pxa:renderMultiple key="productImages" arguments="{_all}"></pxa:renderMultiple>
                             </div>
 
-                            <div class="col-md-4">
-                                <f:if condition="{product.images}">
-                                    <f:image image="{product.mainImage}"
-                                             class="img-rounded"
-                                             maxWidth="{settings.singleView.images.mainMaxWidth}"
-                                             maxHeight="{settings.singleView.images.mainMaxHeight}"
-                                             alt="{product.name}"
-                                             title="{product.name}" />
-
-                                    <div class="row">
-                                        <div class="gallery">
-                                            <f:alias map="{s: settings.singleView.images}">
-
-                                                <f:for as="image" each="{product.galleryImages}" iteration="iterator">
-                                                    <div class="col-md-3">
-                                                        <a href="{f:uri.image(image: image, maxWidth: s.mainMaxWidth, maxHeight: s.mainMaxHeight)}" class="lightbox">
-                                                            <f:image image="{image}"
-                                                                     width="40c"
-                                                                     height="40c"
-                                                                     class="img-thumbnail"
-                                                                     alt="{image.alternative}"
-                                                                     title="{image.title}" />
-                                                        </a>
-                                                    </div>
-                                                </f:for>
-
-                                            </f:alias>
-                                        </div>
+                            <div class="col-md-8">
+                                <div class="content">
+                                    <pxa:renderMultiple key="productTeaser" arguments="{_all}"></pxa:renderMultiple>
+                                    <pxa:renderMultiple key="productSku" arguments="{_all}"></pxa:renderMultiple>
+                                    <hr>
+                                    <pxa:renderMultiple key="productPrice" arguments="{_all}"></pxa:renderMultiple>
+                                    <div class="product-actions">
+                                        <pxa:renderMultiple key="productActions" arguments="{_all}"></pxa:renderMultiple>
                                     </div>
-                                </f:if>
+                                    <div class="product-shortcuts">
+                                        <pxa:renderMultiple key="productShortcuts" arguments="{_all}"></pxa:renderMultiple>
+                                    </div>
+                                    <hr>
+                                    <pxa:renderMultiple key="productDescription" arguments="{_all}"></pxa:renderMultiple>
+                                    <pxa:renderMultiple key="productUsp" arguments="{_all}"></pxa:renderMultiple>
+                                </div>
                             </div>
                         </div>
 
@@ -116,10 +85,8 @@
                               arguments="{relatedProducts: product.accessories, headerLabel: 'fe.accessories'}" />
                 </f:if>
 
-                <f:if condition="{settings.pids.listViewPid} && {category}">
-                    <pxa:link page="{settings.pids.listViewPid}" category="{category}">
-                        <f:translate key="fe.go_back" />
-                    </pxa:link>
+                <f:if condition="{settings.pids.listViewPid}">
+                    <f:link.page id="{settings.pids.listViewPid}"><f:translate key="fe.go_back" /></f:link.page>
                 </f:if>
             </div>
         </div>

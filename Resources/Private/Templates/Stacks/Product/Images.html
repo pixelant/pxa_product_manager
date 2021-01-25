@@ -1,0 +1,29 @@
+<f:if condition="{product.images}">
+    <f:image image="{product.mainImage}"
+                class="img-rounded"
+                maxWidth="{settings.singleView.images.mainMaxWidth}"
+                maxHeight="{settings.singleView.images.mainMaxHeight}"
+                alt="{product.name}"
+                title="{product.name}" />
+
+    <div class="row">
+        <div class="gallery">
+            <f:alias map="{s: settings.singleView.images}">
+
+                <f:for as="image" each="{product.galleryImages}" iteration="iterator">
+                    <div class="col-md-3">
+                        <a href="{f:uri.image(image: image, maxWidth: s.mainMaxWidth, maxHeight: s.mainMaxHeight)}" class="lightbox">
+                            <f:image image="{image}"
+                                        width="40c"
+                                        height="40c"
+                                        class="img-thumbnail"
+                                        alt="{image.alternative}"
+                                        title="{image.title}" />
+                        </a>
+                    </div>
+                </f:for>
+
+            </f:alias>
+        </div>
+    </div>
+</f:if>
