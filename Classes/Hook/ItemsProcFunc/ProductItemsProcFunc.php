@@ -33,7 +33,10 @@ class ProductItemsProcFunc extends GeneralItemsProcFunc
 
         $fields = $this->getFieldsForTable($configuration);
 
-        $attributesFieldTca = BackendUtility::getTcaFieldConfiguration(AttributeSetRepository::TABLE_NAME, 'attributes');
+        $attributesFieldTca = BackendUtility::getTcaFieldConfiguration(
+            AttributeSetRepository::TABLE_NAME,
+            'attributes'
+        );
 
         foreach ($configuration['row']['attribute_sets'] as $attributeSetId) {
             /** @var RelationHandler $relationHandler */

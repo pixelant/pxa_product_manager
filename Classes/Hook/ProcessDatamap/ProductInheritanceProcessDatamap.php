@@ -125,13 +125,13 @@ class ProductInheritanceProcessDatamap
     {// @codingStandardsIgnoreEnd
         foreach ($this->parentRelationPlaceholders as &$parentRelationPlaceholder) {
             if (in_array($parentRelationPlaceholder['parent'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
-                $parentRelationPlaceholder['parent'] =
-                    $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['parent']];
+                $parentRelationPlaceholder['parent']
+                    = $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['parent']];
             }
 
             if (in_array($parentRelationPlaceholder['child'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
-                $parentRelationPlaceholder['child'] =
-                    $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['child']];
+                $parentRelationPlaceholder['child']
+                    = $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['child']];
             }
         }
 
@@ -224,8 +224,8 @@ class ProductInheritanceProcessDatamap
                         foreach ($parentRelations as &$parentRelation) {
                             if (is_string($parentRelation) && strpos($parentRelation, 'NEW') !== false) {
                                 $newRelation = StringUtility::getUniqueId('NEW');
-                                $this->dataHandler->datamap[$foreignTable][$newRelation] =
-                                    $this->dataHandler->datamap[$foreignTable][$parentRelation];
+                                $this->dataHandler->datamap[$foreignTable][$newRelation]
+                                    = $this->dataHandler->datamap[$foreignTable][$parentRelation];
 
                                 $this->parentRelationPlaceholders[] = [
                                     'child' => $newRelation,
