@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
@@ -123,15 +121,15 @@ class ProductInheritanceProcessDatamap
      */
 
     /** @codingStandardsIgnoreStart */
-    public function processDatamap_afterAllOperations(DataHandler $dataHandler)
+    public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
     {// @codingStandardsIgnoreEnd
         foreach ($this->parentRelationPlaceholders as &$parentRelationPlaceholder) {
-            if (in_array($parentRelationPlaceholder['parent'], array_keys($this->dataHandler->substNEWwithIDs))) {
+            if (in_array($parentRelationPlaceholder['parent'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
                 $parentRelationPlaceholder['parent'] =
                     $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['parent']];
             }
 
-            if (in_array($parentRelationPlaceholder['child'], array_keys($this->dataHandler->substNEWwithIDs))) {
+            if (in_array($parentRelationPlaceholder['child'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
                 $parentRelationPlaceholder['child'] =
                     $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['child']];
             }
@@ -211,13 +209,12 @@ class ProductInheritanceProcessDatamap
                             );
                         }
 
-
                         // Check for deleted relations
                         foreach ($childRelations as $childRelation) {
                             $parentRelationUid = $this->findParentRelationUidInIndex($childRelation, $foreignTable);
 
                             // Delete any relation that is not present in the parent
-                            if ($parentRelationUid === 0 || !in_array($parentRelationUid, $parentRelations)) {
+                            if ($parentRelationUid === 0 || !in_array($parentRelationUid, $parentRelations, true)) {
                                 $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
                                 $this->removeParentRelationsFromIndex($parentRelationUid, $foreignTable);
                             }
@@ -398,7 +395,7 @@ class ProductInheritanceProcessDatamap
      * @param int $childUid
      * @param string $tablename
      */
-    protected function addParentChildRelationToIndex(int $parentUid, int $childUid, string $tablename)
+    protected function addParentChildRelationToIndex(int $parentUid, int $childUid, string $tablename): void
     {
         if (
             $parentUid === 0
@@ -430,7 +427,7 @@ class ProductInheritanceProcessDatamap
      * @param int $parentUid
      * @param string $tablename
      */
-    protected function removeParentRelationsFromIndex(int $parentUid, string $tablename)
+    protected function removeParentRelationsFromIndex(int $parentUid, string $tablename): void
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)

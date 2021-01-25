@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Backend\FormEngine\FieldWizard;
 
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
-use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use TYPO3\CMS\Backend\Form\AbstractNode;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
