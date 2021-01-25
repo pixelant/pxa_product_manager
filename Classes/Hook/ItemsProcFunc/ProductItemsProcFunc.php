@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Hook\ItemsProcFunc;
 
-use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\RelationHandler;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Miscellaneous methods to provide data to the TCA.
@@ -58,7 +55,7 @@ class ProductItemsProcFunc extends GeneralItemsProcFunc
                 $configuration['items'][] = [
                     $attribute['label'],
                     AttributeTcaNamingUtility::translateUidAndTypeToFieldName($attributeId, $attribute['type']),
-                    $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['iconfile']
+                    $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['iconfile'],
                 ];
             }
         }

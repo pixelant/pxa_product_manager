@@ -30,7 +30,8 @@ class AttributeTcaNamingUtility
      * @param int $type Attribute::ATTRIBUTE_TYPE_*
      * @return string
      */
-    public static function translateUidAndTypeToFieldName(int $uid, int $type) {
+    public static function translateUidAndTypeToFieldName(int $uid, int $type)
+    {
         $prefix = self::TCA_PREFIX;
 
         if ($type === Attribute::ATTRIBUTE_TYPE_FILE || $type === Attribute::ATTRIBUTE_TYPE_IMAGE) {
