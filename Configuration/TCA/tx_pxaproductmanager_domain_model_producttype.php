@@ -28,7 +28,7 @@ return (function () {
             'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets, ',
         ],
         'types' => [
-            '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets,'],
+            '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets, template_layout'],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -123,6 +123,15 @@ return (function () {
                             'disabled' => false,
                         ],
                     ],
+                ],
+            ],
+            'template_layout' => [
+                'exclude' => true,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_producttype.attribute_template_layout',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'itemsProcFunc' => 'Pixelant\\PxaProductManager\\Hook\\TcaProcFunc->getTemplateLayouts',
                 ],
             ],
         ],
