@@ -130,8 +130,7 @@ return (function () {
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_producttype.attribute_template_layout',
                 'config' => [
                     'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'itemsProcFunc' => 'Pixelant\\PxaProductManager\\Hook\\TcaProcFunc->getTemplateLayouts',
+                    'renderType' => 'selectSingle'
                 ],
             ],
         ],
