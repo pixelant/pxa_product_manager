@@ -1,0 +1,23 @@
+[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productshow/product') > 0] OR
+[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productrender/product') > 0]
+    # add stuff for gallery
+    page {
+        includeCSS {
+            swiper = EXT:pxa_product_manager/Resources/Public/Css/swiper-bundle.min.css
+            pxapm_swiper = EXT:pxa_product_manager/Resources/Public/Css/ProductManager.swiper.css
+        }
+
+        includeJSFooterlibs {
+            swiper = EXT:pxa_product_manager/Resources/Public/JavaScript/swiper-bundle.min.js
+        }
+
+        includeJSFooter {
+            pxapm_swiper = EXT:pxa_product_manager/Resources/Public/JavaScript/ProductManager.swiper.js
+        }
+    }
+
+    plugin.tx_pxaproductmanager {
+        view.renderingStacks.productImages.10.template = Stacks/Product/SwiperImages
+        settings.singleView.related.partial = SwiperRelated
+    }
+[end]
