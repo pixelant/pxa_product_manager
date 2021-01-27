@@ -61,11 +61,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             return $result;
         }
 
-        /** @var PageRenderer $pageRenderer */
-        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-        $pageRenderer->addCssFile(
-            'EXT:pxa_product_manager/Resources/Public/Css/Backend/formEngine.css'
-        );
+        $this->addCss();
 
         $result = $this->handleInheritedFields($result);
 
@@ -104,5 +100,17 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Add CSS to the page renderer. Ensures attributes are styles like other fields.
+     */
+    protected function addCss()
+    {
+        /** @var PageRenderer $pageRenderer */
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+        $pageRenderer->addCssFile(
+            'EXT:pxa_product_manager/Resources/Public/Css/Backend/formEngine.css'
+        );
     }
 }
