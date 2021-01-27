@@ -4,7 +4,6 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
-    $falAttributesField = \Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility::FAL_DB_FIELD;
 
     return [
         'ctrl' => [
@@ -32,7 +31,7 @@ return (function () {
         ],
         'types' => [
             '1' => [
-                'showitem' => 'attributes_values,sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,
+                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProductType, --palette--;;general,--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.attributes,attributes_values,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, parent, related_products, accessories,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.links, fal_links, links,
@@ -43,8 +42,7 @@ return (function () {
         'palettes' => [
             'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, singleview_page, --linebreak--, sku, --linebreak--, price, tax_rate, --linebreak--,  teaser, usp, --linebreak--, description'],
             'access' => ['showitem' => 'hidden, --linebreak--, starttime, endtime'],
-            'paletteAttributes' => ['showitem' => ''],
-            'paletteProdyctType' => ['showitem' => 'product_type'],
+            'paletteProductType' => ['showitem' => 'product_type'],
         ],
         'columns' => [
             'sys_language_uid' => [
@@ -137,7 +135,6 @@ return (function () {
                     ],
                 ],
             ],
-
             'name' => [
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.name',
@@ -214,7 +211,6 @@ return (function () {
             ],
             'attributes_values' => [
                 'exclude' => false,
-                'label' => 'Attribute Values',
                 'config' => [
                     'type' => 'inline',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_attributevalue',
@@ -297,22 +293,6 @@ return (function () {
                         'maxitems' => 99,
                     ],
                     $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
-                ),
-            ],
-            $falAttributesField => [
-                'exclude' => false,
-                'label' => $falAttributesField,
-                'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                    $falAttributesField,
-                    [
-                        'appearance' => [
-                            'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference',
-                        ],
-                        'behaviour' => [
-                            'allowLanguageSynchronization' => true,
-                        ],
-                        'maxitems' => 99,
-                    ]
                 ),
             ],
             'fal_links' => [

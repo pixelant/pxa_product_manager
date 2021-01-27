@@ -19,6 +19,7 @@ use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -59,6 +60,12 @@ class ProductFormDataProvider implements FormDataProviderInterface
         if ($result['tableName'] !== 'tx_pxaproductmanager_domain_model_product') {
             return $result;
         }
+
+        /** @var PageRenderer $pageRenderer */
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+        $pageRenderer->addCssFile(
+            'EXT:pxa_product_manager/Resources/Public/Css/Backend/formEngine.css'
+        );
 
         $result = $this->handleInheritedFields($result);
 

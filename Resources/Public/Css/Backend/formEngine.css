@@ -1,0 +1,18 @@
+
+div[data-foreign-table="tx_pxaproductmanager_domain_model_attributevalue"] > .panel-group,
+div[data-foreign-table="tx_pxaproductmanager_domain_model_attributevalue"] > .panel-group > .panel-default {
+    border: none;
+}
+
+div[data-foreign-table="tx_pxaproductmanager_domain_model_attributevalue"] > .panel-group > .panel {
+    margin-top: 0;
+}
+
+div[data-foreign-table="tx_pxaproductmanager_domain_model_attributevalue"] > .panel-group > .panel-default > .panel-heading {
+    display: none;
+}
+
+div[data-foreign-table="tx_pxaproductmanager_domain_model_attributevalue"] > .panel-group > .panel-default > .panel-collapse > .tab-content > fieldset {
+    padding-left: 0;
+    border: none;
+}

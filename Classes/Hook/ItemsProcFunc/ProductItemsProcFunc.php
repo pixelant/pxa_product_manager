@@ -57,7 +57,7 @@ class ProductItemsProcFunc extends GeneralItemsProcFunc
 
                 $configuration['items'][] = [
                     $attribute['label'],
-                    AttributeTcaNamingUtility::translateUidAndTypeToFieldName($attributeId, $attribute['type']),
+                    'attribute.' . $attributeId,
                     $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['iconfile'],
                 ];
             }

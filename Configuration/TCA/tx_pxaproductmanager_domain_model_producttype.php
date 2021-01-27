@@ -130,7 +130,7 @@ return (function () {
                     'renderType' => 'selectCheckBox',
                     'itemsProcFunc' => \Pixelant\PxaProductManager\Hook\ItemsProcFunc\ProductItemsProcFunc::class . '->getProductFields',
                     'itemsProcConfig' => [
-                        'exclude' => '',
+                        'exclude' => 'attributes_values',
                     ],
                     'size' => 10,
                     'autoSizeMax' => 30,
