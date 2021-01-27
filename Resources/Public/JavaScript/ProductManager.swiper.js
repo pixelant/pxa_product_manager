@@ -20,11 +20,8 @@ var galleryTop = new Swiper('.product-gallery-top', {
 var relatedProducts = new Swiper('.product-relations', {
   slidesPerView: 'auto',
   spaceBetween: 30,
-  scrollbar: {
-    el: '.product-relations-scrollbar',
-    draggable: false,
-    dragSize: 90,
-    hide: false
+  pagination: {
+    el: '.product-relations-pagination',
   },
   navigation: {
     nextEl: '.product-relations-button-next',

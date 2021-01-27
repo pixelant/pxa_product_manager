@@ -1,10 +1,10 @@
  <!-- Swiper -->
 <div class="product-gallery-wrp">
     <div class="swiper-container product-gallery-top">
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper product-gallery-wrapper">
             <f:for each="{product.galleryImages}" as="image" iteration="iteration">
                 <div
-                    class="swiper-slide"
+                    class="swiper-slide product-gallery-swiper-slide"
                     style="background-image:url({f:uri.image(src: '{image.uid}', treatIdAsReference: 1, maxWidth='{settings.singleView.images.mainMaxWidth}', absolute: 1)})">
                 </div>
             </f:for>
@@ -15,10 +15,10 @@
     </div>
 
     <div class="swiper-container product-gallery-thumbs">
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper product-gallery-thumbs-wrapper">
             <f:for each="{product.galleryImages}" as="image" iteration="iteration">
                 <div
-                    class="swiper-slide"
+                    class="swiper-slide product-gallery-thumbs-swiper-slide"
                     style="background-image:url({f:uri.image(src: '{image.uid}', treatIdAsReference: 1, maxWidth='120', absolute: 1)})">
                 </div>
             </f:for>
