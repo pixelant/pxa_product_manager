@@ -75,9 +75,9 @@ class LinkViewHelper extends AbstractTagBasedViewHelper
                 $this->tag->forceClosingTag(true);
 
                 return $this->tag->render();
-            } else {
-                return $url;
             }
+
+            return $url;
         }
 
         return $content;
