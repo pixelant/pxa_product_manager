@@ -87,7 +87,14 @@ class AttributeUtility
 
         $attributes = [];
         foreach ($attributeSets as $attributeSet) {
-            $attributes = array_merge($attributes, self::findAttributesForAttributeSet($attributeSet['uid']));
+            $attribute = array_merge($attributes, self::findAttributesForAttributeSet($attributeSet['uid']));
+
+            // Skip duplicates
+            if (in_array($attribute['uid'], array_column($attributes, 'uid'))) {
+                continue;
+            }
+
+            $attributes[] = $attribute;
         }
 
         return $attributes;
