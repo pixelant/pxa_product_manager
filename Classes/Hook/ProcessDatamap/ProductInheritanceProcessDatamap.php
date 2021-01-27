@@ -319,6 +319,11 @@ class ProductInheritanceProcessDatamap
         $overlayFields = [];
 
         foreach ($inheritedFields as $inheritedField) {
+            // Don't handle attributes here
+            if (strpos($inheritedField, 'attribute.') !== false) {
+                continue;
+            }
+
             if (is_array($parentRecord[$inheritedField])) {
                 $relations = [];
 

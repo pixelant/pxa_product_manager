@@ -45,39 +45,17 @@ class ParentValueFieldWizard extends AbstractNode
             'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:formengine.parentvalue.label'
         );
 
-        // Attribute field
-        if (AttributeTcaNamingUtility::isAttributeFieldName($fieldName)) {
-            $attributeId = AttributeTcaNamingUtility::extractIdFromFieldName($fieldName);
+        $icon = GeneralUtility::makeInstance(IconFactory::class)->getIconForRecord(
+            $this->data['tableName'],
+            $this->data['databaseRow'],
+            Icon::SIZE_SMALL
+        );
 
-            $attributeValueRecord = $this->getAttributeValueOfAttributeForProduct($attributeId, $parentRecord['uid']);
-
-            $icon = GeneralUtility::makeInstance(IconFactory::class)->getIconForRecord(
-                AttributeRepository::TABLE_NAME,
-                [],
-                Icon::SIZE_SMALL
-            );
-
-            $processedParentValue = BackendUtility::getProcessedValueExtra(
-                AttributeValueRepository::TABLE_NAME,
-                'value',
-                $attributeValueRecord['value'],
-                0,
-                $attributeValueRecord['uid']
-            );
-        // Normal field
-        } else {
-            $icon = GeneralUtility::makeInstance(IconFactory::class)->getIconForRecord(
-                $this->data['tableName'],
-                $this->data['databaseRow'],
-                Icon::SIZE_SMALL
-            );
-
-            $processedParentValue = BackendUtility::getProcessedValueExtra(
-                $this->data['tableName'],
-                $this->data['fieldName'],
-                $parentRecord[$fieldName]
-            );
-        }
+        $processedParentValue = BackendUtility::getProcessedValueExtra(
+            $this->data['tableName'],
+            $this->data['fieldName'],
+            $parentRecord[$fieldName]
+        );
 
         $html = '<div class="bg-info" style="padding: .2em" title="' . htmlspecialchars($label) . '">';
         $html .= $icon . ' <strong>' . htmlspecialchars($label) . ':</strong> ';

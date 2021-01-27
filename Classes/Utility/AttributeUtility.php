@@ -7,12 +7,16 @@ namespace Pixelant\PxaProductManager\Utility;
 
 
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
+use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductTypeRepository;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Backend;
 
 /**
  * Convenience utility for attributes and attribute values
@@ -65,6 +69,90 @@ class AttributeUtility
         }
 
         return [];
+    }
+
+    /**
+     * Returns all attribute records for the specified $productTypeId
+     *
+     * @param int $productTypeId
+     * @return array
+     */
+    public static function findAttributesForProductType(int $productTypeId): array
+    {
+        if ($productTypeId === 0) {
+            return [];
+        }
+
+        $attributeSets = self::findAttributeSetsForProductType($productTypeId);
+
+        $attributes = [];
+        foreach ($attributeSets as $attributeSet) {
+            $attributes = array_merge($attributes, self::findAttributesForAttributeSet($attributeSet['uid']));
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Find attribute sets for the given product type
+     *
+     * @param int $productTypeId
+     * @return array of product set records
+     */
+    public static function findAttributeSetsForProductType(int $productTypeId): array
+    {
+        if ($productTypeId === 0) {
+            return [];
+        }
+
+        $fieldTcaConfiguration = BackendUtility::getTcaFieldConfiguration(
+            ProductTypeRepository::TABLE_NAME,
+            'attribute_sets'
+        );
+
+        /** @var RelationHandler $relationHandler */
+        $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
+        $relationHandler->start(
+            '',
+            AttributeSetRepository::TABLE_NAME,
+            $fieldTcaConfiguration['MM'],
+            $productTypeId,
+            ProductTypeRepository::TABLE_NAME,
+            $fieldTcaConfiguration
+        );
+
+        return $relationHandler->getFromDB()[AttributeSetRepository::TABLE_NAME] ?? [];
+    }
+
+    /**
+     * Find attributes for an attribute set
+     *
+     * @param int $attributeSetId
+     * @return array of attribute records
+     */
+    public static function findAttributesForAttributeSet(int $attributeSetId): array
+    {
+        if ($attributeSetId === 0) {
+            return [];
+        }
+
+        $fieldTcaConfiguration = BackendUtility::getTcaFieldConfiguration(
+            AttributeSetRepository::TABLE_NAME,
+            'attributes'
+        );
+
+        /** @var RelationHandler $relationHandler */
+        $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
+        $relationHandler->start(
+            '',
+            AttributeRepository::TABLE_NAME,
+            $fieldTcaConfiguration['MM'],
+            $attributeSetId,
+            AttributeSetRepository::TABLE_NAME,
+            $fieldTcaConfiguration
+        );
+
+        return $relationHandler->getFromDB()[AttributeRepository::TABLE_NAME] ?? [];
     }
 
     /**

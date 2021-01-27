@@ -35,4 +35,6 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 class ProductTypeRepository extends Repository
 {
     use AbleFindByUidList;
+
+    public const TABLE_NAME = 'tx_pxaproductmanager_domain_model_producttype';
 }

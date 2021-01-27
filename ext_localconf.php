@@ -77,6 +77,12 @@ defined('TYPO3_MODE') || die;
         'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldWizard\ParentValueFieldWizard::class,
     ];
 
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1611778775] = [
+        'nodeName' => 'hiddenAttributeType',
+        'priority' => '30',
+        'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldWizard\HiddenAttributeTypeValueFieldWizard::class,
+    ];
+
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1609921375] = [
         'nodeName' => 'inheritedProductField',
         'priority' => '30',
@@ -90,6 +96,14 @@ defined('TYPO3_MODE') || die;
             \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class
         ]
     ];
+
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\NewAttributeRelationRecordsDataProvider::class] = [
+        'depends' => [
+            \TYPO3\CMS\Backend\Form\FormDataProvider\EvaluateDisplayConditions::class
+        ]
+    ];
+
+
 
     // Modify data structure of flexform. Hook will dynamically load flexform parts for selected action
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['pxa_product_manager'] =
