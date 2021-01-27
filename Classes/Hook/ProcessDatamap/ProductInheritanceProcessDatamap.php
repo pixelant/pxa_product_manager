@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
+use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
@@ -177,68 +179,11 @@ class ProductInheritanceProcessDatamap
                 $parentOverlayRow = array_merge($row, $this->getParentOverlayData((int)$parentId, (int)$productType));
 
                 foreach ($parentOverlayRow as $field => $value) {
-                    $fieldTcaConfiguration = BackendUtility::getTcaFieldConfiguration(self::TABLE, $field);
-                    if ($fieldTcaConfiguration['type'] === 'inline') {
-                        $foreignTable = $fieldTcaConfiguration['foreign_table'];
-
-                        $parentRelations = ArrayUtility::removeArrayEntryByValue(
-                            explode(',', $parentOverlayRow[$field]),
-                            ''
-                        );
-
-                        if (isset($row['field'])) {
-                            $childRelations = ArrayUtility::removeArrayEntryByValue(
-                                explode(',', $row[$field]),
-                                ''
-                            );
-                        } else {
-                            /** @var RelationHandler $relationHandler */
-                            $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
-                            $relationHandler->start(
-                                '',
-                                $foreignTable,
-                                '',
-                                $identifier,
-                                self::TABLE,
-                                $fieldTcaConfiguration
-                            );
-
-                            $childRelations = array_column(
-                                $relationHandler->getFromDB()[$foreignTable] ?? [],
-                                'uid'
-                            );
-                        }
-
-                        // Check for deleted relations
-                        foreach ($childRelations as $childRelation) {
-                            $parentRelationUid = $this->findParentRelationUidInIndex($childRelation, $foreignTable);
-
-                            // Delete any relation that is not present in the parent
-                            if ($parentRelationUid === 0 || !in_array($parentRelationUid, $parentRelations, true)) {
-                                $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
-                                $this->removeParentRelationsFromIndex($parentRelationUid, $foreignTable);
-                            }
-                        }
-
-                        // Make copies of new relations (child has to have its own relation record)
-                        foreach ($parentRelations as &$parentRelation) {
-                            if (is_string($parentRelation) && strpos($parentRelation, 'NEW') !== false) {
-                                $newRelation = StringUtility::getUniqueId('NEW');
-                                $this->dataHandler->datamap[$foreignTable][$newRelation]
-                                    = $this->dataHandler->datamap[$foreignTable][$parentRelation];
-
-                                $this->parentRelationPlaceholders[] = [
-                                    'child' => $newRelation,
-                                    'parent' => $parentRelation,
-                                    'tablename' => $foreignTable,
-                                ];
-
-                                $parentRelation = $newRelation;
-                            }
-                        }
-
-                        $parentOverlayRow[$field] = implode(',', $parentRelations);
-                    }
+                    $parentOverlayRow[$field] = $this->processOverlayRelations(
+                        ProductRepository::TABLE_NAME,
+                        $field,
+                        $value
+                    );
                 }
 
                 $this->productDatamap[$identifier] = $parentOverlayRow;
@@ -280,6 +225,82 @@ class ProductInheritanceProcessDatamap
         foreach ($children as $child) {
             $this->processRecordOverlays($child);
         }
+    }
+
+    /**
+     * Process relations that need to be copied in order to create an overlay
+     *
+     * @param $table
+     * @param $field
+     * @param $value
+     * @return string
+     */
+    protected function processOverlayRelations($table, $field, $value)
+    {
+        $fieldTcaConfiguration = BackendUtility::getTcaFieldConfiguration($table, $field);
+        if ($fieldTcaConfiguration['type'] === 'inline') {
+            $foreignTable = $fieldTcaConfiguration['foreign_table'];
+
+            $parentRelations = ArrayUtility::removeArrayEntryByValue(
+                explode(',', $value),
+                ''
+            );
+
+            if (isset($row['field'])) {
+                $childRelations = ArrayUtility::removeArrayEntryByValue(
+                    explode(',', $row[$field]),
+                    ''
+                );
+            } else {
+                /** @var RelationHandler $relationHandler */
+                $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
+                $relationHandler->start(
+                    '',
+                    $foreignTable,
+                    '',
+                    $identifier,
+                    $table,
+                    $fieldTcaConfiguration
+                );
+
+                $childRelations = array_column(
+                    $relationHandler->getFromDB()[$foreignTable] ?? [],
+                    'uid'
+                );
+            }
+
+            // Check for deleted relations
+            foreach ($childRelations as $childRelation) {
+                $parentRelationUid = $this->findParentRelationUidInIndex($childRelation, $foreignTable);
+
+                // Delete any relation that is not present in the parent
+                if ($parentRelationUid === 0 || !in_array($parentRelationUid, $parentRelations, true)) {
+                    $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
+                    $this->removeParentRelationsFromIndex($parentRelationUid, $foreignTable);
+                }
+            }
+
+            // Make copies of new relations (child has to have its own relation record)
+            foreach ($parentRelations as &$parentRelation) {
+                if (is_string($parentRelation) && strpos($parentRelation, 'NEW') !== false) {
+                    $newRelation = StringUtility::getUniqueId('NEW');
+                    $this->dataHandler->datamap[$foreignTable][$newRelation]
+                        = $this->dataHandler->datamap[$foreignTable][$parentRelation];
+
+                    $this->parentRelationPlaceholders[] = [
+                        'child' => $newRelation,
+                        'parent' => $parentRelation,
+                        'tablename' => $foreignTable,
+                    ];
+
+                    $parentRelation = $newRelation;
+                }
+            }
+
+            return implode(',', $parentRelations);
+        }
+
+        return $value;
     }
 
     /**
