@@ -18,11 +18,12 @@
     width: 100%;
 }
 
-.swiper-button-next,
-.swiper-button-prev {
+.product-gallery-button-next,
+.product-gallery-button-prev,
+.product-relations-button-next,
+.product-relations-button-prev {
     background: var(--pm-dark-overlay);
     color: var(--pm-light);
-    padding: 10px;
 }
 
 .product-gallery-thumbs {
@@ -42,5 +43,4 @@
 
 .swiper-slide.product-item-wrp {
     height: auto;
-    width: 25%;
 }

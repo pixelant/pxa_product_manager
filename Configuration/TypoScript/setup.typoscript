@@ -198,3 +198,16 @@ page.includeCSS.product_manager_basic = EXT:pxa_product_manager/Resources/Public
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Api/" extensions="typoscript">
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/TempPluginRenderer/" extensions="typoscript">
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Page/" extensions="typoscript">
+
+// Set variable to detect if pm is in "single view" mode.
+// Assumes that page.10 is used as FLUIDTEMPLATE, default in e.g. bootstrap_package and t3kit
+page.10.variables.product_single_view = TEXT
+page.10.variables.product_single_view.value = 0
+
+[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productshow/product') > 0]
+    page.10.variables.product_single_view.value = 1
+[END]
+
+[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productrender/product') > 0]
+    page.10.variables.product_single_view.value = 1
+[END]
