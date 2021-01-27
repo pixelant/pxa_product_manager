@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -19,29 +21,37 @@ class ConfigurationProviderFactory
      * @return ProviderInterface
      * @throws \UnexpectedValueException
      */
-    public static function create(Attribute $attribute): ProviderInterface
+    public static function create(int $attributeId, array $attribute = null): ProviderInterface
     {
-        switch (true) {
-            case $attribute->isInputType():
+        if ($attribute === null) {
+            $attribute = BackendUtility::getRecord(
+                AttributeRepository::TABLE_NAME,
+                $attributeId
+            );
+        }
+
+        switch ($attribute['type']) {
+            case Attribute::ATTRIBUTE_TYPE_INPUT:
                 return GeneralUtility::makeInstance(InputProvider::class, $attribute);
-            case $attribute->isTextArea():
+            case Attribute::ATTRIBUTE_TYPE_TEXT:
                 return GeneralUtility::makeInstance(TextAreaProvider::class, $attribute);
-            case $attribute->isSelectBoxType():
+            case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
                 return GeneralUtility::makeInstance(SelectBoxProvider::class, $attribute);
-            case $attribute->isCheckboxType():
+            case Attribute::ATTRIBUTE_TYPE_CHECKBOX:
                 return GeneralUtility::makeInstance(CheckboxProvider::class, $attribute);
-            case $attribute->isLinkType():
+            case Attribute::ATTRIBUTE_TYPE_LINK:
                 return GeneralUtility::makeInstance(LinkProvider::class, $attribute);
-            case $attribute->isFalType():
+            case Attribute::ATTRIBUTE_TYPE_FILE:
+            case Attribute::ATTRIBUTE_TYPE_IMAGE:
                 return GeneralUtility::makeInstance(FalProvider::class, $attribute);
-            case $attribute->isDateType():
+            case Attribute::ATTRIBUTE_TYPE_DATETIME:
                 return GeneralUtility::makeInstance(DateTimeProvider::class, $attribute);
-            case $attribute->isLabelType():
+            case Attribute::ATTRIBUTE_TYPE_LABEL:
                 return GeneralUtility::makeInstance(LabelProvider::class, $attribute);
         }
 
         throw new \UnexpectedValueException(
-            'Attribute with type "' . $attribute->getType() . '" not supported.',
+            'Attribute with type "' . $attribute['type'] . '" not supported.',
             1568986135545
         );
     }

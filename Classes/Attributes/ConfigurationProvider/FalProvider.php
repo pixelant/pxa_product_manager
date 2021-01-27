@@ -14,14 +14,14 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 class FalProvider implements ProviderInterface
 {
     /**
-     * @var Attribute
+     * @var array
      */
-    protected Attribute $attribute;
+    protected array $attribute;
 
     /**
-     * @param Attribute $attribute
+     * @param array $attribute
      */
-    public function __construct(Attribute $attribute)
+    public function __construct(array $attribute)
     {
         $this->attribute = $attribute;
     }
@@ -33,7 +33,7 @@ class FalProvider implements ProviderInterface
      */
     public function get(): array
     {
-        if ($this->attribute->getType() === Attribute::ATTRIBUTE_TYPE_IMAGE) {
+        if ($this->attribute['type'] === Attribute::ATTRIBUTE_TYPE_IMAGE) {
             $allowedFileTypes = $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'];
             $label = 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference';
         } else {
@@ -46,7 +46,7 @@ class FalProvider implements ProviderInterface
             $allowedFileTypes
         );
 
-        $configuration['label'] = $this->attribute->getName();
+        $configuration['label'] = $this->attribute['name'];
 
         return $configuration;
     }
@@ -64,14 +64,12 @@ class FalProvider implements ProviderInterface
         string $allowedFileExtensions = '',
         string $disallowedFileExtensions = ''
     ): array {
-        $fieldName = AttributeTcaNamingUtility::translateToTcaFieldName($this->attribute);
-
         return [
             'exclude' => false,
             'label' => '',
             // @codingStandardsIgnoreStart
             'config' => ExtensionManagementUtility::getFileFieldTCAConfig(
-                $fieldName,
+                'value',
                 [
                     'appearance' => [
                         'createNewRelationLinkTitle' => $addNewLabel,
@@ -82,22 +80,21 @@ class FalProvider implements ProviderInterface
                         'collapseAll' => true,
                     ],
                     'foreign_match_fields' => [
-                        'fieldname' => AttributeTcaNamingUtility::FAL_DB_FIELD,
-                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
+                        'fieldname' => 'value',
+                        'tablenames' => 'tx_pxaproductmanager_domain_model_attributevalue',
                         'table_local' => 'sys_file',
-                        'pxa_attribute' => $this->attribute->getUid(),
                     ],
                     'behaviour' => [
                         'allowLanguageSynchronization' => true,
                     ],
                     'overrideChildTca' => [
-                        'columns' => [
+                        /*'columns' => [
                             'pxa_attribute' => [
                                 'config' => [
-                                    'default' => $this->attribute->getUid(),
+                                    'default' => $this->attribute,
                                 ],
                             ],
-                        ],
+                        ],*/
                         'types' => [
                             \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
                                 'showitem' => '

@@ -71,14 +71,6 @@ defined('TYPO3_MODE') || die;
         ]
     );
 
-
-    // Register field control for identifier attribute
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
-        'nodeName' => 'attributeIdentifierControl',
-        'priority' => 30,
-        'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
-    ];
-
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1608645557] = [
         'nodeName' => 'productParentValue',
         'priority' => '30',
@@ -92,7 +84,7 @@ defined('TYPO3_MODE') || die;
     ];
 
     // Add attributes fields to Product edit form
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\ProductEditFormManipulation::class] = [
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\ProductFormDataProvider::class] = [
         'depends' => [
             \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class,
             \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class

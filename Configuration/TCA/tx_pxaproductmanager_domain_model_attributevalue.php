@@ -2,6 +2,19 @@
 
 defined('TYPO3_MODE') || die('Access denied.');
 
+$attributes = \Pixelant\PxaProductManager\Utility\AttributeUtility::findAllAttributes();
+
+$types = [];
+
+foreach ($attributes as $attribute) {
+    $types[(string)$attribute['uid']] = [
+        'showitem' => 'value',
+        'columnsOverrides' => [
+            'value' => \Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory::create((int)$attribute['uid'])->get()
+        ]
+    ];
+}
+
 return [
     'ctrl' => [
         'title' => 'Attribute values',
@@ -10,7 +23,7 @@ return [
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
         'dividers2tabs' => true,
-
+        'type' => 'attribute',
         'origUid' => 't3_origuid',
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
@@ -19,9 +32,7 @@ return [
         'searchFields' => 'value,attribute,',
         'hideTable' => true,
     ],
-    'types' => [
-        '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, --palette--;;1, value, attribute'],
-    ],
+    'types' => $types,
     'palettes' => [
         '1' => ['showitem' => ''],
     ],

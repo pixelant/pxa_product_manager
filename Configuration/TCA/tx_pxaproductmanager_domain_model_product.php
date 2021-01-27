@@ -32,7 +32,7 @@ return (function () {
         ],
         'types' => [
             '1' => [
-                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,
+                'showitem' => 'attributes_values,sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, parent, related_products, accessories,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.links, fal_links, links,
@@ -220,12 +220,24 @@ return (function () {
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_attributevalue',
                     'foreign_field' => 'product',
                     'maxitems' => 9999,
+                    'foreign_types' => [
+                        ['showitem' => 'value'],
+                    ],
                     'appearance' => [
                         'collapseAll' => 0,
-                        'levelLinksPosition' => 'top',
+                        'levelLinksPosition' => 'none',
                         'showSynchronizationLink' => 1,
                         'showPossibleLocalizationRecords' => 1,
                         'showAllLocalizationLink' => 1,
+                        'enabledControls' => [
+                            'info' => false,
+                            'new' => false,
+                            'dragdrop' => false,
+                            'sort' => false,
+                            'hide' => false,
+                            'delete' => false,
+                            'localize' => false,
+                        ],
                     ],
                 ],
             ],
