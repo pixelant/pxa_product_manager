@@ -1,5 +1,4 @@
-[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productshow/product') > 0] OR
-[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productrender/product') > 0]
+[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productshow/product') > 0] OR [traverse(request.getQueryParams(), 'tx_pxaproductmanager_productrender/product') > 0]
     # add stuff for gallery
     page {
         includeCSS {
