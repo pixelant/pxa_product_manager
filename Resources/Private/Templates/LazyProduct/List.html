@@ -11,14 +11,14 @@
     />
 
     <div id="pm-lazy-loading-app" class="list-product-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="col-md-12">
+        <div class="pm-bs-container">
+            <div class="pm-bs-row">
+                <div class="pm-bs-col-md-3">
+                    <div class="pm-bs-col-md-12">
                         <clear-all></clear-all>
                     </div>
                     <f:for as="filter" each="{filters}">
-                        <div class="col-md-12">
+                        <div class="pm-bs-col-md-12">
                             <f:switch expression="{filter.guiType}">
                                 <f:case value="checkbox">
                                     <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
@@ -33,16 +33,16 @@
                         </div>
                     </f:for>
                 </div>
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-6">
+                <div class="pm-bs-col-md-9">
+                    <div class="pm-bs-row">
+                        <div class="pm-bs-col-md-6">
                             <counter></counter>
                         </div>
-                        <div class="col-md-6">
+                        <div class="pm-bs-col-md-6">
                             <sorting :options="{orderBy}" :settings="{settingsJson}"></sorting>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="pm-bs-row">
                         <lazy-loading :settings="{settingsJson}" list-endpoint="{f:uri.page(pageType: '1606131593')}" filter-endpoint="{f:uri.page(pageType: '1606131725')}" inline-template>
                             <div class="lazy-loading-wrapper" :class="{loading: loading}">
                                 <f:comment><!--
@@ -50,8 +50,8 @@
                                 <span class="counter" v-cloak>{{ 'total_results' | trans }} {{ countAllLabel }}</span>
                                 --></f:comment>
 
-                                <div class="row" v-cloak>
-                                    <div class="col-md-4" v-for="product in products" :key="product.uid">
+                                <div class="pm-bs-row" v-cloak>
+                                    <div class="pm-bs-col-md-4" v-for="product in products" :key="product.uid">
                                         <div class="product-item-wrp">
                                             <a :href="product.url">
                                                 <f:render partial="Product/Card" arguments="{product: product}" />

@@ -5,23 +5,24 @@
 <f:section name="main">
     <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
 
-    <div class="single-product-wrapper container">
-        <div class="row">
-            <div class="col-md-12">
+    <div class="single-product-wrapper pm-bs-container">
+        <div class="pm-bs-row">
+            <div class="pm-bs-col-md-8">
                 <pxa:renderMultiple key="productName" arguments="{_all}"></pxa:renderMultiple>
+            </div>
+            <div class="pm-bs-col-md-4">
+                <pxa:renderMultiple key="productSku" arguments="{_all}"></pxa:renderMultiple>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
+        <div class="pm-bs-row">
+            <div class="pm-bs-col-md-4">
                 <pxa:renderMultiple key="productImages" arguments="{_all}"></pxa:renderMultiple>
             </div>
 
-            <div class="col-md-8">
+            <div class="pm-bs-col-md-8">
                 <div class="content">
                     <pxa:renderMultiple key="productTeaser" arguments="{_all}"></pxa:renderMultiple>
-                    <pxa:renderMultiple key="productSku" arguments="{_all}"></pxa:renderMultiple>
-                    <hr>
                     <pxa:renderMultiple key="productPrice" arguments="{_all}"></pxa:renderMultiple>
                     <div class="product-actions">
                         <pxa:renderMultiple key="productActions" arguments="{_all}"></pxa:renderMultiple>
@@ -29,23 +30,22 @@
                     <div class="product-shortcuts">
                         <pxa:renderMultiple key="productShortcuts" arguments="{_all}"></pxa:renderMultiple>
                     </div>
-                    <hr>
                     <pxa:renderMultiple key="productDescription" arguments="{_all}"></pxa:renderMultiple>
                     <pxa:renderMultiple key="productUsp" arguments="{_all}"></pxa:renderMultiple>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-{f:if(condition: '{product.links} || {product.falLinks}', then: '8', else: '12')}">
-                <div class="single-product-table">
+        <div class="pm-bs-row">
+            <div class="pm-bs-col-md-6">
+                <div class="product-attribute-listing">
                     <f:render partial="Product/AttributeListing"
                               arguments="{product: product}" />
                 </div>
             </div>
 
             <f:if condition="{product.links} || {product.falLinks}">
-                <div class="col-md-4">
+                <div class="pm-bs-col-md-6">
                     <div class="single-product-gallery__links">
                         <h3 class="single-product-related-title">
                             <f:translate key="fe.related_links" />

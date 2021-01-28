@@ -84,6 +84,132 @@
     text-decoration: none;
 }
 
+.product-img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
 [v-cloak] {
     display: none !important;
+}
+
+/*!
+ * Include some used parts from Bootstrap Grid v5.0.0-beta1 (https://getbootstrap.com/)
+ * Copyright 2011-2020 The Bootstrap Authors
+ * Copyright 2011-2020 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+.pm-bs-container,
+.pm-bs-container-fluid {
+    width: 100%;
+    padding-right: var(--bs-gutter-x, 0.75rem);
+    padding-left: var(--bs-gutter-x, 0.75rem);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .pm-bs-container {
+        max-width: 540px;
+    }
+}
+@media (min-width: 768px) {
+   .pm-bs-container {
+            max-width: 720px;
+    }
+}
+@media (min-width: 992px) {
+    .pm-bs-container {
+        max-width: 960px;
+    }
+}
+@media (min-width: 1200px) {
+    .pm-bs-container {
+        max-width: 1140px;
+    }
+}
+@media (min-width: 1400px) {
+    .pm-bs-container {
+        max-width: 1320px;
+    }
+}
+.pm-bs-row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(var(--bs-gutter-y) * -1);
+    margin-right: calc(var(--bs-gutter-x) / -2);
+    margin-left: calc(var(--bs-gutter-x) / -2);
+}
+.pm-bs-row > * {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) / 2);
+    padding-left: calc(var(--bs-gutter-x) / 2);
+    margin-top: var(--bs-gutter-y);
+}
+
+@media (min-width: 768px) {
+    .pm-bs-col-md-1 {
+        flex: 0 0 auto;
+        width: 8.3333333333%;
+    }
+
+    .pm-bs-col-md-2 {
+        flex: 0 0 auto;
+        width: 16.6666666667%;
+    }
+
+    .pm-bs-col-md-3 {
+        flex: 0 0 auto;
+        width: 25%;
+    }
+
+    .pm-bs-col-md-4 {
+        flex: 0 0 auto;
+        width: 33.3333333333%;
+    }
+
+    .pm-bs-col-md-5 {
+        flex: 0 0 auto;
+        width: 41.6666666667%;
+    }
+
+    .pm-bs-col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+
+    .pm-bs-col-md-7 {
+        flex: 0 0 auto;
+        width: 58.3333333333%;
+    }
+
+    .pm-bs-col-md-8 {
+        flex: 0 0 auto;
+        width: 66.6666666667%;
+    }
+
+    .pm-bs-col-md-9 {
+        flex: 0 0 auto;
+        width: 75%;
+    }
+
+    .pm-bs-col-md-10 {
+        flex: 0 0 auto;
+        width: 83.3333333333%;
+    }
+
+    .pm-bs-col-md-11 {
+        flex: 0 0 auto;
+        width: 91.6666666667%;
+    }
+
+    .pm-bs-col-md-12 {
+        flex: 0 0 auto;
+        width: 100%;
+    }
 }
