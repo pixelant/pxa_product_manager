@@ -132,8 +132,13 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
             $newChild = $formDataCompiler->compile($formDataCompilerInput);
 
             // This wizard sets the attribute type
-            $newChild['processedTca']['columns']['value']['config']['fieldWizard']['hiddenAttributeType']['renderType']
-                = 'hiddenAttributeType';
+            if ($newChild['processedTca']['columns']['value']['config']['type'] === 'inline') {
+                $newChild['processedTca']['ctrl']['container']['inline']['fieldWizard']['hiddenAttributeType']['renderType']
+                    = 'hiddenAttributeType';
+            } else {
+                $newChild['processedTca']['columns']['value']['config']['fieldWizard']['hiddenAttributeType']['renderType']
+                    = 'hiddenAttributeType';
+            }
 
             $result['processedTca']['columns']['attributes_values']['children'][] = $newChild;
         }

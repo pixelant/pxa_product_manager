@@ -8,6 +8,7 @@ namespace Pixelant\PxaProductManager\Utility;
 
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
+use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductTypeRepository;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -30,7 +31,7 @@ class AttributeUtility
      * @param string $selectFields List of fields to select (comma-separated)
      * @return array|null
      */
-    public static function getAttribute(int $attributeId, string $selectFields = '*'): ?array
+    public static function findAttribute(int $attributeId, string $selectFields = '*'): ?array
     {
         return BackendUtility::getRecord(
             AttributeRepository::TABLE_NAME,
@@ -153,6 +154,25 @@ class AttributeUtility
         );
 
         return $relationHandler->getFromDB()[AttributeRepository::TABLE_NAME] ?? [];
+    }
+
+    /**
+     * Find a specific attribute value for a product
+     *
+     * @param int $productId
+     * @param int $attributeId
+     * @param string $selectFields
+     * @return array|null
+     */
+    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): ?array
+    {
+        $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+
+        return $queryBuilder
+            ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
+            ->from(AttributeValueRepository::TABLE_NAME)
+            ->execute()
+            ->fetchAssociative();
     }
 
     /**

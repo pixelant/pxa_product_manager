@@ -31,7 +31,7 @@ return [
         'delete' => 'deleted',
         'searchFields' => 'value,attribute,',
         'hideTable' => true,
-        'rootLevel' => 1,
+        'rootLevel' => -1,
     ],
     'types' => $types,
     'palettes' => [

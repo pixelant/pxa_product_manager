@@ -31,7 +31,7 @@ return (function () {
         ],
         'types' => [
             '1' => [
-                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProductType, --palette--;;general,--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.attributes,attributes_values,
+                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProductType, --palette--;;general,--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.attributes,attributes_values,_nonfield,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, parent, related_products, accessories,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.links, fal_links, links,

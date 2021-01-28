@@ -6,7 +6,9 @@ namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
@@ -45,11 +47,23 @@ class ProductInheritanceProcessDatamap
     protected array $productDatamap = [];
 
     /**
+     * @var array Representation of DataHandler::datamap[tx_pxaproductmanager_domain_model_attributevalue].
+     */
+    protected array $attributeValueDatamap = [];
+
+    /**
      * Cache of fields to inherit from a product with a specific product type. Key is: [productId]-[productTypeId].
      *
      * @var array
      */
     protected array $inheritedProductFieldsForProductType = [];
+
+    /**
+     * Cache of fields to inherit from a parent product's attribute values. Key is: [productId]-[attributeId].
+     *
+     * @var array
+     */
+    protected array $inheritedAttributeValuesForProduct = [];
 
     /**
      * A counter to keep track of how many products were given inherited data.
@@ -85,15 +99,17 @@ class ProductInheritanceProcessDatamap
     /** @codingStandardsIgnoreStart */
     public function processDatamap_beforeStart(DataHandler $dataHandler): void
     {// @codingStandardsIgnoreEnd
-        if (isset($dataHandler->datamap[self::TABLE])) {
+        if (isset($dataHandler->datamap[ProductRepository::TABLE_NAME])) {
             $this->dataHandler = $dataHandler;
-            $this->productDatamap = $dataHandler->datamap[self::TABLE];
+            $this->productDatamap = $dataHandler->datamap[ProductRepository::TABLE_NAME];
+            $this->attributeValueDatamap = $dataHandler->datamap[AttributeValueRepository::TABLE_NAME];
 
             foreach (array_keys($this->productDatamap) as $identifier) {
                 $this->processRecordOverlays($identifier);
             }
 
-            $dataHandler->datamap[self::TABLE] = $this->productDatamap;
+            $dataHandler->datamap[ProductRepository::TABLE_NAME] = $this->productDatamap;
+            $dataHandler->datamap[AttributeValueRepository::TABLE_NAME] = $this->attributeValueDatamap;
 
             if ($this->productsWithInheritedDataCount > 0) {
                 $message = GeneralUtility::makeInstance(
@@ -138,11 +154,16 @@ class ProductInheritanceProcessDatamap
         }
 
         foreach ($this->parentRelationPlaceholders as $parentRelationPlaceholder) {
-            $this->addParentChildRelationToIndex(
-                $parentRelationPlaceholder['parent'],
-                $parentRelationPlaceholder['child'],
-                $parentRelationPlaceholder['tablename']
-            );
+            if (
+                MathUtility::canBeInterpretedAsInteger($parentRelationPlaceholder['parent'])
+                && MathUtility::canBeInterpretedAsInteger($parentRelationPlaceholder['child'])
+            ) {
+                $this->addParentChildRelationToIndex(
+                    $parentRelationPlaceholder['parent'],
+                    $parentRelationPlaceholder['child'],
+                    $parentRelationPlaceholder['tablename']
+                );
+            }
         }
     }
 
@@ -156,7 +177,7 @@ class ProductInheritanceProcessDatamap
         $row = $this->productDatamap[$identifier];
 
         // Relations are using the formula [tablename]_[id]
-        $parentId = array_pop(explode('_', $row['parent'] ?? ''));
+        $parentProductId = array_pop(explode('_', $row['parent'] ?? ''));
 
         if (!is_array($row)) {
             $row = BackendUtility::getRecord(
@@ -165,28 +186,62 @@ class ProductInheritanceProcessDatamap
                 'parent,product_type'
             );
 
-            $parentId = $row['parent'];
+            $parentProductId = $row['parent'];
         }
 
         if ($row['parent'] && $row['product_type']) {
             $productType = $row['product_type'] ?? BackendUtility::getRecord(
-                self::TABLE,
-                $parentId,
+                ProductRepository::TABLE_NAME,
+                $parentProductId,
                 'product_type'
             )['product_type'];
 
             if ($productType) {
-                $parentOverlayRow = array_merge($row, $this->getParentOverlayData((int)$parentId, (int)$productType));
+                // Process normal product fields
+                $parentProductOverlayRow = array_merge(
+                    $row,
+                    $this->getParentProductOverlayData(
+                        (int)$parentProductId,
+                        (int)$productType
+                    )
+                );
 
-                foreach ($parentOverlayRow as $field => $value) {
-                    $parentOverlayRow[$field] = $this->processOverlayRelations(
+                foreach ($parentProductOverlayRow as $field => $value) {
+                    $parentProductOverlayRow[$field] = $this->processOverlayRelations(
                         ProductRepository::TABLE_NAME,
                         $field,
-                        $value
+                        $value,
+                        $identifier
                     );
                 }
 
-                $this->productDatamap[$identifier] = $parentOverlayRow;
+                $this->productDatamap[$identifier] = $parentProductOverlayRow;
+
+                // Process attribute values
+                $attributeValueIds = explode(',', $this->productDatamap[$identifier]['attributes_values']);
+
+                foreach ($attributeValueIds as $attributeValueId) {
+                    if (MathUtility::canBeInterpretedAsInteger($attributeValueId)) {
+                        $attributeValueRow = $this->attributeValueDatamap[$attributeValueId];
+
+                        $parentAttributeValueRow = $this->getParentAttributeValueData(
+                            (int)$parentProductId,
+                            (int)$productType,
+                            (int)$attributeValueRow['attribute']
+                        );
+
+                        $attributeValueRow = array_merge($attributeValueRow, $parentAttributeValueRow);
+
+                        $attributeValueRow['value'] = $this->processOverlayRelations(
+                            AttributeValueRepository::TABLE_NAME,
+                            'value',
+                            $attributeValueRow['value'],
+                            $attributeValueId
+                        );
+
+                        $this->attributeValueDatamap[$attributeValueId] = $attributeValueRow;
+                    }
+                }
             }
         }
 
@@ -228,89 +283,13 @@ class ProductInheritanceProcessDatamap
     }
 
     /**
-     * Process relations that need to be copied in order to create an overlay
-     *
-     * @param $table
-     * @param $field
-     * @param $value
-     * @return string
-     */
-    protected function processOverlayRelations($table, $field, $value)
-    {
-        $fieldTcaConfiguration = BackendUtility::getTcaFieldConfiguration($table, $field);
-        if ($fieldTcaConfiguration['type'] === 'inline') {
-            $foreignTable = $fieldTcaConfiguration['foreign_table'];
-
-            $parentRelations = ArrayUtility::removeArrayEntryByValue(
-                explode(',', $value),
-                ''
-            );
-
-            if (isset($row['field'])) {
-                $childRelations = ArrayUtility::removeArrayEntryByValue(
-                    explode(',', $row[$field]),
-                    ''
-                );
-            } else {
-                /** @var RelationHandler $relationHandler */
-                $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
-                $relationHandler->start(
-                    '',
-                    $foreignTable,
-                    '',
-                    $identifier,
-                    $table,
-                    $fieldTcaConfiguration
-                );
-
-                $childRelations = array_column(
-                    $relationHandler->getFromDB()[$foreignTable] ?? [],
-                    'uid'
-                );
-            }
-
-            // Check for deleted relations
-            foreach ($childRelations as $childRelation) {
-                $parentRelationUid = $this->findParentRelationUidInIndex($childRelation, $foreignTable);
-
-                // Delete any relation that is not present in the parent
-                if ($parentRelationUid === 0 || !in_array($parentRelationUid, $parentRelations, true)) {
-                    $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
-                    $this->removeParentRelationsFromIndex($parentRelationUid, $foreignTable);
-                }
-            }
-
-            // Make copies of new relations (child has to have its own relation record)
-            foreach ($parentRelations as &$parentRelation) {
-                if (is_string($parentRelation) && strpos($parentRelation, 'NEW') !== false) {
-                    $newRelation = StringUtility::getUniqueId('NEW');
-                    $this->dataHandler->datamap[$foreignTable][$newRelation]
-                        = $this->dataHandler->datamap[$foreignTable][$parentRelation];
-
-                    $this->parentRelationPlaceholders[] = [
-                        'child' => $newRelation,
-                        'parent' => $parentRelation,
-                        'tablename' => $foreignTable,
-                    ];
-
-                    $parentRelation = $newRelation;
-                }
-            }
-
-            return implode(',', $parentRelations);
-        }
-
-        return $value;
-    }
-
-    /**
      * Returns an array of properties that should be overlaid upon any child products of $parent.
      *
      * @param int $parent
      * @param int $productType
      * @return array
      */
-    protected function getParentOverlayData(int $parent, int $productType): array
+    protected function getParentProductOverlayData(int $parent, int $productType): array
     {
         if (isset($this->inheritedProductFieldsForProductType[$parent . '-' . $productType])) {
             return $this->inheritedProductFieldsForProductType[$parent . '-' . $productType];
@@ -321,6 +300,8 @@ class ProductInheritanceProcessDatamap
         if (count($inheritedFields) === 0) {
             return [];
         }
+
+        $inheritedFields[] = 'attributes_values';
 
         $parentRecord = $this->productDatamap[$parent];
 
@@ -371,6 +352,125 @@ class ProductInheritanceProcessDatamap
         }
 
         return $overlayFields;
+    }
+
+    /**
+     * Returns an array of attribute value properties that should be overlaid upon any child of $parentProductId.
+     *
+     * @param int $parentProductId
+     * @param int $productType
+     * @param int $attributeId
+     * @return array
+     */
+    protected function getParentAttributeValueData(int $parentProductId, int $productType, int $attributeId): array
+    {
+        if (isset($this->inheritedAttributeValuesForProduct[$parentProductId . '-' . $attributeId])) {
+            return $this->inheritedAttributeValuesForProduct[$parentProductId . '-' . $attributeId];
+        }
+
+        $inheritedFields = DataInheritanceUtility::getInheritedFieldsForProductType($productType);
+
+        if (count($inheritedFields) === 0 || !in_array('attribute.' . $attributeId, $inheritedFields)) {
+            return [];
+        }
+
+        $attributeValueUid = AttributeUtility::findAttributeValue($parentProductId, $attributeId);
+
+        $attributeValueRecord = $this->attributeValueDatamap[$attributeValueUid];
+
+        if (!is_array($attributeValueRecord)) {
+            $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+            $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
+
+            $formDataCompilerInput = [
+                'tableName' => AttributeValueRepository::TABLE_NAME,
+                'vanillaUid' => $attributeValueUid,
+                'command' => 'edit',
+            ];
+
+            $attributeValueRecord = $formDataCompiler->compile($formDataCompilerInput)['databaseRow'];
+        }
+
+        $this->inheritedAttributeValuesForProduct[$parentProductId . '-' . $attributeId] = $attributeValueRecord;
+
+        return $attributeValueRecord;
+    }
+
+    /**
+     * Process relations that need to be copied in order to create an overlay
+     *
+     * @param $table
+     * @param $field
+     * @param $value
+     * @param $localId
+     * @return string
+     */
+    protected function processOverlayRelations($table, $field, $value, $localId)
+    {
+        $fieldTcaConfiguration = BackendUtility::getTcaFieldConfiguration($table, $field);
+        if ($fieldTcaConfiguration['type'] === 'inline') {
+            $foreignTable = $fieldTcaConfiguration['foreign_table'];
+
+            $parentRelations = ArrayUtility::removeArrayEntryByValue(
+                explode(',', $value),
+                ''
+            );
+
+            if (isset($row['field'])) {
+                $childRelations = ArrayUtility::removeArrayEntryByValue(
+                    explode(',', $row[$field]),
+                    ''
+                );
+            } else {
+                /** @var RelationHandler $relationHandler */
+                $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
+                $relationHandler->start(
+                    '',
+                    $foreignTable,
+                    '',
+                    $localId,
+                    $table,
+                    $fieldTcaConfiguration
+                );
+
+                $childRelations = array_column(
+                    $relationHandler->getFromDB()[$foreignTable] ?? [],
+                    'uid'
+                );
+            }
+
+            // Check for deleted relations
+            foreach ($childRelations as $childRelation) {
+                $parentRelationUid = $this->findParentRelationUidInIndex($childRelation, $foreignTable);
+
+                // Delete any relation that is not present in the parent
+                if ($parentRelationUid === 0 || !in_array($parentRelationUid, $parentRelations, true)) {
+                    $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
+                    $this->removeParentRelationsFromIndex($parentRelationUid, $foreignTable);
+                }
+            }
+
+            // Make copies of new relations (child has to have its own relation record)
+            foreach ($parentRelations as &$parentRelation) {
+                if (is_string($parentRelation) && strpos($parentRelation, 'NEW') !== false) {
+                    $newRelation = StringUtility::getUniqueId('NEW');
+                    $this->dataHandler->datamap[$foreignTable][$newRelation]
+                        = $this->dataHandler->datamap[$foreignTable][$parentRelation];
+
+                    $this->parentRelationPlaceholders[] = [
+                        'child' => $newRelation,
+                        'parent' => $parentRelation,
+                        'tablename' => $foreignTable,
+                    ];
+
+                    $parentRelation = $newRelation;
+                }
+            }
+
+            return implode(',', $parentRelations);
+        }
+
+        return $value;
     }
 
     /**
