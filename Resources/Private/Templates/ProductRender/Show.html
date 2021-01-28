@@ -64,7 +64,7 @@
                 </div>
             </f:if>
         </div>
-        <p>settings.singleView.related.partial: {settings.singleView.related.partial}</p>
+
         <f:if condition="{product.relatedProducts}">
             <f:render partial="Product/{settings.singleView.related.partial}"
                         arguments="{relatedProducts: product.relatedProducts, headerLabel: 'fe.related_products'}" />
