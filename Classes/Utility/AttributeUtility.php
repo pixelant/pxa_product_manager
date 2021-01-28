@@ -168,11 +168,17 @@ class AttributeUtility
     {
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
 
-        return $queryBuilder
+        $row = $queryBuilder
             ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
             ->from(AttributeValueRepository::TABLE_NAME)
             ->execute()
             ->fetchAssociative();
+
+        if(is_array($row)) {
+            return $row;
+        }
+
+        return null;
     }
 
     /**

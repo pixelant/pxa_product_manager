@@ -101,15 +101,12 @@ class ProductInheritanceProcessDatamap
     {// @codingStandardsIgnoreEnd
         if (isset($dataHandler->datamap[ProductRepository::TABLE_NAME])) {
             $this->dataHandler = $dataHandler;
-            $this->productDatamap = $dataHandler->datamap[ProductRepository::TABLE_NAME];
-            $this->attributeValueDatamap = $dataHandler->datamap[AttributeValueRepository::TABLE_NAME];
+            $this->productDatamap = &$dataHandler->datamap[ProductRepository::TABLE_NAME];
+            $this->attributeValueDatamap = &$dataHandler->datamap[AttributeValueRepository::TABLE_NAME];
 
             foreach (array_keys($this->productDatamap) as $identifier) {
                 $this->processRecordOverlays($identifier);
             }
-
-            $dataHandler->datamap[ProductRepository::TABLE_NAME] = $this->productDatamap;
-            $dataHandler->datamap[AttributeValueRepository::TABLE_NAME] = $this->attributeValueDatamap;
 
             if ($this->productsWithInheritedDataCount > 0) {
                 $message = GeneralUtility::makeInstance(
@@ -221,8 +218,16 @@ class ProductInheritanceProcessDatamap
                 $attributeValueIds = explode(',', $this->productDatamap[$identifier]['attributes_values']);
 
                 foreach ($attributeValueIds as $attributeValueId) {
-                    if (MathUtility::canBeInterpretedAsInteger($attributeValueId)) {
+                    //if (MathUtility::canBeInterpretedAsInteger($attributeValueId)) {
                         $attributeValueRow = $this->attributeValueDatamap[$attributeValueId];
+
+                        if (!isset($attributeValueRow['attribute'])) {
+                            $attributeValueRow['attribute'] = BackendUtility::getRecord(
+                                AttributeValueRepository::TABLE_NAME,
+                                $attributeValueId,
+                                'attribute'
+                            )['attribute'];
+                        }
 
                         $parentAttributeValueRow = $this->getParentAttributeValueData(
                             (int)$parentProductId,
@@ -232,15 +237,15 @@ class ProductInheritanceProcessDatamap
 
                         $attributeValueRow = array_merge($attributeValueRow, $parentAttributeValueRow);
 
-                        $attributeValueRow['value'] = $this->processOverlayRelations(
+                        /*$attributeValueRow['value'] = $this->processOverlayRelations(
                             AttributeValueRepository::TABLE_NAME,
                             'value',
                             $attributeValueRow['value'],
                             $attributeValueId
-                        );
+                        );*/
 
                         $this->attributeValueDatamap[$attributeValueId] = $attributeValueRow;
-                    }
+                    //}
                 }
             }
         }
@@ -374,7 +379,7 @@ class ProductInheritanceProcessDatamap
             return [];
         }
 
-        $attributeValueUid = AttributeUtility::findAttributeValue($parentProductId, $attributeId);
+        $attributeValueUid = AttributeUtility::findAttributeValue($parentProductId, $attributeId)['uid'];
 
         $attributeValueRecord = $this->attributeValueDatamap[$attributeValueUid];
 
@@ -390,6 +395,8 @@ class ProductInheritanceProcessDatamap
 
             $attributeValueRecord = $formDataCompiler->compile($formDataCompilerInput)['databaseRow'];
         }
+
+        $attributeValueRecord['attribute'] = $attributeId;
 
         $this->inheritedAttributeValuesForProduct[$parentProductId . '-' . $attributeId] = $attributeValueRecord;
 
@@ -411,10 +418,7 @@ class ProductInheritanceProcessDatamap
         if ($fieldTcaConfiguration['type'] === 'inline') {
             $foreignTable = $fieldTcaConfiguration['foreign_table'];
 
-            $parentRelations = ArrayUtility::removeArrayEntryByValue(
-                explode(',', $value),
-                ''
-            );
+            $parentRelations = GeneralUtility::intExplode(',', $value);
 
             if (isset($row['field'])) {
                 $childRelations = ArrayUtility::removeArrayEntryByValue(
