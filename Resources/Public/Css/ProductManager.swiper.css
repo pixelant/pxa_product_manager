@@ -1,60 +1,63 @@
-.product-gallery-wrp {
+.tx-pxa-product-manager .product-gallery-wrp {
     height: 400px;
 }
 
-.swiper-container {
+.tx-pxa-product-manager .swiper-container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
 
-.swiper-slide {
+.tx-pxa-product-manager .swiper-slide {
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
 }
 
-.product-gallery-top {
+.tx-pxa-product-manager .product-gallery-top {
     height: 80%;
     width: 100%;
 }
 
-.swiper-button-next.product-gallery-button-next,
-.swiper-button-prev.product-gallery-button-prev,
-.swiper-button-next.product-relations-button-next,
-.swiper-button-prev.product-relations-button-prev {
+.tx-pxa-product-manager .swiper-button-next.product-gallery-button-next,
+.tx-pxa-product-manager .swiper-button-prev.product-gallery-button-prev,
+.tx-pxa-product-manager .swiper-button-next.product-relations-button-next,
+.tx-pxa-product-manager .swiper-button-prev.product-relations-button-prev {
     background: var(--pm-dark-overlay);
     color: var(--pm-light);
 }
+.tx-pxa-product-manager .swiper-pagination-bullet-active {
+    background: var(--pm-dark);
+}
 
-.product-relations .product-item-wrp {
+.tx-pxa-product-manager .product-relations .product-item-wrp {
     width: 261px;
 }
 
-.swiper-pagination.product-relations-pagination.swiper-pagination-bullets {
+.tx-pxa-product-manager .swiper-pagination.product-relations-pagination.swiper-pagination-bullets {
     bottom: 0;
 }
 
-.swiper-container.product-gallery-thumbs {
+.tx-pxa-product-manager .swiper-container.product-gallery-thumbs {
     height: 20%;
     box-sizing: border-box;
     padding: 10px 0;
 }
 
-.product-gallery-thumbs .swiper-slide {
+.tx-pxa-product-manager .product-gallery-thumbs .swiper-slide {
     height: 100%;
     opacity: 0.4;
 }
 
-.product-gallery-thumbs .product-gallery-thumbs-swiper-slide {
+.tx-pxa-product-manager .product-gallery-thumbs .product-gallery-thumbs-swiper-slide {
     width: 25%;
 }
 
 
-.product-gallery-thumbs .swiper-slide-thumb-active {
+.tx-pxa-product-manager .product-gallery-thumbs .swiper-slide-thumb-active {
     opacity: 1;
 }
 
-.swiper-slide.product-item-wrp {
+.tx-pxa-product-manager .swiper-slide.product-item-wrp {
     height: auto;
 }
