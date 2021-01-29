@@ -13,65 +13,81 @@ plugin.tx_pxaproductmanager {
         }
 
         renderingStacks {
-            productLayoutShow {
-                10 {
-                    template = Stacks/Layout/Show
-                }
-            }
             productName {
-                10 {
+                50 {
                     template = Stacks/Product/Name
                 }
             }
             productSku {
-                10 {
+                50 {
                     template = Stacks/Product/Sku
                 }
             }
             productPrice {
-                5 {
+                10 {
+                    template = Stacks/Product/PriceCondition
+                }
+                20 {
                     template = Stacks/Product/PriceDivider
                 }
-                10 {
+                50 {
                     template = Stacks/Product/Price
                 }
             }
             productTeaser {
-                10 {
+                50 {
                     template = Stacks/Product/Teaser
                 }
             }
             productDescription {
-                5 {
-                    template = Stacks/Product/PriceDivider
-                }
-                10 {
+                50 {
                     template = Stacks/Product/Description
                 }
             }
-            productUsp {
-                10 {
-                    template = Stacks/Product/Usp
+            productUspList {
+                50 {
+                    template = Stacks/Product/UspList
+                }
+                60 {
+                    template = Stacks/Product/UspListItems
                 }
             }
             productImages {
-                10 {
+                50 {
                     template = Stacks/Product/Images
                 }
             }
             productActions {
-                10 {
+                50 {
                     template = Stacks/Product/Actions
                 }
             }
             productShortcuts {
-                10 {
+                50 {
                     template = Stacks/Product/Shortcuts
                 }
             }
             productListActions {
-                10 {
+                50 {
                     template = Stacks/Product/ListActions
+                }
+            }
+            productAttributeListing {
+                50 {
+                    template = Stacks/Product/AttributeListing
+                }
+            }
+            productLinks {
+                50 {
+                    template = Stacks/Product/LinksList
+                }
+                60 {
+                    template = Stacks/Product/LinksListItems
+                }
+            }
+            productHeader {
+                50 {
+                    template = Stacks/Product/Header
                 }
             }
         }

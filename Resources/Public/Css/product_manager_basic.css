@@ -83,7 +83,8 @@
     text-align: right;
 }
 
-.tx-pxa-product-manager .product-related-file svg {
+.tx-pxa-product-manager .product-related-file svg,
+.tx-pxa-product-manager .product-related-link svg {
     height: 24px;
     fill: var(--pm-dark);
     text-decoration: none;

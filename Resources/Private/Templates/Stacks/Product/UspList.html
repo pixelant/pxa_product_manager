@@ -1,9 +1,7 @@
 <f:if condition="{product.uspArray}">
     <div class="product-usp ce-bullets">
         <ul>
-        <f:for each="{product.uspArray}" as="usp" iteration="i">
-            <li>{usp}</li>
-        </f:for>
+            {childContent}
         </ul>
     </div>
 </f:if>

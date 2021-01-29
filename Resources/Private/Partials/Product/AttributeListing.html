@@ -1,8 +1,6 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:if condition="{product.attributes}">
-    <h3>
-        <f:translate key="fe.attributes"/>
-    </h3>
+    <pxa:renderMultiple key="productHeader" arguments="{headerLabel: 'fe.attributes', subheaderLabel: ''}"></pxa:renderMultiple>
 
     <f:if condition="{settings.attributes.divideAttributesBySets}">
         <f:then>

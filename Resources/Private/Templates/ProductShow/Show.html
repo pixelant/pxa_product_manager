@@ -5,13 +5,13 @@
 <f:section name="main">
     <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
 
-    <div class="single-product-wrapper pm-bs-container">
+    <div class="single-product-wrapper">
         <div class="pm-bs-row">
             <div class="pm-bs-col-md-8">
-                <pxa:renderMultiple key="productName" arguments="{_all}"></pxa:renderMultiple>
+                <pxa:renderMultiple key="productName" arguments="{_all}">{product.name}</pxa:renderMultiple>
             </div>
             <div class="pm-bs-col-md-4">
-                <pxa:renderMultiple key="productSku" arguments="{_all}"></pxa:renderMultiple>
+                <pxa:renderMultiple key="productSku" arguments="{_all}">{product.sku}</pxa:renderMultiple>
             </div>
         </div>
 
@@ -22,47 +22,30 @@
 
             <div class="pm-bs-col-md-8">
                 <div class="content">
-                    <pxa:renderMultiple key="productTeaser" arguments="{_all}"></pxa:renderMultiple>
-                    <pxa:renderMultiple key="productPrice" arguments="{_all}"></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productTeaser" arguments="{_all}"><f:format.html>{product.teaser}</f:format.html></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productPrice" arguments="{_all}">{product.formattedPrice}</pxa:renderMultiple>
                     <div class="product-actions">
                         <pxa:renderMultiple key="productActions" arguments="{_all}"></pxa:renderMultiple>
                     </div>
                     <div class="product-shortcuts">
                         <pxa:renderMultiple key="productShortcuts" arguments="{_all}"></pxa:renderMultiple>
                     </div>
-                    <pxa:renderMultiple key="productDescription" arguments="{_all}"></pxa:renderMultiple>
-                    <pxa:renderMultiple key="productUsp" arguments="{_all}"></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productDescription" arguments="{_all}"><f:format.html>{product.description}</f:format.html></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productUspList" arguments="{_all}"></pxa:renderMultiple>
                 </div>
             </div>
         </div>
 
         <div class="pm-bs-row">
             <div class="pm-bs-col-md-6">
-                <div class="product-attribute-listing">
-                    <f:render partial="Product/AttributeListing"
-                              arguments="{product: product}" />
-                </div>
+                <pxa:renderMultiple key="productAttributeListing" arguments="{_all}">
+                    <f:render partial="Product/AttributeListing" arguments="{product: product}" />
+                </pxa:renderMultiple>
             </div>
 
-            <f:if condition="{product.links} || {product.falLinks}">
-                <div class="pm-bs-col-md-6">
-                    <div class="single-product-gallery__links">
-                        <h3 class="single-product-related-title">
-                            <f:translate key="fe.related_links" />
-                        </h3>
-                        <ul>
-                            <f:if condition="{product.links}">
-                                <f:render partial="Product/Links" arguments="{links: product.links}" />
-                            </f:if>
-
-                            <f:if condition="{product.falLinks}">
-                                <f:render partial="Product/FileLinks"
-                                          arguments="{files: product.falLinks}" />
-                            </f:if>
-                        </ul>
-                    </div>
-                </div>
-            </f:if>
+            <div class="pm-bs-col-md-6">
+                <pxa:renderMultiple key="productLinks" arguments="{_all}"></pxa:renderMultiple>
+            </div>
         </div>
 
         <f:if condition="{product.relatedProducts}">

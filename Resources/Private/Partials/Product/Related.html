@@ -4,9 +4,7 @@
 <div class="row">
     <div class="single-product-related">
         <div class="col-md-12">
-            <h3>
-                <f:translate key="{headerLabel}" />
-            </h3>
+                <pxa:renderMultiple key="productHeader" arguments="{headerLabel: headerLabel, subheaderLabel: subheaderLabel}"></pxa:renderMultiple>
         </div>
         <div class="single-product-related-list">
             <f:for each="{relatedProducts}" as="product">
