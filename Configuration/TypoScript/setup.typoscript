@@ -11,6 +11,86 @@ plugin.tx_pxaproductmanager {
         layoutRootPaths {
             10 = {$plugin.tx_pxaproductmanager.view.layoutRootPath}
         }
+
+        renderingStacks {
+            productName {
+                50 {
+                    template = Stacks/Product/Name
+                }
+            }
+            productSku {
+                50 {
+                    template = Stacks/Product/Sku
+                }
+            }
+            productPrice {
+                10 {
+                    template = Stacks/Product/PriceCondition
+                }
+                20 {
+                    template = Stacks/Product/PriceDivider
+                }
+                50 {
+                    template = Stacks/Product/Price
+                }
+            }
+            productTeaser {
+                50 {
+                    template = Stacks/Product/Teaser
+                }
+            }
+            productDescription {
+                50 {
+                    template = Stacks/Product/Description
+                }
+            }
+            productUspList {
+                50 {
+                    template = Stacks/Product/UspList
+                }
+                60 {
+                    template = Stacks/Product/UspListItems
+                }
+            }
+            productImages {
+                50 {
+                    template = Stacks/Product/Images
+                }
+            }
+            productActions {
+                50 {
+                    template = Stacks/Product/Actions
+                }
+            }
+            productShortcuts {
+                50 {
+                    template = Stacks/Product/Shortcuts
+                }
+            }
+            productListActions {
+                50 {
+                    template = Stacks/Product/ListActions
+                }
+            }
+            productAttributeListing {
+                50 {
+                    template = Stacks/Product/AttributeListing
+                }
+            }
+            productLinks {
+                50 {
+                    template = Stacks/Product/LinksList
+                }
+                60 {
+                    template = Stacks/Product/LinksListItems
+                }
+            }
+            productHeader {
+                50 {
+                    template = Stacks/Product/Header
+                }
+            }
+        }
     }
 
     backend {
@@ -61,6 +141,9 @@ plugin.tx_pxaproductmanager {
             images {
                 mainMaxWidth = {$plugin.tx_pxaproductmanager.settings.singleView.images.mainMaxWidth}
                 mainMaxHeight = {$plugin.tx_pxaproductmanager.settings.singleView.images.mainMaxHeight}
+            }
+            related {
+                partial = Related
             }
         }
 
@@ -131,9 +214,26 @@ plugin.tx_pxaproductmanager {
     }
 }
 
-page.includeCSS.product_manager_basic = EXT:pxa_product_manager/Resources/Public/Css/product_manager_basic.css
 
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Library/" extensions="typoscript">
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Api/" extensions="typoscript">
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/TempPluginRenderer/" extensions="typoscript">
 <INCLUDE_TYPOSCRIPT: source="DIR:EXT:pxa_product_manager/Configuration/TypoScript/Page/" extensions="typoscript">
+
+page {
+    includeCSS.product_manager_basic = EXT:pxa_product_manager/Resources/Public/Css/product_manager_basic.css
+    // Set variable to detect if pm is in "single view" mode.
+    // Assumes that page.10 is used as FLUIDTEMPLATE, default in e.g. bootstrap_package and t3kit
+    10.variables.product_single_view = TEXT
+    10.variables.product_single_view {
+        value = 0
+    }
+}
+
+[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productshow/product') > 0]
+    page.10.variables.product_single_view.value = 1
+[END]
+
+[traverse(request.getQueryParams(), 'tx_pxaproductmanager_productrender/product') > 0]
+    page.10.variables.product_single_view.value = 1
+[END]

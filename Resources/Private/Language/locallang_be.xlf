@@ -332,16 +332,13 @@
 
             <!--BE layout for product sample:START-->
 			<trans-unit id="be.layout.product_display_sample">
-				<source>Product Display Sample</source>
+				<source>Product Display Sample BE Layout</source>
 			</trans-unit>
 			<trans-unit id="be.layout.columns.top">
 				<source>Top content (after site header/before breadcrumbs)</source>
 			</trans-unit>
-			<trans-unit id="be.layout.columns.placeholder">
-				<source>Placeholder without colPos</source>
-			</trans-unit>
 			<trans-unit id="be.layout.columns.content">
-				<source>Content</source>
+				<source>Product Extension Plugin (slide)</source>
 			</trans-unit>
 			<trans-unit id="be.layout.columns.bottom">
 				<source>Additional content (after main content/before site footer)</source>

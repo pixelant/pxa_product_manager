@@ -1,0 +1,27 @@
+ <!-- Swiper -->
+<div class="product-gallery-wrp">
+    <div class="swiper-container product-gallery-top">
+        <div class="swiper-wrapper product-gallery-wrapper">
+            <f:for each="{product.galleryImages}" as="image" iteration="iteration">
+                <div
+                    class="swiper-slide product-gallery-swiper-slide"
+                    style="background-image:url({f:uri.image(src: '{image.uid}', treatIdAsReference: 1, maxWidth='{settings.singleView.images.mainMaxWidth}', absolute: 1)})">
+                </div>
+            </f:for>
+        </div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next product-gallery-button-next"></div>
+        <div class="swiper-button-prev product-gallery-button-prev"></div>
+    </div>
+
+    <div class="swiper-container product-gallery-thumbs">
+        <div class="swiper-wrapper product-gallery-thumbs-wrapper">
+            <f:for each="{product.galleryImages}" as="image" iteration="iteration">
+                <div
+                    class="swiper-slide product-gallery-thumbs-swiper-slide"
+                    style="background-image:url({f:uri.image(src: '{image.uid}', treatIdAsReference: 1, maxWidth='120', absolute: 1)})">
+                </div>
+            </f:for>
+        </div>
+    </div>
+</div>
