@@ -93,7 +93,9 @@ class ProductRepository extends AbstractDemandRepository
 
         $this->addOffset($queryBuilder, $demand);
 
-        $this->addOrderings($queryBuilder, $demand);
+        $this->demandService->getSortBy([
+            'tx_pxaproductmanager_domain_model_product' => 'tx_pxaproductmanager_domain_model_product',
+        ], $queryBuilder);
 
         $this->fireDemandEvent('afterDemandQueryBuilder', $demand, $queryBuilder);
 
