@@ -42,6 +42,13 @@ class AttributeSet extends AbstractEntity
     protected string $name = '';
 
     /**
+     * Attribute label.
+     *
+     * @var string
+     */
+    protected string $label = '';
+
+    /**
      * @var string
      */
     protected string $layout = '';
@@ -128,6 +135,29 @@ class AttributeSet extends AbstractEntity
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Returns the attributeset label.
+     *
+     * @return string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Sets the attributeset label.
+     *
+     * @param string $label
+     * @return AttributeSet
+     */
+    public function setLabel(string $label): self
+    {
+        $this->label = $label;
 
         return $this;
     }

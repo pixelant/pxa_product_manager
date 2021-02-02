@@ -1,4 +1,4 @@
-<h5>{attributeset.name}</h5>
+<h5><f:if condition="{attributeset.label}" then="{attributeset.label}" else="{attributeset.name}"/></h5>
 <dl class="pm-bs-row">
     <f:for each="{attributeset.listingAttributes}" as="attribute">
         <f:if condition="{product.attributeValue.{attribute.identifier}.hasNonEmptyValue}">
