@@ -15,7 +15,7 @@
   "repositories": [
 	{
 	  "type": "git",
-	  "url": "git@github.com:pixelant/demander.git"
+	  "url": "https://github.com/pixelant/demander.git"
 	}
   ],
   "require": {
