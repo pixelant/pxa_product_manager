@@ -143,6 +143,9 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.name">
 				<source>Name</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.label">
+				<source>Label</source>
+			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.layout">
 				<source>Layout</source>
 			</trans-unit>
