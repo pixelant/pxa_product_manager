@@ -9,16 +9,19 @@ use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
+use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Backend;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
 /**
  * Form data provider hook, add TCA on a fly.
  */
-class ProductFormDataProvider implements FormDataProviderInterface
+class AttributeValueFormDataProvider implements FormDataProviderInterface
 {
     use CanTranslateInBackend;
     use CanCreateCollection;
@@ -47,7 +50,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function addData(array $result): array
     {
-        if ($result['tableName'] !== ProductRepository::TABLE_NAME) {
+        if ($result['tableName'] !== AttributeValueRepository::TABLE_NAME) {
             return $result;
         }
 
@@ -66,27 +69,29 @@ class ProductFormDataProvider implements FormDataProviderInterface
      */
     protected function handleInheritedFields(array $result)
     {
-        $parentRow = $result['databaseRow']['parent'][0]['row'];
+        $attributeValue = $result['databaseRow'];
 
-        if (!$result['databaseRow']['product_type'] || !$parentRow) {
+        $product = BackendUtility::getRecord(
+            ProductRepository::TABLE_NAME,
+            $attributeValue['product']
+        );
+
+        if (!$product['product_type'] || !$product['parent']) {
             return $result;
         }
 
-        $inheritFields = DataInheritanceUtility::getInheritedFieldsForProductType(
-            (int)$result['databaseRow']['product_type']
-        );
+        $configuration = &$result['processedTca']['columns']['value'];
 
-        foreach ($result['processedTca']['columns'] as $fieldName => &$configuration) {
-            if (!in_array($fieldName, $inheritFields, true)) {
-                $configuration['config']['fieldWizard']['productParentValue']['renderType'] = 'productParentValue';
-
-                continue;
-            }
-
+        if (in_array(
+            'attribute.' . $attributeValue['attribute'][0],
+            DataInheritanceUtility::getInheritedFieldsForProductType((int)$product['product_type'])
+        )) {
             $configuration['config']['readOnly'] = true;
 
             $configuration['config']['fieldInformation']['inheritedProductField']['renderType']
                 = 'inheritedProductField';
+        } else {
+            $configuration['config']['fieldWizard']['productParentValue']['renderType'] = 'productParentValue';
         }
 
         return $result;

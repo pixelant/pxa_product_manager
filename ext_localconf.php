@@ -104,6 +104,14 @@ defined('TYPO3_MODE') || die;
         ]
     ];
 
+    // Add attributes fields to Product edit form
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\AttributeValueFormDataProvider::class] = [
+        'depends' => [
+            \TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRowInitializeNew::class,
+            \TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class
+        ]
+    ];
+
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Pixelant\PxaProductManager\Backend\FormDataProvider\NewAttributeRelationRecordsDataProvider::class] = [
         'depends' => [
             \TYPO3\CMS\Backend\Form\FormDataProvider\EvaluateDisplayConditions::class

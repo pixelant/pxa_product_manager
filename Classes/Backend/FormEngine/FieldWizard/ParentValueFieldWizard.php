@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Backend\FormEngine\FieldWizard;
 
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use TYPO3\CMS\Backend\Form\AbstractNode;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -31,27 +33,40 @@ class ParentValueFieldWizard extends AbstractNode
     {
         $result = $this->initializeResultArray();
 
-        if (!$this->data['databaseRow']['parent'][0]) {
+        if ($this->data['tableName'] === ProductRepository::TABLE_NAME) {
+            $tableName = $this->data['tableName'];
+            $fieldName = $this->data['fieldName'];
+            $record = $this->data['databaseRow'];
+            $parentRecord = $this->data['databaseRow']['parent'][0]['row'];
+        } elseif ($this->data['tableName'] === AttributeValueRepository::TABLE_NAME) {
+            $tableName = $this->data['tableName'];
+            $fieldName = 'value';
+            $record = $this->data['databaseRow'];
+            $parentRecord = AttributeUtility::findAttributeValue(
+                (int)$record['product'],
+                (int)$record['attribute'][0]
+            );
+        } else {
             return $result;
         }
 
-        $fieldName = $this->data['fieldName'];
-        $fieldConfig = $this->data['processedTca']['columns'][$fieldName];
-        $parentRecord = $this->data['databaseRow']['parent'][0]['row'];
+        if (!$parentRecord) {
+            return $result;
+        }
 
         $label = LocalizationUtility::translate(
             'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:formengine.parentvalue.label'
         );
 
         $icon = GeneralUtility::makeInstance(IconFactory::class)->getIconForRecord(
-            $this->data['tableName'],
-            $this->data['databaseRow'],
+            $tableName,
+            $record,
             Icon::SIZE_SMALL
         );
 
         $processedParentValue = BackendUtility::getProcessedValueExtra(
-            $this->data['tableName'],
-            $this->data['fieldName'],
+            $tableName,
+            $fieldName,
             $parentRecord[$fieldName]
         );
 

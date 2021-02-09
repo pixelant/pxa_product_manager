@@ -32,6 +32,7 @@ return [
         'searchFields' => 'value,attribute,',
         'hideTable' => true,
         'rootLevel' => -1,
+        'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/tag.svg',
     ],
     'types' => $types,
     'palettes' => [
