@@ -83,10 +83,15 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 continue;
             }
 
-            $configuration['config']['readOnly'] = true;
+            if ($configuration['config']['type'] === 'inline') {
+                $result['processedTca']['ctrl']['container']['inline']['fieldInformation']['inheritedProductField']['renderType']
+                    = 'inheritedProductField';
+            } else {
+                $configuration['config']['fieldInformation']['inheritedProductField']['renderType']
+                    = 'inheritedProductField';
+            }
 
-            $configuration['config']['fieldInformation']['inheritedProductField']['renderType']
-                = 'inheritedProductField';
+            $configuration['config']['readOnly'] = true;
         }
 
         return $result;
