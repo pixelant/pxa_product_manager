@@ -80,11 +80,13 @@ class AttributeValueFormDataProvider implements FormDataProviderInterface
 
         $configuration = &$result['processedTca']['columns']['value'];
 
-        if (in_array(
-            'attribute.' . $attributeValue['attribute'][0],
-            DataInheritanceUtility::getInheritedFieldsForProductType((int)$product['product_type']),
-            true
-        )) {
+        if (
+            in_array(
+                'attribute.' . $attributeValue['attribute'][0],
+                DataInheritanceUtility::getInheritedFieldsForProductType((int)$product['product_type']),
+                true
+            )
+        ) {
             $configuration['config']['readOnly'] = true;
 
             if ($configuration['config']['type'] === 'inline') {
