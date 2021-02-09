@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Utility;
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*
@@ -100,6 +102,27 @@ class TcaUtility
             'categoriesRestriction',
             'sys_category'
         );
+    }
+
+    /**
+     * Returns TCA configuration for a field with type-related overrides
+     *
+     * @param string $table
+     * @param string $field
+     * @param array $row
+     * @return mixed
+     */
+    public static function getTcaFieldConfigurationAndRespectColumnsOverrides(string $table, string $field, array $row)
+    {
+        $tcaFieldConf = $GLOBALS['TCA'][$table]['columns'][$field]['config'];
+        $recordType = BackendUtility::getTCAtypeValue($table, $row);
+        $columnsOverridesConfigOfField = $GLOBALS['TCA'][$table]['types'][$recordType]['columnsOverrides'][$field]['config'] ?? null;
+
+        if ($columnsOverridesConfigOfField) {
+            ArrayUtility::mergeRecursiveWithOverrule($tcaFieldConf, $columnsOverridesConfigOfField);
+        }
+
+        return $tcaFieldConf;
     }
 
     /**
