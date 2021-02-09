@@ -222,38 +222,6 @@ class ProductInheritanceProcessDatamap
             }
 
             $this->productDatamap[$identifier] = $productRowWithParentOverlay;
-
-            // Process attribute values
-//                $attributeValueIds = explode(',', $this->productDatamap[$identifier]['attributes_values']);
-//
-//                foreach ($attributeValueIds as $attributeValueId) {
-//                    $attributeValueRow = $this->attributeValueDatamap[$attributeValueId];
-//
-//                    if (!isset($attributeValueRow['attribute'])) {
-//                        $attributeValueRow['attribute'] = BackendUtility::getRecord(
-//                            AttributeValueRepository::TABLE_NAME,
-//                            $attributeValueId,
-//                            'attribute'
-//                        )['attribute'];
-//                    }
-//
-//                    $parentAttributeValueRow = $this->getParentAttributeValueData(
-//                        (int)$parentProductId,
-//                        (int)$productType,
-//                        (int)$attributeValueRow['attribute']
-//                    );
-//
-//                    $attributeValueRow = array_merge($attributeValueRow, $parentAttributeValueRow);
-//
-//                    /*$attributeValueRow['value'] = $this->processOverlayRelations(
-//                        AttributeValueRepository::TABLE_NAME,
-//                        'value',
-//                        $attributeValueRow['value'],
-//                        $attributeValueId
-//                    );*/
-//
-//                    $this->attributeValueDatamap[$attributeValueId] = $attributeValueRow;
-//                }
         }
 
         $children = [];
@@ -364,50 +332,6 @@ class ProductInheritanceProcessDatamap
         }
 
         return $overlayFields;
-    }
-
-    /**
-     * Returns an array of attribute value properties that should be overlaid upon any child of $parentProductId.
-     *
-     * @param int $parentProductId
-     * @param int $productType
-     * @param int $attributeId
-     * @return array
-     */
-    protected function getParentAttributeValueData(int $parentProductId, int $productType, int $attributeId): array
-    {
-        if (isset($this->inheritedAttributeValuesForProduct[$parentProductId . '-' . $attributeId])) {
-            return $this->inheritedAttributeValuesForProduct[$parentProductId . '-' . $attributeId];
-        }
-
-        $inheritedFields = DataInheritanceUtility::getInheritedFieldsForProductType($productType);
-
-        if (count($inheritedFields) === 0 || !in_array('attribute.' . $attributeId, $inheritedFields)) {
-            return [];
-        }
-
-        $attributeValueUid = AttributeUtility::findAttributeValue($parentProductId, $attributeId)['uid'];
-
-        $attributeValueRecord = $this->attributeValueDatamap[$attributeValueUid];
-
-        if (!is_array($attributeValueRecord)) {
-            $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
-            $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
-
-            $formDataCompilerInput = [
-                'tableName' => AttributeValueRepository::TABLE_NAME,
-                'vanillaUid' => $attributeValueUid,
-                'command' => 'edit',
-            ];
-
-            $attributeValueRecord = $formDataCompiler->compile($formDataCompilerInput)['databaseRow'];
-        }
-
-        $attributeValueRecord['attribute'] = $attributeId;
-
-        $this->inheritedAttributeValuesForProduct[$parentProductId . '-' . $attributeId] = $attributeValueRecord;
-
-        return $attributeValueRecord;
     }
 
     /**
@@ -550,12 +474,25 @@ class ProductInheritanceProcessDatamap
     }
 
     /**
-     * Returns the UID of a relations's cousin (attached to a parent product).
+     * Returns the UID of a relations's "cousin" (attached to a parent product).
      *
      * This is useful for inline relations, where a child product must retain its own copies of the relations and where
      * there is no way to know which relation on the child product is the copy of which relation on the parent. To avoid
      * deleting and recreating all relations on the child object, calling this function and
      * addParentChildRelationToIndex() we can keep a record of the relationships.
+     *
+     *     +-----------------+
+     *     | Child product   |
+     *     |                 |      +-----------------+
+     *     | $inlineRelation | ---- | Relation record | -> index table
+     *     +-----------------+      +-----------------+        |
+     *             |                                           |
+     *             |                                           |
+     *     +-----------------+                                 |
+     *     | Parent product  |                                 |
+     *     |                 |      +-----------------+        V
+     *     | $inlineRelation | ---- | Relation record | <- "cousin"
+     *     +-----------------+      +-----------------+
      *
      * @param int $childUid
      * @param string $tablename
@@ -579,7 +516,9 @@ class ProductInheritanceProcessDatamap
     }
 
     /**
+     * Returns the uid of the record on the child relation side
      *
+     * @see ProductInheritanceProcessDatamap::findParentRelationUidInIndex()
      *
      * @param int $parentUid
      * @param string $tablename
