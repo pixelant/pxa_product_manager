@@ -138,27 +138,29 @@ class ProductInheritanceProcessDatamap
     /** @codingStandardsIgnoreStart */
     public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
     {// @codingStandardsIgnoreEnd
-        foreach ($this->parentRelationPlaceholders as &$parentRelationPlaceholder) {
-            if (in_array($parentRelationPlaceholder['parent'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
-                $parentRelationPlaceholder['parent']
-                    = $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['parent']];
+        foreach ($this->parentRelationPlaceholders as $key => $value) {
+            if (in_array($value['parent'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
+                $value['parent']
+                    = $this->dataHandler->substNEWwithIDs[$value['parent']];
             }
 
-            if (in_array($parentRelationPlaceholder['child'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
-                $parentRelationPlaceholder['child']
-                    = $this->dataHandler->substNEWwithIDs[$parentRelationPlaceholder['child']];
+            if (in_array($value['child'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
+                $value['child']
+                    = $this->dataHandler->substNEWwithIDs[$value['child']];
             }
+
+            $this->parentRelationPlaceholders[$key] = $value;
         }
 
-        foreach ($this->parentRelationPlaceholders as $parentRelationPlaceholder) {
+        foreach ($this->parentRelationPlaceholders as $value) {
             if (
-                MathUtility::canBeInterpretedAsInteger($parentRelationPlaceholder['parent'])
-                && MathUtility::canBeInterpretedAsInteger($parentRelationPlaceholder['child'])
+                MathUtility::canBeInterpretedAsInteger($value['parent'])
+                && MathUtility::canBeInterpretedAsInteger($value['child'])
             ) {
                 $this->addParentChildRelationToIndex(
-                    $parentRelationPlaceholder['parent'],
-                    $parentRelationPlaceholder['child'],
-                    $parentRelationPlaceholder['tablename']
+                    $value['parent'],
+                    $value['child'],
+                    $value['tablename']
                 );
             }
         }
@@ -285,16 +287,7 @@ class ProductInheritanceProcessDatamap
         $parentRecord = $this->productDatamap[$parent];
 
         if (!is_array($parentRecord)) {
-            $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
-            $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
-
-            $formDataCompilerInput = [
-                'tableName' => self::TABLE,
-                'vanillaUid' => $parent,
-                'command' => 'edit',
-            ];
-
-            $parentRecord = $formDataCompiler->compile($formDataCompilerInput)['databaseRow'];
+            $parentRecord = $this->compileRecordData(ProductRepository::TABLE_NAME, (int)$parent);
         }
 
         $overlayFields = [];
@@ -302,22 +295,6 @@ class ProductInheritanceProcessDatamap
         foreach ($inheritedFields as $inheritedField) {
             // Don't handle attributes here
             if (strpos($inheritedField, 'attribute.') !== false) {
-                continue;
-            }
-
-            if (is_array($parentRecord[$inheritedField])) {
-                $relations = [];
-
-                foreach ($parentRecord[$inheritedField] as $item) {
-                    if (is_array($item)) {
-                        $relations[] = $item['table'] . '_' . $item['uid'];
-                    } else {
-                        $relations[] = $item;
-                    }
-                }
-
-                $row[$inheritedField] = implode(',', $relations);
-
                 continue;
             }
 
@@ -331,6 +308,55 @@ class ProductInheritanceProcessDatamap
         }
 
         return $overlayFields;
+    }
+
+    /**
+     * Compile a record, i.e. return the record with the data that would be saved with it in a form.
+     *
+     * @param string $tableName
+     * @param int $vanillaUid
+     * @param bool $removeUnprocessedColumns Remove columns that are not processed
+     * @return mixed
+     */
+    protected function compileRecordData(string $tableName, int $vanillaUid, bool $removeUnprocessedColumns = false)
+    {
+        $formDataGroup = GeneralUtility::makeInstance(TcaDatabaseRecord::class);
+        $formDataCompiler = GeneralUtility::makeInstance(FormDataCompiler::class, $formDataGroup);
+
+        $formDataCompilerInput = [
+            'tableName' => $tableName,
+            'vanillaUid' => $vanillaUid,
+            'command' => 'edit',
+        ];
+
+        $result = $formDataCompiler->compile($formDataCompilerInput);
+        $row = $result['databaseRow'];
+
+        if ($removeUnprocessedColumns) {
+            $row = array_filter(
+                $row,
+                fn($key) => in_array($key, $result['columnsToProcess']),
+                ARRAY_FILTER_USE_KEY
+            );
+        }
+
+        foreach ($row as $key => $value) {
+            if (is_array($value)) {
+                $relations = [];
+
+                foreach ($value as $item) {
+                    if (is_array($item)) {
+                        $relations[] = $item['table'] . '_' . $item['uid'];
+                    } else {
+                        $relations[] = $item;
+                    }
+                }
+
+                $row[$key] = implode(',', $relations);
+            }
+        }
+
+        return $row;
     }
 
     /**
@@ -402,10 +428,17 @@ class ProductInheritanceProcessDatamap
         foreach ($childRelations as &$childRelation) {
             // Only allow integer keys. NEW0123456789abcdef keys can't have been deleted
             if (MathUtility::canBeInterpretedAsInteger($childRelation)) {
-                $parentRelationUid = $this->findParentRelationUidInIndex($childRelation, $foreignTable);
+                $parentRelationUid = $this->findParentRelationUidInIndex((int)$childRelation, $foreignTable);
 
                 // Delete any relation that is not present in the parent
-                if ($parentRelationUid === 0 || !in_array($parentRelationUid, $parentRelations, true)) {
+                if (
+                    (
+                        $parentRelationUid === 0
+                        || !in_array((string)$parentRelationUid, $parentRelations, true)
+                    )
+                    && isset($this->dataHandler->cmdmap[$foreignTable][(int)$parentRelationUid]['delete'])
+                    && (int)$this->dataHandler->cmdmap[$foreignTable][(int)$parentRelationUid]['delete'] === 1
+                ) {
                     $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
                     unset($childRelation);
                     $this->removeParentRelationsFromIndex($parentRelationUid, $foreignTable);
@@ -426,7 +459,10 @@ class ProductInheritanceProcessDatamap
                 ];
             // Parent relation isn't new
             } else {
-                $childRelationIdentifier = $this->findChildRelationUidInIndex((int)$parentRelationIdentifier, $foreignTable);
+                $childRelationIdentifier = (string)$this->findChildRelationUidInIndex(
+                    (int)$parentRelationIdentifier,
+                    $foreignTable
+                );
 
                 // Child relation is new
                 if (!$childRelationIdentifier) {
@@ -441,6 +477,37 @@ class ProductInheritanceProcessDatamap
             }
 
             $childRecord = $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier];
+
+            // If the record only has the "hidden" field set, it's an unexpanded inline record and we must expand it
+            if (
+                strpos($parentRelationIdentifier, 'NEW') === false
+                && count($childRecord) === 1
+                && isset($childRecord['hidden'])
+            ) {
+                $compiledParentRecord = $this->compileRecordData($foreignTable, (int)$parentRelationIdentifier, true);
+                $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier] = $compiledParentRecord;
+                $childRecord = $compiledParentRecord;
+            }
+
+            // Set the type field value if it isn't already set
+            $typeField = $GLOBALS['TCA'][$foreignTable]['ctrl']['type'];
+            if (
+                isset($typeField)
+                && strpos($typeField, ':') === false // Skip these types e.g. in sys_file_reference
+                && !isset($childRecord[$typeField])
+                && MathUtility::canBeInterpretedAsInteger($parentRelationIdentifier)
+            ) {
+                $typeValue = (string)BackendUtility::getRecord(
+                    $foreignTable,
+                    $parentRelationIdentifier,
+                    $typeField
+                )[$typeField];
+
+                // Se the parent value too. We'll need it to be correct.
+                $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$typeField] = $typeValue;
+                $childRecord[$typeField] = $typeValue;
+            }
+
             $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
 
             // Recurse through inline relations for childrens' children
@@ -449,7 +516,7 @@ class ProductInheritanceProcessDatamap
                     $foreignTable,
                     $field,
                     $childRecord,
-                    $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$field],
+                    (string)$this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$field],
                     $childRelationIdentifier
                 );
             }
