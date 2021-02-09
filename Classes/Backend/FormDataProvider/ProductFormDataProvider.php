@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;

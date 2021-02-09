@@ -335,7 +335,7 @@ class ProductInheritanceProcessDatamap
         if ($removeUnprocessedColumns) {
             $row = array_filter(
                 $row,
-                fn($key) => in_array($key, $result['columnsToProcess']),
+                fn ($key) => in_array($key, $result['columnsToProcess'], true),
                 ARRAY_FILTER_USE_KEY
             );
         }

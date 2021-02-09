@@ -9,13 +9,11 @@ use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
-use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Backend;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
 /**
@@ -84,7 +82,8 @@ class AttributeValueFormDataProvider implements FormDataProviderInterface
 
         if (in_array(
             'attribute.' . $attributeValue['attribute'][0],
-            DataInheritanceUtility::getInheritedFieldsForProductType((int)$product['product_type'])
+            DataInheritanceUtility::getInheritedFieldsForProductType((int)$product['product_type']),
+            true
         )) {
             $configuration['config']['readOnly'] = true;
 
