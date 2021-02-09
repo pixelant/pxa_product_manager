@@ -71,6 +71,13 @@ defined('TYPO3_MODE') || die;
         ]
     );
 
+    // Register field control for identifier attribute
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1534315213786] = [
+        'nodeName' => 'attributeIdentifierControl',
+        'priority' => 30,
+        'class' => \Pixelant\PxaProductManager\Backend\FormEngine\FieldControl\AttributeIdentifierControl::class
+    ];
+
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1608645557] = [
         'nodeName' => 'productParentValue',
         'priority' => '30',
