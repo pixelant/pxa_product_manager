@@ -4,25 +4,13 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
-use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory;
-use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ProviderInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
-use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
-use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
-use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Exception\NotImplementedException;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
-use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
-use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
 /**
@@ -105,7 +93,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * Add CSS to the page renderer. Ensures attributes are styles like other fields.
      */
-    protected function addCss()
+    protected function addCss(): void
     {
         /** @var PageRenderer $pageRenderer */
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);

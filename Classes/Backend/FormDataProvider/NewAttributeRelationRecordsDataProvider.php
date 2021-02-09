@@ -4,35 +4,22 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Backend\FormDataProvider;
 
-use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory;
-use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ProviderInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
-use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
-use Pixelant\PxaProductManager\Exception\NotImplementedException;
 use Pixelant\PxaProductManager\FlashMessage\BackendFlashMessage;
 use Pixelant\PxaProductManager\Translate\CanTranslateInBackend;
-use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use Pixelant\PxaProductManager\Utility\AttributeUtility;
-use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
-use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Backend\Form\InlineStackProcessor;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
 /**
- * Adds any missing attributes to a product record we're editing
+ * Adds any missing attributes to a product record we're editing.
  */
 class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterface
 {

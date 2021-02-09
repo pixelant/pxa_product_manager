@@ -10,8 +10,8 @@ foreach ($attributes as $attribute) {
     $types[(string)$attribute['uid']] = [
         'showitem' => 'value',
         'columnsOverrides' => [
-            'value' => \Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory::create((int)$attribute['uid'])->get()
-        ]
+            'value' => \Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory::create((int)$attribute['uid'])->get(),
+        ],
     ];
 }
 

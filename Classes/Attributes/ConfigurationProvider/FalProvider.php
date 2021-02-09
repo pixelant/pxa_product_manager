@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**

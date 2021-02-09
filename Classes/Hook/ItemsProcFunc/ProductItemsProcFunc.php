@@ -7,7 +7,6 @@ namespace Pixelant\PxaProductManager\Hook\ItemsProcFunc;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
-use Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

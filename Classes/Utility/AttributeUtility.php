@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\PxaProductManager\Utility;
-
 
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
@@ -17,15 +15,14 @@ use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\Backend;
 
 /**
- * Convenience utility for attributes and attribute values
+ * Convenience utility for attributes and attribute values.
  */
 class AttributeUtility
 {
     /**
-     * Get an attrib
+     * Get an attrib.
      *
      * @param int $attributeId UID of the attribute
      * @param string $selectFields List of fields to select (comma-separated)
@@ -73,7 +70,7 @@ class AttributeUtility
     }
 
     /**
-     * Returns all attribute records for the specified $productTypeId
+     * Returns all attribute records for the specified $productTypeId.
      *
      * @param int $productTypeId
      * @return array
@@ -95,7 +92,7 @@ class AttributeUtility
     }
 
     /**
-     * Find attribute sets for the given product type
+     * Find attribute sets for the given product type.
      *
      * @param int $productTypeId
      * @return array of product set records
@@ -126,7 +123,7 @@ class AttributeUtility
     }
 
     /**
-     * Find attributes for an attribute set
+     * Find attributes for an attribute set.
      *
      * @param int $attributeSetId
      * @return array of attribute records
@@ -157,7 +154,7 @@ class AttributeUtility
     }
 
     /**
-     * Find a specific attribute value for a product
+     * Find a specific attribute value for a product.
      *
      * @param int $productId
      * @param int $attributeId
@@ -174,7 +171,7 @@ class AttributeUtility
             ->execute()
             ->fetchAssociative();
 
-        if(is_array($row)) {
+        if (is_array($row)) {
             return $row;
         }
 

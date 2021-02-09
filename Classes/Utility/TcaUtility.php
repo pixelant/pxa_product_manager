@@ -105,7 +105,7 @@ class TcaUtility
     }
 
     /**
-     * Returns TCA configuration for a field with type-related overrides
+     * Returns TCA configuration for a field with type-related overrides.
      *
      * @param string $table
      * @param string $field

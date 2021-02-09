@@ -8,7 +8,6 @@ use Doctrine\DBAL\FetchMode;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
-use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
@@ -381,7 +380,7 @@ class ProductInheritanceProcessDatamap
                 explode(',', $value),
                 ''
             );
-        } elseif(MathUtility::canBeInterpretedAsInteger($identifier)) {
+        } elseif (MathUtility::canBeInterpretedAsInteger($identifier)) {
             /** @var RelationHandler $relationHandler */
             $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
             $relationHandler->start(
@@ -516,7 +515,7 @@ class ProductInheritanceProcessDatamap
     }
 
     /**
-     * Returns the uid of the record on the child relation side
+     * Returns the uid of the record on the child relation side.
      *
      * @see ProductInheritanceProcessDatamap::findParentRelationUidInIndex()
      *
