@@ -16,9 +16,12 @@ class ConfigurationProviderFactoryTest extends UnitTestCase
      */
     public function createThrownExceptionIfTypeOfAttributeIsNotSupported(): void
     {
-        $attribute = TestsUtility::createEntity(Attribute::class, 1);
-
         $this->expectException(\UnexpectedValueException::class);
-        ConfigurationProviderFactory::create($attribute);
+        ConfigurationProviderFactory::create(
+            1,
+            [
+                'type' => 'VERY-MUCH-UNSUPPORTED-TYPE'
+            ]
+        );
     }
 }
