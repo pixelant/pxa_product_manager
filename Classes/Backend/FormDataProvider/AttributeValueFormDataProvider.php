@@ -88,10 +88,21 @@ class AttributeValueFormDataProvider implements FormDataProviderInterface
         )) {
             $configuration['config']['readOnly'] = true;
 
-            $configuration['config']['fieldInformation']['inheritedProductField']['renderType']
-                = 'inheritedProductField';
+            if ($configuration['config']['type'] === 'inline') {
+                $result['processedTca']['ctrl']['container']['inline']['fieldInformation']['inheritedProductField']['renderType']
+                    = 'inheritedProductField';
+            } else {
+                $configuration['config']['fieldInformation']['inheritedProductField']['renderType']
+                    = 'inheritedProductField';
+            }
         } else {
-            $configuration['config']['fieldWizard']['productParentValue']['renderType'] = 'productParentValue';
+            if ($configuration['config']['type'] === 'inline') {
+                $result['processedTca']['ctrl']['container']['inline']['fieldWizard']['productParentValue']['renderType']
+                    = 'productParentValue';
+            } else {
+                $configuration['config']['fieldWizard']['productParentValue']['renderType']
+                    = 'productParentValue';
+            }
         }
 
         return $result;

@@ -168,6 +168,10 @@ class AttributeUtility
         $row = $queryBuilder
             ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
             ->from(AttributeValueRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId)),
+                $queryBuilder->expr()->eq('attribute', $queryBuilder->createNamedParameter($attributeId))
+            )
             ->execute()
             ->fetchAssociative();
 
