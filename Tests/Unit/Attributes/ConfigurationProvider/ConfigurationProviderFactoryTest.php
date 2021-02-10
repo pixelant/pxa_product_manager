@@ -6,8 +6,6 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory;
-use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class ConfigurationProviderFactoryTest extends UnitTestCase
 {
@@ -20,7 +18,7 @@ class ConfigurationProviderFactoryTest extends UnitTestCase
         ConfigurationProviderFactory::create(
             1,
             [
-                'type' => 'VERY-MUCH-UNSUPPORTED-TYPE'
+                'type' => 'VERY-MUCH-UNSUPPORTED-TYPE',
             ]
         );
     }

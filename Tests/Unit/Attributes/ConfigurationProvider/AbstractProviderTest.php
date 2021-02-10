@@ -7,7 +7,6 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\AbstractProvider;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class AbstractProviderTest extends UnitTestCase
 {
