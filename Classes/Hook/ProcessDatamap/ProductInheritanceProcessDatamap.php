@@ -476,7 +476,7 @@ class ProductInheritanceProcessDatamap
                 }
             }
 
-            $childRecord = $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier];
+            $childRecord = $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier] ?? [];
 
             // If the record only has the "hidden" field set, it's an unexpanded inline record and we must expand it
             if (
