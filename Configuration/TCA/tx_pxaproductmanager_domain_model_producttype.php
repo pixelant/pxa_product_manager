@@ -25,7 +25,7 @@ return (function () {
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/filter.svg',
         ],
         'types' => [
-            '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets, inherit_fields, '],
+            '1' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, name, attribute_sets, template_layout, inherit_fields, '],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -121,6 +121,14 @@ return (function () {
                             'disabled' => false,
                         ],
                     ],
+                ],
+            ],
+            'template_layout' => [
+                'exclude' => true,
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_producttype.attribute_template_layout',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
                 ],
             ],
             'inherit_fields' => [

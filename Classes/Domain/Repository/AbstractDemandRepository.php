@@ -27,6 +27,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use Pixelant\Demander\Service\DemandService;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Event\Repository\RepositoryDemand as RepositoryDemandEvent;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -47,11 +48,24 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     protected Dispatcher $dispatcher;
 
     /**
+     * @var DemandService
+     */
+    protected DemandService $demandService;
+
+    /**
      * @param Dispatcher $dispatcher
      */
     public function injectDispatcher(Dispatcher $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @param DemandService $demandService
+     */
+    public function injectDemandService(DemandService $demandService): void
+    {
+        $this->demandService = $demandService;
     }
 
     /**

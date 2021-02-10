@@ -35,6 +35,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
 CREATE TABLE tx_pxaproductmanager_domain_model_attributeset
 (
     name            varchar(255)     DEFAULT ''  NOT NULL,
+    label           varchar(255)     DEFAULT ''  NOT NULL,
     attributes      int(11) unsigned DEFAULT '0' NOT NULL,
     product_types   int(11) unsigned DEFAULT '0' NOT NULL,
     layout          varchar(60)      DEFAULT 'Default' NOT NULL,
@@ -56,7 +57,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attribute
     options                   int(11) unsigned     DEFAULT '0' NOT NULL,
     label_checked             varchar(255)         DEFAULT ''  NOT NULL,
     label_unchecked           varchar(255)         DEFAULT ''  NOT NULL,
-    image                      int(11) unsigned     DEFAULT '0' NOT NULL
+    image                     int(11) unsigned     DEFAULT '0' NOT NULL
 );
 
 #
@@ -181,6 +182,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_producttype
     name                  varchar(255)       DEFAULT ''     NOT NULL,
     attribute_sets        int(11) unsigned   DEFAULT '0'    NOT NULL,
     inherit_fields        text,
+    template_layout       varchar(255)       DEFAULT ''     NOT NULL,
 );
 
 #

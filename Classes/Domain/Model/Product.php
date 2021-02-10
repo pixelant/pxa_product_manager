@@ -599,9 +599,9 @@ class Product extends AbstractEntity
     {
         if ($this->children === null) {
             /** @var ProductRepository $productRepository */
-            $productRepository = GeneralUtility::makeInstance(ProductRepository::class);
+            $productRepository = $this->objectManager->get(ProductRepository::class);
             $query = $productRepository->createQuery();
-            $children = $query->matching($query->equals('parent'), $this)->execute();
+            $children = $query->matching($query->equals('parent', $this))->execute();
 
             $this->children = new ObjectStorage();
 

@@ -146,6 +146,9 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.name">
 				<source>Name</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.label">
+				<source>Label</source>
+			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.layout">
 				<source>Layout</source>
 			</trans-unit>
@@ -349,6 +352,9 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.inherit_fields">
 			    <source>Fields inherited by child products</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.attribute_template_layout">
+            	<source>Template layout</source>
+            </trans-unit>
 			<!--tx_pxaproductmanager_domain_model_producttype TCA:END-->
 		</body>
 	</file>

@@ -69,6 +69,10 @@ class ProductRenderController extends AbstractController
      */
     public function showAction(Product $product): void
     {
+        $templateLayout = $product->getProductType()->getTemplateLayout();
+        if ($templateLayout !== '') {
+            $this->view->setTemplatePathAndFilename($templateLayout);
+        }
         $this->view->assignMultiple(compact('product'));
     }
 

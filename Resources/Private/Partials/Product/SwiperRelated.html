@@ -1,0 +1,30 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:ppm="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<div class="row">
+    <div class="single-product-related">
+        <div class="col-md-12">
+            <h3>
+                <f:translate key="{headerLabel}" />
+            </h3>
+        </div>
+
+        <div class="swiper-container product-relations">
+            <div class="swiper-wrapper">
+                <f:for each="{relatedProducts}" as="product">
+                    <div class="swiper-slide product-item-wrp">
+                        <ppm:link product="{product}">
+                            <f:render partial="Product/Card" arguments="{product: product}" />
+                        </ppm:link>
+                    </div>
+                </f:for>
+            </div>
+            <!-- Add scrollbar -->
+            <div class="swiper-pagination product-relations-pagination"></div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next product-relations-button-next"></div>
+            <div class="swiper-button-prev product-relations-button-prev"></div>
+        </div>
+    </div>
+</div>
+</html>
