@@ -105,10 +105,10 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
                 // values of the top most parent element set on first level and not overridden on following levels
                 'inlineTopMostParentUid' => $result['inlineTopMostParentUid'] ?: $inlineTopMostParent['uid'],
 
-                'inlineTopMostParentTableName'
-                    => $result['inlineTopMostParentTableName'] ?: $inlineTopMostParent['table'],
-                'inlineTopMostParentFieldName'
-                    => $result['inlineTopMostParentFieldName'] ?: $inlineTopMostParent['field'],
+                // @codingStandardsIgnoreLine
+                'inlineTopMostParentTableName' => $result['inlineTopMostParentTableName'] ?: $inlineTopMostParent['table'],
+                // @codingStandardsIgnoreLine
+                'inlineTopMostParentFieldName' => $result['inlineTopMostParentFieldName'] ?: $inlineTopMostParent['field'],
 
                 'recordTypeValue' => $attribute['uid'],
                 'databaseRow' => [
