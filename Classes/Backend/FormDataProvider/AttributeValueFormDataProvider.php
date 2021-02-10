@@ -90,6 +90,7 @@ class AttributeValueFormDataProvider implements FormDataProviderInterface
             $configuration['config']['readOnly'] = true;
 
             if ($configuration['config']['type'] === 'inline') {
+                // @codingStandardsIgnoreLine
                 $result['processedTca']['ctrl']['container']['inline']['fieldInformation']['inheritedProductField']['renderType']
                     = 'inheritedProductField';
             } else {
@@ -98,6 +99,7 @@ class AttributeValueFormDataProvider implements FormDataProviderInterface
             }
         } else {
             if ($configuration['config']['type'] === 'inline') {
+                // @codingStandardsIgnoreLine
                 $result['processedTca']['ctrl']['container']['inline']['fieldWizard']['productParentValue']['renderType']
                     = 'productParentValue';
             } else {

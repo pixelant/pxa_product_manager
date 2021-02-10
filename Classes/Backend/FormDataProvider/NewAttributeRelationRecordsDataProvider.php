@@ -104,8 +104,11 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
                 // values of the top most parent element set on first level and not overridden on following levels
                 'inlineTopMostParentUid' => $result['inlineTopMostParentUid'] ?: $inlineTopMostParent['uid'],
-                'inlineTopMostParentTableName' => $result['inlineTopMostParentTableName'] ?: $inlineTopMostParent['table'],
-                'inlineTopMostParentFieldName' => $result['inlineTopMostParentFieldName'] ?: $inlineTopMostParent['field'],
+
+                'inlineTopMostParentTableName'
+                    => $result['inlineTopMostParentTableName'] ?: $inlineTopMostParent['table'],
+                'inlineTopMostParentFieldName'
+                    => $result['inlineTopMostParentFieldName'] ?: $inlineTopMostParent['field'],
 
                 'recordTypeValue' => $attribute['uid'],
                 'databaseRow' => [
@@ -120,9 +123,11 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
             // This wizard sets the attribute type
             if ($newChild['processedTca']['columns']['value']['config']['type'] === 'inline') {
+                // @codingStandardsIgnoreLine
                 $newChild['processedTca']['ctrl']['container']['inline']['fieldWizard']['hiddenAttributeType']['renderType']
                     = 'hiddenAttributeType';
             } else {
+                // @codingStandardsIgnoreLine
                 $newChild['processedTca']['columns']['value']['config']['fieldWizard']['hiddenAttributeType']['renderType']
                     = 'hiddenAttributeType';
             }

@@ -83,6 +83,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             }
 
             if ($configuration['config']['type'] === 'inline') {
+                // @codingStandardsIgnoreLine
                 $result['processedTca']['ctrl']['container']['inline']['fieldInformation']['inheritedProductField']['renderType']
                     = 'inheritedProductField';
             } else {

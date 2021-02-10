@@ -116,7 +116,8 @@ class TcaUtility
     {
         $tcaFieldConf = $GLOBALS['TCA'][$table]['columns'][$field]['config'];
         $recordType = BackendUtility::getTCAtypeValue($table, $row);
-        $columnsOverridesConfigOfField = $GLOBALS['TCA'][$table]['types'][$recordType]['columnsOverrides'][$field]['config'] ?? null;
+        $columnsOverridesConfigOfField
+            = $GLOBALS['TCA'][$table]['types'][$recordType]['columnsOverrides'][$field]['config'] ?? null;
 
         if ($columnsOverridesConfigOfField) {
             ArrayUtility::mergeRecursiveWithOverrule($tcaFieldConf, $columnsOverridesConfigOfField);
