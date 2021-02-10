@@ -56,6 +56,13 @@ class ProductType extends AbstractEntity
     protected array $inheritFields = [];
 
     /**
+     * Template layout.
+     *
+     * @var string
+     */
+    protected string $templateLayout = '';
+
+    /**
      * __construct.
      */
     public function __construct()
@@ -153,5 +160,24 @@ class ProductType extends AbstractEntity
     public function setInheritFields(array $inheritFields): void
     {
         $this->inheritFields = $inheritFields;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateLayout(): string
+    {
+        return $this->templateLayout;
+    }
+
+    /**
+     * @param string $templateLayout
+     * @return $this
+     */
+    public function setTemplateLayout(string $templateLayout): self
+    {
+        $this->templateLayout = $templateLayout;
+
+        return $this;
     }
 }

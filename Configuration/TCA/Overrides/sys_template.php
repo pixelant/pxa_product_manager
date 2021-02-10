@@ -19,3 +19,9 @@ defined('TYPO3_MODE') || die;
     'Configuration/TypoScript/Sitemap',
     'Products Manager: Xml Sitemap'
 );
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
+    'pxa_product_manager',
+    'Configuration/TypoScript/Swiper',
+    'Products Manager: Add Swiper Js and Styles'
+);

@@ -12,11 +12,18 @@
       "role": "Developer"
     }
   ],
+  "repositories": [
+	{
+	  "type": "git",
+	  "url": "https://github.com/pixelant/demander.git"
+	}
+  ],
   "require": {
     "php": "^7.4",
     "ext-intl" : "*",
     "evoweb/extender": "^7.0",
-    "typo3/cms-core": "^10.4.6"
+    "typo3/cms-core": "^10.4.6",
+	"pixelant/demander": "dev-master"
   },
   "require-dev": {
     "codeception/codeception": "^4.1.5",

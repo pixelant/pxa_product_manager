@@ -40,6 +40,6 @@ defined('TYPO3_MODE') || die;
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
         'pxa_product_manager',
         'Configuration/TSconfig/Page/Mod/WebLayout/BackendLayouts.tsconfig',
-        'All BE layouts'
+        'Product Manager BE layouts'
     );
 })();
