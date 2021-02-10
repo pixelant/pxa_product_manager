@@ -96,9 +96,9 @@ class ProductInheritanceProcessDatamap
      * @param $id
      */
 
-    /** @codingStandardsIgnoreStart */
+    // phpcs:ignore
     public function processDatamap_beforeStart(DataHandler $dataHandler): void
-    {// @codingStandardsIgnoreEnd
+    {
         if (isset($dataHandler->datamap[ProductRepository::TABLE_NAME])) {
             $this->dataHandler = $dataHandler;
             $this->productDatamap = &$dataHandler->datamap[ProductRepository::TABLE_NAME];
@@ -135,9 +135,9 @@ class ProductInheritanceProcessDatamap
      * @param DataHandler $dataHandler
      */
 
-    /** @codingStandardsIgnoreStart */
+    // phpcs:ignore
     public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
-    {// @codingStandardsIgnoreEnd
+    {
         foreach ($this->parentRelationPlaceholders as $key => $value) {
             if (in_array($value['parent'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
                 $value['parent']
@@ -270,6 +270,8 @@ class ProductInheritanceProcessDatamap
      * @param int $productType
      * @return array
      */
+
+    // phpcs:disable Generic.Metrics.CyclomaticComplexity
     protected function getParentProductOverlayData(int $parent, int $productType): array
     {
         if (isset($this->inheritedProductFieldsForProductType[$parent . '-' . $productType])) {
