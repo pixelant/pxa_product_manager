@@ -15,6 +15,22 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ConfigurationProviderFactory
 {
     /**
+     * Conversion table from attribute type to configuration provider class name.
+     */
+    protected const TYPE_TO_PROVIDER = [
+        Attribute::ATTRIBUTE_TYPE_INPUT => InputProvider::class,
+        Attribute::ATTRIBUTE_TYPE_TEXT => TextAreaProvider::class,
+        Attribute::ATTRIBUTE_TYPE_MULTISELECT => SelectBoxProvider::class,
+        Attribute::ATTRIBUTE_TYPE_DROPDOWN => SelectBoxProvider::class,
+        Attribute::ATTRIBUTE_TYPE_CHECKBOX => CheckboxProvider::class,
+        Attribute::ATTRIBUTE_TYPE_LINK => LinkProvider::class,
+        Attribute::ATTRIBUTE_TYPE_FILE => FalProvider::class,
+        Attribute::ATTRIBUTE_TYPE_IMAGE => FalProvider::class,
+        Attribute::ATTRIBUTE_TYPE_DATETIME => DateTimeProvider::class,
+        Attribute::ATTRIBUTE_TYPE_LABEL => LabelProvider::class,
+    ];
+
+    /**
      * Factory method.
      *
      * @param Attribute $attribute
@@ -30,30 +46,15 @@ class ConfigurationProviderFactory
             );
         }
 
-        switch ($attribute['type']) {
-            case Attribute::ATTRIBUTE_TYPE_INPUT:
-                return GeneralUtility::makeInstance(InputProvider::class, $attribute);
-            case Attribute::ATTRIBUTE_TYPE_TEXT:
-                return GeneralUtility::makeInstance(TextAreaProvider::class, $attribute);
-            case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
-            case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
-                return GeneralUtility::makeInstance(SelectBoxProvider::class, $attribute);
-            case Attribute::ATTRIBUTE_TYPE_CHECKBOX:
-                return GeneralUtility::makeInstance(CheckboxProvider::class, $attribute);
-            case Attribute::ATTRIBUTE_TYPE_LINK:
-                return GeneralUtility::makeInstance(LinkProvider::class, $attribute);
-            case Attribute::ATTRIBUTE_TYPE_FILE:
-            case Attribute::ATTRIBUTE_TYPE_IMAGE:
-                return GeneralUtility::makeInstance(FalProvider::class, $attribute);
-            case Attribute::ATTRIBUTE_TYPE_DATETIME:
-                return GeneralUtility::makeInstance(DateTimeProvider::class, $attribute);
-            case Attribute::ATTRIBUTE_TYPE_LABEL:
-                return GeneralUtility::makeInstance(LabelProvider::class, $attribute);
+        $className = self::TYPE_TO_PROVIDER[$attributeType];
+
+        if ($className === null) {
+            throw new \UnexpectedValueException(
+                'Attribute with type "' . $attribute['type'] . '" not supported.',
+                1568986135545
+            );
         }
 
-        throw new \UnexpectedValueException(
-            'Attribute with type "' . $attribute['type'] . '" not supported.',
-            1568986135545
-        );
+        return GeneralUtility::makeInstance($className, $attribute);
     }
 }
