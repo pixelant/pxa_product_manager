@@ -7,6 +7,7 @@ namespace Pixelant\PxaProductManager\Utility;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
+use Pixelant\PxaProductManager\Domain\Repository\OptionRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductTypeRepository;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -174,6 +175,33 @@ class AttributeUtility
             )
             ->execute()
             ->fetchAssociative();
+
+        if (is_array($row)) {
+            return $row;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find options for attribute.
+     *
+     * @param int $attributeId
+     * @param string $selectFields
+     * @return array|null
+     */
+    public static function findAttributeOptions(int $attributeId, string $selectFields = '*'): ?array
+    {
+        $queryBuilder = self::getQueryBuilderForTable(OptionRepository::TABLE_NAME);
+
+        $row = $queryBuilder
+            ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
+            ->from(OptionRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('attribute', $queryBuilder->createNamedParameter($attributeId))
+            )
+            ->execute()
+            ->fetchAllAssociative();
 
         if (is_array($row)) {
             return $row;

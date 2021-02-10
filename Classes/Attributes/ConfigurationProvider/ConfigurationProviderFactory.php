@@ -36,6 +36,7 @@ class ConfigurationProviderFactory
             case Attribute::ATTRIBUTE_TYPE_TEXT:
                 return GeneralUtility::makeInstance(TextAreaProvider::class, $attribute);
             case Attribute::ATTRIBUTE_TYPE_MULTISELECT:
+            case Attribute::ATTRIBUTE_TYPE_DROPDOWN:
                 return GeneralUtility::makeInstance(SelectBoxProvider::class, $attribute);
             case Attribute::ATTRIBUTE_TYPE_CHECKBOX:
                 return GeneralUtility::makeInstance(CheckboxProvider::class, $attribute);
