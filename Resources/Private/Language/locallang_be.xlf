@@ -118,6 +118,15 @@
 			<trans-unit id="flexform.mode.product_lazy_list">
 				<source>Lazy list</source>
 			</trans-unit>
+			<trans-unit id="flexform.menuLevels">
+				<source>Menu above filters</source>
+			</trans-unit>
+			<trans-unit id="flexform.menuLevels.disabled">
+				<source>No menu</source>
+			</trans-unit>
+			<trans-unit id="flexform.menuLevels.1">
+				<source>Display list of subpages of current page, if on "last level" use parent page as statingpoint</source>
+			</trans-unit>
 			<!--FlexForm:Plugin modes:END-->
 
 			<!--FlexForm:List:START-->

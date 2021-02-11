@@ -219,4 +219,87 @@ abstract class AbstractController extends ActionController
     {
         return $GLOBALS['TSFE'];
     }
+
+    /**
+     * Generate menu for fluid variable based on flexform settings.
+     *
+     * @return array
+     */
+    protected function generateMenu(): array
+    {
+        $levels = (int)$this->settings['menuLevels'] ?? 0;
+        $data = [];
+
+        if ((int)$levels > 0) {
+            $currentPageId = $this->getTypoScriptFrontendController()->id;
+            $rootLine = $this->getTypoScriptFrontendController()->rootLine;
+
+            $subpages = $this->getMenuOfSubpages($currentPageId, $levels);
+            // Check if we are on "last level" step one page up in menu.
+            if (empty($subpages)) {
+                $parentPageId = $rootLine[count($rootLine) - 2]['uid'] ?? false;
+                if (!empty($parentPageId)) {
+                    $currentPageId = (int)$parentPageId;
+                    $subpages = $this->getMenuOfSubpages($currentPageId, $levels);
+                }
+            }
+
+            $current = $this->getMenuOfCurrentPage($currentPageId);
+
+            $data = $current[0] ?? [];
+            $data['children'] = $subpages ?? [];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Generate menu for fluid variable based on flexform settings.
+     *
+     * @param int $pageId
+     * @param int $levels
+     * @return array
+     */
+    protected function getMenuOfSubpages(int $pageId, int $levels): array
+    {
+        $menuDirectoryProcessor = GeneralUtility::makeInstance(
+            \TYPO3\CMS\Frontend\DataProcessing\MenuProcessor::class
+        );
+
+        return $menuDirectoryProcessor->process(
+            $this->configurationManager->getContentObject(),
+            [],
+            [
+                'special' => 'directory',
+                'special.' => ['value' => $pageId],
+                'levels' => $levels,
+                'as' => 'subpages',
+            ],
+            []
+        )['subpages'] ?? [];
+    }
+
+    /**
+     * Generate menu for fluid variable based on flexform settings.
+     *
+     * @param int $pageId
+     * @return array
+     */
+    protected function getMenuOfCurrentPage(int $pageId): array
+    {
+        $menuListProcessor = GeneralUtility::makeInstance(
+            \TYPO3\CMS\Frontend\DataProcessing\MenuProcessor::class
+        );
+
+        return $menuListProcessor->process(
+            $this->configurationManager->getContentObject(),
+            [],
+            [
+                'special' => 'list',
+                'special.' => ['value' => $pageId],
+                'as' => 'current',
+            ],
+            []
+        )['current'] ?? [];
+    }
 }
