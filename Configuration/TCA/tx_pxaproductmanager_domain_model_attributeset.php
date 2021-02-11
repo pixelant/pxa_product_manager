@@ -22,9 +22,6 @@ return (function () {
             'searchFields' => 'name,attributes,',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/layers.svg',
         ],
-        'interface' => [
-            'showRecordFieldList' => 'hidden, name, label, layout, attributes, product_types',
-        ],
         'types' => [
             '1' => ['showitem' => 'name, label, layout, attributes, product_types, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'],
         ],

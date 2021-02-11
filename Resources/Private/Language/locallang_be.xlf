@@ -344,6 +344,24 @@
 				<source>Additional content (after main content/before site footer)</source>
 			</trans-unit>
 			<!--BE layout for product sample:END-->
+
+			<!--ParentValueFieldWizard:START-->
+			<trans-unit id="formengine.parentvalue.label">
+				<source>Parent value</source>
+			</trans-unit>
+			<!--ParentValueFieldWizard:END-->
+
+			<!--InheritedProductDataFieldWizard:START-->
+			<trans-unit id="formengine.inheritedfield">
+				<source>Inherited from parent product.</source>
+			</trans-unit>
+			<!--InheritedProductDataFieldWizard:END-->
+
+			<!--ProductInheritanceProcessDatamap:START-->
+			<trans-unit id="formengine.productinheritance.updatedcount">
+				<source>%s products were updated with data inherited from parent products.</source>
+			</trans-unit>
+			<!--ProductInheritanceProcessDatamap:END-->
 		</body>
 	</file>
 </xliff>

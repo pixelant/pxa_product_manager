@@ -30,7 +30,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 /**
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class AttributeRepository extends Repository
+class OptionRepository extends Repository
 {
-    public const TABLE_NAME = 'tx_pxaproductmanager_domain_model_attribute';
+    public const TABLE_NAME = 'tx_pxaproductmanager_domain_model_option';
 }

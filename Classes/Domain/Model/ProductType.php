@@ -49,6 +49,13 @@ class ProductType extends AbstractEntity
     protected ObjectStorage $attributeSets;
 
     /**
+     * Fields to be inherited from parent to child products.
+     *
+     * @var array
+     */
+    protected array $inheritFields = [];
+
+    /**
      * Template layout.
      *
      * @var string
@@ -137,6 +144,22 @@ class ProductType extends AbstractEntity
         $this->attributeSets = $attributeSets;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInheritFields(): array
+    {
+        return $this->inheritFields;
+    }
+
+    /**
+     * @param array $inheritFields
+     */
+    public function setInheritFields(array $inheritFields): void
+    {
+        $this->inheritFields = $inheritFields;
     }
 
     /**

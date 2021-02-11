@@ -27,6 +27,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
+use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,6 +38,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ProductRepository extends AbstractDemandRepository
 {
     use AbleFindByUidList;
+
+    public const TABLE_NAME = 'tx_pxaproductmanager_domain_model_product';
 
     /**
      * Returns object class name.
@@ -57,17 +60,17 @@ class ProductRepository extends AbstractDemandRepository
     public function createDemandQueryBuilder(DemandInterface $demand): QueryBuilder
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_product');
+            ->getQueryBuilderForTable(self::TABLE_NAME);
 
         $selectFields = [
-            'tx_pxaproductmanager_domain_model_product.uid',
-            'tx_pxaproductmanager_domain_model_product.name',
-            'tx_pxaproductmanager_domain_model_product.teaser',
-            'tx_pxaproductmanager_domain_model_product.sku',
-            'tx_pxaproductmanager_domain_model_product.price',
-            'tx_pxaproductmanager_domain_model_product.singleview_page',
-            'tx_pxaproductmanager_domain_model_product.images',
-            'tx_pxaproductmanager_domain_model_product.product_type',
+            self::TABLE_NAME . '.uid',
+            self::TABLE_NAME . '.name',
+            self::TABLE_NAME . '.teaser',
+            self::TABLE_NAME . '.sku',
+            self::TABLE_NAME . '.price',
+            self::TABLE_NAME . '.singleview_page',
+            self::TABLE_NAME . '.images',
+            self::TABLE_NAME . '.product_type',
         ];
 
         // fireEvent AfterSelectFieldsEvent table fields
@@ -75,7 +78,7 @@ class ProductRepository extends AbstractDemandRepository
         $queryBuilder
             ->select(...$selectFields)
             ->addSelect()
-            ->from('tx_pxaproductmanager_domain_model_product');
+            ->from(self::TABLE_NAME);
 
         $this->fireDemandEvent('afterDemandQueryBuilderInitialize', $demand, $queryBuilder);
 
@@ -279,7 +282,7 @@ class ProductRepository extends AbstractDemandRepository
                 $queryBuilder->expr()->eq(
                     'scrm.tablenames',
                     $parentQueryBuilder->createNamedParameter(
-                        'tx_pxaproductmanager_domain_model_product',
+                        self::TABLE_NAME,
                         \PDO::PARAM_STR
                     )
                 ),

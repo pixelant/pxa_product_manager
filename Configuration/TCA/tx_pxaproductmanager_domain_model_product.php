@@ -4,7 +4,6 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 return (function () {
     $ll = 'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_db.xlf:';
-    $falAttributesField = \Pixelant\PxaProductManager\Utility\AttributeTcaNamingUtility::FAL_DB_FIELD;
 
     return [
         'ctrl' => [
@@ -30,15 +29,11 @@ return (function () {
             'thumbnail' => 'images',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/product.svg',
         ],
-        'interface' => [
-            'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, product_type, name, sku, price, tax_rate, teaser, description, usp,
-            related_products, sub_products, accessories, images, attribute_files, links, fal_links, assets, attributes_values, alternative_title, keywords, meta_description, slug, singleview_page',
-        ],
         'types' => [
             '1' => [
-                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProdyctType, --palette--;;general,--palette--;;paletteAttributes,
+                'showitem' => 'sys_language_uid,l10n_parent,l10n_diffsource, --palette--;;paletteProductType, --palette--;;general,--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.attributes,attributes_values,_nonfield,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.images, images, assets,
---div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, related_products, sub_products, accessories,
+--div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.relations, parent, related_products, accessories,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.links, fal_links, links,
 --div--;' . $ll . 'tx_pxaproductmanager_domain_model_product.tab.metadata, alternative_title, meta_description, keywords,
 --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, --palette--;;access',
@@ -47,8 +42,7 @@ return (function () {
         'palettes' => [
             'general' => ['showitem' => 'name, --linebreak--, slug, --linebreak--, singleview_page, --linebreak--, sku, --linebreak--, price, tax_rate, --linebreak--,  teaser, usp, --linebreak--, description'],
             'access' => ['showitem' => 'hidden, --linebreak--, starttime, endtime'],
-            'paletteAttributes' => ['showitem' => ''],
-            'paletteProdyctType' => ['showitem' => 'product_type'],
+            'paletteProductType' => ['showitem' => 'product_type'],
         ],
         'columns' => [
             'sys_language_uid' => [
@@ -141,7 +135,6 @@ return (function () {
                     ],
                 ],
             ],
-
             'name' => [
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.name',
@@ -218,18 +211,29 @@ return (function () {
             ],
             'attributes_values' => [
                 'exclude' => false,
-                'label' => 'Attribute Values',
                 'config' => [
                     'type' => 'inline',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_attributevalue',
                     'foreign_field' => 'product',
                     'maxitems' => 9999,
+                    'foreign_types' => [
+                        ['showitem' => 'value'],
+                    ],
                     'appearance' => [
                         'collapseAll' => 0,
-                        'levelLinksPosition' => 'top',
+                        'levelLinksPosition' => 'none',
                         'showSynchronizationLink' => 1,
                         'showPossibleLocalizationRecords' => 1,
                         'showAllLocalizationLink' => 1,
+                        'enabledControls' => [
+                            'info' => false,
+                            'new' => false,
+                            'dragdrop' => false,
+                            'sort' => false,
+                            'hide' => false,
+                            'delete' => false,
+                            'localize' => false,
+                        ],
                     ],
                 ],
             ],
@@ -237,30 +241,28 @@ return (function () {
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.related_products',
                 'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
+                    'type' => 'group',
+                    'internal_type' => 'db',
+                    'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
-                        ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    'suggestOptions' => [
+                        'tx_pxaproductmanager_domain_model_product' => \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
+                            ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
+                            ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    ],
                     'MM' => 'tx_pxaproductmanager_product_product_mm',
                     'MM_match_fields' => [
                         'tablenames' => 'tx_pxaproductmanager_domain_model_product',
                         'fieldname' => 'related_products',
                     ],
+                    'MM_opposite_field' => 'related_products',
+                    'MM_oppositeUsage' => [
+                        'tx_pxaproductmanager_domain_model_product' => ['accessories'],
+                    ],
                     'size' => 10,
-                    'autoSizeMax' => 30,
+                    'minitems' => 0,
                     'maxitems' => 9999,
                     'multiple' => 0,
-                    'enableMultiSelectFilterTextfield' => true,
-                    'fieldControl' => [
-                        'editPopup' => [
-                            'disabled' => false,
-                        ],
-                        'addRecord' => [
-                            'disabled' => false,
-                        ],
-                    ],
                 ],
             ],
             'images' => [
@@ -291,22 +293,6 @@ return (function () {
                         'maxitems' => 99,
                     ],
                     $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext']
-                ),
-            ],
-            $falAttributesField => [
-                'exclude' => false,
-                'label' => $falAttributesField,
-                'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                    $falAttributesField,
-                    [
-                        'appearance' => [
-                            'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference',
-                        ],
-                        'behaviour' => [
-                            'allowLanguageSynchronization' => true,
-                        ],
-                        'maxitems' => 99,
-                    ]
                 ),
             ],
             'fal_links' => [
@@ -378,32 +364,25 @@ return (function () {
                     ],
                 ],
             ],
-            'sub_products' => [
+            'parent' => [
                 'exclude' => false,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.sub_products',
+                'label' => $ll . 'tx_pxaproductmanager_domain_model_product.parent',
                 'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
+                    'type' => 'group',
+                    'internal_type' => 'db',
+                    'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getSubProductsForeignTableWherePid() .
-                        ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
-                    'MM' => 'tx_pxaproductmanager_product_product_mm',
-                    'MM_match_fields' => [
-                        'tablenames' => 'tx_pxaproductmanager_domain_model_product',
-                        'fieldname' => 'sub_products',
-                    ],
-                    'size' => 10,
-                    'autoSizeMax' => 30,
-                    'maxitems' => 9999,
-                    'multiple' => 0,
-                    'enableMultiSelectFilterTextfield' => true,
+                    'size' => 1,
+                    'maxitems' => 1,
+                    'minitems' => 0,
+                    'default' => 0,
+                    'eval' => 'int',
                     'fieldControl' => [
                         'editPopup' => [
-                            'disabled' => false,
+                            'disabled' => true,
                         ],
                         'addRecord' => [
-                            'disabled' => false,
+                            'disabled' => true,
                         ],
                     ],
                 ],
@@ -548,30 +527,28 @@ return (function () {
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_product.accessories',
                 'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectMultipleSideBySide',
+                    'type' => 'group',
+                    'internal_type' => 'db',
+                    'allowed' => 'tx_pxaproductmanager_domain_model_product',
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => \Pixelant\PxaProductManager\Utility\TcaUtility::getAccessoriesForeignTableWherePid() .
-                        ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
-                        ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    'suggestOptions' => [
+                        'tx_pxaproductmanager_domain_model_product' => \Pixelant\PxaProductManager\Utility\TcaUtility::getRelatedProductsForeignTableWherePid() .
+                            ' AND tx_pxaproductmanager_domain_model_product.uid != ###THIS_UID###' .
+                            ' ORDER BY tx_pxaproductmanager_domain_model_product.name',
+                    ],
                     'MM' => 'tx_pxaproductmanager_product_product_mm',
                     'MM_match_fields' => [
                         'tablenames' => 'tx_pxaproductmanager_domain_model_product',
                         'fieldname' => 'accessories',
                     ],
+                    'MM_opposite_field' => 'accessories',
+                    'MM_oppositeUsage' => [
+                        'tx_pxaproductmanager_domain_model_product' => ['accessories'],
+                    ],
                     'size' => 10,
-                    'autoSizeMax' => 30,
+                    'minitems' => 0,
                     'maxitems' => 9999,
                     'multiple' => 0,
-                    'enableMultiSelectFilterTextfield' => true,
-                    'fieldControl' => [
-                        'editPopup' => [
-                            'disabled' => false,
-                        ],
-                        'addRecord' => [
-                            'disabled' => false,
-                        ],
-                    ],
                 ],
             ],
             'crdate' => [

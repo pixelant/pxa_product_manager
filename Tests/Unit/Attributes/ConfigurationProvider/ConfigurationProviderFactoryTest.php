@@ -6,8 +6,6 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory;
-use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class ConfigurationProviderFactoryTest extends UnitTestCase
 {
@@ -16,9 +14,12 @@ class ConfigurationProviderFactoryTest extends UnitTestCase
      */
     public function createThrownExceptionIfTypeOfAttributeIsNotSupported(): void
     {
-        $attribute = TestsUtility::createEntity(Attribute::class, 1);
-
         $this->expectException(\UnexpectedValueException::class);
-        ConfigurationProviderFactory::create($attribute);
+        ConfigurationProviderFactory::create(
+            1,
+            [
+                'type' => 'VERY-MUCH-UNSUPPORTED-TYPE',
+            ]
+        );
     }
 }

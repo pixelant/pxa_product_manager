@@ -11,6 +11,7 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
     description       text,
     usp               text,
 
+    parent            int(11) unsigned DEFAULT '0'    NOT NULL,
     related_products  int(11) unsigned DEFAULT '0'    NOT NULL,
     sub_products      int(11) unsigned DEFAULT '0'    NOT NULL,
     accessories       int(11) unsigned DEFAULT '0'    NOT NULL,
@@ -19,7 +20,6 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
     links             int(11) unsigned DEFAULT '0'    NOT NULL,
     fal_links         int(11) unsigned DEFAULT '0'    NOT NULL,
     assets            int(11) unsigned DEFAULT '0'    NOT NULL,
-    attributes_files  int(11) unsigned DEFAULT '0'    NOT NULL,
     attributes_values int(11) unsigned DEFAULT '0'    NOT NULL,
     product_type      int(11) unsigned DEFAULT '0'    NOT NULL,
     alternative_title varchar(255)     DEFAULT ''     NOT NULL,
@@ -181,7 +181,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_producttype
 (
     name                  varchar(255)       DEFAULT ''     NOT NULL,
     attribute_sets        int(11) unsigned   DEFAULT '0'    NOT NULL,
-    template_layout       varchar(255)       DEFAULT ''     NOT NULL
+    inherit_fields        text,
+    template_layout       varchar(255)       DEFAULT ''     NOT NULL,
 );
 
 #
@@ -198,4 +199,18 @@ CREATE TABLE tx_pxaproductmanager_product_pages_mm
 
     KEY uid_local_foreign (uid_local, uid_foreign),
     KEY uid_foreign_tablefield (uid_foreign, tablenames(40), fieldname(3), sorting_foreign)
+);
+
+#
+# Table structure for table 'tx_pxaproductmanager_relation_inheritance_index'
+# Keeps track of inheritance between inline relation records for parent/child products.
+#
+CREATE TABLE tx_pxaproductmanager_relation_inheritance_index
+(
+	uid_parent       int(11)      DEFAULT '0' NOT NULL,
+	uid_child        int(11)      DEFAULT '0' NOT NULL,
+	tablename        varchar(255) DEFAULT ''  NOT NULL,
+
+	KEY uid_child_table (uid_child, tablename),
+	KEY uid_parent_table (uid_parent, tablename)
 );
