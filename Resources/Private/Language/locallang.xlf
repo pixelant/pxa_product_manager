@@ -172,6 +172,9 @@
             <trans-unit id="fe.please_select">
                 <source>Please select...</source>
             </trans-unit>
+            <trans-unit id="fe.filters">
+                <source>Filters</source>
+            </trans-unit>
 
             <trans-unit id="fe.userEmail.orderForm.subject">
                 <source>Thank you for your order</source>

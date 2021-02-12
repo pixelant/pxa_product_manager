@@ -14,24 +14,49 @@
         <div class="pm-bs-container">
             <div class="pm-bs-row">
                 <div class="pm-bs-col-md-3">
-                    <div class="pm-bs-col-md-12">
-                        <clear-all></clear-all>
-                    </div>
-                    <f:for as="filter" each="{filters}">
-                        <div class="pm-bs-col-md-12">
-                            <f:switch expression="{filter.guiType}">
-                                <f:case value="checkbox">
-                                    <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
-                                </f:case>
-                                <f:case value="option">
-                                    <lazy-radio-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
-                                </f:case>
-                                <f:defaultCase>
-                                    <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
-                                </f:defaultCase>
-                            </f:switch>
+                    <f:if condition="{menu.children}">
+                        <div class="pm-bs-col-md-12 product-list-menu">
+                            <span class="product-list-menu-current-title">{menu.title}</span>
+                            <div class="menu-subpages">
+                                <ul class="product-list-menu-submenu">
+                                    <f:for each="{menu.children}" as="menuItem">
+                                        <f:variable name="activeClass">{f:if(condition: '{menuItem.active}', then: ' product-list-menu-submenu-item__active')}</f:variable>
+                                        <f:variable name="currentClass">{f:if(condition: '{menuItem.current}', then: ' product-list-menu-submenu-item__current')}</f:variable>
+                                        <li class="product-list-menu-submenu-item{activeClass}{currentClass}">
+                                            <a class="product-list-menu-submenu-item-link" href="{menuItem.link}">
+                                                <span class="product-list-menu-submenu-item-title">{menuItem.title}</span>
+                                            </a>
+                                        </li>
+                                    </f:for>
+                                </ul>
+                            </div>
                         </div>
-                    </f:for>
+                    </f:if>
+
+                    <f:if condition="{filters}">
+                        <div class="pm-bs-col-md-12">
+                            <span class="product-list-menu-current-title"><f:translate key="fe.filters" /></span>
+                        </div>
+
+                        <div class="pm-bs-col-md-12">
+                            <clear-all></clear-all>
+                        </div>
+                        <f:for as="filter" each="{filters}">
+                            <div class="pm-bs-col-md-12">
+                                <f:switch expression="{filter.guiType}">
+                                    <f:case value="checkbox">
+                                        <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
+                                    </f:case>
+                                    <f:case value="option">
+                                        <lazy-radio-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
+                                    </f:case>
+                                    <f:defaultCase>
+                                        <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
+                                    </f:defaultCase>
+                                </f:switch>
+                            </div>
+                        </f:for>
+                    </f:if>
                 </div>
                 <div class="pm-bs-col-md-9">
                     <div class="pm-bs-row">
