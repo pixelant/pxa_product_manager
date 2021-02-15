@@ -2,7 +2,12 @@
 
 defined('TYPO3_MODE') || die('Access denied.');
 
-$attributes = \Pixelant\PxaProductManager\Utility\AttributeUtility::findAllAttributes();
+try {
+    $attributes = \Pixelant\PxaProductManager\Utility\AttributeUtility::findAllAttributes();
+} catch (\Doctrine\DBAL\Exception\TableNotFoundException $th) {
+    // catch TableNotFoundException to avoid exception when table isn't created yet.
+    $attributes = [];
+}
 
 $types = [];
 
