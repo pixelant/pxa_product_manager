@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Attributes\ConfigurationProvider;
 
-use Pixelant\PxaProductManager\Domain\Model\Option;
+use Pixelant\PxaProductManager\Utility\AttributeUtility;
 
 /**
  * Selectbox TCA.
@@ -21,9 +21,10 @@ class SelectBoxProvider extends AbstractProvider
         }
 
         $options = [];
-        /** @var Option $option */
-        foreach ($this->attribute->getOptions() as $option) {
-            $options[] = [$option->getValue(), $option->getUid()];
+
+        $attributeOptions = AttributeUtility::findAttributeOptions($this->attribute['uid'], 'uid, value');
+        foreach ($attributeOptions as $option) {
+            $options[] = [$option['value'], $option['uid']];
         }
 
         if (empty($options)) {

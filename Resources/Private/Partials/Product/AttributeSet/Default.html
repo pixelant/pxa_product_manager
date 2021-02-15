@@ -1,22 +1,20 @@
-<h4>{attributeset.name}</h4>
-<table class="table">
+<h5><f:if condition="{attributeset.label}" then="{attributeset.label}" else="{attributeset.name}"/></h5>
+<dl class="pm-bs-row">
     <f:for each="{attributeset.listingAttributes}" as="attribute">
         <f:if condition="{product.attributeValue.{attribute.identifier}.hasNonEmptyValue}">
-            <tr>
-                <th>
-                    <f:if condition="{attribute.image}">
-                        <f:image image="{attribute.image}"
-                                 maxWidth="{settings.attributes.imageMaxSize}"
-                                 maxHeight="{settings.attributes.imageMaxSize}"
-                                 alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
-                    </f:if>
-                    <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
-                </th>
-                <td>
-                    <f:render partial="Product/Attribute/Type{attribute.type}"
-                              arguments="{attribute: attribute, product: product}"/>
-                </td>
-            </tr>
+            <dt class="pm-bs-col-md-4">
+                <f:if condition="{attribute.image}">
+                    <f:image image="{attribute.image}"
+                            maxWidth="{settings.attributes.imageMaxSize}"
+                            maxHeight="{settings.attributes.imageMaxSize}"
+                            alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
+                </f:if>
+                <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
+            </dt>
+            <dd class="pm-bs-col-md-8">
+                <f:render partial="Product/Attribute/Type{attribute.type}"
+                        arguments="{attribute: attribute, product: product}"/>
+            </dd>
         </f:if>
     </f:for>
-</table>
+</dl>

@@ -7,7 +7,6 @@ namespace Pixelant\PxaProductManager\Tests\Unit\Attributes\ConfigurationProvider
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\AbstractProvider;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class AbstractProviderTest extends UnitTestCase
 {
@@ -34,7 +33,7 @@ class AbstractProviderTest extends UnitTestCase
         $type = Attribute::ATTRIBUTE_TYPE_INPUT;
         $testConf = ['conf' => ['type' => 'input']];
 
-        $attribute = TestsUtility::createEntity(Attribute::class, ['uid' => 1, 'type' => $type, 'name' => 'Attribute']);
+        $attribute = ['uid' => 1, 'type' => $type, 'name' => 'Attribute'];
 
         $tca[$type] = $testConf;
 
@@ -52,7 +51,7 @@ class AbstractProviderTest extends UnitTestCase
      */
     public function isRequiredReturnTrueIfAttributeIsRequired(): void
     {
-        $attribute = TestsUtility::createEntity(Attribute::class, ['uid' => 1, 'required' => true]);
+        $attribute = ['uid' => 1, 'required' => true];
 
         $this->inject($this->subject, 'attribute', $attribute);
 

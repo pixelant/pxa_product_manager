@@ -118,6 +118,15 @@
 			<trans-unit id="flexform.mode.product_lazy_list">
 				<source>Lazy list</source>
 			</trans-unit>
+			<trans-unit id="flexform.menuLevels">
+				<source>Menu above filters</source>
+			</trans-unit>
+			<trans-unit id="flexform.menuLevels.disabled">
+				<source>No menu</source>
+			</trans-unit>
+			<trans-unit id="flexform.menuLevels.1">
+				<source>Display list of subpages of current page, if on "last level" use parent page as statingpoint</source>
+			</trans-unit>
 			<!--FlexForm:Plugin modes:END-->
 
 			<!--FlexForm:List:START-->
@@ -332,21 +341,36 @@
 
             <!--BE layout for product sample:START-->
 			<trans-unit id="be.layout.product_display_sample">
-				<source>Product Display Sample</source>
+				<source>Product Display Sample BE Layout</source>
 			</trans-unit>
 			<trans-unit id="be.layout.columns.top">
 				<source>Top content (after site header/before breadcrumbs)</source>
 			</trans-unit>
-			<trans-unit id="be.layout.columns.placeholder">
-				<source>Placeholder without colPos</source>
-			</trans-unit>
 			<trans-unit id="be.layout.columns.content">
-				<source>Content</source>
+				<source>Product Extension Plugin (slide)</source>
 			</trans-unit>
 			<trans-unit id="be.layout.columns.bottom">
 				<source>Additional content (after main content/before site footer)</source>
 			</trans-unit>
 			<!--BE layout for product sample:END-->
+
+			<!--ParentValueFieldWizard:START-->
+			<trans-unit id="formengine.parentvalue.label">
+				<source>Parent value</source>
+			</trans-unit>
+			<!--ParentValueFieldWizard:END-->
+
+			<!--InheritedProductDataFieldWizard:START-->
+			<trans-unit id="formengine.inheritedfield">
+				<source>Inherited from parent product.</source>
+			</trans-unit>
+			<!--InheritedProductDataFieldWizard:END-->
+
+			<!--ProductInheritanceProcessDatamap:START-->
+			<trans-unit id="formengine.productinheritance.updatedcount">
+				<source>%s products were updated with data inherited from parent products.</source>
+			</trans-unit>
+			<!--ProductInheritanceProcessDatamap:END-->
 		</body>
 	</file>
 </xliff>

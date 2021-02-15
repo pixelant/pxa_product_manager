@@ -12,9 +12,9 @@ use Pixelant\PxaProductManager\Domain\Model\Attribute;
 abstract class AbstractProvider implements ProviderInterface
 {
     /**
-     * @var Attribute
+     * @var array Attribute row
      */
-    protected Attribute $attribute;
+    protected array $attribute;
 
     /**
      * @var array
@@ -110,9 +110,9 @@ abstract class AbstractProvider implements ProviderInterface
     ];
 
     /**
-     * @param Attribute $attribute
+     * @param array $attribute
      */
-    public function __construct(Attribute $attribute)
+    public function __construct(array $attribute)
     {
         $this->attribute = $attribute;
     }
@@ -136,11 +136,11 @@ abstract class AbstractProvider implements ProviderInterface
      */
     protected function getAttributeConfiguration(): array
     {
-        $configuration = $this->tca[$this->attribute->getType()];
-        $configuration['label'] = $this->attribute->getName();
+        $configuration = $this->tca[$this->attribute['type']];
+        $configuration['label'] = $this->attribute['name'];
 
-        if ($this->attribute->getDefaultValue()) {
-            $configuration['config']['default'] = $this->attribute->getDefaultValue();
+        if ($this->attribute['default_value']) {
+            $configuration['config']['default'] = $this->attribute['default_value'];
         }
 
         return $configuration;
@@ -153,7 +153,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     protected function isRequired(): bool
     {
-        return $this->attribute->isRequired();
+        return (bool)$this->attribute['required'];
     }
 
     /**

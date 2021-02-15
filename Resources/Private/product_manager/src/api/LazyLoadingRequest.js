@@ -29,6 +29,11 @@ class LazyLoadingRequest
             objectToFormData({
                 tx_pxaproductmanager_lazyloading: {
                     demand: demand
+                },
+                d: {
+                  orderBy: {
+                    sorting: 'product_'+demand.orderBy+','+demand.orderDirection
+                  }
                 }
             }) // Extbase doesn't understand json
         )
@@ -45,7 +50,12 @@ class LazyLoadingRequest
             objectToFormData({
                 tx_pxaproductmanager_lazyavailablefilters: {
                     demand: demand
+                },
+              d: {
+                orderBy: {
+                  sorting: 'product_'+demand.orderBy+','+demand.orderDirection
                 }
+              }
             }) // Extbase doesn't understand json
         )
     }

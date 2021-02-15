@@ -5,126 +5,67 @@
 <f:section name="main">
     <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="single-product-wrapper">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <h1>{product.name}</h1>
-
-                                <f:if condition="{product.price}">
-                                    <h5>{product.price}</h5>
-                                </f:if>
-                            </div>
-                        </div>
-
-                        <f:if condition="{product.teaser}">
-                            <div class="product-teaser">
-                                <f:format.html>{product.teaser}</f:format.html>
-                            </div>
-                        </f:if>
-
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="content">
-                                    <f:if condition="{product.description}">
-                                        <f:format.html>{product.description}</f:format.html>
-                                    </f:if>
-
-                                    <f:if condition="{product.usp}">
-                                        <p class="usp">{product.usp -> f:format.nl2br()}</p>
-                                    </f:if>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <f:if condition="{product.images}">
-                                    <f:image image="{product.mainImage}"
-                                             class="img-rounded"
-                                             maxWidth="{settings.singleView.images.mainMaxWidth}"
-                                             maxHeight="{settings.singleView.images.mainMaxHeight}"
-                                             alt="{product.name}"
-                                             title="{product.name}" />
-
-                                    <div class="row">
-                                        <div class="gallery">
-                                            <f:alias map="{s: settings.singleView.images}">
-
-                                                <f:for as="image" each="{product.galleryImages}" iteration="iterator">
-                                                    <div class="col-md-3">
-                                                        <a href="{f:uri.image(image: image, maxWidth: s.mainMaxWidth, maxHeight: s.mainMaxHeight)}" class="lightbox">
-                                                            <f:image image="{image}"
-                                                                     width="40c"
-                                                                     height="40c"
-                                                                     class="img-thumbnail"
-                                                                     alt="{image.alternative}"
-                                                                     title="{image.title}" />
-                                                        </a>
-                                                    </div>
-                                                </f:for>
-
-                                            </f:alias>
-                                        </div>
-                                    </div>
-                                </f:if>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-{f:if(condition: '{product.links} || {product.falLinks}', then: '8', else: '12')}">
-                                <div class="single-product-table">
-                                    <f:render partial="Product/AttributeListing"
-                                              arguments="{product: product}" />
-                                </div>
-                            </div>
-
-                            <f:if condition="{product.links} || {product.falLinks}">
-                                <div class="col-md-4">
-                                    <div class="single-product-gallery__links">
-                                        <h3 class="single-product-related-title">
-                                            <f:translate key="fe.related_links" />
-                                        </h3>
-                                        <ul>
-                                            <f:if condition="{product.links}">
-                                                <f:render partial="Product/Links" arguments="{links: product.links}" />
-                                            </f:if>
-
-                                            <f:if condition="{product.falLinks}">
-                                                <f:render partial="Product/FileLinks"
-                                                          arguments="{files: product.falLinks}" />
-                                            </f:if>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </f:if>
-                        </div>
-                    </div>
-                </div>
-
-                <f:if condition="{product.relatedProducts}">
-                    <f:render partial="Product/Related"
-                              arguments="{relatedProducts: product.relatedProducts, headerLabel: 'fe.related_products'}" />
-                </f:if>
-
-                <f:if condition="{product.subProducts}">
-                    <f:render partial="Product/Related"
-                              arguments="{relatedProducts: product.subProducts, headerLabel: 'fe.sub_products'}" />
-                </f:if>
-
-                <f:if condition="{product.accessories}">
-                    <f:render partial="Product/Related"
-                              arguments="{relatedProducts: product.accessories, headerLabel: 'fe.accessories'}" />
-                </f:if>
-
-                <f:if condition="{settings.pids.listViewPid} && {category}">
-                    <pxa:link page="{settings.pids.listViewPid}" category="{category}">
-                        <f:translate key="fe.go_back" />
-                    </pxa:link>
-                </f:if>
+    <div class="single-product-wrapper">
+        <div class="pm-bs-row">
+            <div class="pm-bs-col-md-8">
+                <pxa:renderMultiple key="productName" arguments="{_all}">{product.name}</pxa:renderMultiple>
+            </div>
+            <div class="pm-bs-col-md-4">
+                <pxa:renderMultiple key="productSku" arguments="{_all}">{product.sku}</pxa:renderMultiple>
             </div>
         </div>
+
+        <div class="pm-bs-row">
+            <div class="pm-bs-col-md-4">
+                <pxa:renderMultiple key="productImages" arguments="{_all}"></pxa:renderMultiple>
+            </div>
+
+            <div class="pm-bs-col-md-8">
+                <div class="content">
+                    <pxa:renderMultiple key="productTeaser" arguments="{_all}"><f:format.html>{product.teaser}</f:format.html></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productPrice" arguments="{_all}">{product.formattedPrice}</pxa:renderMultiple>
+                    <div class="product-actions">
+                        <pxa:renderMultiple key="productActions" arguments="{_all}"></pxa:renderMultiple>
+                    </div>
+                    <div class="product-shortcuts">
+                        <pxa:renderMultiple key="productShortcuts" arguments="{_all}"></pxa:renderMultiple>
+                    </div>
+                    <pxa:renderMultiple key="productDescription" arguments="{_all}"><f:format.html>{product.description}</f:format.html></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productUspList" arguments="{_all}"></pxa:renderMultiple>
+                </div>
+            </div>
+        </div>
+
+        <div class="pm-bs-row">
+            <div class="pm-bs-col-md-6">
+                <pxa:renderMultiple key="productAttributeListing" arguments="{_all}">
+                    <f:render partial="Product/AttributeListing" arguments="{product: product}" />
+                </pxa:renderMultiple>
+            </div>
+
+            <div class="pm-bs-col-md-6">
+                <pxa:renderMultiple key="productLinks" arguments="{_all}"></pxa:renderMultiple>
+            </div>
+        </div>
+
+        <f:if condition="{product.relatedProducts}">
+            <f:render partial="Product/{settings.singleView.related.partial}"
+                        arguments="{relatedProducts: product.relatedProducts, headerLabel: 'fe.related_products'}" />
+        </f:if>
+
+        <f:if condition="{product.subProducts}">
+            <f:render partial="Product/{settings.singleView.related.partial}"
+                        arguments="{relatedProducts: product.subProducts, headerLabel: 'fe.sub_products'}" />
+        </f:if>
+
+        <f:if condition="{product.accessories}">
+            <f:render partial="Product/{settings.singleView.related.partial}"
+                        arguments="{relatedProducts: product.accessories, headerLabel: 'fe.accessories'}" />
+        </f:if>
+
+        <f:if condition="{settings.pids.listViewPid}">
+            <f:link.page id="{settings.pids.listViewPid}"><f:translate key="fe.go_back" /></f:link.page>
+        </f:if>
     </div>
 </f:section>
 </html>

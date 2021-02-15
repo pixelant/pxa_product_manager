@@ -7,10 +7,10 @@
             <f:link.typolink parameter="{file.originalResource.publicUrl} _blank">
                 <f:if condition="{f:uri.image(src: 'EXT:pxa_product_manager/Resources/Public/Icons/FileIcons/{file.originalResource.properties.extension}.svg')}">
                     <f:then>
-                        <ppm:svg source="{f:uri.resource(path: 'Icons/FileIcons/{file.originalResource.properties.extension}.svg')}"/>
+                        <ppm:svg source="{f:uri.resource(path: 'Icons/FileIcons/{file.originalResource.properties.extension}.svg', extensionName:'PxaProductManager')}"/>
                     </f:then>
                     <f:else>
-                        <ppm:svg source="{f:uri.resource(path: 'Icons/FileIcons/default.svg')}"/>
+                        <ppm:svg source="{f:uri.resource(path: 'Icons/FileIcons/default.svg', extensionName:'PxaProductManager')}"/>
                     </f:else>
                 </f:if>
                 <f:if condition="{file.originalResource.properties.title}">

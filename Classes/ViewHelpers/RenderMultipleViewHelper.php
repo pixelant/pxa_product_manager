@@ -13,10 +13,20 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 class RenderMultipleViewHelper extends AbstractViewHelper
 {
     /**
+     * @var array
+     */
+    protected $extbaseConfiguration = [];
+
+    /**
      * @var bool
      */
     protected $escapeOutput = false;
 
+    /**
+     * Initialize arbuments.
+     *
+     * @return void
+     */
     public function initializeArguments(): void
     {
         parent::initializeArguments();
@@ -25,39 +35,51 @@ class RenderMultipleViewHelper extends AbstractViewHelper
     }
 
     /**
+     * Initialize viewhelper.
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
+        $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+        $this->extbaseConfiguration = $configurationManager
+            ->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_FRAMEWORK);
+    }
+
+    /**
+     * Render viewhelper.
+     *
      * @return string
      */
     public function render(): string
     {
-        $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
-        $extbaseConfiguration = $configurationManager
-            ->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_FRAMEWORK);
-        $config = $extbaseConfiguration['view']['renderingStacks'];
-        $this->arguments['arguments']['childContent'] = $this->renderChildren();
-        $childContent = $this->arguments['arguments']['childContent'];
-        $output = '';
-        $childContentMatch = false;
+        $config = $this->extbaseConfiguration['view']['renderingStacks'];
+        $renderingStack = $config[$this->arguments['key']] ?? false;
 
-        foreach ($config as $key => $renderingStack) {
-            if ($key === $this->arguments['key']) {
-                foreach ($renderingStack as $renderingParts) {
-                    $partOutput = htmlspecialchars_decode(
-                        $this->getView($renderingParts['template'], $this->arguments)
-                    );
-                    $output = $output . $partOutput;
+        if (!empty($renderingStack)) {
+            $parts = 0;
+            $output = '';
+            $childContent = false;
 
-                    if (preg_match('/' . $childContent . '/', $partOutput)) {
-                        $childContentMatch = true;
-                    }
+            krsort($renderingStack, SORT_NUMERIC);
+            foreach ($renderingStack as $index => $renderingParts) {
+                if ($parts === 0) {
+                    $this->arguments['arguments']['childContent'] = $this->renderChildren();
+                } else {
+                    $this->arguments['arguments']['childContent'] = $childContent[$parts - 1] ?? '';
                 }
+
+                $childContent[$parts] = htmlspecialchars_decode(
+                    $this->getView($renderingParts['template'], $this->arguments)
+                );
+                $parts++;
+            }
+            if (is_array($childContent)) {
+                $output = $childContent[count($childContent) - 1];
             }
         }
 
-        if ($childContentMatch) {
-            return $output;
-        }
-
-        return $output . $childContent;
+        return $output;
     }
 
     /**
@@ -69,25 +91,15 @@ class RenderMultipleViewHelper extends AbstractViewHelper
      */
     public function getView(string $path, array $arguments): string
     {
-        $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $view = $objectManager->get(StandaloneView::class);
         $view->setFormat('html');
-        $extbaseConfiguration = $configurationManager
-            ->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_FRAMEWORK);
-        $templateRootPaths = $extbaseConfiguration['view']['templateRootPaths'];
+        $view->setTemplateRootPaths($this->extbaseConfiguration['view']['templateRootPaths']);
+        $view->setPartialRootPaths($this->extbaseConfiguration['view']['partialRootPaths']);
+        $view->setLayoutRootPaths($this->extbaseConfiguration['view']['layoutRootPaths']);
+        $view->setTemplate($path);
+        $view->assignMultiple($arguments['arguments']);
 
-        foreach ($templateRootPaths as $rootPath) {
-            $absFilePath = GeneralUtility::getFileAbsFileName($rootPath);
-            $view->setTemplatePathAndFilename($absFilePath . $path . '.html');
-
-            if ($view->hasTemplate()) {
-                $view->assignMultiple($arguments['arguments']);
-
-                return $view->render();
-            }
-        }
-
-        return '';
+        return $view->render();
     }
 }

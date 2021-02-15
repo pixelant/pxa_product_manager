@@ -41,8 +41,11 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_product.fal_links.add_button">
 				<source>Add file</source>
 			</trans-unit>
-			<trans-unit id="tx_pxaproductmanager_domain_model_product.sub_products">
-				<source>Sub Products</source>
+			<trans-unit id="tx_pxaproductmanager_domain_model_product.parent">
+				<source>Parent product</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_product.children">
+				<source>Child products</source>
 			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_product.tab.images">
 				<source>Images / Media</source>
@@ -142,6 +145,9 @@
 			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.name">
 				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.label">
+				<source>Label</source>
 			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_attributeset.layout">
 				<source>Layout</source>
@@ -261,7 +267,7 @@
 
 			<!--sys_file_reference TCA:START-->
 			<trans-unit id="sys_file_reference.pxa_attribute">
-			    <source>Attribite</source>
+			    <source>Attribute</source>
 			</trans-unit>
 			<trans-unit id="sys_file_reference.pxapm_type">
 				<source>Image type</source>
@@ -343,6 +349,12 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.attribute_sets">
 			    <source>Attribute sets</source>
 			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.inherit_fields">
+			    <source>Fields inherited by child products</source>
+			</trans-unit>
+			<trans-unit id="tx_pxaproductmanager_domain_model_producttype.attribute_template_layout">
+            	<source>Template layout</source>
+            </trans-unit>
 			<!--tx_pxaproductmanager_domain_model_producttype TCA:END-->
 		</body>
 	</file>

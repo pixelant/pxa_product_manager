@@ -53,9 +53,9 @@ plugin.tx_pxaproductmanager {
 
             images {
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_singleview/020; type=string; label=Main image max image width
-                mainMaxWidth = 600
+                mainMaxWidth = 510
                 # cat=plugin.tx_pxaproductmanager/pxaproductmanager_singleview/030; type=string; label=Main image max image height
-                mainMaxHeight = 600
+                mainMaxHeight = 320
             }
         }
 

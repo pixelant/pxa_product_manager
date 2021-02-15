@@ -1,0 +1,13 @@
+config.tx_demander {
+    properties {
+        product_name {
+            table = tx_pxaproductmanager_domain_model_product
+            field = name
+        }
+
+        product_tstamp {
+            table = tx_pxaproductmanager_domain_model_product
+            field = tstamp
+        }
+    }
+}
