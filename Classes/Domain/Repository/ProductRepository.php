@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Event\Repository\RegisterAdditionalProductListReturnFieldsEvent;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -73,8 +74,11 @@ class ProductRepository extends AbstractDemandRepository
             self::TABLE_NAME . '.product_type',
         ];
 
+        $event = GeneralUtility::makeInstance(RegisterAdditionalProductListReturnFieldsEvent::class, $selectFields);
+        $this->dispatcher->dispatch($event);
+
         $queryBuilder
-            ->select(...$selectFields)
+            ->select(...$event->getSelectFields())
             ->addSelect()
             ->from(self::TABLE_NAME);
 
