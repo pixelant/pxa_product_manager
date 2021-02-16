@@ -194,4 +194,9 @@ defined('TYPO3_MODE') || die;
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
         'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $pdDokType . ')'
     );
+
+    if (TYPO3_MODE === 'BE') {
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']['pxa_product_manager']
+            = \Pixelant\PxaProductManager\Command\UpdateChildRelationCommandController::class;
+    }
 })();

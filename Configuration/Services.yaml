@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: true
+    public: false
+
+  Pixelant\PxaProductManager\:
+    resource: '../Classes/*'
+
+  Pixelant\PxaProductManager\Command\UpdateChildRelationCommand:
+    tags:
+      - name: 'console.command'
+        command: 'pxa_product_manager:updatechildrelations'
