@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
-use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
@@ -139,14 +138,14 @@ class ProductInheritanceProcessDatamap
     public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
     {
         foreach ($this->parentRelationPlaceholders as $key => $value) {
-            if (in_array($value['parent'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
+            if (in_array($value['parent'], array_keys($dataHandler->substNEWwithIDs), true)) {
                 $value['parent']
-                    = $this->dataHandler->substNEWwithIDs[$value['parent']];
+                    = $dataHandler->substNEWwithIDs[$value['parent']];
             }
 
-            if (in_array($value['child'], array_keys($this->dataHandler->substNEWwithIDs), true)) {
+            if (in_array($value['child'], array_keys($dataHandler->substNEWwithIDs), true)) {
                 $value['child']
-                    = $this->dataHandler->substNEWwithIDs[$value['child']];
+                    = $dataHandler->substNEWwithIDs[$value['child']];
             }
 
             $this->parentRelationPlaceholders[$key] = $value;
@@ -158,9 +157,11 @@ class ProductInheritanceProcessDatamap
                 && MathUtility::canBeInterpretedAsInteger($value['child'])
             ) {
                 $this->addParentChildRelationToIndex(
-                    $value['parent'],
-                    $value['child'],
-                    $value['tablename']
+                    (int)$value['parent'],
+                    (int)$value['child'],
+                    $value['tablename'],
+                    (int)$value['child_parent_id'],
+                    $value['child_parent_table'],
                 );
             }
         }
@@ -203,23 +204,34 @@ class ProductInheritanceProcessDatamap
         }
 
         if ($parentProductId && $productTypeId) {
+            // get parent overlay data
+            $parentProductOverlayData = $this->getParentProductOverlayData(
+                (int)$parentProductId,
+                (int)$productTypeId
+            );
+            // set pid of current product, seems to be "lost" though, but DataHandler requires a pid on insert
+            $pid = BackendUtility::getRecord(ProductRepository::TABLE_NAME, $identifier, 'pid')['pid'] ?? 0;
+
             // Process normal product fields
             $productRowWithParentOverlay = array_merge(
                 $productRow,
-                $this->getParentProductOverlayData(
-                    (int)$parentProductId,
-                    (int)$productTypeId
-                )
+                $parentProductOverlayData
             );
 
-            foreach ($productRowWithParentOverlay as $field => $value) {
+            // process overlay relations (inline), only fields from parentProductOverlayData
+            foreach ($parentProductOverlayData as $field => $value) {
                 $productRowWithParentOverlay[$field] = $this->processOverlayRelations(
                     ProductRepository::TABLE_NAME,
                     $field,
                     $productRow,
                     (string)$value,
-                    (string)$identifier
+                    (string)$identifier,
+                    (int)$pid
                 );
+            }
+
+            if (count($parentProductOverlayData) > 0) {
+                $this->productsWithInheritedDataCount++;
             }
 
             $this->productDatamap[$identifier] = $productRowWithParentOverlay;
@@ -305,10 +317,6 @@ class ProductInheritanceProcessDatamap
 
         $this->inheritedProductFieldsForProductType[$parent . '-' . $productType] = $overlayFields;
 
-        if (count($overlayFields) > 0) {
-            $this->productsWithInheritedDataCount++;
-        }
-
         return $overlayFields;
     }
 
@@ -369,6 +377,7 @@ class ProductInheritanceProcessDatamap
      * @param array $row The value of the field in the child record
      * @param string|null $parentValue The value of the field in the parent record
      * @param string $identifier The identifier of the current record (int cast to string or NEW0123456789abcdef)
+     * @param int|null $pid The value of the pid of the related record
      * @return string
      */
     protected function processOverlayRelations(
@@ -376,7 +385,8 @@ class ProductInheritanceProcessDatamap
         string $field,
         array $row,
         ?string $parentValue,
-        string $identifier
+        string $identifier,
+        ?int $pid
     ) {
         if ($parentValue === null) {
             return null;
@@ -430,7 +440,12 @@ class ProductInheritanceProcessDatamap
         foreach ($childRelations as &$childRelation) {
             // Only allow integer keys. NEW0123456789abcdef keys can't have been deleted
             if (MathUtility::canBeInterpretedAsInteger($childRelation)) {
-                $parentRelationUid = $this->findParentRelationUidInIndex((int)$childRelation, $foreignTable);
+                $parentRelationUid = $this->findParentRelationUidInIndex(
+                    (int)$childRelation,
+                    $foreignTable,
+                    (int)$identifier,
+                    $table
+                );
 
                 // Delete any relation that is not present in the parent
                 if (
@@ -443,7 +458,12 @@ class ProductInheritanceProcessDatamap
                 ) {
                     $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
                     unset($childRelation);
-                    $this->removeParentRelationsFromIndex($parentRelationUid, $foreignTable);
+                    $this->removeParentRelationsFromIndex(
+                        $parentRelationUid,
+                        $foreignTable,
+                        (int)$identifier,
+                        $table
+                    );
                 }
             }
         }
@@ -458,12 +478,16 @@ class ProductInheritanceProcessDatamap
                     'child' => $childRelationIdentifier,
                     'parent' => $parentRelationIdentifier,
                     'tablename' => $foreignTable,
+                    'child_parent_id' => $identifier,
+                    'child_parent_table' => $table,
                 ];
             // Parent relation isn't new
             } else {
                 $childRelationIdentifier = (string)$this->findChildRelationUidInIndex(
                     (int)$parentRelationIdentifier,
-                    $foreignTable
+                    $foreignTable,
+                    (int)$identifier,
+                    $table
                 );
 
                 // Child relation is new
@@ -474,58 +498,72 @@ class ProductInheritanceProcessDatamap
                         'child' => $childRelationIdentifier,
                         'parent' => $parentRelationIdentifier,
                         'tablename' => $foreignTable,
+                        'child_parent_id' => $identifier,
+                        'child_parent_table' => $table,
                     ];
                 }
             }
 
-            $childRecord = $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier] ?? [];
-
-            // If the record only has the "hidden" field set, it's an unexpanded inline record and we must expand it
-            if (
-                strpos($parentRelationIdentifier, 'NEW') === false
-                && count($childRecord) === 1
-                && isset($childRecord['hidden'])
-            ) {
-                $compiledParentRecord = $this->compileRecordData($foreignTable, (int)$parentRelationIdentifier, true);
-                $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier] = $compiledParentRecord;
-                $childRecord = $compiledParentRecord;
+            $childRecord = $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier];
+            if (empty($childRecord)) {
+                // Try fetch, if parent product isn't saved datamap for it is missing
+                // Need to define how to know what data to fetch
             }
 
-            // Set the type field value if it isn't already set
-            $typeField = $GLOBALS['TCA'][$foreignTable]['ctrl']['type'];
-            if (
-                isset($typeField)
-                && strpos($typeField, ':') === false // Skip these types e.g. in sys_file_reference
-                && !isset($childRecord[$typeField])
-                && MathUtility::canBeInterpretedAsInteger($parentRelationIdentifier)
-            ) {
-                $typeValue = (string)BackendUtility::getRecord(
-                    $foreignTable,
-                    $parentRelationIdentifier,
-                    $typeField
-                )[$typeField];
+            if (!empty($childRecord)) {
+                // If the record only has the "hidden" field set, it's an unexpanded inline record and we must expand it
+                if (
+                    strpos($parentRelationIdentifier, 'NEW') === false
+                    && count($childRecord) === 1
+                    && isset($childRecord['hidden'])
+                ) {
+                    $compiledParentRecord = $this->compileRecordData($foreignTable, (int)$parentRelationIdentifier, true);
+                    $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier] = $compiledParentRecord;
+                    $childRecord = $compiledParentRecord;
+                }
 
-                // Se the parent value too. We'll need it to be correct.
-                $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$typeField] = $typeValue;
-                $childRecord[$typeField] = $typeValue;
+                // Set the type field value if it isn't already set
+                $typeField = $GLOBALS['TCA'][$foreignTable]['ctrl']['type'];
+                if (
+                    isset($typeField)
+                    && strpos($typeField, ':') === false // Skip these types e.g. in sys_file_reference
+                    && !isset($childRecord[$typeField])
+                    && MathUtility::canBeInterpretedAsInteger($parentRelationIdentifier)
+                ) {
+                    $typeValue = (string)BackendUtility::getRecord(
+                        $foreignTable,
+                        $parentRelationIdentifier,
+                        $typeField
+                    )[$typeField];
+
+                    // Se the parent value too. We'll need it to be correct.
+                    $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$typeField] = $typeValue;
+                    $childRecord[$typeField] = $typeValue;
+                }
+
+                // if record is new, set pid, so it can be saved in DataHandler.
+                if (!MathUtility::canBeInterpretedAsInteger($childRelationIdentifier)) {
+                    $childRecord['pid'] = $pid;
+                }
+
+                $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
+
+                // Recurse through inline relations for childrens' children
+                foreach ($childRecord as $field => $value) {
+                    $childRecord[$field] = $this->processOverlayRelations(
+                        $foreignTable,
+                        $field,
+                        $childRecord,
+                        (string)$this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$field],
+                        $childRelationIdentifier,
+                        $pid
+                    );
+                }
+
+                $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
+
+                $childRelations[] = $childRelationIdentifier;
             }
-
-            $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
-
-            // Recurse through inline relations for childrens' children
-            foreach ($childRecord as $field => $value) {
-                $childRecord[$field] = $this->processOverlayRelations(
-                    $foreignTable,
-                    $field,
-                    $childRecord,
-                    (string)$this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$field],
-                    $childRelationIdentifier
-                );
-            }
-
-            $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
-
-            $childRelations[] = $childRelationIdentifier;
         }
 
         return implode(',', $childRelations);
@@ -564,9 +602,16 @@ class ProductInheritanceProcessDatamap
      *
      * @param int $childUid
      * @param string $tablename
+     * @param int $childParentId
+     * @param string $childParentTable
      * @return int Uid of the record. Zero if not found
      */
-    protected function findParentRelationUidInIndex(int $childUid, string $tablename): int
+    protected function findParentRelationUidInIndex(
+        int $childUid,
+        string $tablename,
+        int $childParentId,
+        string $childParentTable
+    ): int
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -577,7 +622,12 @@ class ProductInheritanceProcessDatamap
             ->from(self::RELATION_INDEX_TABLE)
             ->where(
                 $queryBuilder->expr()->eq('uid_child', $queryBuilder->createNamedParameter($childUid)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename))
+                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename)),
+                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
+                $queryBuilder->expr()->eq(
+                    'child_parent_tablename',
+                    $queryBuilder->createNamedParameter($childParentTable)
+                )
             )
             ->execute()
             ->fetchOne();
@@ -590,9 +640,16 @@ class ProductInheritanceProcessDatamap
      *
      * @param int $parentUid
      * @param string $tablename
+     * @param int $childParentId
+     * @param string $childParentTable
      * @return int
      */
-    protected function findChildRelationUidInIndex(int $parentUid, string $tablename): int
+    protected function findChildRelationUidInIndex(
+        int $parentUid,
+        string $tablename,
+        int $childParentId,
+        string $childParentTable
+    ): int
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -603,7 +660,12 @@ class ProductInheritanceProcessDatamap
             ->from(self::RELATION_INDEX_TABLE)
             ->where(
                 $queryBuilder->expr()->eq('uid_parent', $queryBuilder->createNamedParameter($parentUid)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename))
+                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename)),
+                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
+                $queryBuilder->expr()->eq(
+                    'child_parent_tablename',
+                    $queryBuilder->createNamedParameter($childParentTable)
+                )
             )
             ->execute()
             ->fetchOne();
@@ -617,13 +679,26 @@ class ProductInheritanceProcessDatamap
      * @param int $parentUid
      * @param int $childUid
      * @param string $tablename
+     * @param int $childParentId
+     * @param string $childParentTable
      */
-    protected function addParentChildRelationToIndex(int $parentUid, int $childUid, string $tablename): void
+    protected function addParentChildRelationToIndex(
+        int $parentUid,
+        int $childUid,
+        string $tablename,
+        int $childParentId,
+        string $childParentTable
+    ): void
     {
         if (
             $parentUid === 0
             || $childUid === 0
-            || $this->findParentRelationUidInIndex($childUid, $tablename) === $parentUid
+            || $this->findParentRelationUidInIndex(
+                $childUid,
+                $tablename,
+                $childParentId,
+                $childParentTable
+            ) === $parentUid
         ) {
             return;
         }
@@ -638,6 +713,8 @@ class ProductInheritanceProcessDatamap
                 'uid_parent' => $parentUid,
                 'uid_child' => $childUid,
                 'tablename' => $tablename,
+                'child_parent_id' => $childParentId,
+                'child_parent_tablename' => $childParentTable,
             ])
             ->execute();
     }
@@ -649,8 +726,15 @@ class ProductInheritanceProcessDatamap
      *
      * @param int $parentUid
      * @param string $tablename
+     * @param int $childParentId
+     * @param string $childParentTable
      */
-    protected function removeParentRelationsFromIndex(int $parentUid, string $tablename): void
+    protected function removeParentRelationsFromIndex(
+        int $parentUid,
+        string $tablename,
+        int $childParentId,
+        string $childParentTable
+    ): void
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -660,7 +744,12 @@ class ProductInheritanceProcessDatamap
             ->delete(self::RELATION_INDEX_TABLE)
             ->where(
                 $queryBuilder->expr()->eq('uid_parent', $queryBuilder->createNamedParameter($parentUid)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename))
+                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename)),
+                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
+                $queryBuilder->expr()->eq(
+                    'child_parent_tablename',
+                    $queryBuilder->createNamedParameter($childParentTable)
+                )
             )
             ->execute();
     }

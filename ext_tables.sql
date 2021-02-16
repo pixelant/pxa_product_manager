@@ -207,10 +207,15 @@ CREATE TABLE tx_pxaproductmanager_product_pages_mm
 #
 CREATE TABLE tx_pxaproductmanager_relation_inheritance_index
 (
-	uid_parent       int(11)      DEFAULT '0' NOT NULL,
-	uid_child        int(11)      DEFAULT '0' NOT NULL,
-	tablename        varchar(255) DEFAULT ''  NOT NULL,
+	uid_parent              int(11)      DEFAULT '0' NOT NULL,
+	uid_child               int(11)      DEFAULT '0' NOT NULL,
+	tablename               varchar(255) DEFAULT ''  NOT NULL,
+    child_parent_id         int(11)      DEFAULT '0' NOT NULL,
+    child_parent_tablename  varchar(255) DEFAULT ''  NOT NULL,
 
 	KEY uid_child_table (uid_child, tablename),
-	KEY uid_parent_table (uid_parent, tablename)
+	KEY uid_parent_table (uid_parent, tablename),
+    KEY uid_child_table (uid_child, tablename, child_parent_id, child_parent_tablename),
+    KEY uid_parent_table (uid_parent, tablename, child_parent_id, child_parent_tablename),
+
 );
