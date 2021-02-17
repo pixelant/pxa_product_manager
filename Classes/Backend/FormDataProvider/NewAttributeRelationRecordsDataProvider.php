@@ -60,7 +60,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
             return $result;
         }
 
-        $attributes = AttributeUtility::findAttributesForProductType((int)$result['databaseRow']['product_type']);
+        $attributes = AttributeUtility::findAttributesForProductType((int)$result['databaseRow']['product_type'][0]);
 
         foreach ($attributes as $attribute) {
             foreach ($result['processedTca']['columns']['attributes_values']['children'] as $attributeValueResult) {
