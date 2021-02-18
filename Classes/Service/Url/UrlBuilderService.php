@@ -33,7 +33,7 @@ class UrlBuilderService implements UrlBuilderServiceInterface
         ],
         'tx_pxaproductmanager_productrender' => [
             'controller' => 'ProductRender',
-            'action' => 'init'
+            'action' => 'init',
         ],
     ];
 
