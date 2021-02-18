@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Command;
 
 use Symfony\Component\Console\Command\Command;
+<<<<<<< HEAD
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -40,6 +41,26 @@ class UpdateChildRelationCommand extends Command
 
     /**
      * Executes the command for showing sys_log entries.
+=======
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
+class UpdateChildRelationCommand extends Command
+{
+    /**
+     * Configure the command by defining the name, options and arguments
+     */
+    protected function configure()
+    {
+        $this->setDescription('Update child relations table.')
+           ->setHelp('Prints a list of recent sys_log entries.' . LF . 'If you want to get more detailed information, use the --verbose option.');
+    }
+
+    /**
+     * Executes the command for showing sys_log entries
+>>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
      *
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -50,6 +71,7 @@ class UpdateChildRelationCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
 
+<<<<<<< HEAD
         $io->section('Fetching missing relations');
         $records = $this->fetchMissingChildRelations();
 
@@ -181,4 +203,10 @@ class UpdateChildRelationCommand extends Command
 
         return $records;
     }
+=======
+        // ...
+        $io->writeln('Write something');
+        return true;
+    }
+>>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
 }

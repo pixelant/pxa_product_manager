@@ -517,11 +517,15 @@ class ProductInheritanceProcessDatamap
                     && count($childRecord) === 1
                     && isset($childRecord['hidden'])
                 ) {
+<<<<<<< HEAD
                     $compiledParentRecord = $this->compileRecordData(
                         $foreignTable,
                         (int)$parentRelationIdentifier,
                         true
                     );
+=======
+                    $compiledParentRecord = $this->compileRecordData($foreignTable, (int)$parentRelationIdentifier, true);
+>>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
                     $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier] = $compiledParentRecord;
                     $childRecord = $compiledParentRecord;
                 }
@@ -615,7 +619,12 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
+<<<<<<< HEAD
     ): int {
+=======
+    ): int
+    {
+>>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
@@ -652,7 +661,12 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
+<<<<<<< HEAD
     ): int {
+=======
+    ): int
+    {
+>>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
@@ -690,7 +704,12 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
+<<<<<<< HEAD
     ): void {
+=======
+    ): void
+    {
+>>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
         if (
             $parentUid === 0
             || $childUid === 0
@@ -735,7 +754,12 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
+<<<<<<< HEAD
     ): void {
+=======
+    ): void
+    {
+>>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
