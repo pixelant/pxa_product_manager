@@ -517,7 +517,11 @@ class ProductInheritanceProcessDatamap
                     && count($childRecord) === 1
                     && isset($childRecord['hidden'])
                 ) {
-                    $compiledParentRecord = $this->compileRecordData($foreignTable, (int)$parentRelationIdentifier, true);
+                    $compiledParentRecord = $this->compileRecordData(
+                        $foreignTable,
+                        (int)$parentRelationIdentifier,
+                        true
+                    );
                     $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier] = $compiledParentRecord;
                     $childRecord = $compiledParentRecord;
                 }
@@ -611,8 +615,7 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
-    ): int
-    {
+    ): int {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
@@ -649,8 +652,7 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
-    ): int
-    {
+    ): int {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
@@ -688,8 +690,7 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
-    ): void
-    {
+    ): void {
         if (
             $parentUid === 0
             || $childUid === 0
@@ -734,8 +735,7 @@ class ProductInheritanceProcessDatamap
         string $tablename,
         int $childParentId,
         string $childParentTable
-    ): void
-    {
+    ): void {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
