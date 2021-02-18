@@ -6,7 +6,6 @@ namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
 use Pixelant\PxaProductManager\Domain\Model\Product;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
@@ -45,11 +44,6 @@ class ProductInheritanceProcessDatamap
      * @var array Representation of DataHandler::datamap[tx_pxaproductmanager_domain_model_product].
      */
     protected array $productDatamap = [];
-
-    /**
-     * @var array Representation of DataHandler::datamap[tx_pxaproductmanager_domain_model_attributevalue].
-     */
-    protected array $attributeValueDatamap = [];
 
     /**
      * Cache of fields to inherit from a product with a specific product type. Key is: [productId]-[productTypeId].
@@ -102,7 +96,6 @@ class ProductInheritanceProcessDatamap
         if (isset($dataHandler->datamap[ProductRepository::TABLE_NAME])) {
             $this->dataHandler = $dataHandler;
             $this->productDatamap = &$dataHandler->datamap[ProductRepository::TABLE_NAME];
-            $this->attributeValueDatamap = &$dataHandler->datamap[AttributeValueRepository::TABLE_NAME];
 
             foreach (array_keys($this->productDatamap) as $identifier) {
                 $this->processProductRecordOverlays($identifier);
