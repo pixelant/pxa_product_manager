@@ -46,11 +46,6 @@ class ProductInheritanceProcessDatamap
     protected array $productDatamap = [];
 
     /**
-     * @var array Representation of DataHandler::datamap[tx_pxaproductmanager_domain_model_attributevalue].
-     */
-    protected array $attributeValueDatamap = [];
-
-    /**
      * Cache of fields to inherit from a product with a specific product type. Key is: [productId]-[productTypeId].
      *
      * @var array
@@ -101,7 +96,6 @@ class ProductInheritanceProcessDatamap
         if (isset($dataHandler->datamap[ProductRepository::TABLE_NAME])) {
             $this->dataHandler = $dataHandler;
             $this->productDatamap = &$dataHandler->datamap[ProductRepository::TABLE_NAME];
-            $this->attributeValueDatamap = &$dataHandler->datamap[AttributeValueRepository::TABLE_NAME];
 
             foreach (array_keys($this->productDatamap) as $identifier) {
                 $this->processProductRecordOverlays($identifier);
@@ -176,19 +170,56 @@ class ProductInheritanceProcessDatamap
     {
         $productRow = $this->productDatamap[$identifier];
 
-        if (!is_array($productRow)) {
-            $productRow = BackendUtility::getRecord(
-                ProductRepository::TABLE_NAME,
-                $identifier,
-                'parent,product_type'
-            );
+        // Make sure productRow have product_type and parent.
+        $this->addProductTypeAndParentToRecordIfNeeded($identifier, $productRow);
+
+        // The product type will always be an integer. It is never new.
+        $productTypeId = (int)array_pop(explode('_', (string)$productRow['product_type'] ?? ''));
+
+        // Fetch inherited fields by product_type.
+        $inheritedFields = DataInheritanceUtility::getInheritedFieldsForProductType($productTypeId);
+
+        // No need to continue if product_type has no inherited fields.
+        if (empty($inheritedFields)) {
+            return;
         }
+
+        // If data doesn't contain any inherited fields no need to continue.
+        $inheritedFields[] = 'attributes_values';
+        if (empty(array_intersect(array_keys($productRow), $inheritedFields))) {
+            return;
+        }
+
+        $recordIsNew = !MathUtility::canBeInterpretedAsInteger($identifier);
 
         // Relations could be using the formula `[tablename]_[id]`.
         // Datamap keys are string, so we need this value as string.
         $parentProductId = (string)array_pop(explode('_', (string)$productRow['parent'] ?? ''));
-        // The product type will always be an integer. It is never new.
-        $productTypeId = (int)array_pop(explode('_', (string)$productRow['product_type'] ?? ''));
+
+        $children = $this->fetchChildRecordIdentifiers($identifier);
+        $recordIsParent = count($children) > 0;
+        $recordIsChild = !empty($parentProductId);
+
+        // @TODO: Start of debug, remember to remove when debug is done!
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(
+            [
+                'details' => array('@' => date('Y-m-d H:i:s'), 'class' => __CLASS__, 'function' => __FUNCTION__, 'file' => __FILE__, 'line' => __LINE__),
+                '$identifier' => $identifier,
+                'recordIsNew' => $recordIsNew,
+                'productRow' => $productRow,
+                'inheritedFields' => $inheritedFields,
+                'recordIsParent' => $recordIsParent,
+                'recordIsChild' => $recordIsChild,
+                'empty($productRow[product_type])' => empty($productRow['product_type']),
+                'empty($productRow[parent])' => empty($productRow['parent']),
+                'array_keys($productRow)' => array_keys($productRow),
+                'array_intersect(array_keys($productRow), $inheritedFields)' => array_intersect(array_keys($productRow), $inheritedFields),
+                'fetchChildRecordIdentifiers' => $this->fetchChildRecordIdentifiers($identifier),
+            ],
+            date('Y-m-d H:i:s') . ' : ' . __METHOD__ . ' : ' . __LINE__
+        );
+        return;
+        // @TODO: End of debug, remember to remove when debug is done!
 
         // If this is a new record, check if the product type is defined in the parent
         if (!MathUtility::canBeInterpretedAsInteger($identifier) && !$productTypeId && $parentProductId) {
@@ -752,5 +783,52 @@ class ProductInheritanceProcessDatamap
                 )
             )
             ->execute();
+    }
+
+    protected function addProductTypeAndParentToRecordIfNeeded($identifier, array &$record): void
+    {
+        if (empty($record['parent']) || empty($record['product_type'])) {
+            $productRow = BackendUtility::getRecord(
+                ProductRepository::TABLE_NAME,
+                $identifier,
+                'parent,product_type'
+            );
+
+            // only set fetched values if record didn't have them before
+            if (isset($productRow['parent']) && empty($record['parent'])) {
+                $record['parent'] = $productRow['parent'];
+            }
+            if (isset($productRow['product_type']) && empty($record['product_type'])) {
+                $record['product_type'] = $productRow['product_type'];
+            }
+        }
+    }
+
+    protected function fetchChildRecordIdentifiers($identifier): array
+    {
+        // New records can't have any child records yet.
+        if (MathUtility::canBeInterpretedAsInteger($identifier)) {
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getConnectionForTable(ProductRepository::TABLE_NAME)
+                ->createQueryBuilder();
+
+            $queryBuilder
+                ->getRestrictions()
+                ->removeAll()
+                ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+
+            return $queryBuilder
+                ->select('uid')
+                ->from(ProductRepository::TABLE_NAME)
+                ->where($queryBuilder->expr()->eq(
+                    'parent',
+                    $queryBuilder->createNamedParameter($identifier)
+                ))
+                ->execute()
+                ->fetchAll(FetchMode::COLUMN, 0);
+        }
+
+        return [];
     }
 }
