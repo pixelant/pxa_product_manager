@@ -1,11 +1,7 @@
 services:
   _defaults:
     autowire: false
-<<<<<<< HEAD
     autoconfigure: false
-=======
-    autoconfigure: true
->>>>>>> cab139966027ca64e66bcdd60aaded1d4b951695
     public: false
 
   Pixelant\PxaProductManager\:
