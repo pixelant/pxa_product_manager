@@ -62,6 +62,21 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         $attributes = AttributeUtility::findAttributesForProductType((int)$result['databaseRow']['product_type'][0]);
 
+        // don't display attributevalues for attributes not included for product type
+        foreach ($result['processedTca']['columns']['attributes_values']['children'] as $key => $attributeValueResult) {
+            $attributeStillExist = false;
+            foreach ($attributes as $attribute) {
+                if ((int)$attributeValueResult['databaseRow']['attribute'][0] === $attribute['uid']) {
+                    $attributeStillExist = true;
+
+                    continue;
+                }
+            }
+            if (!$attributeStillExist) {
+                unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
+            }
+        }
+
         foreach ($attributes as $attribute) {
             foreach ($result['processedTca']['columns']['attributes_values']['children'] as $attributeValueResult) {
                 if ((int)$attributeValueResult['databaseRow']['attribute'][0] === $attribute['uid']) {
