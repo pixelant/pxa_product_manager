@@ -68,6 +68,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
             foreach ($attributes as $attribute) {
                 if ((int)$attributeValueResult['databaseRow']['attribute'][0] === $attribute['uid']) {
                     $attributeStillExist = true;
+
                     continue;
                 }
             }
