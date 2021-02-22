@@ -75,12 +75,21 @@ class ProductInheritanceProcessDatamap
      * [
      *     'child' => <placeholder>,
      *     'parent' => <placeholder|UID>,
-     *     'tablename' => <table name>
+     *     'tablename' => <table name>,
+     *     'child_parent_id' => <child parent id>,
+     *     'child_parent_table' => <childs parent able name>
      * ]
      *
      * @var array
      */
     protected array $parentRelationPlaceholders = [];
+
+    /**
+     * Array to store product relations.
+     *
+     * @var array
+     */
+    protected array $productRelations = [];
 
     /**
      * Overlay parent product data as defined by the inherited fields in the ProductType.
@@ -142,6 +151,11 @@ class ProductInheritanceProcessDatamap
                     = $dataHandler->substNEWwithIDs[$value['child']];
             }
 
+            if (in_array($value['child_parent_id'], array_keys($dataHandler->substNEWwithIDs), true)) {
+                $value['child_parent_id']
+                    = $dataHandler->substNEWwithIDs[$value['child_parent_id']];
+            }
+
             $this->parentRelationPlaceholders[$key] = $value;
         }
 
@@ -168,7 +182,15 @@ class ProductInheritanceProcessDatamap
      */
     protected function processProductRecordOverlays($identifier): void
     {
+        $inheritMode = false;
         $productRow = $this->productDatamap[$identifier];
+
+        // $productRow isn't an arrat if parent product was saved and then
+        // called function to save children, then inheritmode = true
+        if (!is_array($productRow)) {
+            $inheritMode = true;
+            $productRow = [];
+        }
 
         // Make sure productRow have product_type and parent.
         $this->addProductTypeAndParentToRecordIfNeeded($identifier, $productRow);
@@ -177,16 +199,16 @@ class ProductInheritanceProcessDatamap
         $productTypeId = (int)array_pop(explode('_', (string)$productRow['product_type'] ?? ''));
 
         // Fetch inherited fields by product_type.
-        $inheritedFields = DataInheritanceUtility::getInheritedFieldsForProductType($productTypeId);
+        $inheritedFields = $this->getInheritedFieldsForProductType($productTypeId);
 
         // No need to continue if product_type has no inherited fields.
         if (empty($inheritedFields)) {
             return;
         }
 
-        // If data doesn't contain any inherited fields no need to continue.
-        $inheritedFields[] = 'attributes_values';
-        if (empty(array_intersect(array_keys($productRow), $inheritedFields))) {
+        // If data doesn't contain any inherited fields (e.g. saved in list mode) and we
+        // aren't processing a child when the parent was saved, we do not need to continue.
+        if (empty(array_intersect(array_keys($productRow), $inheritedFields)) && !$inheritMode) {
             return;
         }
 
@@ -200,50 +222,35 @@ class ProductInheritanceProcessDatamap
         $recordIsParent = count($children) > 0;
         $recordIsChild = !empty($parentProductId);
 
-        // @TODO: Start of debug, remember to remove when debug is done!
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(
-            [
-                'details' => array('@' => date('Y-m-d H:i:s'), 'class' => __CLASS__, 'function' => __FUNCTION__, 'file' => __FILE__, 'line' => __LINE__),
-                '$identifier' => $identifier,
-                'recordIsNew' => $recordIsNew,
-                'productRow' => $productRow,
-                'inheritedFields' => $inheritedFields,
-                'recordIsParent' => $recordIsParent,
-                'recordIsChild' => $recordIsChild,
-                'empty($productRow[product_type])' => empty($productRow['product_type']),
-                'empty($productRow[parent])' => empty($productRow['parent']),
-                'array_keys($productRow)' => array_keys($productRow),
-                'array_intersect(array_keys($productRow), $inheritedFields)' => array_intersect(array_keys($productRow), $inheritedFields),
-                'fetchChildRecordIdentifiers' => $this->fetchChildRecordIdentifiers($identifier),
-            ],
-            date('Y-m-d H:i:s') . ' : ' . __METHOD__ . ' : ' . __LINE__
-        );
-        return;
-        // @TODO: End of debug, remember to remove when debug is done!
-
-        // If this is a new record, check if the product type is defined in the parent
-        if (!MathUtility::canBeInterpretedAsInteger($identifier) && !$productTypeId && $parentProductId) {
-            if (isset($this->productDatamap[$parentProductId]['product_type'])) {
-                $productTypeId = (int)$this->productDatamap[$parentProductId]['product_type'];
-            } else {
-                $productTypeId = (int)BackendUtility::getRecord(
-                    ProductRepository::TABLE_NAME,
-                    $parentProductId,
-                    'product_type'
-                )['product_type'];
-            }
-        }
-
-        if ($parentProductId && $productTypeId) {
-            // get parent overlay data
+        $status = '';
+        // Current record is a "child".
+        if ($recordIsChild) {
+            // Get parent overlay data.
             $parentProductOverlayData = $this->getParentProductOverlayData(
                 (int)$parentProductId,
                 (int)$productTypeId
             );
-            // set pid of current product, seems to be "lost" though, but DataHandler requires a pid on insert
+
+            // Load product relations
+            $this->loadProductRelations(
+                $identifier,
+                $productRow,
+                array_keys($parentProductOverlayData),
+            );
+
+            // Set pid of current product, seems to be "lost" though, but DataHandler requires a pid on insert.
             $pid = BackendUtility::getRecord(ProductRepository::TABLE_NAME, $identifier, 'pid')['pid'] ?? 0;
 
-            // Process normal product fields
+            // Current record is updated when parent was saved. (can't be a new record)
+            if (!$inheritMode) {
+                // Fetch product relations according parent product overlay data.
+                $this->loadProductRelations(
+                    $parentProductId,
+                    [],
+                    array_keys($parentProductOverlayData),
+                );
+            }
+
             $productRowWithParentOverlay = array_merge(
                 $productRow,
                 $parentProductOverlayData
@@ -257,7 +264,8 @@ class ProductInheritanceProcessDatamap
                     $productRow,
                     (string)$value,
                     (string)$identifier,
-                    (int)$pid
+                    (int)$pid,
+                    $inheritedFields
                 );
             }
 
@@ -268,41 +276,21 @@ class ProductInheritanceProcessDatamap
             $this->productDatamap[$identifier] = $productRowWithParentOverlay;
         }
 
-        $children = [];
-
-        // Get child products if this product is not new. New products don't have children yet.
-        if (MathUtility::canBeInterpretedAsInteger($identifier)) {
-            /** @var QueryBuilder $queryBuilder */
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getConnectionForTable(ProductRepository::TABLE_NAME)
-                ->createQueryBuilder();
-
-            $queryBuilder
-                ->getRestrictions()
-                ->removeAll()
-                ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
-
-            $children = $queryBuilder
-                ->select('uid')
-                ->from(ProductRepository::TABLE_NAME)
-                ->where($queryBuilder->expr()->eq(
-                    'parent',
-                    $queryBuilder->createNamedParameter($identifier)
-                ))
-                ->execute()
-                ->fetchAll(FetchMode::COLUMN, 0);
-        }
-
-        foreach ($this->productDatamap as $childIdentifier => $childData) {
-            if ($childData['parent'] === ProductRepository::TABLE_NAME . '_' . $identifier) {
-                $children[] = $childIdentifier;
+        // Current record is a updated "parent".
+        if ($recordIsParent && !$recordIsNew) {
+            // Process children.
+            // Not sure when this can happen (from before changes)?
+            foreach ($this->productDatamap as $childIdentifier => $childData) {
+                if ($childData['parent'] === ProductRepository::TABLE_NAME . '_' . $identifier) {
+                    $children[] = $childIdentifier;
+                }
             }
-        }
 
-        $children = array_unique($children);
+            $children = array_unique($children);
 
-        foreach ($children as $child) {
-            $this->processProductRecordOverlays($child);
+            foreach ($children as $child) {
+                $this->processProductRecordOverlays($child);
+            }
         }
     }
 
@@ -321,13 +309,11 @@ class ProductInheritanceProcessDatamap
             return $this->inheritedProductFieldsForProductType[$parent . '-' . $productType];
         }
 
-        $inheritedFields = DataInheritanceUtility::getInheritedFieldsForProductType($productType);
+        $inheritedFields = $this->getInheritedFieldsForProductType($productType);
 
         if (count($inheritedFields) === 0) {
             return [];
         }
-
-        $inheritedFields[] = 'attributes_values';
 
         $parentRecord = $this->productDatamap[$parent];
 
@@ -409,6 +395,7 @@ class ProductInheritanceProcessDatamap
      * @param string|null $parentValue The value of the field in the parent record
      * @param string $identifier The identifier of the current record (int cast to string or NEW0123456789abcdef)
      * @param int|null $pid The value of the pid of the related record
+     * @param array $inheritedFields The value of the pid of the related record
      * @return string
      */
     protected function processOverlayRelations(
@@ -417,7 +404,8 @@ class ProductInheritanceProcessDatamap
         array $row,
         ?string $parentValue,
         string $identifier,
-        ?int $pid
+        ?int $pid,
+        array $inheritedFields
     ) {
         if ($parentValue === null) {
             return null;
@@ -468,33 +456,35 @@ class ProductInheritanceProcessDatamap
         }
 
         // Check for deleted relations
-        foreach ($childRelations as &$childRelation) {
-            // Only allow integer keys. NEW0123456789abcdef keys can't have been deleted
-            if (MathUtility::canBeInterpretedAsInteger($childRelation)) {
-                $parentRelationUid = $this->findParentRelationUidInIndex(
-                    (int)$childRelation,
-                    $foreignTable,
-                    (int)$identifier,
-                    $table
-                );
-
-                // Delete any relation that is not present in the parent
-                if (
-                    (
-                        $parentRelationUid === 0
-                        || !in_array((string)$parentRelationUid, $parentRelations, true)
-                    )
-                    && isset($this->dataHandler->cmdmap[$foreignTable][(int)$parentRelationUid]['delete'])
-                    && (int)$this->dataHandler->cmdmap[$foreignTable][(int)$parentRelationUid]['delete'] === 1
-                ) {
-                    $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
-                    unset($childRelation);
-                    $this->removeParentRelationsFromIndex(
-                        $parentRelationUid,
+        if (is_array($childRelations)) {
+            foreach ($childRelations as &$childRelation) {
+                // Only allow integer keys. NEW0123456789abcdef keys can't have been deleted
+                if (MathUtility::canBeInterpretedAsInteger($childRelation)) {
+                    $parentRelationUid = $this->findParentRelationUidInIndex(
+                        (int)$childRelation,
                         $foreignTable,
                         (int)$identifier,
                         $table
                     );
+
+                    // Delete any relation that is not present in the parent
+                    if (
+                        (
+                            $parentRelationUid === 0
+                            || !in_array((string)$parentRelationUid, $parentRelations, true)
+                        )
+                        && isset($this->dataHandler->cmdmap[$foreignTable][(int)$parentRelationUid]['delete'])
+                        && (int)$this->dataHandler->cmdmap[$foreignTable][(int)$parentRelationUid]['delete'] === 1
+                    ) {
+                        $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
+                        unset($childRelation);
+                        $this->removeParentRelationsFromIndex(
+                            $parentRelationUid,
+                            $foreignTable,
+                            (int)$identifier,
+                            $table
+                        );
+                    }
                 }
             }
         }
@@ -538,7 +528,7 @@ class ProductInheritanceProcessDatamap
             $childRecord = $this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier];
             if (empty($childRecord)) {
                 // Try fetch, if parent product isn't saved datamap for it is missing
-                // Need to define how to know what data to fetch
+                $childRecord = $this->productRelations[$foreignTable][$parentRelationIdentifier];
             }
 
             if (!empty($childRecord)) {
@@ -576,6 +566,20 @@ class ProductInheritanceProcessDatamap
                     $childRecord[$typeField] = $typeValue;
                 }
 
+                // Only specific attribute values should be inherited.
+                if ($typeField === 'attribute' && isset($childRecord[$typeField])) {
+                    // If typeField.typeValue isn't in inheritedFields use own value.
+                    if (!in_array($typeField . '.' . $childRecord[$typeField], $inheritedFields)) {
+                        if (isset($this->dataHandler->datamap[$foreignTable][$childRelationIdentifier]['value'])) {
+                            $childRecord['value']
+                                = $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier]['value'];
+                        } else {
+                            $childRecord['value']
+                                = $this->productRelations[$foreignTable][$childRelationIdentifier]['value'] ?? '';
+                        }
+                    }
+                }
+
                 // if record is new, set pid, so it can be saved in DataHandler.
                 if (!MathUtility::canBeInterpretedAsInteger($childRelationIdentifier)) {
                     $childRecord['pid'] = $pid;
@@ -583,19 +587,22 @@ class ProductInheritanceProcessDatamap
 
                 $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
 
-                // Recurse through inline relations for childrens' children
-                foreach ($childRecord as $field => $value) {
-                    $childRecord[$field] = $this->processOverlayRelations(
-                        $foreignTable,
-                        $field,
-                        $childRecord,
-                        (string)$this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$field],
-                        $childRelationIdentifier,
-                        $pid
-                    );
-                }
+                if (isset($this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$field])) {
+                    // Recurse through inline relations for childrens' children
+                    foreach ($childRecord as $field => $value) {
+                        $childRecord[$field] = $this->processOverlayRelations(
+                            $foreignTable,
+                            $field,
+                            $childRecord,
+                            (string)$this->dataHandler->datamap[$foreignTable][$parentRelationIdentifier][$field],
+                            $childRelationIdentifier,
+                            $pid,
+                            $inheritedFields
+                        );
+                    }
 
-                $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
+                    $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier] = $childRecord;
+                }
 
                 $childRelations[] = $childRelationIdentifier;
             }
@@ -785,25 +792,50 @@ class ProductInheritanceProcessDatamap
             ->execute();
     }
 
+    /**
+     * Add product_type and parent to current record if missing and it can be fetched.
+     *
+     * @param $identifier
+     * @param array $record
+     * @return void
+     */
     protected function addProductTypeAndParentToRecordIfNeeded($identifier, array &$record): void
     {
-        if (empty($record['parent']) || empty($record['product_type'])) {
+        // If parent isn't set on update, fetch from record, not changed?
+        if (MathUtility::canBeInterpretedAsInteger($identifier)) {
+            if (!isset($record['parent']) || empty($record['product_type'])) {
+                $productRow = BackendUtility::getRecord(
+                    ProductRepository::TABLE_NAME,
+                    $identifier,
+                    'parent, product_type'
+                );
+
+                if (isset($productRow['parent']) && !isset($record['parent'])) {
+                    $record['parent'] = $productRow['parent'];
+                }
+            }
+        }
+        // If parent is set, fetch product_type from parent instead of relying on child.
+        if (!empty($record['parent'])) {
+            $parent = (string)array_pop(explode('_', (string)$record['parent'] ?? ''));
             $productRow = BackendUtility::getRecord(
                 ProductRepository::TABLE_NAME,
-                $identifier,
-                'parent,product_type'
+                $parent,
+                'product_type'
             );
+        }
 
-            // only set fetched values if record didn't have them before
-            if (isset($productRow['parent']) && empty($record['parent'])) {
-                $record['parent'] = $productRow['parent'];
-            }
-            if (isset($productRow['product_type']) && empty($record['product_type'])) {
-                $record['product_type'] = $productRow['product_type'];
-            }
+        if (isset($productRow['product_type']) && (int)$productRow['product_type'] != (int)($record['product_type'])) {
+            $record['product_type'] = (string)$productRow['product_type'];
         }
     }
 
+    /**
+     * Fetch child products.
+     *
+     * @param $identifier
+     * @return array
+     */
     protected function fetchChildRecordIdentifiers($identifier): array
     {
         // New records can't have any child records yet.
@@ -830,5 +862,79 @@ class ProductInheritanceProcessDatamap
         }
 
         return [];
+    }
+
+    /**
+     * Fetch product relations
+     *
+     * @param $identifier
+     * @param array $row
+     * @param array $fields
+     * @param string $relationTable
+     * @return void
+     */
+    protected function loadProductRelations($identifier, $row, $fields)
+    {
+        if (!empty($this->productRelations[$identifier])) {
+            return;
+        }
+
+        // if row is empty initialize simple product row
+        if (count($row) == 0) {
+            $this->addProductTypeAndParentToRecordIfNeeded($identifier, $row);
+        }
+
+        foreach ($fields as $field) {
+            $fieldTcaConfiguration = TcaUtility::getTcaFieldConfigurationAndRespectColumnsOverrides(
+                self::TABLE,
+                $field,
+                $row
+            );
+
+            // Only inline relations need special treatment
+            if ($fieldTcaConfiguration['type'] !== 'inline') {
+                continue;
+            }
+
+            $foreignTable = $fieldTcaConfiguration['foreign_table'];
+
+            /** @var RelationHandler $relationHandler */
+            $relationHandler = GeneralUtility::makeInstance(RelationHandler::class);
+            $relationHandler->start(
+                '',
+                $foreignTable,
+                '',
+                $identifier,
+                self::TABLE,
+                $fieldTcaConfiguration
+            );
+
+            $this->productRelations[$identifier][$foreignTable] = $relationHandler->getFromDB()[$foreignTable] ?? [];
+
+            // load compiled record data
+            foreach ($this->productRelations[$identifier][$foreignTable] as $id => $values) {
+                $this->productRelations[$foreignTable][$id]
+                    = $this->compileRecordData($foreignTable, (int)$id, true);
+            }
+        }
+    }
+
+    /**
+     * Local get inherited fields for product type.
+     * Adds 'attributes_values' field if any attribute is inherited.
+     *
+     * @param integer $productType
+     * @return array
+     */
+    protected function getInheritedFieldsForProductType(int $productType): array
+    {
+        $inheritedFields = DataInheritanceUtility::getInheritedFieldsForProductType($productType) ?? [];
+        foreach ($inheritedFields as $inheritedField) {
+            if (strpos($inheritedField, 'attribute.') !== false) {
+                $inheritedFields[] = 'attributes_values';
+                break;
+            }
+        }
+        return $inheritedFields;
     }
 }
