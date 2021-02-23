@@ -31,7 +31,11 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 class ProductInheritanceProcessDatamap
 {
     protected const TABLE = ProductRepository::TABLE_NAME;
-    protected const RELATION_INDEX_TABLE = RelationInheritanceIndexRepository::TABLE_NAME;
+
+    /**
+     * @var RelationInheritanceIndexRepository
+     */
+    protected RelationInheritanceIndexRepository $relationInheritanceIndexRepository;
 
     /**
      * The DataHandler object supplied when calling this class.
@@ -90,6 +94,16 @@ class ProductInheritanceProcessDatamap
      * @var array
      */
     protected array $productRelations = [];
+
+    /**
+     * Construct.
+     */
+    public function __construct()
+    {
+        $this->relationInheritanceIndexRepository = GeneralUtility::makeInstance(
+            RelationInheritanceIndexRepository::class
+        );
+    }
 
     /**
      * Overlay parent product data as defined by the inherited fields in the ProductType.
@@ -164,7 +178,7 @@ class ProductInheritanceProcessDatamap
                 MathUtility::canBeInterpretedAsInteger($value['parent'])
                 && MathUtility::canBeInterpretedAsInteger($value['child'])
             ) {
-                $this->addParentChildRelationToIndex(
+                $this->relationInheritanceIndexRepository->addParentChildRelationToIndex(
                     (int)$value['parent'],
                     (int)$value['child'],
                     $value['tablename'],
@@ -462,7 +476,7 @@ class ProductInheritanceProcessDatamap
             foreach ($childRelations as &$childRelation) {
                 // Only allow integer keys. NEW0123456789abcdef keys can't have been deleted
                 if (MathUtility::canBeInterpretedAsInteger($childRelation)) {
-                    $parentRelationUid = $this->findParentRelationUidInIndex(
+                    $parentRelationUid = $this->relationInheritanceIndexRepository->findParentRelationUidInIndex(
                         (int)$childRelation,
                         $foreignTable,
                         (int)$identifier,
@@ -480,7 +494,7 @@ class ProductInheritanceProcessDatamap
                     ) {
                         $this->dataHandler->cmdmap[$foreignTable][(int)$childRelation]['delete'] = 1;
                         unset($childRelation);
-                        $this->removeParentRelationsFromIndex(
+                        $this->relationInheritanceIndexRepository->removeParentRelationsFromIndex(
                             $parentRelationUid,
                             $foreignTable,
                             (int)$identifier,
@@ -506,12 +520,13 @@ class ProductInheritanceProcessDatamap
                 ];
             // Parent relation isn't new
             } else {
-                $childRelationIdentifier = (string)$this->findChildRelationUidInIndex(
-                    (int)$parentRelationIdentifier,
-                    $foreignTable,
-                    (int)$identifier,
-                    $table
-                );
+                $childRelationIdentifier
+                    = (string)$this->relationInheritanceIndexRepository->findChildRelationUidInIndex(
+                        (int)$parentRelationIdentifier,
+                        $foreignTable,
+                        (int)$identifier,
+                        $table
+                    );
 
                 // Child relation is new
                 if (!$childRelationIdentifier) {
@@ -621,177 +636,6 @@ class ProductInheritanceProcessDatamap
     protected function getLanguageService()
     {
         return $GLOBALS['LANG'];
-    }
-
-    /**
-     * Returns the UID of a relations's "cousin" (attached to a parent product).
-     *
-     * This is useful for inline relations, where a child product must retain its own copies of the relations and where
-     * there is no way to know which relation on the child product is the copy of which relation on the parent. To avoid
-     * deleting and recreating all relations on the child object, calling this function and
-     * addParentChildRelationToIndex() we can keep a record of the relationships.
-     *
-     *     +-----------------+
-     *     | Child product   |
-     *     |                 |      +-----------------+
-     *     | $inlineRelation | ---- | Relation record | -> index table
-     *     +-----------------+      +-----------------+        |
-     *             |                                           |
-     *             |                                           |
-     *     +-----------------+                                 |
-     *     | Parent product  |                                 |
-     *     |                 |      +-----------------+        V
-     *     | $inlineRelation | ---- | Relation record | <- "cousin"
-     *     +-----------------+      +-----------------+
-     *
-     * @param int $childUid
-     * @param string $tablename
-     * @param int $childParentId
-     * @param string $childParentTable
-     * @return int Uid of the record. Zero if not found
-     */
-    protected function findParentRelationUidInIndex(
-        int $childUid,
-        string $tablename,
-        int $childParentId,
-        string $childParentTable
-    ): int {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
-
-        return (int)$queryBuilder
-            ->select('uid_parent')
-            ->from(self::RELATION_INDEX_TABLE)
-            ->where(
-                $queryBuilder->expr()->eq('uid_child', $queryBuilder->createNamedParameter($childUid)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename)),
-                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
-                $queryBuilder->expr()->eq(
-                    'child_parent_tablename',
-                    $queryBuilder->createNamedParameter($childParentTable)
-                )
-            )
-            ->execute()
-            ->fetchOne();
-    }
-
-    /**
-     * Returns the uid of the record on the child relation side.
-     *
-     * @see ProductInheritanceProcessDatamap::findParentRelationUidInIndex()
-     *
-     * @param int $parentUid
-     * @param string $tablename
-     * @param int $childParentId
-     * @param string $childParentTable
-     * @return int
-     */
-    protected function findChildRelationUidInIndex(
-        int $parentUid,
-        string $tablename,
-        int $childParentId,
-        string $childParentTable
-    ): int {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
-
-        return (int)$queryBuilder
-            ->select('uid_child')
-            ->from(self::RELATION_INDEX_TABLE)
-            ->where(
-                $queryBuilder->expr()->eq('uid_parent', $queryBuilder->createNamedParameter($parentUid)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename)),
-                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
-                $queryBuilder->expr()->eq(
-                    'child_parent_tablename',
-                    $queryBuilder->createNamedParameter($childParentTable)
-                )
-            )
-            ->execute()
-            ->fetchOne();
-    }
-
-    /**
-     * Index a relation copy.
-     *
-     * @see ProductInheritanceProcessDatamap::findParentRelationUidInIndex()
-     *
-     * @param int $parentUid
-     * @param int $childUid
-     * @param string $tablename
-     * @param int $childParentId
-     * @param string $childParentTable
-     */
-    protected function addParentChildRelationToIndex(
-        int $parentUid,
-        int $childUid,
-        string $tablename,
-        int $childParentId,
-        string $childParentTable
-    ): void {
-        if (
-            $parentUid === 0
-            || $childUid === 0
-            || $this->findParentRelationUidInIndex(
-                $childUid,
-                $tablename,
-                $childParentId,
-                $childParentTable
-            ) === $parentUid
-        ) {
-            return;
-        }
-
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
-
-        $queryBuilder
-            ->insert(self::RELATION_INDEX_TABLE)
-            ->values([
-                'uid_parent' => $parentUid,
-                'uid_child' => $childUid,
-                'tablename' => $tablename,
-                'child_parent_id' => $childParentId,
-                'child_parent_tablename' => $childParentTable,
-            ])
-            ->execute();
-    }
-
-    /**
-     * Remove a relation copy parent from the index.
-     *
-     * @see ProductInheritanceProcessDatamap::findParentRelationUidInIndex()
-     *
-     * @param int $parentUid
-     * @param string $tablename
-     * @param int $childParentId
-     * @param string $childParentTable
-     */
-    protected function removeParentRelationsFromIndex(
-        int $parentUid,
-        string $tablename,
-        int $childParentId,
-        string $childParentTable
-    ): void {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
-
-        $queryBuilder
-            ->delete(self::RELATION_INDEX_TABLE)
-            ->where(
-                $queryBuilder->expr()->eq('uid_parent', $queryBuilder->createNamedParameter($parentUid)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter($tablename)),
-                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
-                $queryBuilder->expr()->eq(
-                    'child_parent_tablename',
-                    $queryBuilder->createNamedParameter($childParentTable)
-                )
-            )
-            ->execute();
     }
 
     /**
