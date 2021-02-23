@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Pixelant\PxaProductManager\:
+    resource: '../Classes/*'
+
+  Pixelant\PxaProductManager\Command\UpdateRelationInheritanceIndexCommand:
+    tags:
+      - name: 'console.command'
+        command: 'productmanager:updaterelationinheritanceindex'

@@ -16,6 +16,7 @@ class AttributeValueRepositoryTest extends FunctionalTestCase
 
     protected $testExtensionsToLoad = [
         'typo3conf/ext/pxa_product_manager',
+        'typo3conf/ext/demander',
     ];
 
     protected function setUp(): void

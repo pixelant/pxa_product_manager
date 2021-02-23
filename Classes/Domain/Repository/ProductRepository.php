@@ -195,10 +195,28 @@ class ProductRepository extends AbstractDemandRepository
 
         foreach ($values as $value) {
             $conditions->add(
-                $expressionBuilder->like(
-                    'tpdmav.value',
-                    $parentQueryBuilder->createNamedParameter(
-                        '%,' . $queryBuilder->escapeLikeWildcards($value) . ',%'
+                $expressionBuilder->orX(
+                    $expressionBuilder->eq(
+                        'tpdmav.value',
+                        $parentQueryBuilder->createNamedParameter($value, \PDO::PARAM_INT)
+                    ),
+                    $expressionBuilder->like(
+                        'tpdmav.value',
+                        $parentQueryBuilder->createNamedParameter(
+                            $queryBuilder->escapeLikeWildcards($value) . ',%'
+                        )
+                    ),
+                    $expressionBuilder->like(
+                        'tpdmav.value',
+                        $parentQueryBuilder->createNamedParameter(
+                            '%,' . $queryBuilder->escapeLikeWildcards($value)
+                        )
+                    ),
+                    $expressionBuilder->like(
+                        'tpdmav.value',
+                        $parentQueryBuilder->createNamedParameter(
+                            '%,' . $queryBuilder->escapeLikeWildcards($value) . ',%'
+                        )
                     )
                 )
             );
