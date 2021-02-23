@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
-use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
@@ -180,6 +179,8 @@ class ProductInheritanceProcessDatamap
      *
      * @param $identifier
      */
+
+    // phpcs:disable Generic.Metrics.CyclomaticComplexity
     protected function processProductRecordOverlays($identifier): void
     {
         $inheritMode = false;
@@ -569,7 +570,7 @@ class ProductInheritanceProcessDatamap
                 // Only specific attribute values should be inherited.
                 if ($typeField === 'attribute' && isset($childRecord[$typeField])) {
                     // If typeField.typeValue isn't in inheritedFields use own value.
-                    if (!in_array($typeField . '.' . $childRecord[$typeField], $inheritedFields)) {
+                    if (!in_array($typeField . '.' . $childRecord[$typeField], $inheritedFields, true)) {
                         if (isset($this->dataHandler->datamap[$foreignTable][$childRelationIdentifier]['value'])) {
                             $childRecord['value']
                                 = $this->dataHandler->datamap[$foreignTable][$childRelationIdentifier]['value'];
@@ -825,7 +826,7 @@ class ProductInheritanceProcessDatamap
             );
         }
 
-        if (isset($productRow['product_type']) && (int)$productRow['product_type'] != (int)($record['product_type'])) {
+        if (isset($productRow['product_type']) && (int)$productRow['product_type'] !== (int)($record['product_type'])) {
             $record['product_type'] = (string)$productRow['product_type'];
         }
     }
@@ -865,7 +866,7 @@ class ProductInheritanceProcessDatamap
     }
 
     /**
-     * Fetch product relations
+     * Load product relations.
      *
      * @param $identifier
      * @param array $row
@@ -873,14 +874,14 @@ class ProductInheritanceProcessDatamap
      * @param string $relationTable
      * @return void
      */
-    protected function loadProductRelations($identifier, $row, $fields)
+    protected function loadProductRelations($identifier, $row, $fields): void
     {
         if (!empty($this->productRelations[$identifier])) {
             return;
         }
 
         // if row is empty initialize simple product row
-        if (count($row) == 0) {
+        if (count($row) === 0) {
             $this->addProductTypeAndParentToRecordIfNeeded($identifier, $row);
         }
 
@@ -923,7 +924,7 @@ class ProductInheritanceProcessDatamap
      * Local get inherited fields for product type.
      * Adds 'attributes_values' field if any attribute is inherited.
      *
-     * @param integer $productType
+     * @param int $productType
      * @return array
      */
     protected function getInheritedFieldsForProductType(int $productType): array
@@ -932,9 +933,11 @@ class ProductInheritanceProcessDatamap
         foreach ($inheritedFields as $inheritedField) {
             if (strpos($inheritedField, 'attribute.') !== false) {
                 $inheritedFields[] = 'attributes_values';
+
                 break;
             }
         }
+
         return $inheritedFields;
     }
 }
