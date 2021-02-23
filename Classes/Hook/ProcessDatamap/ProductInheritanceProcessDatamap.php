@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Hook\ProcessDatamap;
 
 use Doctrine\DBAL\FetchMode;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Domain\Repository\RelationInheritanceIndexRepository;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
@@ -29,8 +30,8 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class ProductInheritanceProcessDatamap
 {
-    protected const TABLE = 'tx_pxaproductmanager_domain_model_product';
-    protected const RELATION_INDEX_TABLE = 'tx_pxaproductmanager_relation_inheritance_index';
+    protected const TABLE = ProductRepository::TABLE_NAME;
+    protected const RELATION_INDEX_TABLE = RelationInheritanceIndexRepository::TABLE_NAME;
 
     /**
      * The DataHandler object supplied when calling this class.
@@ -186,7 +187,7 @@ class ProductInheritanceProcessDatamap
         $inheritMode = false;
         $productRow = $this->productDatamap[$identifier];
 
-        // $productRow isn't an arrat if parent product was saved and then
+        // $productRow isn't an array if parent product was saved and then
         // called function to save children, then inheritmode = true
         if (!is_array($productRow)) {
             $inheritMode = true;

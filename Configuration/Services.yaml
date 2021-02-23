@@ -7,7 +7,7 @@ services:
   Pixelant\PxaProductManager\:
     resource: '../Classes/*'
 
-  Pixelant\PxaProductManager\Command\UpdateChildRelationCommand:
+  Pixelant\PxaProductManager\Command\UpdateRelationInheritanceIndexCommand:
     tags:
       - name: 'console.command'
-        command: 'pxa_product_manager:updatechildrelations'
+        command: 'productmanager:updaterelationinheritanceindex'

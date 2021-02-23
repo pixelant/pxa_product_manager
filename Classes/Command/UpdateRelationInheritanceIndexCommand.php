@@ -17,6 +17,9 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Command;
 
+use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
+use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
+use Pixelant\PxaProductManager\Domain\Repository\RelationInheritanceIndexRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,22 +27,22 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class UpdateChildRelationCommand extends Command
+class UpdateRelationInheritanceIndexCommand extends Command
 {
-    protected const PRODUCT_TABLE = 'tx_pxaproductmanager_domain_model_product';
-    protected const ATTRIBUTEVALUE_TABLE = 'tx_pxaproductmanager_domain_model_attributevalue';
-    protected const RELATION_INDEX_TABLE = 'tx_pxaproductmanager_relation_inheritance_index';
+    protected const PRODUCT_TABLE = ProductRepository::TABLE_NAME;
+    protected const ATTRIBUTEVALUE_TABLE = AttributeValueRepository::TABLE_NAME;
+    protected const RELATION_INDEX_TABLE = RelationInheritanceIndexRepository::TABLE_NAME;
 
     /**
      * Configure the command by defining the name, options and arguments.
      */
     protected function configure(): void
     {
-        $this->setDescription('Update child relations table.');
+        $this->setDescription('Update relation inheritance index.');
     }
 
     /**
-     * Executes the command for showing sys_log entries.
+     * Executes the command to update relation inheritance index.
      *
      * @param InputInterface $input
      * @param OutputInterface $output
@@ -47,6 +50,8 @@ class UpdateChildRelationCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
 
@@ -71,7 +76,7 @@ class UpdateChildRelationCommand extends Command
     }
 
     /**
-     * Add child relation.
+     * Add a relation to the inheritance index.
      *
      * @param array $record
      * @return void
@@ -95,7 +100,7 @@ class UpdateChildRelationCommand extends Command
     }
 
     /**
-     * Fetch missing child relation.
+     * Fetch missing relation inheritance.
      *
      * @return array
      */
@@ -113,8 +118,8 @@ class UpdateChildRelationCommand extends Command
             )
             ->addSelectLiteral(
                 $queryBuilder->expr()->count('*'),
-                '\'tx_pxaproductmanager_domain_model_product\' as child_parent_tablename',
-                '\'tx_pxaproductmanager_domain_model_attributevalue\' as tablename'
+                '\'' . self::PRODUCT_TABLE . '\' as child_parent_tablename',
+                '\'' . self::ATTRIBUTEVALUE_TABLE . '\' as tablename'
             )
             ->from(self::PRODUCT_TABLE, 'tpdmp')
             ->leftJoin(
@@ -130,7 +135,7 @@ class UpdateChildRelationCommand extends Command
                 'tpdmp',
                 self::ATTRIBUTEVALUE_TABLE,
                 'tpdmaparent',
-                $queryBuilder->expr()->andX(
+                (string)$queryBuilder->expr()->andX(
                     $queryBuilder->expr()->eq(
                         'tpdmaparent.product',
                         $queryBuilder->quoteIdentifier('tpdmp.parent')
@@ -139,13 +144,13 @@ class UpdateChildRelationCommand extends Command
                         'tpdmaparent.attribute',
                         $queryBuilder->quoteIdentifier('tpdma.attribute')
                     )
-                )->__toString()
+                )
             )
             ->leftJoin(
                 'tpdma',
                 self::RELATION_INDEX_TABLE,
                 'tprii',
-                $queryBuilder->expr()->andX(
+                (string)$queryBuilder->expr()->andX(
                     $queryBuilder->expr()->eq(
                         'tprii.uid_child',
                         $queryBuilder->quoteIdentifier('tpdma.uid')
@@ -154,7 +159,7 @@ class UpdateChildRelationCommand extends Command
                         'tprii.uid_parent',
                         $queryBuilder->quoteIdentifier('tpdmaparent.uid')
                     )
-                )->__toString()
+                )
             )
             ->where(
                 $queryBuilder->expr()->gt(
