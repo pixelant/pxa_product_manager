@@ -63,7 +63,7 @@ class LinkHandlingFormData
                     BackendUtility::getRecordTitle($table, $row),
                     $id
                 ),
-                'icon' => $this->iconFactory->getIconForRecord($table, $row, Icon::SIZE_SMALL)->render(),
+                'icon' => $this->iconFactory->getIconForRecord($table, $row ?? [], Icon::SIZE_SMALL)->render(),
             ];
         }
 

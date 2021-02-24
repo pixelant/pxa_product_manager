@@ -283,10 +283,7 @@
 
 			<!--Link handler:START-->
 			<trans-unit id="be.product_link_handler">
-				<source>Products (PM)</source>
-			</trans-unit>
-			<trans-unit id="be.category_link_handler">
-				<source>Category (PM)</source>
+				<source>Product</source>
 			</trans-unit>
 			<!--Link handler:END-->
 
