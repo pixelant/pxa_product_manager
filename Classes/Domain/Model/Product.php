@@ -222,7 +222,13 @@ class Product extends AbstractEntity
      */
     public function initializeObject(): void
     {
-        $this->initStorageObjects();
+        // $this->initStorageObjects();
+        // Run __construct instead due to the use of the extender extension.
+        // It is possible to "extend" the constructor in Extended classes but
+        // not the initStorageObjects() used by Extbase.
+        // "Workaround" to be able to extend e.g. Product Model with a ObjectStorage
+        // property using the Extender extension.
+        $this->__construct();
     }
 
     /**
