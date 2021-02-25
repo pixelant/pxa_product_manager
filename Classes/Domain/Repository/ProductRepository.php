@@ -31,6 +31,7 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
@@ -72,6 +73,28 @@ class ProductRepository extends AbstractDemandRepository
             self::TABLE_NAME . '.images',
             self::TABLE_NAME . '.product_type',
         ];
+
+        // Fetch listView settings.
+        $listViewSettings = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+            'PxaProductManager'
+        )['listView'] ?? [];
+
+        // If any additionalFields are set, we need to add them to selectFields.
+        if (!empty($listViewSettings['additionalFields'])) {
+            $additionalFields = $listViewSettings['additionalFields'] ?? [];
+            if (!empty($additionalFields)) {
+                $additionalFieldsList = GeneralUtility::trimExplode(',', $additionalFields, true);
+                foreach ($additionalFieldsList as $additionalField) {
+                    $selectFields[] = self::TABLE_NAME . '.' . $additionalField;
+                }
+            }
+        }
+
+        // If any additionalAttribute is set, we need to fetch attributes_values field.
+        if (!empty($listViewSettings['additionalAttributes'])) {
+            $selectFields[] = self::TABLE_NAME . '.attributes_values';
+        }
 
         // fireEvent AfterSelectFieldsEvent table fields
 

@@ -6,8 +6,10 @@ namespace Pixelant\PxaProductManager\Domain\Resource;
 
 use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
 use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use TYPO3\CMS\Extbase\Service\ImageService;
 
 class Product extends AbstractResource
@@ -82,8 +84,35 @@ class Product extends AbstractResource
         $resource = [
             'listImage' => $this->getProcessedImageUri($this->entity->getListImage()),
             'url' => $this->getUrl(),
-            // 'cardView' => $this->entity->getProductType()->getName(),
         ];
+
+        // Add additional fields to result.
+        $additionalFields = $this->settings['listView']['additionalFields'] ?? false;
+        if (!empty($additionalFields)) {
+            $additionalFields = GeneralUtility::underscoredToLowerCamelCase($additionalFields);
+            $additionalFieldsList = GeneralUtility::trimExplode(',', $additionalFields, true);
+            foreach ($additionalFieldsList as $additionalField) {
+                $additional[$additionalField] = $this->convertPropertyValue(
+                    ObjectAccess::getProperty($this->entity, $additionalField)
+                );
+            }
+        }
+
+        // Add additional attributes to result.
+        $additionalAttributes = $this->settings['listView']['additionalAttributes'] ?? false;
+        if (!empty($additionalAttributes)) {
+            $attributeValues = $this->entity->getAttributeValue();
+            $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
+            foreach ($additionalAttributesList as $attribute) {
+                if (!empty($attributeValues[$attribute])) {
+                    $attr = $attributeValues[$attribute]->getAttribute();
+                    $resource[$attribute] = [
+                        'label' => $attr->getLabel() ?? $attr->getName(),
+                        'data' => $attributeValues[$attribute]->getRenderValue(),
+                    ];
+                }
+            }
+        }
 
         return parent::extractProperties($resource + ($additional ?? []));
     }

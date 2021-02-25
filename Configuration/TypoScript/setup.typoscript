@@ -168,6 +168,10 @@ plugin.tx_pxaproductmanager {
                     value = tstamp,desc
                 }
             }
+            # to include properties in list, add field names in list (usp,tax_rate)
+            additionalFields =
+            # to include attributes in list, add attribute identifiers in list (identifier1,identifier2)
+            additionalAttributes =
         }
 
         wishList {

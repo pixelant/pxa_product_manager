@@ -139,9 +139,9 @@ class Product extends AbstractEntity
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @var Product
+     * @var Product|null
      */
-    protected Product $parent;
+    protected $parent = null;
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Transient
@@ -583,7 +583,9 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @return Product|null
+     * Gets the parent product.
+     *
+     * @return Product|null the parent product
      */
     public function getParent(): ?self
     {
