@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Event\Repository\RegisterAdditionalProductListReturnFieldsEvent;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -73,24 +74,19 @@ class ProductRepository extends AbstractDemandRepository
             self::TABLE_NAME . '.product_type',
         ];
 
-        // fireEvent AfterSelectFieldsEvent table fields
+        $event = GeneralUtility::makeInstance(RegisterAdditionalProductListReturnFieldsEvent::class, $selectFields);
+        $this->dispatcher->dispatch($event);
 
         $queryBuilder
-            ->select(...$selectFields)
+            ->select(...$event->getSelectFields())
             ->addSelect()
             ->from(self::TABLE_NAME);
-
-        $this->fireDemandEvent('afterDemandQueryBuilderInitialize', $demand, $queryBuilder);
 
         $this->addStorageExpression($queryBuilder, $demand);
 
         $this->addProductPagesExpression($queryBuilder, $demand);
 
-        $this->fireDemandEvent('beforeDemandQueryBuilderFilters', $demand, $queryBuilder);
-
         $this->addFilters($queryBuilder, $demand);
-
-        $this->fireDemandEvent('afterDemandQueryBuilderFilters', $demand, $queryBuilder);
 
         $this->addLimit($queryBuilder, $demand);
 
@@ -99,8 +95,6 @@ class ProductRepository extends AbstractDemandRepository
         $this->demandService->getSortBy([
             'tx_pxaproductmanager_domain_model_product' => 'tx_pxaproductmanager_domain_model_product',
         ], $queryBuilder);
-
-        $this->fireDemandEvent('afterDemandQueryBuilder', $demand, $queryBuilder);
 
         return $queryBuilder;
     }

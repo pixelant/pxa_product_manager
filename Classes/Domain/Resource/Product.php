@@ -95,9 +95,6 @@ class Product extends AbstractResource
      */
     protected function getUrl(): string
     {
-        $tsPid = $this->settings['pids']['singleViewPid'] ?? 0;
-        $pageUid = (int) ($tsPid ?: $this->siteConfiguration->getValue('singleViewPid') ?: 0);
-
         return $this->urlBuilderService->url(
             $this->entity
         );
@@ -153,5 +150,10 @@ class Product extends AbstractResource
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'PxaProductManager'
         );
+    }
+
+    protected function getAttributeValue($identifier)
+    {
+        return $this->entity->getAttributeValue[$identifier];
     }
 }

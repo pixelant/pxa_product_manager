@@ -8,13 +8,40 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Domain\Resource\Filter as FilterResource;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
+use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
 
 /**
  * This is test for abstract class.
  */
 class FilterTest extends UnitTestCase
 {
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|ListenerProvider
+     */
+    protected $listenerProviderMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|EventDispatcher
+     */
+    protected $eventDispatcherMock;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->listenerProviderMock = $this
+            ->getMockBuilder(ListenerProvider::class)
+            ->disableOriginalConstructor()
+            ->setMethodsExcept(['getListenersForEvent'])
+            ->getMock();
+
+        $this->eventDispatcherMock = $this
+            ->getMockBuilder(EventDispatcher::class)
+            ->setConstructorArgs([$this->listenerProviderMock])
+            ->setMethodsExcept(['dispatch'])
+            ->getMock();
+    }
+
     /**
      * @test
      */
@@ -56,7 +83,7 @@ class FilterTest extends UnitTestCase
             ->setGuiState('expanded');
 
         $subject = new FilterResource($filter);
-        $subject->injectDispatcher($this->createMock(Dispatcher::class));
+        $subject->injectDispatcher($this->eventDispatcherMock);
 
         self::assertEquals($expect, $subject->toArray());
     }
