@@ -32,6 +32,7 @@ use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Event\Repository\RepositoryDemand as RepositoryDemandEvent;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -53,6 +54,11 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     protected DemandService $demandService;
 
     /**
+     * @var ConfigurationManagerInterface
+     */
+    protected ConfigurationManagerInterface $configurationManager;
+
+    /**
      * @param Dispatcher $dispatcher
      */
     public function injectDispatcher(Dispatcher $dispatcher): void
@@ -66,6 +72,14 @@ abstract class AbstractDemandRepository extends Repository implements DemandRepo
     public function injectDemandService(DemandService $demandService): void
     {
         $this->demandService = $demandService;
+    }
+
+    /**
+     * @param ConfigurationManagerInterface $configurationManager
+     */
+    public function injectConfigurationManagerInterface(ConfigurationManagerInterface $configurationManager): void
+    {
+        $this->configurationManager = $configurationManager;
     }
 
     /**
