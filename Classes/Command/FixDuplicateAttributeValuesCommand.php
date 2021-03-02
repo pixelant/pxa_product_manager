@@ -70,35 +70,48 @@ class FixDuplicateAttributeValuesCommand extends Command
 
                 if (
                     !empty($firstAttribute)
-                    && $firstAttribute['product_attrval_attribute'] == $firstAttribute['parent_attrval_attribute']
-                    && $firstAttribute['product_parent'] == $firstAttribute['parent_attrval_product']
+                    && $firstAttribute['product_attrval_attribute'] === $firstAttribute['parent_attrval_attribute']
+                    && $firstAttribute['product_parent'] === $firstAttribute['parent_attrval_product']
                     && $riiExists
                 ) {
-                    if ($firstAttribute['product_attrval_value'] != $firstAttribute['parent_attrval_value']) {
+                    if ($firstAttribute['product_attrval_value'] !== $firstAttribute['parent_attrval_value']) {
                         $this->updateAttributeValueValue(
                             $firstAttribute['product_attrval_uid'],
                             $firstAttribute['parent_attrval_value']
                         );
                     }
-                    foreach ($attributeValues as $avIndex => $attributeValue) {
-                        if ($avIndex > 0) {
-                            $this->removeAttributeValueRecord($attributeValue['product_attrval_uid']);
-                            if ($attributeValue['tprii_uid_parent']) {
-                                $this->removeRelationInheritanceIndexRecord(
-                                    $attributeValue['tprii_uid_parent'],
-                                    $attributeValue['product_attrval_uid'],
-                                    $attributeValue['product_attrval_product']
-                                );
-                            }
-                        }
-                    }
+                    $this->removeDuplicateAttributeValuesAndRii($attributeValues);
                 }
                 $io->progressAdvance();
             }
             $io->progressFinish();
+        } else {
+            $io->success('No duplicate attribute values found');
         }
 
         return true;
+    }
+
+    /**
+     * Checks and removes duplicate attribute values and rii if exists.
+     *
+     * @param array $attributeValues
+     * @return void
+     */
+    protected function removeDuplicateAttributeValuesAndRii(array $attributeValues): void
+    {
+        foreach ($attributeValues as $avIndex => $attributeValue) {
+            if ($avIndex > 0) {
+                $this->removeAttributeValueRecord($attributeValue['product_attrval_uid']);
+                if ($attributeValue['tprii_uid_parent']) {
+                    $this->removeRelationInheritanceIndexRecord(
+                        $attributeValue['tprii_uid_parent'],
+                        $attributeValue['product_attrval_uid'],
+                        $attributeValue['product_attrval_product']
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -167,33 +180,14 @@ class FixDuplicateAttributeValuesCommand extends Command
             ->execute()
             ->fetchAllAssociative();
 
-        // @TODO: Start of debug, remember to remove when debug is done!
-        $sql = $queryBuilder->getSQL();
-        $parameters = $queryBuilder->getParameters();
-        foreach ($parameters as $key => $parameter) {
-            switch ($queryBuilder->getParameterType($key)) {
-                case 1:
-                    $stringParams[':' . $key] = (int)$parameter;
-                    break;
-                case 101:
-                    $stringParams[':' . $key] = implode(',', $parameter);
-                    break;
-                default:
-                    $stringParams[':' . $key] = $queryBuilder->quote($parameter);
-                    break;
-            }
-        }
-        $statement = strtr($sql, $stringParams);
-        echo($statement);
-        // @TODO: End of debug, remember to remove when debug is done!
         return $records;
     }
 
     /**
      * Fetch Attribute Value data for attrbute and product.
      *
-     * @param integer $attribute
-     * @param integer $product
+     * @param int $attribute
+     * @param int $product
      * @return array
      */
     protected function fetchAttributeValueData(int $attribute, int $product): array
@@ -287,7 +281,7 @@ class FixDuplicateAttributeValuesCommand extends Command
     /**
      * Update Attribute Value value.
      *
-     * @param integer $uid
+     * @param int $uid
      * @param string $value
      * @return void
      */
@@ -311,7 +305,7 @@ class FixDuplicateAttributeValuesCommand extends Command
     /**
      * Remove attribute value record.
      *
-     * @param integer $uid
+     * @param int $uid
      * @return void
      */
     protected function removeAttributeValueRecord(int $uid): void
@@ -332,11 +326,11 @@ class FixDuplicateAttributeValuesCommand extends Command
     }
 
     /**
-     * Remove RelationInheritanceIndexRecord
+     * Remove RelationInheritanceIndexRecord.
      *
-     * @param integer $uidParent
-     * @param integer $uidChild
-     * @param integer $childParentId
+     * @param int $uidParent
+     * @param int $uidChild
+     * @param int $childParentId
      * @return void
      */
     protected function removeRelationInheritanceIndexRecord(
