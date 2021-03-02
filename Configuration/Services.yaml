@@ -11,3 +11,14 @@ services:
     tags:
       - name: 'console.command'
         command: 'productmanager:updaterelationinheritanceindex'
+
+  Pixelant\PxaProductManager\Command\FixDuplicateAttributeValuesCommand:
+    tags:
+      - name: 'console.command'
+        command: 'productmanager:fixduplicateattributevalues'
+
+
+  Pixelant\PxaProductManager\Command\RemoveOrphanAttributeValuesCommand:
+    tags:
+      - name: 'console.command'
+        command: 'productmanager:removeorphanattributevalues'
