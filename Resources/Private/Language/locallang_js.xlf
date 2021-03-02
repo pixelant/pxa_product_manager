@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2014-07-02T15:29:57Z"
+          product-name="pxa_product_manager">
+        <header/>
+        <body>
+            <trans-unit id="js.load_more">
+                <source>Load more</source>
+            </trans-unit>
+            <trans-unit id="js.total_results">
+                <source>Total results</source>
+            </trans-unit>
+            <trans-unit id="js.please_select">
+                <source>Please select...</source>
+            </trans-unit>
+            <trans-unit id="js.loading">
+                <source>Loading...</source>
+            </trans-unit>
+            <trans-unit id="js.clear">
+                <source>Clear</source>
+            </trans-unit>
+            <trans-unit id="js.clear_all">
+                <source>Clear all</source>
+            </trans-unit>
+
+            <trans-unit id="js.sort_by">
+                <source>A Sort by</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
