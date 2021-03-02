@@ -38,6 +38,9 @@ return [
         'hideTable' => true,
         'rootLevel' => -1,
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/tag.svg',
+        'security' => [
+            'ignoreRootLevelRestriction' => true,
+        ],
     ],
     'types' => $types,
     'palettes' => [
