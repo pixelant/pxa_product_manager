@@ -27,7 +27,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
-use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Event\Repository\GetProductQueryBuilderEvent;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -74,46 +74,18 @@ class ProductRepository extends AbstractDemandRepository
             self::TABLE_NAME . '.product_type',
         ];
 
-        // Fetch listView settings.
-        $listViewSettings = $this->configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-            'PxaProductManager'
-        )['listView'] ?? [];
-
-        // If any additionalFields are set, we need to add them to selectFields.
-        if (!empty($listViewSettings['additionalFields'])) {
-            $additionalFields = $listViewSettings['additionalFields'] ?? [];
-            if (!empty($additionalFields)) {
-                $additionalFieldsList = GeneralUtility::trimExplode(',', $additionalFields, true);
-                foreach ($additionalFieldsList as $additionalField) {
-                    $selectFields[] = self::TABLE_NAME . '.' . $additionalField;
-                }
-            }
-        }
-
-        // If any additionalAttribute is set, we need to fetch attributes_values field.
-        if (!empty($listViewSettings['additionalAttributes'])) {
-            $selectFields[] = self::TABLE_NAME . '.attributes_values';
-        }
-
-        // fireEvent AfterSelectFieldsEvent table fields
+        $selectFields = $this->addAdditionalSelectFields($selectFields);
 
         $queryBuilder
             ->select(...$selectFields)
             ->addSelect()
             ->from(self::TABLE_NAME);
 
-        $this->fireDemandEvent('afterDemandQueryBuilderInitialize', $demand, $queryBuilder);
-
         $this->addStorageExpression($queryBuilder, $demand);
 
         $this->addProductPagesExpression($queryBuilder, $demand);
 
-        $this->fireDemandEvent('beforeDemandQueryBuilderFilters', $demand, $queryBuilder);
-
         $this->addFilters($queryBuilder, $demand);
-
-        $this->fireDemandEvent('afterDemandQueryBuilderFilters', $demand, $queryBuilder);
 
         $this->addLimit($queryBuilder, $demand);
 
@@ -123,9 +95,10 @@ class ProductRepository extends AbstractDemandRepository
             'tx_pxaproductmanager_domain_model_product' => 'tx_pxaproductmanager_domain_model_product',
         ], $queryBuilder);
 
-        $this->fireDemandEvent('afterDemandQueryBuilder', $demand, $queryBuilder);
+        $event = GeneralUtility::makeInstance(GetProductQueryBuilderEvent::class, $queryBuilder);
+        $this->eventDispatcher->dispatch($event);
 
-        return $queryBuilder;
+        return $event->getqueryBuilder();
     }
 
     /**
@@ -389,5 +362,38 @@ class ProductRepository extends AbstractDemandRepository
         }
 
         $queryBuilder->andWhere($conditions);
+    }
+
+    /**
+     * Adds additional select fields defined in typoscript settings.
+     *
+     * @param array $selectFields
+     * @return array
+     */
+    protected function addAdditionalSelectFields(array $selectFields): array
+    {
+        // Fetch listView settings.
+        $listViewSettings = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+            'PxaProductManager'
+        )['listView'] ?? [];
+
+        // If any additionalFields are set, we need to add them to selectFields.
+        if (!empty($listViewSettings['additionalFields'])) {
+            $additionalFields = $listViewSettings['additionalFields'] ?? [];
+            if (!empty($additionalFields)) {
+                $additionalFieldsList = GeneralUtility::trimExplode(',', $additionalFields, true);
+                foreach ($additionalFieldsList as $additionalField) {
+                    $selectFields[] = self::TABLE_NAME . '.' . $additionalField;
+                }
+            }
+        }
+
+        // If any additionalAttribute is set, we need to fetch attributes_values field.
+        if (!empty($listViewSettings['additionalAttributes'])) {
+            $selectFields[] = self::TABLE_NAME . '.attributes_values';
+        }
+
+        return $selectFields;
     }
 }
