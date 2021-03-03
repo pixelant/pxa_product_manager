@@ -90,6 +90,17 @@ abstract class AbstractResource implements ResourceInterface
     protected function convertPropertyValue($value)
     {
         if ($value instanceof ObjectStorage) {
+            $data = [];
+            foreach ($value as $object) {
+                if ($object instanceof \TYPO3\CMS\Extbase\Domain\Model\FileReference) {
+                    $data[] = '/' . ltrim($object->getOriginalResource()->getPublicUrl(), '/');
+                }
+            }
+
+            if (!empty($data)) {
+                return $data;
+            }
+
             return $value->toArray();
         }
 
