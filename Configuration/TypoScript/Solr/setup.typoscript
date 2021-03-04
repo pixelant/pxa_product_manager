@@ -52,11 +52,17 @@ plugin.tx_solr {
                 }
 
                 /*
-                # Index attribute value example.
-                #attribute_rsk_stringS = USER
-                #attribute_rsk_stringS {
-                #  userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue->value
-                #  identifier = rsk
+                # Index attribute value example, in this case the attribute identifier is rsk.
+                #attribute_rsk_textS = USER
+                #attribute_rsk_textS {
+                #    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue->value
+                #    identifier = rsk
+                #}
+                # Index attribute mutliple value example (e.g. multi select).
+                #attribute_rsk_textM = USER
+                #attribute_rsk_textM {
+                #    userFunc = Pixelant\PxaProductManager\UserFunction\Solr\AttributeMultiValue->value
+                #    identifier = rsk
                 #}
                 */
 
