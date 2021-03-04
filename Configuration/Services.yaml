@@ -22,3 +22,10 @@ services:
     tags:
       - name: 'console.command'
         command: 'productmanager:removeorphanattributevalues'
+
+  Pixelant\PxaProductManager\UserFunction\Solr\AbstractValue:
+    public: true
+  Pixelant\PxaProductManager\UserFunction\Solr\AttributeMultiValue:
+    public: true
+  Pixelant\PxaProductManager\UserFunction\Solr\AttributeValue:
+    public: true

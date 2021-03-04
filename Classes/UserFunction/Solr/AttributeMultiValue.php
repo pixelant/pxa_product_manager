@@ -6,7 +6,7 @@ namespace Pixelant\PxaProductManager\UserFunction\Solr;
 
 use Pixelant\PxaProductManager\Domain\Model\Option;
 
-class AttributeValue extends AbstractValue
+class AttributeMultiValue extends AbstractValue
 {
     /**
      * Return string value of attribute.
@@ -32,12 +32,12 @@ class AttributeValue extends AbstractValue
                     }
                 }
                 $arrayValue = array_unique($arrayValue);
-                $value = implode(',', $arrayValue);
+                $value = $arrayValue;
             } else {
-                $value = $renderValue;
+                $value = [$renderValue];
             }
         }
 
-        return $value;
+        return serialize($value);
     }
 }
