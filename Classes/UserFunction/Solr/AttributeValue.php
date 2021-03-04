@@ -11,12 +11,12 @@ class AttributeValue extends AbstractValue
     /**
      * Return string value of attribute.
      *
-     * @param $_
+     * @param string $content
      * @param array $params
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function value($_, array $params): string
+    public function value(string $content, array $params): string
     {
         $attributeValue = $this->initValue($params);
         $value = '';
