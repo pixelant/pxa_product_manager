@@ -4,7 +4,7 @@
 class Demand
 {
     constructor(settings) {
-        this.storagePid = settings.storagePid;
+        this.storagePid = settings.storagePid || {};
         this.pageTreeStartingPoint = settings.pageTreeStartingPoint;
         this.orderBy = settings.orderBy;
         this.orderDirection = settings.orderDirection;
@@ -59,10 +59,12 @@ class Demand
      */
     asQueryParams() {
         let params = {};
+        let arrayProperties = ['filters', 'storagePid'];
 
         for (let property in this) {
             const value = this[property];
-            params[property] = property === 'filters'
+
+            params[property] = arrayProperties.includes(property)
                 ? JSON.stringify(value)
                 : value;
         }

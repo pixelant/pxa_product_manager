@@ -79,7 +79,7 @@
             EventHandler.on('filterUpdateDemand', data => {
                 this.demand.updateFilter(data.filter, data.options);
             })
-            
+
             EventHandler.on('filtersCleared', () => {
                 // Reset offset
                 this.demand.offSet = 0;
@@ -112,6 +112,8 @@
                     }
 
                     settings.filters = JSON.parse(settings.filters);
+
+                    settings.storagePid = JSON.parse(settings.storagePid);
 
                     // Emit preselect even, so filters will read data
                     EventHandler.emit('filterPreSelect', settings.filters);
