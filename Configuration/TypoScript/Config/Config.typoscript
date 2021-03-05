@@ -1,0 +1,6 @@
+config.pageTitleProviders {
+    productManager {
+        provider = Pixelant\PxaProductManager\Seo\PageTitle\ProductPageTitleProvider
+        before = record,seo
+    }
+}

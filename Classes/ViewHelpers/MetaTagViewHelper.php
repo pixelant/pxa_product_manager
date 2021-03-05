@@ -37,13 +37,15 @@ class MetaTagViewHelper extends AbstractViewHelper
     ): void {
         $type = $arguments['type'];
         $name = $arguments['name'];
+        $content = trim(strip_tags($arguments['content'] ?? $renderChildrenClosure()));
 
         if (!empty($content)) {
-            $content = trim(strip_tags($arguments['content'] ?? $renderChildrenClosure()));
             static::getPageRenderer()->setMetaTag(
                 $type,
                 $name,
-                $content
+                $content,
+                [],
+                true
             );
         }
     }
