@@ -4,13 +4,14 @@ plugin.tx_seo.config {
             products {
                 provider = Pixelant\PxaProductManager\Seo\XmlSitemap\ProductsXmlSitemapDataProvider
                 config {
+                    sortField = sorting
+                    #additionalWhere = AND (pid != 457)
+                    # Exclude products from sitemap based on the product_type.
+                    #excludedProductTypes =
+                    #
+                    includeSku = 1
                     pid = {$plugin.tx_pxaproductmanager.persistence.storagePid}
-                    recursive = 2
-                    url {
-                        pageId = {$plugin.tx_pxaproductmanager.settings.pids.singleViewPid}
-                        # Exclude categories part from URL
-                        excludeCategories = 0
-                    }
+                    recursive = {$plugin.tx_pxaproductmanager.persistence.recursive}
                 }
             }
         }
