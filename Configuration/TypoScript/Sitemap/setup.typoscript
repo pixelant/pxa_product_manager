@@ -8,8 +8,6 @@ plugin.tx_seo.config {
                     #additionalWhere = AND (pid != 457)
                     # Exclude products from sitemap based on the product_type.
                     #excludedProductTypes =
-                    #
-                    includeSku = 1
                     pid = {$plugin.tx_pxaproductmanager.persistence.storagePid}
                     recursive = {$plugin.tx_pxaproductmanager.persistence.recursive}
                 }
