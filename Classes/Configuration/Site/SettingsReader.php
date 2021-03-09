@@ -26,13 +26,9 @@ class SettingsReader
      */
     protected ServerRequest $request;
 
-    /**
-     * @param ServerRequest $request
-     */
-    public function __construct(ServerRequest $request = null)
+    public function injectServerRequest(ServerRequest $request)
     {
-        $this->request = $request ?? $GLOBALS['TYPO3_REQUEST'];
-        $this->init();
+        $this->request = $request;
     }
 
     /**
