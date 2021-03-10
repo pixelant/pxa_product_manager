@@ -26,7 +26,7 @@ class SettingsReader
      */
     protected ServerRequest $request;
 
-    public function injectServerRequest(ServerRequest $request)
+    public function injectServerRequest(ServerRequest $request): void
     {
         $this->request = $request;
     }
