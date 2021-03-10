@@ -44,6 +44,7 @@
                 nextQueueLoading: false,
                 products: [],
                 countAll: 0,
+                countCurrent: 0,
             }
         },
 
@@ -146,14 +147,16 @@
 
                 // Only load products
                 EventHandler.emit('totalCountUpdated', '');
+                EventHandler.emit('currentCountUpdated', '--');
 
                 this.request.loadProducts(demand)
                     .then(({data}) => {
                         this.products = data.products;
                         this.loading = false;
+                        this.countCurrent = data.products.length;
 
                         this.updateAvailableOptions(availableOptionsRequest);
-
+                        EventHandler.emit('currentCountUpdated', this.countCurrent);
                     })
                     .catch(error => console.error('Error while request products:', error));
             },
@@ -184,6 +187,9 @@
                 this.request.loadProducts(this.demand)
                     .then(({data}) => {
                         this.products = this.products.concat(data.products);
+                        this.countCurrent = this.products.length;
+
+                        EventHandler.emit('currentCountUpdated', this.countCurrent);
 
                         this.updateQueryString();
                         this.nextQueueLoading = false;

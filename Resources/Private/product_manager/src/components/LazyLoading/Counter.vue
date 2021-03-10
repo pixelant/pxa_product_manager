@@ -1,6 +1,6 @@
 <template>
     <div id="counter">
-        <span class="counter" v-cloak>{{ 'total_results' | trans }} {{ countAllLabel }}</span>
+        <span class="counter" v-cloak>{{ 'showing' | trans }} {{ countCurrent }} {{ 'of' | trans }} {{ countAllLabel }} {{ 'products' | trans }}</span>
     </div>
 </template>
 
@@ -13,6 +13,7 @@
         data() {
             return {
                 countAll: 0,
+                countCurrent: 0,
             }
         },
 
@@ -25,6 +26,9 @@
         created() {
             EventHandler.on('totalCountUpdated', countAll => {
                 this.countAll = countAll
+            });
+            EventHandler.on('currentCountUpdated', countCurrent => {
+                this.countCurrent = countCurrent
             });
         },
 

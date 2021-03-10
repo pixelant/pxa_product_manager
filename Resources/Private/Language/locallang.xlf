@@ -221,6 +221,15 @@
             <trans-unit id="js.sort_by">
                 <source>Sort by</source>
             </trans-unit>
+            <trans-unit id="js.showing">
+                <source>Showing</source>
+            </trans-unit>
+            <trans-unit id="js.of">
+                <source>of</source>
+            </trans-unit>
+            <trans-unit id="js.products">
+                <source>products</source>
+            </trans-unit>
 
             <trans-unit id="fe.orderBy.name_asc">
                 <source>Name A-Z</source>
