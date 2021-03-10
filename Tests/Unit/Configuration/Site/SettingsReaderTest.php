@@ -25,7 +25,8 @@ class SettingsReaderTest extends UnitTestCase
         $request = $this->prophesize(ServerRequest::class);
         $request->getAttribute('site')->shouldBeCalled()->willReturn($site->reveal());
 
-        $subject = new SettingsReader($request->reveal());
+        $subject = new SettingsReader();
+        $subject->injectServerRequest($request->reveal());
         $this->callInaccessibleMethod($subject, 'init');
 
         self::assertEquals($settings, TestsUtility::getProtectedVarValue($subject, 'settings'));
