@@ -9,5 +9,15 @@ config.tx_demander {
             table = tx_pxaproductmanager_domain_model_product
             field = tstamp
         }
+
+        product_crdate {
+            table = tx_pxaproductmanager_domain_model_product
+            field = crdate
+        }
+
+        product_sorting {
+            table = tx_pxaproductmanager_domain_model_product
+            field = sorting
+        }
     }
 }
