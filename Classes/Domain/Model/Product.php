@@ -36,6 +36,7 @@ use Pixelant\PxaProductManager\Formatter\PriceFormatter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
@@ -589,6 +590,10 @@ class Product extends AbstractEntity
      */
     public function getParent(): ?self
     {
+        if ($this->parent instanceof LazyLoadingProxy) {
+            $this->parent = $this->parent->_loadRealInstance();
+        }
+
         return $this->parent;
     }
 
