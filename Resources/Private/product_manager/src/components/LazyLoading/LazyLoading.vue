@@ -203,7 +203,7 @@
             updateQueryString() {
                 let hash = '-';
 
-                if (this.demand.hasQueryStringChanges()) {
+                if (this.demand.hasQueryStringChanges(this.settings)) {
                     hash = queryString.stringify(
                         this.demand.asQueryParams(),
                         queryStringOptions
