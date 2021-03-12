@@ -50,8 +50,11 @@ class Demand
      *
      * @returns {boolean}
      */
-    hasQueryStringChanges() {
-        return Object.keys(this.filters).length > 0 || this.offSet > 0;
+    hasQueryStringChanges(settings) {
+        return Object.keys(this.filters).length > 0
+            || this.offSet > 0
+            || this.orderBy != settings.orderBy
+            || this.orderDirection != settings.orderDirection;
     }
 
     /**
