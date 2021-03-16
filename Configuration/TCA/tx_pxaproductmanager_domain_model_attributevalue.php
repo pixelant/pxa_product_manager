@@ -40,6 +40,7 @@ return [
         'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/tag.svg',
         'security' => [
             'ignoreRootLevelRestriction' => true,
+            'ignoreWebMountRestriction' => true,
         ],
     ],
     'types' => $types,
