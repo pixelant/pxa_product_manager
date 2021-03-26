@@ -12,7 +12,7 @@ try {
 $types = [
     '0' => [
         'showitem' => 'value',
-    ]
+    ],
 ];
 
 foreach ($attributes as $attribute) {
