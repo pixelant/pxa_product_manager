@@ -19,7 +19,7 @@ foreach ($attributes as $attribute) {
     if ($attribute['uid'] === 0) {
         continue;
     }
-    
+
     $types[(string)$attribute['uid']] = [
         'showitem' => 'value',
         'columnsOverrides' => [
