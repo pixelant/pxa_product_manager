@@ -12,6 +12,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 class AttributeTypeValidationProcessDatamap
 {
+    protected const FALLBACK_TYPE = Attribute::ATTRIBUTE_TYPE_INPUT;
+
     /**
      * Validate the attribute type value
      *
@@ -36,11 +38,14 @@ class AttributeTypeValidationProcessDatamap
                     2, // Update
                     0,
                     1, // Severity: error
-                    'The attribute type "' . (int)$fieldArray['type'] . '" is not valid.',
+                    'The attribute type "' . (int)$fieldArray['type'] . '" is not valid and was changed to ' .
+                    '"' . self::FALLBACK_TYPE . '".',
                     0,
                     $data = [],
                     (int)$fieldArray['pid']
                 );
+
+                $fieldArray['type'] = self::FALLBACK_TYPE;
 
                 return;
             }
@@ -52,12 +57,14 @@ class AttributeTypeValidationProcessDatamap
                     1, // New
                     0,
                     1, // Severity: error
-                    'Attribute type is required.',
+                    'Attribute type is required. It was set to was changed to "' . self::FALLBACK_TYPE . '".',
                     0,
                     $data = [],
                     (int)$fieldArray['pid'],
                     $id
                 );
+
+                $fieldArray['type'] = self::FALLBACK_TYPE;
             }
         }
     }
