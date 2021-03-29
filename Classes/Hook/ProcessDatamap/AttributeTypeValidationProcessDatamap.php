@@ -28,7 +28,10 @@ class AttributeTypeValidationProcessDatamap
         DataHandler $dataHandler
     ): void {
         if ($table === 'tx_pxaproductmanager_domain_model_attribute') {
-            if (isset($fieldArray['type']) && !in_array((int)$fieldArray['type'], Attribute::getAttributeTypes(), true)) {
+            if (
+                isset($fieldArray['type'])
+                && !in_array((int)$fieldArray['type'], Attribute::getAttributeTypes(), true)
+            ) {
                 $dataHandler->log(
                     $table,
                     $id,
@@ -54,7 +57,7 @@ class AttributeTypeValidationProcessDatamap
                     1,
                     0,
                     1,
-                    'Attribute type is required. It was set to was changed to "' . self::FALLBACK_TYPE . '".',
+                    'Attribute type is required. It was changed to "' . self::FALLBACK_TYPE . '".',
                     0,
                     $data = [],
                     (int)$fieldArray['pid'],
