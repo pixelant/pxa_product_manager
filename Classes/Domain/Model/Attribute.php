@@ -543,4 +543,25 @@ class Attribute extends AbstractEntity
 
         return (string)$this->value;
     }
+
+    /**
+     * Returns the available attribute type ids.
+     *
+     * @return string[]
+     */
+    public static function getAttributeTypes(): array
+    {
+        return [
+            self::ATTRIBUTE_TYPE_INPUT,
+            self::ATTRIBUTE_TYPE_TEXT,
+            self::ATTRIBUTE_TYPE_DATETIME,
+            self::ATTRIBUTE_TYPE_DROPDOWN,
+            self::ATTRIBUTE_TYPE_CHECKBOX,
+            self::ATTRIBUTE_TYPE_LINK,
+            self::ATTRIBUTE_TYPE_IMAGE,
+            self::ATTRIBUTE_TYPE_LABEL,
+            self::ATTRIBUTE_TYPE_MULTISELECT,
+            self::ATTRIBUTE_TYPE_FILE,
+        ];
+    }
 }
