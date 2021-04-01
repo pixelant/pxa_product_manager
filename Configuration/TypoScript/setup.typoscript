@@ -172,6 +172,8 @@ plugin.tx_pxaproductmanager {
             additionalFields =
             # to include attributes in list, add attribute identifiers in list (identifier1,identifier2)
             additionalAttributes =
+            # to override what page menu in product list should begin from
+            menuPageId =
         }
 
         wishList {

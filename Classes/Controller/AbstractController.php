@@ -234,6 +234,11 @@ abstract class AbstractController extends ActionController
             $currentPageId = $this->getTypoScriptFrontendController()->id;
             $rootLine = $this->getTypoScriptFrontendController()->rootLine;
 
+            $fixedMenuPageId = (int)$this->settings['listView']['menuPageId'] ?? 0;
+            if ($fixedMenuPageId > 0) {
+                $currentPageId = $fixedMenuPageId;
+            }
+
             $subpages = $this->getMenuOfSubpages($currentPageId, $levels);
             // Check if we are on "last level" step one page up in menu.
             if (empty($subpages)) {
