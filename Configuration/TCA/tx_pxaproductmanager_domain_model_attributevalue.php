@@ -75,18 +75,16 @@ return [
         ],
         'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
-            'exclude' => 1,
             'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    ['', 0],
-                ],
-                'foreign_table' => 'tx_pxaproductmanager_domain_model_attributevalue',
-                'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_attributevalue.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_attributevalue.sys_language_uid IN (-1,0)',
-                'default' => 0,
-            ],
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'tx_pxaproductmanager_domain_model_attributevalue',
+                'size' => 1,
+                'maxitems' => 1,
+                'minitems' => 0,
+                'default' => 0
+            ]
         ],
         'l10n_diffsource' => [
             'config' => [
