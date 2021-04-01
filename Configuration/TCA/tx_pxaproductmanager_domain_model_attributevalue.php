@@ -83,8 +83,8 @@ return [
                 'size' => 1,
                 'maxitems' => 1,
                 'minitems' => 0,
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ],
         'l10n_diffsource' => [
             'config' => [
