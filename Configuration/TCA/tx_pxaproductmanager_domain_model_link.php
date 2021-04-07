@@ -67,7 +67,7 @@ return (function () {
                         ['', 0],
                     ],
                     'foreign_table' => 'tx_pxaproductmanager_domain_model_link',
-                    'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_link.pid=###CURRENT_PID### AND tx_pxaproductmanager_domain_model_link.sys_language_uid IN (-1,0)',
+                    'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_link.uid=###REC_FIELD_l10n_parent### AND tx_pxaproductmanager_domain_model_link.sys_language_uid IN (-1,0)',
                     'default' => 0
                 ],
             ],
