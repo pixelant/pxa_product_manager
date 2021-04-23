@@ -95,7 +95,13 @@ return [
         ],
         'attribute' => [
             'config' => [
-                'type' => 'passthrough',
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'tx_pxaproductmanager_domain_model_attribute',
+                'foreign_table' => 'tx_pxaproductmanager_domain_model_attribute',
+                // Should always be hidden.
+                'display_cond' => 'FIELD:uid:=:0',
+                'default' => 0,
             ],
         ],
     ],
