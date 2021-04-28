@@ -271,6 +271,8 @@ abstract class AbstractController extends ActionController
             \TYPO3\CMS\Frontend\DataProcessing\MenuProcessor::class
         );
 
+        $excludeUidList = $this->settings['listView']['excludeUidList'] ?? '';
+
         return $menuDirectoryProcessor->process(
             $this->configurationManager->getContentObject(),
             [],
@@ -279,6 +281,7 @@ abstract class AbstractController extends ActionController
                 'special.' => ['value' => $pageId],
                 'levels' => $levels,
                 'as' => 'subpages',
+                'excludeUidList' => $excludeUidList,
             ],
             []
         )['subpages'] ?? [];
