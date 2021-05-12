@@ -24,7 +24,7 @@ class LazyLoadingRequest
      * @returns {*}
      */
     loadProducts(demand) {
-        return axios.post(
+        let result = axios.post(
             this.listUrl,
             objectToFormData({
                 tx_pxaproductmanager_lazyloading: {
@@ -37,6 +37,9 @@ class LazyLoadingRequest
                 }
             }) // Extbase doesn't understand json
         )
+        var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
+        window.dispatchEvent(evt);
+        return result;
     }
 
     /**

@@ -173,6 +173,9 @@
                         EventHandler.emit('filterOptionsUpdate', data.options);
                         EventHandler.emit('totalCountUpdated', data.countAll);
 
+                        var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
+                        window.dispatchEvent(evt);
+
                     })
                     .catch(error => console.error('Error while request filter options:', error));
             },
@@ -195,6 +198,8 @@
                         this.nextQueueLoading = false;
                     })
                     .catch(error => console.error('Error while request products:', error));
+                    var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
+                    window.dispatchEvent(evt);
             },
 
             /**
