@@ -166,6 +166,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           tools: composer:v2
           extensions: mysqli
+          coverage: none
       - name: "Show Composer version"
         run: composer --version
       -
