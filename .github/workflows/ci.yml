@@ -153,7 +153,7 @@ jobs:
           - ^10.4
   functional-tests:
     name: "Functional tests"
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: php-lint
     steps:
       -
@@ -199,7 +199,8 @@ jobs:
           composer show
       -
         name: "Start MySQL"
-        run: "sudo /etc/init.d/mysql start"
+        run: "sudo systemctl start mysql.service"
+
       -
         name: "Run functional tests"
         run: |
