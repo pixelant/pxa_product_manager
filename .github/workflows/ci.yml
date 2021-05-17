@@ -165,7 +165,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           tools: composer:v2
-          extensions: mysqli
+          extensions: sqlite3
           coverage: none
       - name: "Show Composer version"
         run: composer --version
@@ -204,10 +204,7 @@ jobs:
       -
         name: "Run functional tests"
         run: |
-          export typo3DatabaseName="typo3";
-          export typo3DatabaseHost="127.0.0.1";
-          export typo3DatabaseUsername="root";
-          export typo3DatabasePassword="root";
+          export typo3DatabaseDriver="pdo_sqlite";
           composer ci:tests:functional
     strategy:
       matrix:
