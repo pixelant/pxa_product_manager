@@ -178,7 +178,7 @@ class FixDuplicateAttributeValuesCommand extends Command
             ->having('attribute_count > 1')
             ->orHaving('attribute_count != inheritance_count')
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchAll();
 
         return $records;
     }
@@ -273,7 +273,7 @@ class FixDuplicateAttributeValuesCommand extends Command
             )
             ->orderBy('product_attributevalue.tstamp', 'DESC')
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchAll();
 
         return $records;
     }

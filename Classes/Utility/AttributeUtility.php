@@ -61,7 +61,7 @@ class AttributeUtility
             ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
             ->from(AttributeRepository::TABLE_NAME)
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchAll();
 
         if (is_array($row)) {
             return $row;
@@ -201,7 +201,7 @@ class AttributeUtility
                 $queryBuilder->expr()->eq('attribute', $queryBuilder->createNamedParameter($attributeId))
             )
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchAll();
 
         if (is_array($row)) {
             return $row;

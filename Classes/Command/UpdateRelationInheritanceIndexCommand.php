@@ -180,7 +180,7 @@ class UpdateRelationInheritanceIndexCommand extends Command
                 'tpdmaparent.uid'
             )
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchAll();
 
         return $records;
     }
