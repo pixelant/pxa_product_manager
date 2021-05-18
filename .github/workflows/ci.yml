@@ -198,10 +198,6 @@ jobs:
           composer update --no-ansi --no-interaction --no-progress
           composer show
       -
-        name: "Start MySQL"
-        run: "sudo systemctl start mysql.service"
-
-      -
         name: "Run functional tests"
         run: |
           export typo3DatabaseDriver="pdo_sqlite";
