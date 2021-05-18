@@ -37,8 +37,6 @@ class LazyLoadingRequest
                 }
             }) // Extbase doesn't understand json
         )
-        var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
-        window.dispatchEvent(evt);
         return result;
     }
 

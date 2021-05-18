@@ -157,6 +157,9 @@
 
                         this.updateAvailableOptions(availableOptionsRequest);
                         EventHandler.emit('currentCountUpdated', this.countCurrent);
+                    }).then(function(){
+                        var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
+                        window.dispatchEvent(evt);
                     })
                     .catch(error => console.error('Error while request products:', error));
             },
@@ -172,10 +175,6 @@
 
                         EventHandler.emit('filterOptionsUpdate', data.options);
                         EventHandler.emit('totalCountUpdated', data.countAll);
-
-                        var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
-                        window.dispatchEvent(evt);
-
                     })
                     .catch(error => console.error('Error while request filter options:', error));
             },
@@ -196,10 +195,12 @@
 
                         this.updateQueryString();
                         this.nextQueueLoading = false;
+                    }).then(function(){
+                        var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
+                        window.dispatchEvent(evt);
                     })
                     .catch(error => console.error('Error while request products:', error));
-                    var evt = new CustomEvent("ProductsLoaded", {detail: "Any Object Here"});
-                    window.dispatchEvent(evt);
+
             },
 
             /**
