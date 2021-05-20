@@ -9,6 +9,7 @@ use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Model\DTO\CategoryDemand;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\DTO\ProductDemand;
+use Pixelant\PxaProductManager\Event\Controller\ExcludePagesFromMenuEvent;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -271,6 +272,12 @@ abstract class AbstractController extends ActionController
             \TYPO3\CMS\Frontend\DataProcessing\MenuProcessor::class
         );
 
+        $excludeUidList = $this->settings['listView']['excludeUidList'] ?? '';
+
+        $excludePagesFromMenuEvent = GeneralUtility::makeInstance(ExcludePagesFromMenuEvent::class, $excludeUidList);
+        $event = $this->eventDispatcher->dispatch($excludePagesFromMenuEvent);
+        $excludeUidList = $event->getExcludeUidList();
+
         return $menuDirectoryProcessor->process(
             $this->configurationManager->getContentObject(),
             [],
@@ -279,6 +286,7 @@ abstract class AbstractController extends ActionController
                 'special.' => ['value' => $pageId],
                 'levels' => $levels,
                 'as' => 'subpages',
+                'excludeUidList' => $excludeUidList,
             ],
             []
         )['subpages'] ?? [];
