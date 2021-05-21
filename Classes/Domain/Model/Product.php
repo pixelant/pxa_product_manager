@@ -834,6 +834,35 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Returns an AttributeValue of a specific $attribute type or null.
+     *
+     * @param Attribute $attribute
+     * @return AttributeValue|null
+     */
+    public function getAttributeValueForAttribute(Attribute $attribute): ?AttributeValue
+    {
+        /** @var AttributeValue $attributeValue */
+        foreach ($this->getAttributesValues() as $attributeValue) {
+            if ($attributeValue->getAttribute()->getUid() === $attribute->getUid()) {
+                return $attributeValue;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns true if this product has an AttributeValue of the $attribute type.
+     *
+     * @param Attribute $attribute
+     * @return bool
+     */
+    public function hasAttributeValueForAttribute(Attribute $attribute): bool
+    {
+        return $this->getAttributeValueForAttribute($attribute) !== null;
+    }
+
+    /**
      * Will return all attributes sets of all categories rootline.
      * Init attribute values at same time.
      *
