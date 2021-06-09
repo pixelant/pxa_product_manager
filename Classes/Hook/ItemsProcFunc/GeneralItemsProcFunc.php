@@ -34,7 +34,6 @@ class GeneralItemsProcFunc
         );
 
         $excludeFields = [
-            't3ver_label',
             $GLOBALS['TCA'][$tableName]['ctrl']['languageField'],
             $GLOBALS['TCA'][$tableName]['ctrl']['transOrigPointerField'],
             $GLOBALS['TCA'][$tableName]['ctrl']['type'],
