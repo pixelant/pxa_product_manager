@@ -64,31 +64,20 @@ return (function () {
             ],
             'l10n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
-                'exclude' => true,
                 'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
                 'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'items' => [
-                        ['', 0],
-                    ],
-                    'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                    'foreign_table_where' => 'AND tx_pxaproductmanager_domain_model_product.pid=###CURRENT_PID###' .
-                        ' AND tx_pxaproductmanager_domain_model_product.sys_language_uid IN (-1,0)',
+                    'type' => 'group',
+                    'internal_type' => 'db',
+                    'allowed' => 'tx_pxaproductmanager_domain_model_product',
+                    'size' => 1,
+                    'maxitems' => 1,
+                    'minitems' => 0,
                     'default' => 0,
                 ],
             ],
             'l10n_diffsource' => [
                 'config' => [
                     'type' => 'passthrough',
-                ],
-            ],
-            't3ver_label' => [
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.versionLabel',
-                'config' => [
-                    'type' => 'input',
-                    'size' => 30,
-                    'max' => 255,
                 ],
             ],
             'hidden' => [
