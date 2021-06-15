@@ -26,7 +26,7 @@ namespace Pixelant\PxaProductManager\Backend\Tree;
  */
 
 use TYPO3\CMS\Backend\Tree\View\ElementBrowserPageTreeView;
-use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 /**
  * Class BrowserTreeView.
