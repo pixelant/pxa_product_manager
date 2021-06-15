@@ -543,13 +543,19 @@ return (function () {
             'crdate' => [
                 'label' => 'crdate',
                 'config' => [
-                    'type' => 'passthrough',
+                    'type' => 'input',
+                    'renderType' => 'inputDateTime',
+                    'eval' => 'datetime,int',
+                    'readOnly' => true,
                 ],
             ],
             'tstamp' => [
                 'label' => 'tstamp',
                 'config' => [
-                    'type' => 'passthrough',
+                    'type' => 'input',
+                    'renderType' => 'inputDateTime',
+                    'eval' => 'datetime,int',
+                    'readOnly' => true,
                 ],
             ],
             'deleted' => [
