@@ -843,6 +843,11 @@ class Product extends AbstractEntity
     {
         /** @var AttributeValue $attributeValue */
         foreach ($this->getAttributesValues() as $attributeValue) {
+            // In case data structure is wrong.
+            if ($attributeValue->getAttribute() === null) {
+                continue;
+            }
+
             if ($attributeValue->getAttribute()->getUid() === $attribute->getUid()) {
                 return $attributeValue;
             }
