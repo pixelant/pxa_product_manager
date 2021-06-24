@@ -28,7 +28,6 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  */
 
 use DateTime;
-use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
