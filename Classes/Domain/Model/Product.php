@@ -48,11 +48,6 @@ class Product extends AbstractEntity
     use CanCreateCollection;
 
     /**
-     * @var MapperServiceInterface
-     */
-    protected MapperServiceInterface $attributesValuesMapper;
-
-    /**
      * @var UpdaterInterface
      */
     protected UpdaterInterface $attributeValueUpdater;
@@ -230,14 +225,6 @@ class Product extends AbstractEntity
         // "Workaround" to be able to extend e.g. Product Model with a ObjectStorage
         // property using the Extender extension.
         $this->__construct();
-    }
-
-    /**
-     * @param MapperServiceInterface $attributesValuesMapper
-     */
-    public function injectAttributesValuesMapper(MapperServiceInterface $attributesValuesMapper): void
-    {
-        $this->attributesValuesMapper = $attributesValuesMapper;
     }
 
     /**
@@ -799,7 +786,7 @@ class Product extends AbstractEntity
     public function getAttributeValue(): array
     {
         return $this->getCachedProperty('attributeValue', function () {
-            $attributeValues = $this->attributesValuesMapper->map($this);
+            $attributeValues = $this->getAttributesValuesWithValidAttributes();
 
             $keys = array_map(
                 fn (AttributeValue $attributeValue) => $attributeValue->getAttribute()->getIdentifier(),
@@ -1067,7 +1054,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return all attributes sets from choosen productType.
+     * Return all attributes sets from chosen productType.
      * It fetch every attribute set of every category from parents tree
      * + product own attributes sets.
      *
