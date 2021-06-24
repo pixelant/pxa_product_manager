@@ -51,7 +51,6 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attribute
     type                      int(11)              DEFAULT '0' NOT NULL,
     required                  smallint(5) unsigned DEFAULT '0' NOT NULL,
     show_in_attribute_listing smallint(5) unsigned DEFAULT '0' NOT NULL,
-    show_in_compare           smallint(5) unsigned DEFAULT '0' NOT NULL,
     identifier                varchar(255)         DEFAULT ''  NOT NULL,
     default_value             varchar(255)         DEFAULT ''  NOT NULL,
     options                   int(11) unsigned     DEFAULT '0' NOT NULL,

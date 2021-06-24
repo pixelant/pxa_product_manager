@@ -41,7 +41,7 @@ return (function () {
         'palettes' => [
             'core' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource, --linebreak--, hidden'],
             'common' => ['showitem' => 'name, --linebreak--, label, --linebreak--, type'],
-            'options' => ['showitem' => 'required, show_in_attribute_listing, show_in_compare, --linebreak--, image'],
+            'options' => ['showitem' => 'required, show_in_attribute_listing, --linebreak--, image'],
             'checkbox_values' => ['showitem' => 'label_checked, label_unchecked'],
         ],
         'columns' => [
@@ -217,21 +217,6 @@ return (function () {
             'show_in_attribute_listing' => [
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.show_in_attribute_listing',
-                'config' => [
-                    'type' => 'check',
-                    'renderType' => 'checkboxToggle',
-                    'items' => [
-                        [
-                            0 => '',
-                            1 => '',
-                        ],
-                    ],
-                    'default' => 1,
-                ],
-            ],
-            'show_in_compare' => [
-                'exclude' => false,
-                'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.show_in_compare',
                 'config' => [
                     'type' => 'check',
                     'renderType' => 'checkboxToggle',

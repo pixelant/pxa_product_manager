@@ -71,11 +71,6 @@ class Attribute extends AbstractEntity
     protected bool $showInAttributeListing = false;
 
     /**
-     * @var bool
-     */
-    protected bool $showInCompare = false;
-
-    /**
      * @var string
      */
     protected string $identifier = '';
@@ -244,29 +239,6 @@ class Attribute extends AbstractEntity
     public function setShowInAttributeListing(bool $showInAttributeListing): self
     {
         $this->showInAttributeListing = $showInAttributeListing;
-
-        return $this;
-    }
-
-    /**
-     * Returns if attribute should be included in compare view.
-     *
-     * @return bool
-     */
-    public function getShowInCompare(): bool
-    {
-        return $this->showInCompare;
-    }
-
-    /**
-     * Sets if attribute should be included in compare view.
-     *
-     * @param bool $showInCompare
-     * @return Attribute
-     */
-    public function setShowInCompare(bool $showInCompare): self
-    {
-        $this->showInCompare = $showInCompare;
 
         return $this;
     }
