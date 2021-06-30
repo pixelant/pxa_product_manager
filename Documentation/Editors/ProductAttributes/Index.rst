@@ -62,13 +62,6 @@ This is a short explanation of the "non standard" TYPO3 fields.
 .. container:: table-row
 
    Field
-        Show In Compare
-   Description
-        TBD, will probably be included from a separat addon module.
-
-.. container:: table-row
-
-   Field
         Image
    Description
         Option to add a image or a svg to be included in attribute listings in product FE single view.
