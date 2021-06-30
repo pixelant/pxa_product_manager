@@ -31,15 +31,15 @@ return (function () {
                 'showitem' => '
                     name, label, layout, attributes, product_types,
                     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, --palette--;;lang,
-                    --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden'
+                    --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden',
             ],
         ],
         'palettes' => [
             'lang' => [
-                'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource'
+                'showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource',
             ],
             '1' => [
-                'showitem' => ''
+                'showitem' => '',
             ],
         ],
         'columns' => [
