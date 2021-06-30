@@ -182,9 +182,6 @@
 			<trans-unit id="tx_pxaproductmanager_domain_model_attribute.show_in_attribute_listing">
 				<source>Show In Attribute Listing</source>
 			</trans-unit>
-			<trans-unit id="tx_pxaproductmanager_domain_model_attribute.show_in_compare">
-				<source>Show In Compare</source>
-			</trans-unit>
 			<trans-unit id="tx_pxaproductmanager_domain_model_attribute.identifier">
 				<source>Identifier</source>
 			</trans-unit>
