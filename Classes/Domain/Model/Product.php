@@ -942,10 +942,10 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @param string $productType
+     * @param ProductType $productType
      * @return Product
      */
-    public function setProductType(string $productType): self
+    public function setProductType(ProductType $productType): self
     {
         $this->productType = $productType;
 

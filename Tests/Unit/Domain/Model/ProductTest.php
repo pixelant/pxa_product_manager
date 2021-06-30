@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Model\AttributeSet;
@@ -13,6 +12,7 @@ use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Category;
 use Pixelant\PxaProductManager\Domain\Model\Image;
 use Pixelant\PxaProductManager\Domain\Model\Product;
+use Pixelant\PxaProductManager\Domain\Model\ProductType;
 use Pixelant\PxaProductManager\Tests\Utility\TestsUtility;
 
 class ProductTest extends UnitTestCase
@@ -27,34 +27,6 @@ class ProductTest extends UnitTestCase
         parent::setUp();
 
         $this->subject = new Product();
-    }
-
-    /**
-     * @test
-     */
-    public function getAttributeValueWillMapValues(): void
-    {
-        $am = $this->prophesize(MapperService::class);
-        $am->map($this->subject)->shouldBeCalled();
-
-        $this->subject->injectAttributesValuesMapper($am->reveal());
-
-        $this->subject->getAttributeValue();
-    }
-
-    /**
-     * @test
-     */
-    public function getAttributeValueSetCacheValues(): void
-    {
-        $am = $this->prophesize(MapperService::class);
-        $am->map($this->subject)->shouldBeCalledOnce();
-
-        $this->subject->injectAttributesValuesMapper($am->reveal());
-
-        $this->subject->getAttributeValue();
-        $this->subject->getAttributeValue();
-        $this->subject->getAttributeValue();
     }
 
     /**
@@ -229,51 +201,49 @@ class ProductTest extends UnitTestCase
      */
     public function getListingAttributesSetsReturnAttributesSetsWithThatHaveAttributesThatAreVisibleInListing(): void
     {
-        $attr1 = TestsUtility::createEntity(
-            Attribute::class,
-            [
-                'uid' => 1,
-                'type' => 1,
-                'showInAttributeListing' => false,
-            ]
-        );
-        $attr2 = TestsUtility::createEntity(
-            Attribute::class,
-            [
-                'uid' => 2,
-                'type' => 1,
-                'showInAttributeListing' => false,
-            ]
-        );
-        $attr3 = TestsUtility::createEntity(
-            Attribute::class,
-            [
-                'uid' => 3,
-                'type' => 1,
-                'showInAttributeListing' => true,
-            ]
-        );
+        $testStringValue = 'SomeString';
+        /** @var Product $product */
+        $product = TestsUtility::createEntity(Product::class, 2000);
 
-        $attrSet1 = TestsUtility::createEntity(
-            AttributeSet::class,
-            ['uid' => 10, 'attributes' => TestsUtility::createObjectStorage($attr1)]
-        );
-        $attrSet2 = TestsUtility::createEntity(
-            AttributeSet::class,
-            ['uid' => 20, 'attributes' => TestsUtility::createObjectStorage($attr2)]
-        );
-        $attrSet3 = TestsUtility::createEntity(
-            AttributeSet::class,
-            ['uid' => 30, 'attributes' => TestsUtility::createObjectStorage($attr3)]
-        );
+        /** @var Attribute $attribute1 */
+        $attribute1 = TestsUtility::createEntity(Attribute::class, 1);
+        $attribute1->setType(Attribute::ATTRIBUTE_TYPE_INPUT);
+        $attribute1->setShowInAttributeListing(false);
 
-        $attributeProperties = [
-            'uid' => 100,
-            'attribute' => $attr3,
-            'value' => 'testvalue',
-            'stringValue' => 'testvalue',
-        ];
-        $attributeValue = TestsUtility::createEntity(AttributeValue::class, $attributeProperties);
+        /** @var Attribute $attribute2 */
+        $attribute2 = TestsUtility::createEntity(Attribute::class, 2);
+        $attribute2->setType(Attribute::ATTRIBUTE_TYPE_INPUT);
+        $attribute2->setShowInAttributeListing(false);
+
+        /** @var Attribute $attribute3 */
+        $attribute3 = TestsUtility::createEntity(Attribute::class, 3);
+        $attribute3->setType(Attribute::ATTRIBUTE_TYPE_INPUT);
+        $attribute3->setShowInAttributeListing(true);
+
+        /** @var AttributeSet $attributeSet1 */
+        $attributeSet1 = TestsUtility::createEntity(AttributeSet::class, 10);
+        $attributeSet1->setAttributes(TestsUtility::createObjectStorage($attribute1));
+
+        /** @var AttributeSet $attributeSet2 */
+        $attributeSet2 = TestsUtility::createEntity(AttributeSet::class, 20);
+        $attributeSet2->setAttributes(TestsUtility::createObjectStorage($attribute2));
+
+        /** @var AttributeSet $attributeSet3 */
+        $attributeSet3 = TestsUtility::createEntity(AttributeSet::class, 30);
+        $attributeSet3->setAttributes(TestsUtility::createObjectStorage($attribute3));
+
+        /** @var ProductType $productType */
+        $productType = TestsUtility::createEntity(ProductType::class, 1000);
+        $productType->setAttributeSets(
+            TestsUtility::createObjectStorage($attributeSet1, $attributeSet2, $attributeSet3)
+        );
+        $product->setProductType($productType);
+
+        /** @var AttributeValue $attributeValue */
+        $attributeValue = TestsUtility::createEntity(AttributeValue::class, 100);
+        $attributeValue->setValue($testStringValue);
+        $attributeValue->setProduct($product);
+        $attributeValue->setAttribute($attribute3);
 
         $subject = $this->createPartialMock(
             Product::class,
@@ -284,15 +254,15 @@ class ProductTest extends UnitTestCase
         );
         $subject->expects(self::once())->method('_getAllAttributesSets')->willReturn(
             [
-                10 => $attrSet1,
-                20 => $attrSet2,
-                30 => $attrSet3,
+                10 => $attributeSet1,
+                20 => $attributeSet2,
+                30 => $attributeSet3,
             ]
         );
 
         $subject->method('getAttributeValue')->willReturn([3 => $attributeValue]);
 
-        self::assertEquals([0 => $attrSet3], $subject->getListingAttributeSets());
+        self::assertEquals([0 => $attributeSet3], $subject->getListingAttributeSets());
     }
 
     /**
