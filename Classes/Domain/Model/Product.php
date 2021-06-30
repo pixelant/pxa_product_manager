@@ -28,7 +28,6 @@ namespace Pixelant\PxaProductManager\Domain\Model;
  */
 
 use DateTime;
-use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
@@ -46,11 +45,6 @@ class Product extends AbstractEntity
 {
     use CanCacheProperties;
     use CanCreateCollection;
-
-    /**
-     * @var MapperServiceInterface
-     */
-    protected MapperServiceInterface $attributesValuesMapper;
 
     /**
      * @var UpdaterInterface
@@ -230,14 +224,6 @@ class Product extends AbstractEntity
         // "Workaround" to be able to extend e.g. Product Model with a ObjectStorage
         // property using the Extender extension.
         $this->__construct();
-    }
-
-    /**
-     * @param MapperServiceInterface $attributesValuesMapper
-     */
-    public function injectAttributesValuesMapper(MapperServiceInterface $attributesValuesMapper): void
-    {
-        $this->attributesValuesMapper = $attributesValuesMapper;
     }
 
     /**
@@ -799,7 +785,7 @@ class Product extends AbstractEntity
     public function getAttributeValue(): array
     {
         return $this->getCachedProperty('attributeValue', function () {
-            $attributeValues = $this->attributesValuesMapper->map($this);
+            $attributeValues = $this->getAttributesValuesWithValidAttributes();
 
             $keys = array_map(
                 fn (AttributeValue $attributeValue) => $attributeValue->getAttribute()->getIdentifier(),
@@ -831,6 +817,40 @@ class Product extends AbstractEntity
         $this->attributesValues = $attributesValues;
 
         return $this;
+    }
+
+    /**
+     * Returns an AttributeValue of a specific $attribute type or null.
+     *
+     * @param Attribute $attribute
+     * @return AttributeValue|null
+     */
+    public function getAttributeValueForAttribute(Attribute $attribute): ?AttributeValue
+    {
+        /** @var AttributeValue $attributeValue */
+        foreach ($this->getAttributesValues() as $attributeValue) {
+            // In case data structure is wrong.
+            if ($attributeValue->getAttribute() === null) {
+                continue;
+            }
+
+            if ($attributeValue->getAttribute()->getUid() === $attribute->getUid()) {
+                return $attributeValue;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns true if this product has an AttributeValue of the $attribute type.
+     *
+     * @param Attribute $attribute
+     * @return bool
+     */
+    public function hasAttributeValueForAttribute(Attribute $attribute): bool
+    {
+        return $this->getAttributeValueForAttribute($attribute) !== null;
     }
 
     /**
@@ -922,10 +942,10 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @param string $productType
+     * @param ProductType $productType
      * @return Product
      */
-    public function setProductType(string $productType): self
+    public function setProductType(ProductType $productType): self
     {
         $this->productType = $productType;
 
@@ -1033,7 +1053,7 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Return all attributes sets from choosen productType.
+     * Return all attributes sets from chosen productType.
      * It fetch every attribute set of every category from parents tree
      * + product own attributes sets.
      *

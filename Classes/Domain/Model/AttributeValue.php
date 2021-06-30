@@ -2,6 +2,7 @@
 
 namespace Pixelant\PxaProductManager\Domain\Model;
 
+use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperFactory;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -54,6 +55,13 @@ class AttributeValue extends AbstractEntity
      * @var array
      */
     protected array $arrayValue = [];
+
+    /**
+     * True if the value mapper has done its job.
+     *
+     * @var bool
+     */
+    protected bool $mapped = false;
 
     /**
      * @var \Pixelant\PxaProductManager\Domain\Model\Product|null
@@ -133,10 +141,10 @@ class AttributeValue extends AbstractEntity
             $this->getAttribute()->isFalType() ||
             $this->getAttribute()->isSelectBoxType()
         ) {
-            return $this->arrayValue;
+            return $this->getArrayValue();
         }
 
-        return $this->stringValue;
+        return $this->getStringValue();
     }
 
     /**
@@ -146,6 +154,8 @@ class AttributeValue extends AbstractEntity
      */
     public function getStringValue(): string
     {
+        $this->map();
+
         return $this->stringValue;
     }
 
@@ -169,6 +179,8 @@ class AttributeValue extends AbstractEntity
      */
     public function getArrayValue(): array
     {
+        $this->map();
+
         return $this->arrayValue;
     }
 
@@ -181,7 +193,7 @@ class AttributeValue extends AbstractEntity
     public function getTextToArray(): array
     {
         if ($this->getAttribute()->getType() === Attribute::ATTRIBUTE_TYPE_TEXT) {
-            return GeneralUtility::trimExplode(LF, $this->stringValue, true);
+            return GeneralUtility::trimExplode(LF, $this->getStringValue(), true);
         }
 
         return [];
@@ -207,6 +219,8 @@ class AttributeValue extends AbstractEntity
      */
     public function getHasNonEmptyValue()
     {
+        $this->map();
+
         if ($this->getAttribute()->isFalType()) {
             return !empty($this->arrayValue);
         }
@@ -220,5 +234,29 @@ class AttributeValue extends AbstractEntity
         }
 
         return strlen($this->stringValue) > 0;
+    }
+
+    /**
+     * Returns true if the ValueMapper has done its job.
+     *
+     * @return bool
+     */
+    public function isMapped(): bool
+    {
+        return $this->mapped;
+    }
+
+    /**
+     * Map values to the object.
+     */
+    public function map(): void
+    {
+        if ($this->isMapped()) {
+            return;
+        }
+
+        GeneralUtility::makeInstance(MapperFactory::class)
+            ->create($this)
+            ->map($this->getProduct(), $this);
     }
 }
