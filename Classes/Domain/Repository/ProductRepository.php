@@ -28,6 +28,7 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use Pixelant\PxaProductManager\Domain\Model\DTO\DemandInterface;
 use Pixelant\PxaProductManager\Domain\Model\Filter;
 use Pixelant\PxaProductManager\Event\Repository\GetProductQueryBuilderEvent;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -60,6 +61,7 @@ class ProductRepository extends AbstractDemandRepository
      */
     public function createDemandQueryBuilder(DemandInterface $demand): QueryBuilder
     {
+        /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::TABLE_NAME);
 
@@ -90,6 +92,8 @@ class ProductRepository extends AbstractDemandRepository
         $this->addLimit($queryBuilder, $demand);
 
         $this->addOffset($queryBuilder, $demand);
+
+        $this->addLanguageRestriction($queryBuilder);
 
         $this->demandService->getSortBy([
             'tx_pxaproductmanager_domain_model_product' => 'tx_pxaproductmanager_domain_model_product',
@@ -395,5 +399,22 @@ class ProductRepository extends AbstractDemandRepository
         }
 
         return $selectFields;
+    }
+
+    /**
+     * Add restriction based on current site language.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function addLanguageRestriction(QueryBuilder $queryBuilder)
+    {
+        $languageId = GeneralUtility::makeInstance(Context::class)->getAspect('language')->getId();
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->in(
+                $GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['languageField'],
+                [$languageId, -1]
+            )
+        );
     }
 }
