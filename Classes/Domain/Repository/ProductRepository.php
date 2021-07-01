@@ -406,7 +406,7 @@ class ProductRepository extends AbstractDemandRepository
      *
      * @param QueryBuilder $queryBuilder
      */
-    protected function addLanguageRestriction(QueryBuilder $queryBuilder)
+    protected function addLanguageRestriction(QueryBuilder $queryBuilder): void
     {
         $languageId = GeneralUtility::makeInstance(Context::class)->getAspect('language')->getId();
 
