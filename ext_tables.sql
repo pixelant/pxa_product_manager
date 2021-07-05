@@ -26,7 +26,10 @@ CREATE TABLE tx_pxaproductmanager_domain_model_product
     keywords          text,
     meta_description  text,
     slug              varchar(2048),
-    singleview_page   varchar(2048)
+    singleview_page   varchar(2048),
+
+    KEY parent(parent),
+    KEY language_identifier (l10n_parent,sys_language_uid),
 );
 
 #
@@ -80,7 +83,9 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attributevalue
 CREATE TABLE tx_pxaproductmanager_domain_model_option
 (
     attribute int(11) unsigned DEFAULT '0' NOT NULL,
-    value     varchar(255)     DEFAULT ''  NOT NULL
+    value     varchar(255)     DEFAULT ''  NOT NULL,
+
+    KEY attribute(attribute),
 );
 
 #
@@ -92,7 +97,9 @@ CREATE TABLE tx_pxaproductmanager_domain_model_link
 
     name        varchar(255)     DEFAULT ''  NOT NULL,
     link        varchar(255)     DEFAULT ''  NOT NULL,
-    description varchar(255)     DEFAULT ''  NOT NULL
+    description varchar(255)     DEFAULT ''  NOT NULL,
+
+    KEY product(product),
 );
 
 #
