@@ -209,7 +209,7 @@ class ProductInheritanceProcessDatamap
         }
 
         // Make sure productRow have product_type and parent.
-        $this->addProductTypeAndParentToRecordIfNeeded($identifier, $productRow);
+        $this->addProductTypeAndParentAndLanguageToRecordIfNeeded($identifier, $productRow);
 
         // The product type will always be an integer. It is never new.
         $productTypeId = (int)array_pop(explode('_', (string)$productRow['product_type'] ?? ''));
@@ -234,7 +234,10 @@ class ProductInheritanceProcessDatamap
         // Datamap keys are string, so we need this value as string.
         $parentProductId = (string)array_pop(explode('_', (string)$productRow['parent'] ?? ''));
 
-        $children = $this->fetchChildRecordIdentifiers($identifier);
+        $children = $this->fetchChildRecordIdentifiers(
+            $identifier,
+            $productRow[$GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField']]
+        );
         $recordIsParent = count($children) > 0;
         $recordIsChild = !empty($parentProductId);
 
@@ -645,19 +648,29 @@ class ProductInheritanceProcessDatamap
      * @param array $record
      * @return void
      */
-    protected function addProductTypeAndParentToRecordIfNeeded($identifier, array &$record): void
+    protected function addProductTypeAndParentAndLanguageToRecordIfNeeded($identifier, array &$record): void
     {
+        $languageField = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
+
         // If parent isn't set on update, fetch from record, not changed?
         if (MathUtility::canBeInterpretedAsInteger($identifier)) {
-            if (!isset($record['parent']) || empty($record['product_type'])) {
+            if (
+                !isset($record['parent'])
+                || empty($record['product_type'])
+                || !isset($record[$languageField])
+            ) {
                 $productRow = BackendUtility::getRecord(
                     ProductRepository::TABLE_NAME,
                     $identifier,
-                    'parent, product_type'
+                    'parent, product_type, ' . $languageField
                 );
 
                 if (isset($productRow['parent']) && !isset($record['parent'])) {
                     $record['parent'] = $productRow['parent'];
+                }
+
+                if (!isset($record[$languageField])) {
+                    $record[$languageField] = $productRow[$languageField];
                 }
             }
         }
@@ -674,6 +687,10 @@ class ProductInheritanceProcessDatamap
         if (isset($productRow['product_type']) && (int)$productRow['product_type'] !== (int)($record['product_type'])) {
             $record['product_type'] = (string)$productRow['product_type'];
         }
+
+        if (!isset($record[$languageField])) {
+            $record[$languageField] = 0;
+        }
     }
 
     /**
@@ -682,7 +699,7 @@ class ProductInheritanceProcessDatamap
      * @param $identifier
      * @return array
      */
-    protected function fetchChildRecordIdentifiers($identifier): array
+    protected function fetchChildRecordIdentifiers($identifier, int $languageId): array
     {
         // New records can't have any child records yet.
         if (MathUtility::canBeInterpretedAsInteger($identifier)) {
@@ -699,10 +716,29 @@ class ProductInheritanceProcessDatamap
             return $queryBuilder
                 ->select('uid')
                 ->from(ProductRepository::TABLE_NAME)
-                ->where($queryBuilder->expr()->eq(
-                    'parent',
-                    $queryBuilder->createNamedParameter($identifier)
+                ->where($queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->andX(
+                        $queryBuilder->expr()->eq(
+                            'parent',
+                            $queryBuilder->createNamedParameter($identifier)
+                        ),
+                        $queryBuilder->expr()->in(
+                            $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'],
+                            [0, -1]
+                        )
+                    ),
+                    $queryBuilder->expr()->andX(
+                        $queryBuilder->expr()->eq(
+                            $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['transOrigPointerField'],
+                            $queryBuilder->createNamedParameter($identifier)
+                        ),
+                        $queryBuilder->expr()->eq(
+                            $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'],
+                            $queryBuilder->createNamedParameter($languageId)
+                        )
+                    )
                 ))
+                ->where()
                 ->execute()
                 ->fetchAll(FetchMode::COLUMN, 0);
         }
@@ -727,7 +763,7 @@ class ProductInheritanceProcessDatamap
 
         // if row is empty initialize simple product row
         if (count($row) === 0) {
-            $this->addProductTypeAndParentToRecordIfNeeded($identifier, $row);
+            $this->addProductTypeAndParentAndLanguageToRecordIfNeeded($identifier, $row);
         }
 
         foreach ($fields as $field) {
