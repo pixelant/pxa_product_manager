@@ -124,7 +124,6 @@ return (function () {
                     ],
                 ],
             ],
-
             'name' => [
                 'exclude' => false,
                 'label' => $ll . 'tx_pxaproductmanager_domain_model_attribute.name',
@@ -197,6 +196,9 @@ return (function () {
                     'maxitems' => 1,
                     'eval' => 'required',
                     'disableNoMatchingValueElement' => true,
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'required' => [
@@ -212,6 +214,9 @@ return (function () {
                         ],
                     ],
                     'default' => 0,
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'show_in_attribute_listing' => [
@@ -227,6 +232,9 @@ return (function () {
                         ],
                     ],
                     'default' => 1,
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'identifier' => [
@@ -242,6 +250,9 @@ return (function () {
                         'attributeIdentifierControl' => [
                             'renderType' => 'attributeIdentifierControl',
                         ],
+                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
                     ],
                 ],
             ],
@@ -307,6 +318,9 @@ return (function () {
                         'showPossibleLocalizationRecords' => true,
                         'showAllLocalizationLink' => true,
                         'useSortable' => true,
+                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
                     ],
                 ],
             ],

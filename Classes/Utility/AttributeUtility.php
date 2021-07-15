@@ -211,6 +211,29 @@ class AttributeUtility
     }
 
     /**
+     * Remove attribute value record.
+     *
+     * @param int $uid
+     * @return void
+     */
+    public static function deleteAttributeValueRecord(int $uid): void
+    {
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+
+        $queryBuilder
+            ->delete(AttributeValueRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid',
+                    $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
+                )
+            )
+            ->execute();
+    }
+
+    /**
      * @param string $table
      * @return QueryBuilder
      */

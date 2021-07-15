@@ -8,6 +8,7 @@ use Doctrine\DBAL\FetchMode;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Domain\Repository\RelationInheritanceIndexRepository;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
+use Pixelant\PxaProductManager\Utility\RelationInheritanceIndexUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
@@ -64,14 +65,16 @@ class ProductInheritanceProcessDatamap
     protected array $inheritedAttributeValuesForProduct = [];
 
     /**
-     * A counter to keep track of how many products were given inherited data.
+     * A array to keep track of what products were given inherited data.
+     *
+     * Used as counter and to check for invalid relations if parent product have changed.
      *
      * Good for debugging and as a respectful gesture to the user who waits for 100K child products to be updated
      * because they corrected a typo.
      *
      * @var int
      */
-    protected int $productsWithInheritedDataCount = 0;
+    protected array $productsWithInheritedData = [];
 
     /**
      * APlaceholders (NEW01234567890abcdef) that will be put into the relation index when we have the actual UID.
@@ -124,7 +127,7 @@ class ProductInheritanceProcessDatamap
                 $this->processProductRecordOverlays($identifier);
             }
 
-            if ($this->productsWithInheritedDataCount > 0) {
+            if (count($this->productsWithInheritedData) > 0) {
                 $message = GeneralUtility::makeInstance(
                     FlashMessage::class,
                     sprintf(
@@ -132,7 +135,8 @@ class ProductInheritanceProcessDatamap
                             'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf'
                             . ':formengine.productinheritance.updatedcount'
                         ),
-                        $this->productsWithInheritedDataCount
+                        count($this->productsWithInheritedData),
+                        implode(',', $this->productsWithInheritedData)
                     ),
                     '',
                     FlashMessage::INFO,
@@ -185,6 +189,13 @@ class ProductInheritanceProcessDatamap
                     (int)$value['child_parent_id'],
                     $value['child_parent_table'],
                 );
+            }
+        }
+
+        // Make sure relation inheritance index and attribute values are up to date for affected child products.
+        if (count($this->productsWithInheritedData) > 0) {
+            foreach ($this->productsWithInheritedData as $childProductUid) {
+                RelationInheritanceIndexUtility::updateRelationsByChildParentId($childProductUid);
             }
         }
     }
@@ -286,7 +297,7 @@ class ProductInheritanceProcessDatamap
             }
 
             if (count($parentProductOverlayData) > 0) {
-                $this->productsWithInheritedDataCount++;
+                $this->productsWithInheritedData[] = $identifier;
             }
 
             $this->productDatamap[$identifier] = $productRowWithParentOverlay;
