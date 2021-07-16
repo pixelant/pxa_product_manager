@@ -118,6 +118,9 @@ return (function () {
                             'disabled' => false,
                         ],
                     ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'template_layout' => [
@@ -126,6 +129,9 @@ return (function () {
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'inherit_fields' => [
@@ -139,6 +145,9 @@ return (function () {
                     ],
                     'size' => 10,
                     'autoSizeMax' => 30,
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
         ],

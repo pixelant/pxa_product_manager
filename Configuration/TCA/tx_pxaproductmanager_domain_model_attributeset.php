@@ -135,6 +135,9 @@ return (function () {
                             'disabled' => false,
                         ],
                     ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'layout' => [
@@ -147,6 +150,9 @@ return (function () {
                         [$ll . '.layout.default', 'Default'],
                     ],
                     'default' => 'Default',
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'product_types' => [
@@ -171,6 +177,9 @@ return (function () {
                         'addRecord' => [
                             'disabled' => false,
                         ],
+                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
                     ],
                 ],
             ],
