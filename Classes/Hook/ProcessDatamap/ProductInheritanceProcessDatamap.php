@@ -195,7 +195,7 @@ class ProductInheritanceProcessDatamap
         // Make sure relation inheritance index and attribute values are up to date for affected child products.
         if (count($this->productsWithInheritedData) > 0) {
             foreach ($this->productsWithInheritedData as $childProductUid) {
-                RelationInheritanceIndexUtility::updateRelationsByChildParentId($childProductUid);
+                RelationInheritanceIndexUtility::updateRelationsByChildParentId((int)$childProductUid);
             }
         }
     }
