@@ -239,8 +239,7 @@ class ProductRepository extends AbstractDemandRepository
                     $parentQueryBuilder->createNamedParameter($attributeId, \PDO::PARAM_INT)
                 ),
             )
-            ->andWhere($conditions)
-            ->groupBy('tpppm.uid_local');
+            ->andWhere($conditions);
 
         return $subQuery->getSQL();
     }
