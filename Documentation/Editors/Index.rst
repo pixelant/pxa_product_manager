@@ -15,6 +15,7 @@ Editors
   ProductAttributes/Index
   ProductAttributeSets/Index
   ProductTypes/Index
+  ProductInheritance/Index
   CategoryManagement/Index
   ProductManagement/Index
   PluginFilters/Index
