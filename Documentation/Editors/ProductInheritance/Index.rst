@@ -44,8 +44,8 @@ A product with a product selected in the *Parent product* field is a
 
 .. _product-inheritance-inheritance:
 
-Product inheritance
-===================
+Product value inheritance
+=========================
 
 Defining a product type and parent product makes it possible to inherit field
 values from the parent.
@@ -85,6 +85,20 @@ attributes. From left to right,:
    *child* record. This means that it is possible for a parent and child product
    to have different product types. Though useful in some cases, it can lead to
    unexpected behavior.
+
+Recognizing an inherited field
+------------------------------
+
+Inherited fields are marked with the text "Inherited from parent product." They
+are also disabled and cannot be edited.
+
+Non-inherited fields will have the parent value in a blue box below the field.
+
+.. figure:: Images/InheritedFields.png
+
+   In this example the field *Name* is inherited from the parent product. The
+   field *Sku* is not inherited and displayes the parent value ("1234567") in a
+   blue box below the field itself.
 
 How inheritance works
 ---------------------

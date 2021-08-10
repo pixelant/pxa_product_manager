@@ -6,8 +6,9 @@ Developers
 ================
 
 .. toctree::
-  :maxdepth: 2
-  :titlesonly:
+   :maxdepth: 2
+   :titlesonly:
 
-  ModelExtender/Index
-  PhpApi/Index
+   ProductInheritance/Index
+   ModelExtender/Index
+   PhpApi/Index
