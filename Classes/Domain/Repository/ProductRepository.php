@@ -200,23 +200,9 @@ class ProductRepository extends AbstractDemandRepository
                         'tpdmav.value',
                         $parentQueryBuilder->createNamedParameter($value, \PDO::PARAM_INT)
                     ),
-                    $expressionBuilder->like(
+                    $expressionBuilder->inSet(
                         'tpdmav.value',
-                        $parentQueryBuilder->createNamedParameter(
-                            $queryBuilder->escapeLikeWildcards($value) . ',%'
-                        )
-                    ),
-                    $expressionBuilder->like(
-                        'tpdmav.value',
-                        $parentQueryBuilder->createNamedParameter(
-                            '%,' . $queryBuilder->escapeLikeWildcards($value)
-                        )
-                    ),
-                    $expressionBuilder->like(
-                        'tpdmav.value',
-                        $parentQueryBuilder->createNamedParameter(
-                            '%,' . $queryBuilder->escapeLikeWildcards($value) . ',%'
-                        )
+                        $parentQueryBuilder->createNamedParameter($value, \PDO::PARAM_STR)
                     )
                 )
             );
@@ -240,7 +226,7 @@ class ProductRepository extends AbstractDemandRepository
                 ),
             )
             ->andWhere($conditions)
-            ->groupBy('tpppm.uid_local');
+            ->groupBy('tpdmav.product');
 
         return $subQuery->getSQL();
     }
