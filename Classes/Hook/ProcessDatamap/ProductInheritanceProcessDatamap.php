@@ -233,12 +233,6 @@ class ProductInheritanceProcessDatamap
             return;
         }
 
-        // If data doesn't contain any inherited fields (e.g. saved in list mode) and we
-        // aren't processing a child when the parent was saved, we do not need to continue.
-        if (empty(array_intersect(array_keys($productRow), $inheritedFields)) && !$inheritMode) {
-            return;
-        }
-
         $recordIsNew = !MathUtility::canBeInterpretedAsInteger($identifier);
 
         // Relations could be using the formula `[tablename]_[id]`.
@@ -248,6 +242,18 @@ class ProductInheritanceProcessDatamap
         $children = $this->fetchChildRecordIdentifiers($identifier);
         $recordIsParent = count($children) > 0;
         $recordIsChild = !empty($parentProductId);
+
+        // If data doesn't contain any inherited fields (e.g. saved in list mode)
+        // and we aren't processing a child when the parent was saved,
+        // and we aren't processing a new child
+        // we do not need to continue.
+        if (
+            empty(array_intersect(array_keys($productRow), $inheritedFields))
+            && !$inheritMode
+            && !($recordIsNew && $recordIsChild)
+        ) {
+            return;
+        }
 
         $status = '';
         // Current record is a "child".
