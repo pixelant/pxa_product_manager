@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_domain_model_product>
+    <uid>1</uid>
+    <pid>84</pid>
+    <tstamp>1,629,123,302</tstamp>
+    <crdate>1,629,123,170</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>256</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <t3ver_oid>0</t3ver_oid>
+    <t3ver_wsid>0</t3ver_wsid>
+    <t3ver_state>0</t3ver_state>
+    <t3ver_stage>0</t3ver_stage>
+    <t3ver_count>0</t3ver_count>
+    <t3ver_tstamp>0</t3ver_tstamp>
+    <t3ver_move_id>0</t3ver_move_id>
+    <name>Product 1</name>
+    <sku>12345</sku>
+    <price>12,345</price>
+    <tax_rate>25</tax_rate>
+    <teaser>Product 1 teaser</teaser>
+    <description>&lt;p&gt;The description for product 1&lt;/p&gt;</description>
+    <usp>Product 1 usp line 1
+Product 1 usp line 2
+Product 1 usp line 3</usp>
+    <parent>0</parent>
+    <related_products>0</related_products>
+    <sub_products>0</sub_products>
+    <accessories>0</accessories>
+    <images>1</images>
+    <attribute_files>0</attribute_files>
+    <links>0</links>
+    <fal_links>0</fal_links>
+    <assets>0</assets>
+    <attributes_values>4</attributes_values>
+    <product_type>1</product_type>
+    <alternative_title></alternative_title>
+    <keywords></keywords>
+    <meta_description></meta_description>
+    <slug>product-1</slug>
+    <singleview_page>1</singleview_page>
+    <categories>0</categories>
+  </tx_pxaproductmanager_domain_model_product>
+</dataset>

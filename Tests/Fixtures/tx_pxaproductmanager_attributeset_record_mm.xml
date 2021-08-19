@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_attributeset_record_mm>
+    <uid_local>1</uid_local>
+    <uid_foreign>1</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_attribute</tablenames>
+    <fieldname>attributes</fieldname>
+    <sorting>1</sorting>
+    <sorting_foreign>0</sorting_foreign>
+  </tx_pxaproductmanager_attributeset_record_mm>
+  <tx_pxaproductmanager_attributeset_record_mm>
+    <uid_local>1</uid_local>
+    <uid_foreign>2</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_attribute</tablenames>
+    <fieldname>attributes</fieldname>
+    <sorting>2</sorting>
+    <sorting_foreign>0</sorting_foreign>
+  </tx_pxaproductmanager_attributeset_record_mm>
+  <tx_pxaproductmanager_attributeset_record_mm>
+    <uid_local>1</uid_local>
+    <uid_foreign>3</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_attribute</tablenames>
+    <fieldname>attributes</fieldname>
+    <sorting>3</sorting>
+    <sorting_foreign>0</sorting_foreign>
+  </tx_pxaproductmanager_attributeset_record_mm>
+  <tx_pxaproductmanager_attributeset_record_mm>
+    <uid_local>1</uid_local>
+    <uid_foreign>4</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_attribute</tablenames>
+    <fieldname>attributes</fieldname>
+    <sorting>4</sorting>
+    <sorting_foreign>0</sorting_foreign>
+  </tx_pxaproductmanager_attributeset_record_mm>
+  <tx_pxaproductmanager_attributeset_record_mm>
+    <uid_local>1</uid_local>
+    <uid_foreign>1</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_producttype</tablenames>
+    <fieldname>product_type</fieldname>
+    <sorting>0</sorting>
+    <sorting_foreign>1</sorting_foreign>
+  </tx_pxaproductmanager_attributeset_record_mm>
+</dataset>

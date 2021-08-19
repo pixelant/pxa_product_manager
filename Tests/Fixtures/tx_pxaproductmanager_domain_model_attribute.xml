@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_domain_model_attribute>
+    <uid>1</uid>
+    <pid>84</pid>
+    <tstamp>1,629,122,626</tstamp>
+    <crdate>1,629,121,614</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>16</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Attribute 1 Dropdown</name>
+    <label>Attribute 1</label>
+    <type>4</type>
+    <required>0</required>
+    <show_in_attribute_listing>1</show_in_attribute_listing>
+    <identifier>attribute1Dropdown</identifier>
+    <default_value></default_value>
+    <options>5</options>
+    <label_checked></label_checked>
+    <label_unchecked></label_unchecked>
+    <image>0</image>
+  </tx_pxaproductmanager_domain_model_attribute>
+  <tx_pxaproductmanager_domain_model_attribute>
+    <uid>2</uid>
+    <pid>84</pid>
+    <tstamp>1,629,122,629</tstamp>
+    <crdate>1,629,121,992</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>24</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Attribute 2 Dropdown</name>
+    <label>Attribute 2</label>
+    <type>4</type>
+    <required>0</required>
+    <show_in_attribute_listing>1</show_in_attribute_listing>
+    <identifier>attribute2Dropdown</identifier>
+    <default_value></default_value>
+    <options>5</options>
+    <label_checked></label_checked>
+    <label_unchecked></label_unchecked>
+    <image>0</image>
+  </tx_pxaproductmanager_domain_model_attribute>
+  <tx_pxaproductmanager_domain_model_attribute>
+    <uid>3</uid>
+    <pid>84</pid>
+    <tstamp>1,629,122,631</tstamp>
+    <crdate>1,629,122,090</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>28</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Attribute 3 Muitiselect</name>
+    <label>Attribute 3</label>
+    <type>9</type>
+    <required>0</required>
+    <show_in_attribute_listing>1</show_in_attribute_listing>
+    <identifier>attribute3Muitiselect</identifier>
+    <default_value></default_value>
+    <options>5</options>
+    <label_checked></label_checked>
+    <label_unchecked></label_unchecked>
+    <image>0</image>
+  </tx_pxaproductmanager_domain_model_attribute>
+  <tx_pxaproductmanager_domain_model_attribute>
+    <uid>4</uid>
+    <pid>84</pid>
+    <tstamp>1,629,122,490</tstamp>
+    <crdate>1,629,122,470</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>32</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Attribute 4 MultiSelect</name>
+    <label>Attribute 4</label>
+    <type>9</type>
+    <required>0</required>
+    <show_in_attribute_listing>1</show_in_attribute_listing>
+    <identifier>attribute4Multiselect</identifier>
+    <default_value></default_value>
+    <options>5</options>
+    <label_checked></label_checked>
+    <label_unchecked></label_unchecked>
+    <image>0</image>
+  </tx_pxaproductmanager_domain_model_attribute>
+</dataset>

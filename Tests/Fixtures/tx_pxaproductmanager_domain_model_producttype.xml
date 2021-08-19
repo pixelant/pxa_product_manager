@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_domain_model_producttype>
+    <uid>1</uid>
+    <pid>84</pid>
+    <tstamp>1,629,122,680</tstamp>
+    <crdate>1,629,122,652</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Product Type 1</name>
+    <attribute_sets>1</attribute_sets>
+    <inherit_fields>tax_rate,attribute.1,attribute.3</inherit_fields>
+    <template_layout></template_layout>
+  </tx_pxaproductmanager_domain_model_producttype>
+</dataset>
