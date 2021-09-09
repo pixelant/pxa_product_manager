@@ -8,4 +8,28 @@
     <sorting>1</sorting>
     <sorting_foreign>0</sorting_foreign>
   </tx_pxaproductmanager_product_pages_mm>
+  <tx_pxaproductmanager_product_pages_mm>
+    <uid_local>2</uid_local>
+    <uid_foreign>85</uid_foreign>
+    <tablenames>pages</tablenames>
+    <fieldname>doktype</fieldname>
+    <sorting>1</sorting>
+    <sorting_foreign>0</sorting_foreign>
+  </tx_pxaproductmanager_product_pages_mm>
+  <tx_pxaproductmanager_product_pages_mm>
+    <uid_local>3</uid_local>
+    <uid_foreign>85</uid_foreign>
+    <tablenames>pages</tablenames>
+    <fieldname>doktype</fieldname>
+    <sorting>1</sorting>
+    <sorting_foreign>0</sorting_foreign>
+  </tx_pxaproductmanager_product_pages_mm>
+  <tx_pxaproductmanager_product_pages_mm>
+    <uid_local>4</uid_local>
+    <uid_foreign>85</uid_foreign>
+    <tablenames>pages</tablenames>
+    <fieldname>doktype</fieldname>
+    <sorting>1</sorting>
+    <sorting_foreign>0</sorting_foreign>
+  </tx_pxaproductmanager_product_pages_mm>
 </dataset>

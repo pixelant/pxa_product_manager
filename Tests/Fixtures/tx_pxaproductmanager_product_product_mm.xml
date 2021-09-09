@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_product_product_mm>
+    <uid_local>2</uid_local>
+    <uid_foreign>1</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+    <fieldname>related_products</fieldname>
+    <sorting>0</sorting>
+    <sorting_foreign>1</sorting_foreign>
+  </tx_pxaproductmanager_product_product_mm>
+  <tx_pxaproductmanager_product_product_mm>
+    <uid_local>3</uid_local>
+    <uid_foreign>1</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+    <fieldname>related_products</fieldname>
+    <sorting>0</sorting>
+    <sorting_foreign>2</sorting_foreign>
+  </tx_pxaproductmanager_product_product_mm>
+  <tx_pxaproductmanager_product_product_mm>
+    <uid_local>3</uid_local>
+    <uid_foreign>1</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+    <fieldname>accessories</fieldname>
+    <sorting>0</sorting>
+    <sorting_foreign>1</sorting_foreign>
+  </tx_pxaproductmanager_product_product_mm>
+  <tx_pxaproductmanager_product_product_mm>
+    <uid_local>2</uid_local>
+    <uid_foreign>1</uid_foreign>
+    <tablenames>tx_pxaproductmanager_domain_model_product</tablenames>
+    <fieldname>accessories</fieldname>
+    <sorting>0</sorting>
+    <sorting_foreign>2</sorting_foreign>
+  </tx_pxaproductmanager_product_product_mm>
+</dataset>

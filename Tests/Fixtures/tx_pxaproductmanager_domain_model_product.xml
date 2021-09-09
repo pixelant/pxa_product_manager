@@ -3,14 +3,14 @@
   <tx_pxaproductmanager_domain_model_product>
     <uid>1</uid>
     <pid>84</pid>
-    <tstamp>1,629,123,302</tstamp>
+    <tstamp>1,630,306,787</tstamp>
     <crdate>1,629,123,170</crdate>
     <cruser_id>1</cruser_id>
     <deleted>0</deleted>
     <hidden>0</hidden>
     <starttime>0</starttime>
     <endtime>0</endtime>
-    <sorting>256</sorting>
+    <sorting>32</sorting>
     <sys_language_uid>0</sys_language_uid>
     <l10n_parent>0</l10n_parent>
     <l10n_state></l10n_state>
@@ -33,20 +33,168 @@
 Product 1 usp line 2
 Product 1 usp line 3</usp>
     <parent>0</parent>
+    <related_products>2</related_products>
+    <sub_products>0</sub_products>
+    <accessories>2</accessories>
+    <images>2</images>
+    <attribute_files>0</attribute_files>
+    <links>2</links>
+    <fal_links>1</fal_links>
+    <assets>2</assets>
+    <attributes_values>24</attributes_values>
+    <product_type>1</product_type>
+    <alternative_title>Product 1 Alternative Title</alternative_title>
+    <keywords>Product 1 Keywords</keywords>
+    <meta_description>Product 1 Meta Description </meta_description>
+    <slug>product-1</slug>
+    <singleview_page>1</singleview_page>
+    <categories>3</categories>
+  </tx_pxaproductmanager_domain_model_product>
+  <tx_pxaproductmanager_domain_model_product>
+    <uid>2</uid>
+    <pid>84</pid>
+    <tstamp>1,630,306,001</tstamp>
+    <crdate>1,629,797,858</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>48</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <t3ver_oid>0</t3ver_oid>
+    <t3ver_wsid>0</t3ver_wsid>
+    <t3ver_state>0</t3ver_state>
+    <t3ver_stage>0</t3ver_stage>
+    <t3ver_count>0</t3ver_count>
+    <t3ver_tstamp>0</t3ver_tstamp>
+    <t3ver_move_id>0</t3ver_move_id>
+    <name>Product 2</name>
+    <sku>23456</sku>
+    <price>23,456</price>
+    <tax_rate>20</tax_rate>
+    <teaser>Product 2 teaser</teaser>
+    <description>&lt;p&gt;The description for product 2&lt;/p&gt;</description>
+    <usp>Product 2 usp line 1
+Product 2 usp line 2
+Product 2 usp line 3</usp>
+    <parent>0</parent>
     <related_products>0</related_products>
     <sub_products>0</sub_products>
     <accessories>0</accessories>
-    <images>1</images>
+    <images>2</images>
     <attribute_files>0</attribute_files>
     <links>0</links>
     <fal_links>0</fal_links>
     <assets>0</assets>
     <attributes_values>4</attributes_values>
-    <product_type>1</product_type>
+    <product_type>2</product_type>
     <alternative_title></alternative_title>
     <keywords></keywords>
     <meta_description></meta_description>
-    <slug>product-1</slug>
+    <slug>product-2</slug>
+    <singleview_page>1</singleview_page>
+    <categories>0</categories>
+  </tx_pxaproductmanager_domain_model_product>
+  <tx_pxaproductmanager_domain_model_product>
+    <uid>3</uid>
+    <pid>84</pid>
+    <tstamp>1,629,798,126</tstamp>
+    <crdate>1,629,798,043</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>64</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <t3ver_oid>0</t3ver_oid>
+    <t3ver_wsid>0</t3ver_wsid>
+    <t3ver_state>0</t3ver_state>
+    <t3ver_stage>0</t3ver_stage>
+    <t3ver_count>0</t3ver_count>
+    <t3ver_tstamp>0</t3ver_tstamp>
+    <t3ver_move_id>0</t3ver_move_id>
+    <name>Product 3</name>
+    <sku>34567</sku>
+    <price>34,567</price>
+    <tax_rate>30</tax_rate>
+    <teaser>Product 3 teaser</teaser>
+    <description>&lt;p&gt;The description for product 3&lt;/p&gt;</description>
+    <usp>Product 3 usp line 1
+Product 3 usp line 2
+Product 3 usp line 3</usp>
+    <parent>0</parent>
+    <related_products>0</related_products>
+    <sub_products>0</sub_products>
+    <accessories>0</accessories>
+    <images>2</images>
+    <attribute_files>0</attribute_files>
+    <links>0</links>
+    <fal_links>0</fal_links>
+    <assets>0</assets>
+    <attributes_values>4</attributes_values>
+    <product_type>3</product_type>
+    <alternative_title></alternative_title>
+    <keywords></keywords>
+    <meta_description></meta_description>
+    <slug>product-3</slug>
+    <singleview_page>1</singleview_page>
+    <categories>0</categories>
+  </tx_pxaproductmanager_domain_model_product>
+  <tx_pxaproductmanager_domain_model_product>
+    <uid>4</uid>
+    <pid>84</pid>
+    <tstamp>1,630,312,379</tstamp>
+    <crdate>1,630,312,240</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <starttime>0</starttime>
+    <endtime>0</endtime>
+    <sorting>16</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <t3ver_oid>0</t3ver_oid>
+    <t3ver_wsid>0</t3ver_wsid>
+    <t3ver_state>0</t3ver_state>
+    <t3ver_stage>0</t3ver_stage>
+    <t3ver_count>0</t3ver_count>
+    <t3ver_tstamp>0</t3ver_tstamp>
+    <t3ver_move_id>0</t3ver_move_id>
+    <name>Product 4</name>
+    <sku>45678</sku>
+    <price>45,678</price>
+    <tax_rate>40</tax_rate>
+    <teaser>Product 4 Teaser</teaser>
+    <description>&lt;p&gt;Product 4 Description&lt;/p&gt;</description>
+    <usp>Product 4 USP</usp>
+    <parent>0</parent>
+    <related_products>0</related_products>
+    <sub_products>0</sub_products>
+    <accessories>0</accessories>
+    <images>0</images>
+    <attribute_files>0</attribute_files>
+    <links>0</links>
+    <fal_links>0</fal_links>
+    <assets>0</assets>
+    <attributes_values>14</attributes_values>
+    <product_type>4</product_type>
+    <alternative_title></alternative_title>
+    <keywords></keywords>
+    <meta_description></meta_description>
+    <slug>default-280ce80c97</slug>
     <singleview_page>1</singleview_page>
     <categories>0</categories>
   </tx_pxaproductmanager_domain_model_product>

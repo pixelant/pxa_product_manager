@@ -3,7 +3,7 @@
   <tx_pxaproductmanager_domain_model_attributeset>
     <uid>1</uid>
     <pid>84</pid>
-    <tstamp>1,629,122,638</tstamp>
+    <tstamp>1,630,305,901</tstamp>
     <crdate>1,629,122,171</crdate>
     <cruser_id>1</cruser_id>
     <deleted>0</deleted>
@@ -17,8 +17,8 @@
     <l10n_diffsource></l10n_diffsource>
     <name>Attribute Set 1 Name</name>
     <label>Attribute Set 1 Label</label>
-    <attributes>4</attributes>
-    <product_types>0</product_types>
+    <attributes>14</attributes>
+    <product_types>4</product_types>
     <layout>Default</layout>
   </tx_pxaproductmanager_domain_model_attributeset>
 </dataset>

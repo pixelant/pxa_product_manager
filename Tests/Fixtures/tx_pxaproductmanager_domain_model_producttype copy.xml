@@ -65,7 +65,7 @@
     <l10n_diffsource></l10n_diffsource>
     <name>Product Type 4 - All Attributes Types Inherited</name>
     <attribute_sets>1</attribute_sets>
-    <inherit_fields>attribute.5,attribute.6,attribute.7,attribute.8,attribute.9,attribute.10,attribute.11,attribute.14</inherit_fields>
+    <inherit_fields>attribute.5,attribute.6,attribute.7,attribute.8,attribute.9,attribute.10,attribute.11,attribute.12,attribute.13,attribute.14</inherit_fields>
     <template_layout></template_layout>
   </tx_pxaproductmanager_domain_model_producttype>
 </dataset>

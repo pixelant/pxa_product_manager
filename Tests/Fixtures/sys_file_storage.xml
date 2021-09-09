@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<dataset>
+  <sys_file_storage>
+    <uid>1</uid>
+    <pid>0</pid>
+    <tstamp>1,594,827,760</tstamp>
+    <crdate>1,594,827,760</crdate>
+    <cruser_id>0</cruser_id>
+    <deleted>0</deleted>
+    <description>This is the local fileadmin/ directory. This storage mount has been created automatically by TYPO3.</description>
+    <name>fileadmin/ (auto-created)</name>
+    <driver>Local</driver>
+    <configuration>&lt;?xml version="1.0" encoding="utf-8" standalone="yes" ?&gt;
+&lt;T3FlexForms&gt;
+    &lt;data&gt;
+        &lt;sheet index="sDEF"&gt;
+            &lt;language index="lDEF"&gt;
+                &lt;field index="basePath"&gt;
+                    &lt;value index="vDEF"&gt;fileadmin/&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index="pathType"&gt;
+                    &lt;value index="vDEF"&gt;relative&lt;/value&gt;
+                &lt;/field&gt;
+                &lt;field index="caseSensitive"&gt;
+                    &lt;value index="vDEF"&gt;1&lt;/value&gt;
+                &lt;/field&gt;
+            &lt;/language&gt;
+        &lt;/sheet&gt;
+    &lt;/data&gt;
+&lt;/T3FlexForms&gt;</configuration>
+    <is_default>1</is_default>
+    <is_browsable>1</is_browsable>
+    <is_public>1</is_public>
+    <is_writable>1</is_writable>
+    <is_online>1</is_online>
+    <auto_extract_metadata>1</auto_extract_metadata>
+    <processingfolder></processingfolder>
+  </sys_file_storage>
+</dataset>

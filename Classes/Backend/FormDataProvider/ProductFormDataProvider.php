@@ -72,7 +72,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         $inheritFields = DataInheritanceUtility::getInheritedFieldsForProductType(
-            (int)$result['databaseRow']['product_type']
+            (int)$result['databaseRow']['product_type'][0]
         );
 
         foreach ($result['processedTca']['columns'] as $fieldName => &$configuration) {
