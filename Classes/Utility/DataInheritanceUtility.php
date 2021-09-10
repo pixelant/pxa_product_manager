@@ -326,10 +326,16 @@ class DataInheritanceUtility
     ): array {
         $computedInlineInheritanceData = [];
 
+        $childRecord = BackendUtility::getRecord(
+            ProductRepository::TABLE_NAME,
+            $childProductId,
+            '*'
+        );
+
         $fieldTcaConfiguration = TcaUtility::getTcaFieldConfigurationAndRespectColumnsOverrides(
             ProductRepository::TABLE_NAME,
             'attributes_values',
-            $childInheritanceData
+            $childRecord
         );
 
         $resolvedChildItemsList = self::getRelationHandlerResolvedItems(
@@ -387,6 +393,11 @@ class DataInheritanceUtility
 
         self::addParentSortingToResolvedChildRelationItems($resolvedChildItemsList, $resolvedParentItemsList);
 
+        self::addSortingToResolvedChildAttributeRelations(
+            $resolvedChildItemsList,
+            (int)$parentInheritanceData['product_type']
+        );
+
         $attributeTypes = self::listAttributeTypesOfInheritedAttributeValues($inheritedAttributes);
 
         foreach ($inheritedAttributes as $attribute) {
@@ -409,7 +420,7 @@ class DataInheritanceUtility
 
         // Fix sorting like "parent".
         usort($resolvedChildItemsList, function ($a, $b) {
-            return $a['parent_sorting'] > $b['parent_sorting'];
+            return $a['attribute_sorting'] > $b['attribute_sorting'];
         });
 
         // Add field to array.
@@ -432,13 +443,17 @@ class DataInheritanceUtility
      *
      * @param array $resolvedItems
      * @param string $identifier
+     * @param string $identifierField
      * @return int
      * @throws \UnexpectedValueException
      */
-    protected static function resolvedItemIndexByIdentifier(array $resolvedItems, string $identifier): int
-    {
+    protected static function resolvedItemIndexByIdentifier(
+        array $resolvedItems,
+        string $identifier,
+        string $identifierField = 'identifier'
+    ): int {
         foreach ($resolvedItems as $index => $resolvedItem) {
-            if ((string)$resolvedItem['identifier'] === $identifier) {
+            if ((string)$resolvedItem[$identifierField] === $identifier) {
                 return $index;
             }
         }
@@ -607,6 +622,38 @@ class DataInheritanceUtility
                     $resolvedChildItemsList[$cIndex]['parent_sorting'] = $pIndex;
                 }
             }
+        }
+    }
+
+    /**
+     * Compares resolved child relations and adds parent sorting to child items.
+     *
+     * @param array $resolvedChildItemsList
+     * @param array $resolvedParentItemsList
+     * @return void
+     */
+    protected static function addSortingToResolvedChildAttributeRelations(
+        array &$resolvedChildItemsList,
+        int $productType
+    ): void {
+        if ($productType === 0) {
+            return;
+        }
+
+        $attributesForProductType = AttributeUtility::findAttributesForProductType($productType);
+
+        foreach ($resolvedChildItemsList as $cIndex => $cResolvedItem) {
+            try {
+                $attributeSorting = self::resolvedItemIndexByIdentifier(
+                    $attributesForProductType,
+                    (string)$cResolvedItem['identifier'],
+                    'uid'
+                );
+            } catch (\Throwable $th) {
+                $attributeSorting = 99;
+            }
+
+            $resolvedChildItemsList[$cIndex]['attribute_sorting'] = $attributeSorting;
         }
     }
 

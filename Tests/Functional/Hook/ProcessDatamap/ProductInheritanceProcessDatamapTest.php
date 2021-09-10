@@ -399,6 +399,74 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
     }
 
     /**
+     * @test
+     */
+    public function localizeChildProductInheritsCorrectFieldsFromParent(): void
+    {
+        // NOTE, copy a child product produces duplicate attribute values.
+        // Could be that the inheritance doesn't check if child product already have an attribute,
+        // and it only checks tx_pxaproductmanager_relation_inheritance_index for mappings.
+        // How do we validate data in tx_pxaproductmanager_relation_inheritance_index....
+        // NOTE, Also seems like also inline fields e.g. images are duplicated during copy.
+        // NOTE, Also need to test to save a parent and check child product attribute values.
+        $this->importDataSets();
+
+        // Fretch parent product.
+        /** @var Product $parentProduct */
+        $parentProduct = $this->productRepository->findByUid(self::PRODUCT_WITH_PT_COMBINED);
+
+        /** @var Product $childProduct */
+        $childProduct = $this->createAndFetchNewProduct(
+            [
+                'name' => 'Child Product - Child to ' . $parentProduct->getName(),
+                'pid' => $parentProduct->getPid(),
+                'parent' => ProductRepository::TABLE_NAME . '_' . $parentProduct->getUid(),
+                'product_type' => $parentProduct->getProductType()->getUid(),
+                'singleview_page' => self::SINGLE_VIEW_PAGE,
+                'tax_rate' => 25,
+            ],
+            [
+                0 => [
+                    'value' => '1',
+                    'attribute' => 1,
+                ],
+                1 => [
+                    'value' => '2',
+                    'attribute' => 2,
+                ],
+                2 => [
+                    'value' => '11,13,15',
+                    'attribute' => 3,
+                ],
+                3 => [
+                    'value' => '',
+                    'attribute' => 4,
+                ],
+            ],
+            [
+                0 => 30,
+            ]
+        );
+
+        self::assertInstanceOf(Product::class, $childProduct);
+
+        $this->assertProductHasCorrectAttributeValues($parentProduct);
+
+        $this->assertChildInheritedFieldsAreEqualToParent($parentProduct, $childProduct);
+
+        // Create a copy of the new child product
+        $copiedChildProduct = $this->createAndFetchCopyOfProduct($childProduct);
+
+        self::assertInstanceOf(Product::class, $copiedChildProduct);
+
+        $this->assertChildInheritedFieldsAreEqualToParent($parentProduct, $copiedChildProduct);
+
+        // product -> hasAttributeValueForAttribute()
+        // product -> getAttributesValues
+        // inheritance table check tx_pxaproductmanager_relation_inheritance_index
+    }
+
+    /**
      * Create new product using DataHandler.
      *
      * @param array $row Product data
@@ -480,6 +548,36 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
     protected function createAndFetchCopyOfProduct(Product $product): Product
     {
         return $this->productRepository->findByUid($this->createCopyOfProduct($product));
+    }
+
+    /**
+     * Localize a product using DataHandler.
+     *
+     * @param Product $product Product
+     * @return int
+     */
+    protected function createLocalizationOfProduct(Product $product): int
+    {
+        $cmd[ProductRepository::TABLE_NAME][$product->getUid()]['localize'] = 2;
+
+        /** @var DataHandler $dataHandler */
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->start([], $cmd);
+        $dataHandler->process_datamap();
+        $dataHandler->process_cmdmap();
+
+        return $dataHandler->copyMappingArray[ProductRepository::TABLE_NAME][$product->getUid()];
+    }
+
+    /**
+     * Copy a product using DataHandler and fetch it.
+     *
+     * @param Product $product Product
+     * @return Product
+     */
+    protected function createAndFetchLocalizedProduct(Product $product): Product
+    {
+        return $this->productRepository->findByUid($this->createLocalizationOfProduct($product));
     }
 
     /**

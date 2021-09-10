@@ -121,8 +121,9 @@ defined('TYPO3_MODE') || die;
 
 
     // Modify data structure of flexform. Hook will dynamically load flexform parts for selected action
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['pxa_product_manager'] =
-        \Pixelant\PxaProductManager\Hook\FlexFormDataStructureHook::class;
+    // Disable hook, problems during translations import. Don't think it is needed anymore.
+    // $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools::class]['flexParsing']['pxa_product_manager'] =
+    //    \Pixelant\PxaProductManager\Hook\FlexFormDataStructureHook::class;
 
     // Register default plugin actions with flexform settings
     \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
