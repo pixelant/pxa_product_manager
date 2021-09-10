@@ -146,7 +146,7 @@ return (function () {
                         ],
                     ],
                     'fallbackCharacter' => '-',
-                    'eval' => 'uniqueInPid',
+                    'eval' => 'uniqueInSite',
                     'default' => '',
                 ],
             ],
