@@ -22,10 +22,10 @@ services:
       - name: 'console.command'
         command: 'productmanager:removeorphanattributevalues'
 
-  Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldFileRerenceValueEvent:
+  Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldFileReferenceValueEvent:
     tags:
       - name: event.listener
-        identifier: 'calculateInlineFieldFileRerenceValueEvent'
+        identifier: 'calculateInlineFieldFileReferenceValueEvent'
         before: ''
         event: Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldValueEvent
 

@@ -6,7 +6,7 @@ namespace Pixelant\PxaProductManager\Event\DataInheritance;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
-class CalculateInlineFieldFileRerenceValueEvent
+class CalculateInlineFieldFileReferenceValueEvent
 {
     /**
      * @param CalculatePropertyValueEvent $event
