@@ -182,7 +182,7 @@ class DataInheritanceUtility
             return [];
         }
 
-        $inheritedFields = self::getInheritedFieldsForProductType(self::getProductTypeForProduct($productType));
+        $inheritedFields = self::getInheritedFieldsForProductType($productType);
         if (count($inheritedFields) === 0) {
             return [];
         }
@@ -267,9 +267,11 @@ class DataInheritanceUtility
         $compiledProductRecord = self::compileRecordData(ProductRepository::TABLE_NAME, $productId);
 
         if ($onlyIncludeInheritedFields) {
-            $inheritedDbFields = self::getInheritedDbFieldsForProductType(
-                self::getProductTypeForProduct((int)$compiledProductRecord['product_type'])
-            );
+            $productType = (int)$compiledProductRecord['product_type'] ?? false;
+            if (!$productType) {
+                self::getProductTypeForProduct((int)$compiledProductRecord['uid']);
+            }
+            $inheritedDbFields = self::getInheritedDbFieldsForProductType($productType);
 
             $compiledProductRecord = array_filter(
                 $compiledProductRecord,
