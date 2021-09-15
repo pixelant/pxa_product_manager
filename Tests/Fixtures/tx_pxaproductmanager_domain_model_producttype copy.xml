@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_domain_model_producttype>
+    <uid>1</uid>
+    <pid>84</pid>
+    <tstamp>1,630,307,304</tstamp>
+    <crdate>1,629,122,652</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Product Type 1 - Combined</name>
+    <attribute_sets>1</attribute_sets>
+    <inherit_fields>tax_rate,related_products,images,fal_links,links,assets,accessories,categories,attribute.1,attribute.3</inherit_fields>
+    <template_layout></template_layout>
+  </tx_pxaproductmanager_domain_model_producttype>
+  <tx_pxaproductmanager_domain_model_producttype>
+    <uid>2</uid>
+    <pid>84</pid>
+    <tstamp>1,629,797,815</tstamp>
+    <crdate>1,629,797,807</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Product Type 2 - No attributes</name>
+    <attribute_sets>1</attribute_sets>
+    <inherit_fields>tax_rate,images</inherit_fields>
+    <template_layout></template_layout>
+  </tx_pxaproductmanager_domain_model_producttype>
+  <tx_pxaproductmanager_domain_model_producttype>
+    <uid>3</uid>
+    <pid>84</pid>
+    <tstamp>1,629,797,840</tstamp>
+    <crdate>1,629,797,834</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Product Type 3 - Only attributes</name>
+    <attribute_sets>1</attribute_sets>
+    <inherit_fields>attribute.1,attribute.3</inherit_fields>
+    <template_layout></template_layout>
+  </tx_pxaproductmanager_domain_model_producttype>
+  <tx_pxaproductmanager_domain_model_producttype>
+    <uid>4</uid>
+    <pid>84</pid>
+    <tstamp>1,630,305,970</tstamp>
+    <crdate>1,630,305,874</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Product Type 4 - All Attributes Types Inherited</name>
+    <attribute_sets>1</attribute_sets>
+    <inherit_fields>attribute.5,attribute.6,attribute.7,attribute.8,attribute.9,attribute.10,attribute.11,attribute.12,attribute.13,attribute.14</inherit_fields>
+    <template_layout></template_layout>
+  </tx_pxaproductmanager_domain_model_producttype>
+</dataset>

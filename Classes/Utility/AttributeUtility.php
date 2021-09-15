@@ -86,7 +86,7 @@ class AttributeUtility
 
         $attributes = [];
         foreach ($attributeSets as $attributeSet) {
-            $attributes = array_merge($attributes, self::findAttributesForAttributeSet($attributeSet['uid']));
+            $attributes = array_merge($attributes, self::findAttributesForAttributeSet((int)$attributeSet['uid']));
         }
 
         return $attributes;

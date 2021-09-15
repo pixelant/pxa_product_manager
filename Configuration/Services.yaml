@@ -17,11 +17,59 @@ services:
       - name: 'console.command'
         command: 'productmanager:fixduplicateattributevalues'
 
-
   Pixelant\PxaProductManager\Command\RemoveOrphanAttributeValuesCommand:
     tags:
       - name: 'console.command'
         command: 'productmanager:removeorphanattributevalues'
+
+  Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldFileReferenceValueEvent:
+    tags:
+      - name: event.listener
+        identifier: 'calculateInlineFieldFileReferenceValueEvent'
+        before: ''
+        event: Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldValueEvent
+
+  Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldLinkValueEvent:
+    tags:
+      - name: event.listener
+        identifier: 'calculateInlineFieldLinkValueEvent'
+        before: ''
+        event: Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldValueEvent
+
+  Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldAttributeValueValueEvent:
+    tags:
+      - name: event.listener
+        identifier: 'calculateInlineFieldAttributeValueValueEvent'
+        before: ''
+        event: Pixelant\PxaProductManager\Event\DataInheritance\CalculateInlineFieldValueEvent
+
+  Pixelant\PxaProductManager\Event\DataInheritance\InheritNewInlineFileReferenceDataEvent:
+    tags:
+      - name: event.listener
+        identifier: 'inheritNewInlineFileReferenceDataEvent'
+        before: ''
+        event: Pixelant\PxaProductManager\Event\DataInheritance\InheritNewInlineDataEvent
+
+  Pixelant\PxaProductManager\Event\DataInheritance\InheritNewInlineLinkDataEvent:
+    tags:
+      - name: event.listener
+        identifier: 'inheritNewInlineLinkDataEvent'
+        before: ''
+        event: Pixelant\PxaProductManager\Event\DataInheritance\InheritNewInlineDataEvent
+
+  Pixelant\PxaProductManager\Event\DataInheritance\InlineLinkIdentifierFieldEvent:
+    tags:
+      - name: event.listener
+        identifier: 'inlineLinkIdentifierFieldEvent'
+        before: ''
+        event: Pixelant\PxaProductManager\Event\DataInheritance\InlineIdentifierFieldEvent
+
+  Pixelant\PxaProductManager\Event\DataInheritance\InlineAttributeValueIdentifierFieldEvent:
+    tags:
+      - name: event.listener
+        identifier: 'inlineAttributeValueIdentifierFieldEvent'
+        before: ''
+        event: Pixelant\PxaProductManager\Event\DataInheritance\InlineIdentifierFieldEvent
 
   Pixelant\PxaProductManager\UserFunction\Solr\AbstractValue:
     public: true

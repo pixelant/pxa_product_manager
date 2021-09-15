@@ -21,10 +21,12 @@ use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Domain\Repository\RelationInheritanceIndexRepository;
+use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -56,35 +58,74 @@ class FixDuplicateAttributeValuesCommand extends Command
         $io->title($this->getDescription());
 
         $io->section('Fetching duplicate attribute values');
+
+        $inheritDataOnProducts = [];
+        $outputAttributeValues = false;
+
         $records = $this->fetchDuplicateAttributeValues();
         if (count($records) > 0) {
-            $io->writeLn(sprintf('Found %s duplicate attribute values', count($records)));
+            $io->writeLn(sprintf('Found %s product attributes with multiple attribute values', count($records)));
             $io->section('Try and determine correct attribute value');
             $io->progressStart(count($records));
             foreach ($records as $index => $record) {
-                // attribute_count inheritance_count
-                $riiExists = (int)$record['inheritance_count'] > 0;
+                $attributeValues = $this->fetchAttributeValuesByProductAndAttribute(
+                    (int)$record['product'],
+                    (int)$record['attribute']
+                );
 
-                $attributeValues = $this->fetchAttributeValueData($record['attruid'], $record['product']);
-                $firstAttribute = $attributeValues[0] ?? [];
-
-                if (
-                    !empty($firstAttribute)
-                    && $firstAttribute['product_attrval_attribute'] === $firstAttribute['parent_attrval_attribute']
-                    && $firstAttribute['product_parent'] === $firstAttribute['parent_attrval_product']
-                    && $riiExists
-                ) {
-                    if ($firstAttribute['product_attrval_value'] !== $firstAttribute['parent_attrval_value']) {
-                        $this->updateAttributeValueValue(
-                            $firstAttribute['product_attrval_uid'],
-                            $firstAttribute['parent_attrval_value']
-                        );
+                if ((int)$record['product'] === 0) {
+                    foreach ($attributeValues as $attributeValue) {
+                        $this->removeAttributeValueRecord((int)$attributeValue['uid']);
                     }
-                    $this->removeDuplicateAttributeValuesAndRii($attributeValues);
+
+                    continue;
                 }
+
+                $this->determineAttributeValueScores($attributeValues);
+
+                usort($attributeValues, function ($a, $b) {
+                    return $a['score'] < $b['score'];
+                });
+
+                if ($outputAttributeValues) {
+                    $io->table(array_keys($attributeValues[0]), $attributeValues, true);
+                }
+
+                if (!in_array('score', array_keys($attributeValues), false)) {
+                    $io->writeln(
+                        sprintf(
+                            'SKIPPING attribute values for product %s, attribute %s, no score could be calculated.',
+                            $record['product'],
+                            $record['attribute']
+                        )
+                    );
+                    $io->table(array_keys($attributeValues[0]), $attributeValues, true);
+
+                    continue;
+                }
+
+                $this->removeAttributeValuesAccordingToScore($attributeValues, $inheritDataOnProducts);
+
                 $io->progressAdvance();
             }
             $io->progressFinish();
+
+            $inheritDataOnProducts = array_unique($inheritDataOnProducts);
+            if (count($inheritDataOnProducts) > 0) {
+                $io->writeLn(sprintf(
+                    'Found %s products that have attributes not up to date with parents',
+                    count($inheritDataOnProducts)
+                ));
+                $io->section('Update inheritage on products');
+
+                $io->progressStart(count($inheritDataOnProducts));
+                foreach ($inheritDataOnProducts as $uid) {
+                    DataInheritanceUtility::inheritDataFromParent($uid);
+
+                    $io->progressAdvance();
+                }
+                $io->progressFinish();
+            }
         } else {
             $io->success('No duplicate attribute values found');
         }
@@ -93,94 +134,240 @@ class FixDuplicateAttributeValuesCommand extends Command
     }
 
     /**
-     * Checks and removes duplicate attribute values and rii if exists.
+     * Remove duplicate attribute values according score.
      *
      * @param array $attributeValues
+     * @param array $inheritDataOnProducts
      * @return void
      */
-    protected function removeDuplicateAttributeValuesAndRii(array $attributeValues): void
-    {
-        foreach ($attributeValues as $avIndex => $attributeValue) {
-            if ($avIndex > 0) {
-                $this->removeAttributeValueRecord($attributeValue['product_attrval_uid']);
-                if ($attributeValue['tprii_uid_parent']) {
-                    $this->removeRelationInheritanceIndexRecord(
-                        $attributeValue['tprii_uid_parent'],
-                        $attributeValue['product_attrval_uid'],
-                        $attributeValue['product_attrval_product']
-                    );
+    protected function removeAttributeValuesAccordingToScore(
+        array $attributeValues,
+        array &$inheritDataOnProducts
+    ): void {
+        foreach ($attributeValues as $sIndex => $attributeValue) {
+            if ($sIndex > 0) {
+                $this->removeAttributeValueRecord((int)$attributeValue['uid']);
+            } else {
+                // If first records score is zero, we need to update inheritance for product.
+                if ($attributeValue['score'] === 0) {
+                    $inheritDataOnProducts[] = $attributeValue['product'];
                 }
             }
         }
     }
 
     /**
-     * Fetch duplicate attribute values.
+     * Fetch all Attribute Values connected to same product and attribute more than once.
      *
      * @return array
      */
     protected function fetchDuplicateAttributeValues(): array
     {
+        /** @var \TYPO3\CMS\Core\Database\Query\QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(self::ATTRIBUTEVALUE_TABLE);
         $queryBuilder->getRestrictions()->removeAll();
-        $records = $queryBuilder
-            ->select('attrval.product', 'attr.uid as attruid', 'attr.label')
-            ->addSelectLiteral('COUNT(attrval.attribute) as attribute_count')
-            ->addSelectLiteral('COUNT(tprii.uid_child) as inheritance_count')
-            ->from(self::ATTRIBUTEVALUE_TABLE, 'attrval')
-            ->join(
-                'attrval',
-                self::ATTRIBUTE_TABLE,
-                'attr',
-                $queryBuilder->expr()->eq(
-                    'attr.uid',
-                    $queryBuilder->quoteIdentifier('attrval.attribute')
-                )
-            )
-            ->join(
-                'attrval',
-                self::PRODUCT_TABLE,
-                'product',
-                $queryBuilder->expr()->eq(
-                    'product.uid',
-                    $queryBuilder->quoteIdentifier('attrval.product')
-                )
-            )
-            ->leftJoin(
-                'attrval',
-                self::RELATION_INDEX_TABLE,
-                'tprii',
-                $queryBuilder->expr()->eq(
-                    'tprii.uid_child',
-                    $queryBuilder->quoteIdentifier('attrval.uid')
-                )
-            )
+
+        $records = $queryBuilder->select('product', 'attribute')
+            ->addSelectLiteral('COUNT(*) as cnt')
+            ->from(self::ATTRIBUTEVALUE_TABLE)
             ->where(
                 $queryBuilder->expr()->eq(
-                    'attrval.deleted',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                ),
-                $queryBuilder->expr()->eq(
-                    'product.deleted',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                ),
-                $queryBuilder->expr()->eq(
-                    'attr.deleted',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                ),
-                $queryBuilder->expr()->gt(
-                    'product.parent',
+                    'deleted',
                     $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
             )
-            ->groupBy('product', 'attr.uid')
-            ->having('attribute_count > 1')
-            ->orHaving('attribute_count != inheritance_count')
+            ->groupBy('product', 'attribute')
+            ->having('cnt > 1')
             ->execute()
             ->fetchAllAssociative();
 
         return $records;
+    }
+
+    /**
+     * Fetch attribute values by product and attribute.
+     *
+     * @param int $product
+     * @param int $attribute
+     * @return array
+     */
+    protected function fetchAttributeValuesByProductAndAttribute(int $product, int $attribute): array
+    {
+        /** @var \TYPO3\CMS\Core\Database\Query\QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable(self::ATTRIBUTEVALUE_TABLE);
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $records = $queryBuilder->select('*')
+            ->from(self::ATTRIBUTEVALUE_TABLE)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'product',
+                    $queryBuilder->createNamedParameter($product, \PDO::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'attribute',
+                    $queryBuilder->createNamedParameter($attribute, \PDO::PARAM_INT)
+                )
+            )
+            ->orderBy('crdate')
+            ->execute()
+            ->fetchAllAssociative();
+
+        return $records;
+    }
+
+    /**
+     * Fetch attribute value by id.
+     *
+     * @param int $id
+     * @return array
+     */
+    protected function fetchAttributeValueById(int $id): array
+    {
+        /** @var \TYPO3\CMS\Core\Database\Query\QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable(self::ATTRIBUTEVALUE_TABLE);
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $records = $queryBuilder->select('*')
+            ->from(self::ATTRIBUTEVALUE_TABLE)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid',
+                    $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT)
+                )
+            )
+            ->orderBy('crdate')
+            ->execute()
+            ->fetchAllAssociative();
+
+        return $records[0] ?? [];
+    }
+
+    /**
+     * Try and create a score to be able to decide what attribute values to keep.
+     *
+     * @param array $attributeValues
+     * @return void
+     * @throws \Exception
+     */
+    protected function determineAttributeValueScores(array &$attributeValues): void
+    {
+        $values = array_column($attributeValues, 'value');
+        $sysLanguageUid = array_column($attributeValues, 'sys_language_uid');
+        $localizedFromUid = array_column($attributeValues, 'l10n_parent');
+        $copiedFromUid = array_column($attributeValues, 't3_origuid');
+
+        $allValuesAreSame = count(array_unique($values)) === 1;
+        $allLanguagesAreSame = count(array_unique($sysLanguageUid)) === 1;
+        $allLocalizedFromSame = count(array_unique($localizedFromUid)) === 1;
+        $allCopiedFromSame = count(array_unique($copiedFromUid)) === 1;
+
+        // All attribute values are fetched by attribute and product,
+        // so all attribute values have same product.
+        // Use first attribute value for product and attribute id.
+        $parentProduct = BackendUtility::getRecord(
+            self::PRODUCT_TABLE,
+            $attributeValues[0]['product'],
+            'parent'
+        )['parent'] ?? [];
+
+        $parentAttribute = [];
+        if (!empty($parentProduct)) {
+            $parentAttribute = $this->fetchAttributeValuesByProductAndAttribute(
+                (int)$parentProduct,
+                (int)$attributeValues[0]['attribute']
+            ) ?? [];
+
+            if (count($parentAttribute) > 1) {
+                throw new \Exception(
+                    sprintf(
+                        'Parent product have duplicate attribute values (product: %s, attribute: %s)',
+                        $parentProduct,
+                        $attributeValues[0]['attribute']
+                    ),
+                    1
+                );
+            }
+
+            $parentAttribute = $parentAttribute[0];
+        }
+
+        try {
+            // Use index in score, attribute values are sorted in query.
+            foreach ($attributeValues as $index => &$attributeValue) {
+                $attributeValue['parent_attribute_value'] = $parentAttribute['value'];
+                $attributeValue['parent_attribute_uid'] = $parentAttribute['uid'];
+                $attributeValue['parent_product_uid'] = $parentProduct;
+
+                $attributeValue['score'] = $this->determineAttributeValueScore(
+                    $index,
+                    $attributeValue,
+                    $allValuesAreSame,
+                    $allLanguagesAreSame,
+                    $allLocalizedFromSame,
+                    $allCopiedFromSame,
+                    $parentAttribute
+                );
+            }
+        } catch (\Throwable $th) {
+            $attributeValue['error'] = $th->getMessage();
+        }
+    }
+
+    /**
+     * Calulate attribute value score.
+     *
+     * @param int $index
+     * @param array $attributeValue
+     * @param bool $allValuesAreSame
+     * @param bool $allLanguagesAreSame
+     * @param bool $allLocalizedFromSame
+     * @param bool $allCopiedFromSame
+     * @param array $parentAttribute
+     * @return int
+     * @throws \Exception
+     */
+    protected function determineAttributeValueScore(
+        int $index,
+        array $attributeValue,
+        bool $allValuesAreSame,
+        bool $allLanguagesAreSame,
+        bool $allLocalizedFromSame,
+        bool $allCopiedFromSame,
+        array $parentAttribute
+    ): int {
+        // Try and caculate most correct attribute value: score,
+        // not important what "max score" is just to be accurate by how important the "match" is.
+        // Interesting compare fields: value, sys_language_uid, l10n_parent, t3_origuid.
+        $score = 0;
+
+        // AttributeValue value doesn't equal parent attributevalue value,
+        // all duplicate attributevalues value are same and parent attributevalue value is not empty.
+        if (
+            (string)$parentAttribute['value'] !== (string)$attributeValue['value']
+            && $allValuesAreSame
+            && !empty($parentAttribute)
+        ) {
+            throw new \Exception('Could not determine attribute score, no attribute values are correct. (Delete)?', 1);
+        }
+        // AttributeValue value equals parent attributevalue value, score + 100.
+        if ((string)$parentAttribute['value'] === (string)$attributeValue['value'] && !empty($parentAttribute)) {
+            $score += 100;
+        }
+
+        // If all attribue values are same, the index indicates how important value is (according to query).
+        if ($allValuesAreSame) {
+            if ($allLanguagesAreSame && $allLocalizedFromSame && $allCopiedFromSame) {
+                $score += (100 - ($index * 1));
+            }
+        }
+
+        // Wasn't necessary to calculate any more scores for the duplicates found in current project.
+
+        return $score;
     }
 
     /**
@@ -320,38 +507,6 @@ class FixDuplicateAttributeValuesCommand extends Command
                 $queryBuilder->expr()->eq(
                     'uid',
                     $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
-                )
-            )
-            ->execute();
-    }
-
-    /**
-     * Remove RelationInheritanceIndexRecord.
-     *
-     * @param int $uidParent
-     * @param int $uidChild
-     * @param int $childParentId
-     * @return void
-     */
-    protected function removeRelationInheritanceIndexRecord(
-        int $uidParent,
-        int $uidChild,
-        int $childParentId
-    ): void {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
-
-        $queryBuilder
-            ->delete(self::RELATION_INDEX_TABLE)
-            ->where(
-                $queryBuilder->expr()->eq('uid_parent', $queryBuilder->createNamedParameter($uidParent)),
-                $queryBuilder->expr()->eq('uid_child', $queryBuilder->createNamedParameter($uidChild)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter(self::ATTRIBUTEVALUE_TABLE)),
-                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
-                $queryBuilder->expr()->eq(
-                    'child_parent_tablename',
-                    $queryBuilder->createNamedParameter(self::PRODUCT_TABLE)
                 )
             )
             ->execute();

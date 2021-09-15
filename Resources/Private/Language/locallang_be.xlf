@@ -365,7 +365,7 @@
 
 			<!--ProductInheritanceProcessDatamap:START-->
 			<trans-unit id="formengine.productinheritance.updatedcount">
-				<source>%s products were updated with data inherited from parent products. [%s]</source>
+				<source>Product [%s] was updated with data inherited from parent. (%s)</source>
 			</trans-unit>
 			<!--ProductInheritanceProcessDatamap:END-->
 		</body>

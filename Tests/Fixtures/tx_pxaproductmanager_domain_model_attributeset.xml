@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_domain_model_attributeset>
+    <uid>1</uid>
+    <pid>84</pid>
+    <tstamp>1,630,305,901</tstamp>
+    <crdate>1,629,122,171</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sorting>256</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_source>0</l10n_source>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <name>Attribute Set 1 Name</name>
+    <label>Attribute Set 1 Label</label>
+    <attributes>14</attributes>
+    <product_types>4</product_types>
+    <layout>Default</layout>
+  </tx_pxaproductmanager_domain_model_attributeset>
+</dataset>

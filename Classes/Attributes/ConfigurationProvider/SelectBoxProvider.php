@@ -22,7 +22,7 @@ class SelectBoxProvider extends AbstractProvider
 
         $options = [];
 
-        $attributeOptions = AttributeUtility::findAttributeOptions($this->attribute['uid'], 'uid, value');
+        $attributeOptions = AttributeUtility::findAttributeOptions((int)$this->attribute['uid'], 'uid, value');
         foreach ($attributeOptions as $option) {
             $options[] = [$option['value'], $option['uid']];
         }

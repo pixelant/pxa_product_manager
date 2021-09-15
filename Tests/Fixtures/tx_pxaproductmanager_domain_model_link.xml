@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<dataset>
+  <tx_pxaproductmanager_domain_model_link>
+    <uid>1</uid>
+    <pid>84</pid>
+    <tstamp>1,630,306,787</tstamp>
+    <crdate>1,630,306,543</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sorting>1</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <product>1</product>
+    <name>Product 1 Link 1 To Page 65</name>
+    <link>t3://page?uid=65</link>
+    <description></description>
+  </tx_pxaproductmanager_domain_model_link>
+  <tx_pxaproductmanager_domain_model_link>
+    <uid>2</uid>
+    <pid>84</pid>
+    <tstamp>1,630,306,787</tstamp>
+    <crdate>1,630,306,543</crdate>
+    <cruser_id>1</cruser_id>
+    <deleted>0</deleted>
+    <hidden>0</hidden>
+    <sorting>2</sorting>
+    <sys_language_uid>0</sys_language_uid>
+    <l10n_parent>0</l10n_parent>
+    <l10n_state></l10n_state>
+    <t3_origuid>0</t3_origuid>
+    <l10n_diffsource></l10n_diffsource>
+    <product>1</product>
+    <name>Product 1 Link 2 To Product 2</name>
+    <link>t3://pxappm?product=2</link>
+    <description></description>
+  </tx_pxaproductmanager_domain_model_link>
+</dataset>
