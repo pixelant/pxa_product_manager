@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Event\DataInheritance;
 
+/**
+ * Event to use when creating inline inheritance data.
+ *
+ * Inline types can have different "default" data.
+ * This event makes it possible to set the default data per inline type.
+ */
 class InheritNewInlineDataEvent
 {
     /**

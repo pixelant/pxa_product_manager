@@ -6,6 +6,11 @@ namespace Pixelant\PxaProductManager\Event\DataInheritance;
 
 use Psr\EventDispatcher\StoppableEventInterface;
 
+/**
+ * Event to get the identifier field name by table.
+ *
+ * Defaults is uid_local.
+ */
 class InlineIdentifierFieldEvent implements StoppableEventInterface
 {
     /**
@@ -24,7 +29,6 @@ class InlineIdentifierFieldEvent implements StoppableEventInterface
     protected $inlineIdentifierFieldIsSet = false;
 
     /**
-     * CalculateInlineFieldValueEvent constructor.
      * @param $property
      */
     public function __construct(string $table)

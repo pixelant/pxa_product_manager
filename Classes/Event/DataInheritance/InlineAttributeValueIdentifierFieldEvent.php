@@ -6,6 +6,9 @@ namespace Pixelant\PxaProductManager\Event\DataInheritance;
 
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 
+/**
+ * Event to get the identifier field name for attribute values table.
+ */
 class InlineAttributeValueIdentifierFieldEvent
 {
     /**

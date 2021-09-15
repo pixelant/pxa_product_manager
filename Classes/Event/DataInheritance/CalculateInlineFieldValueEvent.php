@@ -6,6 +6,14 @@ namespace Pixelant\PxaProductManager\Event\DataInheritance;
 
 use Psr\EventDispatcher\StoppableEventInterface;
 
+/**
+ * Event used for calculate values for inline fields.
+ *
+ * E.g. for sys_file_reference we need the uid of the sys_file it points at,
+ * not the uid of the sys_file_reference it points to.
+ *
+ * These values can be used to  compare if an inherited field of a child product matches the parent product.
+ */
 class CalculateInlineFieldValueEvent implements StoppableEventInterface
 {
     /**

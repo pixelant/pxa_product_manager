@@ -62,7 +62,8 @@ class DataInheritanceUtility
         return self::$productTypeInheritedFields[$productType];
     }
 
-    /** Get product type for product.
+    /**
+     * Get product type for product.
      *
      * @param int $productId
      * @return int
@@ -599,7 +600,7 @@ class DataInheritanceUtility
                 $resolvedItem['table'],
                 $resolvedItem['uid'],
                 $identifierField
-            )[$identifierField];
+            )[$identifierField] ?? [];
 
             if (!empty($identifier)) {
                 $resolvedRelationsItems[$index]['identifier'] = $identifier;

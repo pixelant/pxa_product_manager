@@ -75,7 +75,6 @@ class FixDuplicateAttributeValuesCommand extends Command
 
                 if ((int)$record['product'] === 0) {
                     foreach ($attributeValues as $attributeValue) {
-                        $io->writeln('DELETE attribute value with uid: ' . $attributeValue['uid'] . ' - PRODUCT 0');
                         $this->removeAttributeValueRecord((int)$attributeValue['uid']);
                     }
 
@@ -105,7 +104,7 @@ class FixDuplicateAttributeValuesCommand extends Command
                     continue;
                 }
 
-                $this->removeAttributeValuesAccordingScore($attributeValues, $inheritDataOnProducts);
+                $this->removeAttributeValuesAccordingToScore($attributeValues, $inheritDataOnProducts);
 
                 $io->progressAdvance();
             }
@@ -121,7 +120,6 @@ class FixDuplicateAttributeValuesCommand extends Command
 
                 $io->progressStart(count($inheritDataOnProducts));
                 foreach ($inheritDataOnProducts as $uid) {
-                    $io->writeln('Would try and update product: ' . $uid);
                     DataInheritanceUtility::inheritDataFromParent($uid);
 
                     $io->progressAdvance();
@@ -142,8 +140,10 @@ class FixDuplicateAttributeValuesCommand extends Command
      * @param array $inheritDataOnProducts
      * @return void
      */
-    protected function removeAttributeValuesAccordingScore(array $attributeValues, array &$inheritDataOnProducts): void
-    {
+    protected function removeAttributeValuesAccordingToScore(
+        array $attributeValues,
+        array &$inheritDataOnProducts
+    ): void {
         foreach ($attributeValues as $sIndex => $attributeValue) {
             if ($sIndex > 0) {
                 $this->removeAttributeValueRecord((int)$attributeValue['uid']);
@@ -339,12 +339,13 @@ class FixDuplicateAttributeValuesCommand extends Command
         bool $allCopiedFromSame,
         array $parentAttribute
     ): int {
-        /* caculate most correct attribute value: score,
-        * not important what "max score" is just to be accurate by how important the "match" is.
-        * compare fields: value, sys_language_uid, l10n_parent, t3_origuid, value
-        */
+        // Try and caculate most correct attribute value: score,
+        // not important what "max score" is just to be accurate by how important the "match" is.
+        // Interesting compare fields: value, sys_language_uid, l10n_parent, t3_origuid.
         $score = 0;
 
+        // AttributeValue value doesn't equal parent attributevalue value,
+        // all duplicate attributevalues value are same and parent attributevalue value is not empty.
         if (
             (string)$parentAttribute['value'] !== (string)$attributeValue['value']
             && $allValuesAreSame
@@ -352,41 +353,21 @@ class FixDuplicateAttributeValuesCommand extends Command
         ) {
             throw new \Exception('Could not determine attribute score, no attribute values are correct. (Delete)?', 1);
         }
-        // Value is same as "parent"
+        // AttributeValue value equals parent attributevalue value, score + 100.
         if ((string)$parentAttribute['value'] === (string)$attributeValue['value'] && !empty($parentAttribute)) {
             $score += 100;
         }
 
-        // If all attribue values are same, the index indicates how important value is according to query.
+        // If all attribue values are same, the index indicates how important value is (according to query).
         if ($allValuesAreSame) {
             if ($allLanguagesAreSame && $allLocalizedFromSame && $allCopiedFromSame) {
                 $score += (100 - ($index * 1));
             }
         }
 
-        return $score;
-    }
+        // Wasn't necessary to calculate any more scores for the duplicates found in current project.
 
-    /**
-     * Checks and removes duplicate attribute values and rii if exists.
-     *
-     * @param array $attributeValues
-     * @return void
-     */
-    protected function removeDuplicateAttributeValuesAndRii(array $attributeValues): void
-    {
-        foreach ($attributeValues as $avIndex => $attributeValue) {
-            if ($avIndex > 0) {
-                $this->removeAttributeValueRecord($attributeValue['product_attrval_uid']);
-                if ($attributeValue['tprii_uid_parent']) {
-                    $this->removeRelationInheritanceIndexRecord(
-                        $attributeValue['tprii_uid_parent'],
-                        $attributeValue['product_attrval_uid'],
-                        $attributeValue['product_attrval_product']
-                    );
-                }
-            }
-        }
+        return $score;
     }
 
     /**
@@ -526,38 +507,6 @@ class FixDuplicateAttributeValuesCommand extends Command
                 $queryBuilder->expr()->eq(
                     'uid',
                     $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
-                )
-            )
-            ->execute();
-    }
-
-    /**
-     * Remove RelationInheritanceIndexRecord.
-     *
-     * @param int $uidParent
-     * @param int $uidChild
-     * @param int $childParentId
-     * @return void
-     */
-    protected function removeRelationInheritanceIndexRecord(
-        int $uidParent,
-        int $uidChild,
-        int $childParentId
-    ): void {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable(self::RELATION_INDEX_TABLE);
-
-        $queryBuilder
-            ->delete(self::RELATION_INDEX_TABLE)
-            ->where(
-                $queryBuilder->expr()->eq('uid_parent', $queryBuilder->createNamedParameter($uidParent)),
-                $queryBuilder->expr()->eq('uid_child', $queryBuilder->createNamedParameter($uidChild)),
-                $queryBuilder->expr()->eq('tablename', $queryBuilder->createNamedParameter(self::ATTRIBUTEVALUE_TABLE)),
-                $queryBuilder->expr()->eq('child_parent_id', $queryBuilder->createNamedParameter($childParentId)),
-                $queryBuilder->expr()->eq(
-                    'child_parent_tablename',
-                    $queryBuilder->createNamedParameter(self::PRODUCT_TABLE)
                 )
             )
             ->execute();

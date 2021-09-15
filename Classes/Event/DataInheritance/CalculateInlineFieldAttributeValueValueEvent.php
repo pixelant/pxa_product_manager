@@ -11,12 +11,14 @@ use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Pixelant\PxaProductManager\Utility\TcaUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
+/**
+ * Calculates value for attribute value.
+ */
 class CalculateInlineFieldAttributeValueValueEvent
 {
     protected static array $attributeTypes;
 
     /**
-     * Calculates Attribute Value Value.
      * Needs to also include attribute id to be able to match directly by attribute.x.
      * Sets event value to a combined string, containing attributeUid|Value.
      *
@@ -52,35 +54,35 @@ class CalculateInlineFieldAttributeValueValueEvent
     }
 
     /**
-     * Get Attribute Type.
+     * Get Attribute type by Attribute uid.
      *
-     * @param int $id
+     * @param int $attributeId
      * @return int
      */
-    protected static function getAttributeType(int $id): int
+    protected static function getAttributeType(int $attributeId): int
     {
-        if (isset(self::$attributeTypes[$id])) {
-            return self::$attributeTypes[$id];
+        if (isset(self::$attributeTypes[$attributeId])) {
+            return self::$attributeTypes[$attributeId];
         }
 
         $type = (int)BackendUtility::getRecord(
             AttributeRepository::TABLE_NAME,
-            $id,
+            $attributeId,
             'type'
         )['type'] ?? 0;
 
-        self::$attributeTypes[$id] = $type;
+        self::$attributeTypes[$attributeId] = $type;
 
-        return self::$attributeTypes[$id];
+        return self::$attributeTypes[$attributeId];
     }
 
     /**
      * Resolve inline targets.
      *
-     * @param array $record
+     * @param array $record AttributeValue record
      * @return array
      */
-    protected static function resolveInlineRelationTargets($record): array
+    protected static function resolveInlineRelationTargets(array $record): array
     {
         $resolvedItemsList = [];
 
