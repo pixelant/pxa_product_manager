@@ -43,4 +43,37 @@ class FalMapper extends AbstractMapper
             }
         }
     }
+
+    /**
+     * Same functionality as map() but exclude Extbase entities.
+     *
+     * @param int $attributeValue
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Property\Exception
+     */
+    public function mapToArray(int $attributeValue): array
+    {
+        $fileRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\FileRepository::class);
+        $fileObjects = $fileRepository->findByRelation(
+            'tx_pxaproductmanager_domain_model_attributevalue',
+            'value',
+            $attributeValue
+        );
+
+        if (!empty($fileObjects)) {
+            $files = [];
+
+            /** @var FileReferenceConverter $fileReferenceConverter */
+            $fileReferenceConverter = GeneralUtility::makeInstance(FileReferenceConverter::class);
+
+            /** @var TYPO3\CMS\Core\Resource\FileReference $file */
+            foreach ($fileObjects as $key => $file) {
+                $files[] = $fileReferenceConverter->convertFrom($file->getUid(), FileReference::class);
+            }
+
+            return $files;
+        }
+
+        return [];
+    }
 }
