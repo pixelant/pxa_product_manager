@@ -6,6 +6,7 @@ namespace Pixelant\PxaProductManager\Domain\Resource;
 
 use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
 use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
+use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
@@ -101,15 +102,20 @@ class Product extends AbstractResource
         // Add additional attributes to result.
         $additionalAttributes = $this->settings['listView']['additionalAttributes'] ?? false;
         if (!empty($additionalAttributes)) {
-            $attributeValues = $this->entity->getAttributeValue();
             $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
-            foreach ($additionalAttributesList as $attribute) {
-                if (!empty($attributeValues[$attribute])) {
-                    $attr = $attributeValues[$attribute]->getAttribute();
-                    $resource[$attribute] = [
-                        'label' => $attr->getLabel() ?? $attr->getName(),
-                        'data' => $attributeValues[$attribute]->getRenderValue(),
-                    ];
+            foreach ($additionalAttributesList as $attributeIdentifier) {
+                foreach ($this->entity->getAttributes() as $attribute) {
+                    if ($attribute->getIdentifier() === $attributeIdentifier) {
+                        $attributeValue = AttributeUtility::findAttributeValue(
+                            $this->entity->getUid(),
+                            $attribute->getUid()
+                        );
+
+                        $resource[$attributeIdentifier] = [
+                            'label' => $attribute->getLabel() ?? $attribute->getName(),
+                            'data' => AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']),
+                        ];
+                    }
                 }
             }
         }

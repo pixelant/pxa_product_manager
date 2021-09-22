@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\Utility;
 
+use Pixelant\PxaProductManager\Attributes\ValueMapper\FalMapper;
+use Pixelant\PxaProductManager\Attributes\ValueMapper\SelectBoxMapper;
+use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
@@ -181,6 +184,44 @@ class AttributeUtility
         }
 
         return null;
+    }
+
+    /**
+     * Getting corresponding render value of attribute value. Without Extbase entities, only simple types.
+     *
+     * @param int $uid
+     * @return mixed
+     */
+    public static function getAttributeValueRenderValue(int $uid)
+    {
+        $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+
+        $attributeValue = $queryBuilder
+            ->select('*')
+            ->from(AttributeValueRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid))
+            )
+            ->execute()
+            ->fetchAssociative();
+
+        $attribute = self::findAttribute($attributeValue['attribute']);
+
+        if (
+            $attribute['type'] === Attribute::ATTRIBUTE_TYPE_IMAGE ||
+            $attribute['type'] === Attribute::ATTRIBUTE_TYPE_FILE
+        ) {
+            return GeneralUtility::makeInstance(FalMapper::class)->mapToArray($attributeValue['uid']);
+        }
+        if (
+            $attribute['type'] === Attribute::ATTRIBUTE_TYPE_MULTISELECT ||
+            $attribute['type'] === Attribute::ATTRIBUTE_TYPE_DROPDOWN
+        ) {
+            return GeneralUtility::makeInstance(SelectBoxMapper::class)
+                ->mapToArray($attributeValue['value'], $attributeValue['attribute']);
+        }
+
+        return $attributeValue['value'];
     }
 
     /**
