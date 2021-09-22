@@ -25,6 +25,11 @@ class ProductInheritanceProcessDatamap
     protected const TABLE = ProductRepository::TABLE_NAME;
 
     /**
+     * @var array
+     */
+    protected array $productsToBeProcessed = [];
+
+    /**
      * Overlay parent product data as defined by the inherited fields in the ProductType.
      *
      * @param array $fieldArray
@@ -36,6 +41,9 @@ class ProductInheritanceProcessDatamap
     public function processDatamap_beforeStart(DataHandler $dataHandler): void
     {
         if (isset($dataHandler->datamap[ProductRepository::TABLE_NAME])) {
+            // Store list of products saved now, after process there will be more, e.g. all localizations etc.
+            $this->productsToBeProcessed = array_keys($dataHandler->datamap[ProductRepository::TABLE_NAME]);
+
             // Make sure product type is correct if product has a parent.
             foreach ($dataHandler->datamap[ProductRepository::TABLE_NAME] as &$record) {
                 $this->inheritProductTypeFromParent($record);
@@ -55,12 +63,26 @@ class ProductInheritanceProcessDatamap
         // Check if any products where saved, then check if it is a parent or a child.
         if (isset($dataHandler->datamap[ProductRepository::TABLE_NAME])) {
             foreach (array_keys($dataHandler->datamap[ProductRepository::TABLE_NAME]) as $identifier) {
+                // Skip products added to datamap during operations.
+                if (!in_array($identifier, $this->productsToBeProcessed, true)) {
+                    continue;
+                }
+
                 if (MathUtility::canBeInterpretedAsInteger($identifier)) {
                     $productId = (int)$identifier;
                 } else {
                     $productId = (int)$dataHandler->substNEWwithIDs[$identifier];
                 }
-                $inheritStatus = $dataHandler->datamap[ProductRepository::TABLE_NAME][$productId]['is_inherited'] ?? 0;
+
+                $language = $dataHandler
+                    ->datamap[ProductRepository::TABLE_NAME][$productId]['sys_language_uid'] ?? null;
+
+                if ($language === null) {
+                    $language = DataInheritanceUtility::getProductLanguage($productId);
+                }
+
+                $inheritStatus = (int)$dataHandler
+                    ->datamap[ProductRepository::TABLE_NAME][$productId]['is_inherited'] ?? 0;
 
                 if (!empty($productId) && $inheritStatus === 0) {
                     $parentProductId = (int)BackendUtility::getRecord(
@@ -69,7 +91,10 @@ class ProductInheritanceProcessDatamap
                         'parent'
                     )['parent'] ?? 0;
 
-                    $children = $this->fetchChildRecordIdentifiers($productId);
+                    // If current record is localized, we need to fetch children by default language.
+                    // child products parent should always be the default product.
+                    $children = $this->fetchChildRecordIdentifiers($productId, (int)$language);
+
                     $recordIsParent = count($children) > 0;
                     $recordIsChild = !empty($parentProductId);
 
@@ -78,11 +103,20 @@ class ProductInheritanceProcessDatamap
                         continue;
                     }
 
+                    // We need to know what parent to calculate hash for.
+                    $parentHashProductId = $this->calculateParentHashProductId(
+                        $recordIsChild,
+                        $recordIsParent,
+                        $parentProductId,
+                        $productId,
+                        (int)$language
+                    );
+
                     if ($recordIsChild) {
-                        $parentHash = DataInheritanceUtility::calculateInheritanceHash($parentProductId);
+                        $parentHash = DataInheritanceUtility::calculateInheritanceHash($parentHashProductId);
                         $childHashes[$productId] = DataInheritanceUtility::calculateInheritanceHash($productId);
                     } elseif ($recordIsParent) {
-                        $parentHash = DataInheritanceUtility::calculateInheritanceHash($productId);
+                        $parentHash = DataInheritanceUtility::calculateInheritanceHash($parentHashProductId);
                         foreach ($children as $child) {
                             $childHashes[$child] = DataInheritanceUtility::calculateInheritanceHash($child);
                         }
@@ -173,12 +207,20 @@ class ProductInheritanceProcessDatamap
 
     /**
      * Fetch child products.
+     * All child records should point to a parent in the "default" language,
+     * so filter out children by the parent language.
      *
      * @param $identifier
+     * @param int $language
      * @return array
      */
-    protected function fetchChildRecordIdentifiers($identifier): array
+    protected function fetchChildRecordIdentifiers($identifier, int $language): array
     {
+        // If current record is localized, we need to fetch children by default language parent.
+        if ((int)$language > 0) {
+            $identifier = DataInheritanceUtility::getParentProductIdOfLocalizedProduct($identifier);
+        }
+
         // New records can't have any child records yet.
         if (MathUtility::canBeInterpretedAsInteger($identifier)) {
             /** @var QueryBuilder $queryBuilder */
@@ -194,15 +236,52 @@ class ProductInheritanceProcessDatamap
             return $queryBuilder
                 ->select('uid')
                 ->from(ProductRepository::TABLE_NAME)
-                ->where($queryBuilder->expr()->eq(
-                    'parent',
-                    $queryBuilder->createNamedParameter($identifier)
-                ))
+                ->where(
+                    $queryBuilder->expr()->eq(
+                        'parent',
+                        $queryBuilder->createNamedParameter($identifier)
+                    ),
+                    $queryBuilder->expr()->eq(
+                        'sys_language_uid',
+                        $queryBuilder->createNamedParameter($language, \PDO::PARAM_INT)
+                    )
+                )
                 ->execute()
                 ->fetchAll(FetchMode::COLUMN, 0);
         }
 
         return [];
+    }
+
+    /**
+     * Calculate what product uid to use when calculating parent hash.
+     *
+     * @param bool $recordIsChild
+     * @param bool $recordIsParent
+     * @param int $parentProductId
+     * @param int $productId
+     * @param int $language
+     * @return int
+     */
+    protected function calculateParentHashProductId(
+        bool $recordIsChild,
+        bool $recordIsParent,
+        int $parentProductId,
+        int $productId,
+        int $language
+    ): int {
+        if ($recordIsChild) {
+            $parentHashProductId = $parentProductId;
+            if ($language > 0) {
+                $parentHashProductId = DataInheritanceUtility::getParentProductIdOfLocalizedProduct(
+                    $parentProductId
+                );
+            }
+        } elseif ($recordIsParent) {
+            $parentHashProductId = $productId;
+        }
+
+        return $parentHashProductId;
     }
 
     /**
