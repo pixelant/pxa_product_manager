@@ -4,6 +4,7 @@ namespace Pixelant\PxaProductManager\Tests\Functional\Hook\ProcessDatamap;
 
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use Pixelant\PxaProductManager\Attributes\ConfigurationProvider\ConfigurationProviderFactory;
+use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Domain\Model\ProductType;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
@@ -12,6 +13,7 @@ use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Domain\Repository\ProductTypeRepository;
 use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\WorkspaceAspect;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -19,7 +21,10 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
+use TYPO3\CMS\Extbase\Persistence\Generic\Session;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
 {
@@ -81,7 +86,7 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
      * @var array
      */
     protected $siteLanguageConfiguration = [
-        1 => [
+        2 => [
             'title' => 'Dansk',
             'enabled' => true,
             'languageId' => 1,
@@ -93,7 +98,7 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
             'fallbackType' => 'fallback',
             'fallbacks' => '0',
         ],
-        2 => [
+        1 => [
             'title' => 'Deutsch',
             'enabled' => true,
             'languageId' => 2,
@@ -189,6 +194,7 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../../../Fixtures/sys_file_reference.xml');
         $this->importDataSet(__DIR__ . '/../../../Fixtures/sys_file_storage.xml');
         $this->importDataSet(__DIR__ . '/../../../Fixtures/sys_file.xml');
+        $this->importDataSet(__DIR__ . '/../../../Fixtures/sys_language.xml');
         $this->importDataSet(__DIR__ . '/../../../Fixtures/tx_pxaproductmanager_attributeset_record_mm.xml');
         $this->importDataSet(__DIR__ . '/../../../Fixtures/tx_pxaproductmanager_domain_model_attribute.xml');
         $this->importDataSet(__DIR__ . '/../../../Fixtures/tx_pxaproductmanager_domain_model_attributeset.xml');
@@ -455,11 +461,96 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
         $this->assertChildInheritedFieldsAreEqualToParent($parentProduct, $childProduct);
 
         // Create a copy of the new child product
-        $copiedChildProduct = $this->createAndFetchCopyOfProduct($childProduct);
+        $localizedChildProduct = $this->createAndFetchLocalizedProduct($childProduct);
 
-        self::assertInstanceOf(Product::class, $copiedChildProduct);
+        self::assertInstanceOf(Product::class, $localizedChildProduct);
 
-        $this->assertChildInheritedFieldsAreEqualToParent($parentProduct, $copiedChildProduct);
+        $this->assertChildInheritedFieldsAreEqualToParent($parentProduct, $localizedChildProduct);
+
+        // product -> hasAttributeValueForAttribute()
+        // product -> getAttributesValues
+        // inheritance table check tx_pxaproductmanager_relation_inheritance_index
+    }
+
+    /**
+     * @test
+     */
+    public function localizeChildProductInheritsCorrectFieldsFromLocalizedParent(): void
+    {
+        // NOTE, copy a child product produces duplicate attribute values.
+        // Could be that the inheritance doesn't check if child product already have an attribute,
+        // and it only checks tx_pxaproductmanager_relation_inheritance_index for mappings.
+        // How do we validate data in tx_pxaproductmanager_relation_inheritance_index....
+        // NOTE, Also seems like also inline fields e.g. images are duplicated during copy.
+        // NOTE, Also need to test to save a parent and check child product attribute values.
+        $this->importDataSets();
+
+        // Fretch parent product.
+        /** @var Product $parentProduct */
+        $parentProduct = $this->productRepository->findByUid(self::PRODUCT_WITH_PT_COMBINED);
+
+        /** @var Product $childProduct */
+        $childProduct = $this->createAndFetchNewProduct(
+            [
+                'name' => 'Child Product - Child to ' . $parentProduct->getName(),
+                'pid' => $parentProduct->getPid(),
+                'parent' => ProductRepository::TABLE_NAME . '_' . $parentProduct->getUid(),
+                'product_type' => $parentProduct->getProductType()->getUid(),
+                'singleview_page' => self::SINGLE_VIEW_PAGE,
+                'tax_rate' => 25,
+            ],
+            [
+                0 => [
+                    'value' => '1',
+                    'attribute' => 1,
+                ],
+                1 => [
+                    'value' => '2',
+                    'attribute' => 2,
+                ],
+                2 => [
+                    'value' => '11,13,15',
+                    'attribute' => 3,
+                ],
+                3 => [
+                    'value' => '',
+                    'attribute' => 4,
+                ],
+            ],
+            [
+                0 => 30,
+            ]
+        );
+
+        self::assertInstanceOf(Product::class, $childProduct);
+
+        $this->assertProductHasCorrectAttributeValues($parentProduct);
+
+        $this->assertChildInheritedFieldsAreEqualToParent($parentProduct, $childProduct);
+
+        $localizedParentProduct = $this->createAndFetchLocalizedProduct($parentProduct);
+
+        // Update some inherited value.
+        $localizedParentProduct->setTaxRate(33);
+
+        // Update some inherited attribute value.
+        /** @var AttributeValue $attribute3 */
+        $attribute3 = $localizedParentProduct->getAttributeValue()['attribute3Muitiselect'];
+        $attribute3->setValue('2,3');
+
+        $this->productRepository->update($localizedParentProduct);
+
+        $persistanceManager = GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(PersistenceManagerInterface::class);
+        $persistanceManager->persistAll();
+        $persistanceManager->clearState();
+
+        // Localize child product.
+        $localizedChildProduct = $this->createAndFetchLocalizedProduct($childProduct);
+
+        self::assertInstanceOf(Product::class, $localizedChildProduct);
+
+        $this->assertChildInheritedFieldsAreEqualToParent($localizedParentProduct, $localizedChildProduct);
 
         // product -> hasAttributeValueForAttribute()
         // product -> getAttributesValues
@@ -517,6 +608,8 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
      */
     protected function createAndFetchNewProduct(array $row, array $attributeValues = [], array $images = []): Product
     {
+        $this->destroySession();
+
         return $this->productRepository->findByUid($this->createNewProduct($row, $attributeValues, $images));
     }
 
@@ -547,6 +640,8 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
      */
     protected function createAndFetchCopyOfProduct(Product $product): Product
     {
+        $this->destroySession();
+
         return $this->productRepository->findByUid($this->createCopyOfProduct($product));
     }
 
@@ -558,7 +653,7 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
      */
     protected function createLocalizationOfProduct(Product $product): int
     {
-        $cmd[ProductRepository::TABLE_NAME][$product->getUid()]['localize'] = 2;
+        $cmd[ProductRepository::TABLE_NAME][$product->getUid()]['localize'] = 1;
 
         /** @var DataHandler $dataHandler */
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
@@ -577,7 +672,25 @@ class ProductInheritanceProcessDatamapTest extends FunctionalTestCase
      */
     protected function createAndFetchLocalizedProduct(Product $product): Product
     {
-        return $this->productRepository->findByUid($this->createLocalizationOfProduct($product));
+        $localizedProductId = $this->createLocalizationOfProduct($product);
+        $this->destroySession();
+
+        // Fetch record by id and then use datamapper to avoid getting the default record.
+        $localizedProductRecord = BackendUtility::getRecord(
+            ProductRepository::TABLE_NAME,
+            $localizedProductId,
+            '*'
+        );
+        $dataMapper = GeneralUtility::makeInstance(ObjectManager::class)->get(DataMapper::class);
+
+        return $dataMapper->map(Product::class, [$localizedProductRecord])[0];
+    }
+
+    protected function destroySession(): void
+    {
+        /** @var Session $session */
+        $session = GeneralUtility::makeInstance(ObjectManager::class)->get(Session::class);
+        $session->destroy();
     }
 
     /**
