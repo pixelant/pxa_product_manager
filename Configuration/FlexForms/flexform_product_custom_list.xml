@@ -53,6 +53,12 @@
 										<type>suggest</type>
 									</suggest>
 								</wizards>
+								<suggestOptions>
+									<default>
+										<additionalSearchFields>sku</additionalSearchFields>
+										<searchCondition>sys_language_uid in (0,-1)</searchCondition>
+									</default>
+								</suggestOptions>
 							</config>
 						</TCEforms>
 					</settings.customProductsList.products>
