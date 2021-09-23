@@ -75,6 +75,7 @@ abstract class AbstractController extends ActionController
     {
         $uids = GeneralUtility::intExplode(',', $uidsList, true);
         if (!empty($uids)) {
+            $uids = $repository->overlayUidList($uids);
             $records = $repository->findByUids($uids)->toArray();
 
             return $this->collection($records)->sortByOrderList($uids, 'uid')->toArray();
