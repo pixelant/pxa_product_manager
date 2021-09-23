@@ -165,7 +165,7 @@ class AttributeUtility
      * @param string $selectFields
      * @return array|null
      */
-    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): ?array
+    public static function findAttributeValues(int $productId, int $attributeId, string $selectFields = '*'): ?array
     {
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
 

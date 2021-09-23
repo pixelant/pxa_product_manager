@@ -16,8 +16,8 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         parent::initializeArguments();
 
         $this->registerArgument('product', Product::class, 'Product', true, null);
-        $this->registerArgument('attributesIdentifiers', 'array', 'attributesIdentifiers', false, null);
-        $this->registerArgument('attributesUids', 'array', 'attributesUids', false, null);
+        $this->registerArgument('attributeIdentifiers', 'array', 'attributesIdentifiers', false, null);
+        $this->registerArgument('attributeUids', 'array', 'attributesUids', false, null);
     }
 
     public static function renderStatic(
@@ -28,41 +28,37 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         $product = $arguments['product'];
         $attributeValues = [];
 
-        if ($arguments['attributesIdentifiers']) {
-            $attributesIdentifiers = $arguments['attributesIdentifiers'];
+        if ($arguments['attributeIdentifiers']) {
+            $attributeIdentifiers = $arguments['attributeIdentifiers'];
 
             foreach ($product->getAttributes() as $attribute) {
-                foreach ($attributesIdentifiers as $identifier) {
-                    if ($attribute->getIdentifier() === $identifier) {
-                        $attributeValue = AttributeUtility::findAttributeValue(
-                            $product->getUid(),
-                            $attribute->getUid()
-                        );
+                if (in_array($attribute->getIdentifier(), $attributeIdentifiers, true)) {
+                    $attributeValue = AttributeUtility::findAttributeValues(
+                        $product->getUid(),
+                        $attribute->getUid()
+                    );
 
-                        if ($attributeValue) {
-                            $attributeValue['renderValue']
-                                = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
-                            $attributeValues[$attribute->getIdentifier()] = $attributeValue;
-                        }
+                    if ($attributeValue) {
+                        $attributeValue['renderValue']
+                            = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
+                        $attributeValues[$attribute->getIdentifier()] = $attributeValue;
                     }
                 }
             }
-        } elseif ($arguments['attributesUids']) {
-            $attributesUids = $arguments['attributesUids'];
+        } elseif ($arguments['attributeUids']) {
+            $attributeUids = $arguments['attributeUids'];
 
             foreach ($product->getAttributes() as $attribute) {
-                foreach ($attributesUids as $uid) {
-                    if ($attribute->getUid() === $uid) {
-                        $attributeValue = AttributeUtility::findAttributeValue(
-                            $product->getUid(),
-                            $attribute->getUid()
-                        );
+                if (in_array($attribute->getUid(), $attributeUids, true)) {
+                    $attributeValue = AttributeUtility::findAttributeValues(
+                        $product->getUid(),
+                        $attribute->getUid()
+                    );
 
-                        if ($attributeValue) {
-                            $attributeValue['renderValue']
-                                = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
-                            $attributeValues[$attribute->getUid()] = $attributeValue;
-                        }
+                    if ($attributeValue) {
+                        $attributeValue['renderValue']
+                            = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
+                        $attributeValues[$attribute->getUid()] = $attributeValue;
                     }
                 }
             }
@@ -71,7 +67,7 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         }
 
         foreach ($product->getAttributes() as $attribute) {
-            $attributeValue = AttributeUtility::findAttributeValue(
+            $attributeValue = AttributeUtility::findAttributeValues(
                 $product->getUid(),
                 $attribute->getUid()
             );
