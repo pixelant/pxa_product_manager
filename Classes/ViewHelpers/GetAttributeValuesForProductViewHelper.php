@@ -11,11 +11,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
 {
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
 
-        $this->registerArgument('product', Product::class, "Product",true, null);
+        $this->registerArgument('product', Product::class, 'Product', true, null);
         $this->registerArgument('attributesIdentifiers', 'array', 'attributesIdentifiers', false, null);
         $this->registerArgument('attributesUids', 'array', 'attributesUids', false, null);
     }
@@ -28,37 +28,36 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         $product = $arguments['product'];
         $attributeValues = [];
 
-        if ($arguments['attributesIdentifiers']){
+        if ($arguments['attributesIdentifiers']) {
             $attributesIdentifiers = $arguments['attributesIdentifiers'];
 
-            foreach ($product->getAttributes() as $attribute){
+            foreach ($product->getAttributes() as $attribute) {
                 foreach ($attributesIdentifiers as $identifier) {
-                    if ($attribute->getIdentifier() == $identifier){
+                    if ($attribute->getIdentifier() === $identifier) {
                         $attributeValue = AttributeUtility::findAttributeValue(
                             $product->getUid(),
                             $attribute->getUid()
                         );
 
-                        if ($attributeValue){
+                        if ($attributeValue) {
                             $attributeValue['renderValue'] = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
                             $attributeValues[$attribute->getIdentifier()] = $attributeValue;
                         }
                     }
                 }
             }
-
-        } elseif ($arguments['attributesUids']){
+        } elseif ($arguments['attributesUids']) {
             $attributesUids = $arguments['attributesUids'];
 
-            foreach ($product->getAttributes() as $attribute){
+            foreach ($product->getAttributes() as $attribute) {
                 foreach ($attributesUids as $uid) {
-                    if ($attribute->getUid() == $uid){
+                    if ($attribute->getUid() === $uid) {
                         $attributeValue = AttributeUtility::findAttributeValue(
                             $product->getUid(),
                             $attribute->getUid()
                         );
 
-                        if ($attributeValue){
+                        if ($attributeValue) {
                             $attributeValue['renderValue'] = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
                             $attributeValues[$attribute->getUid()] = $attributeValue;
                         }
@@ -69,13 +68,13 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
             return $attributeValues;
         }
 
-        foreach ($product->getAttributes() as $attribute){
+        foreach ($product->getAttributes() as $attribute) {
             $attributeValue = AttributeUtility::findAttributeValue(
                 $product->getUid(),
                 $attribute->getUid()
             );
 
-            if ($attributeValue){
+            if ($attributeValue) {
                 $attributeValue['renderValue'] = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
                 $attributeValues[$attribute->getIdentifier()] = $attributeValue;
             }
