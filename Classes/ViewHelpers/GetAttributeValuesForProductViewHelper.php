@@ -24,7 +24,7 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         array $arguments,
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
-    ) {
+    ): array {
         $product = $arguments['product'];
         $attributeValues = [];
 
@@ -40,7 +40,8 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
                         );
 
                         if ($attributeValue) {
-                            $attributeValue['renderValue'] = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
+                            $attributeValue['renderValue']
+                                = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
                             $attributeValues[$attribute->getIdentifier()] = $attributeValue;
                         }
                     }
@@ -58,7 +59,8 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
                         );
 
                         if ($attributeValue) {
-                            $attributeValue['renderValue'] = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
+                            $attributeValue['renderValue']
+                                = AttributeUtility::getAttributeValueRenderValue($attributeValue['uid']);
                             $attributeValues[$attribute->getUid()] = $attributeValue;
                         }
                     }
