@@ -33,7 +33,7 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
 
             foreach ($product->getAttributes() as $attribute) {
                 if (in_array($attribute->getIdentifier(), $attributeIdentifiers, true)) {
-                    $attributeValue = AttributeUtility::findAttributeValues(
+                    $attributeValue = AttributeUtility::findAttributeValue(
                         $product->getUid(),
                         $attribute->getUid()
                     );
@@ -50,7 +50,7 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
 
             foreach ($product->getAttributes() as $attribute) {
                 if (in_array($attribute->getUid(), $attributeUids, true)) {
-                    $attributeValue = AttributeUtility::findAttributeValues(
+                    $attributeValue = AttributeUtility::findAttributeValue(
                         $product->getUid(),
                         $attribute->getUid()
                     );
@@ -67,7 +67,7 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         }
 
         foreach ($product->getAttributes() as $attribute) {
-            $attributeValue = AttributeUtility::findAttributeValues(
+            $attributeValue = AttributeUtility::findAttributeValue(
                 $product->getUid(),
                 $attribute->getUid()
             );

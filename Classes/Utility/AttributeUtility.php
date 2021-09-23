@@ -161,11 +161,12 @@ class AttributeUtility
      * Find a specific attribute value for a product.
      *
      * @param int $productId
-     * @param int $attributeId
+     * @param array $attributeIds
      * @param string $selectFields
      * @return array|null
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public static function findAttributeValues(int $productId, int $attributeId, string $selectFields = '*'): ?array
+    public static function findAttributeValues(int $productId, array $attributeIds, string $selectFields = '*'): ?array
     {
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
 
@@ -174,7 +175,7 @@ class AttributeUtility
             ->from(AttributeValueRepository::TABLE_NAME)
             ->where(
                 $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId)),
-                $queryBuilder->expr()->eq('attribute', $queryBuilder->createNamedParameter($attributeId))
+                $queryBuilder->expr()->in('attribute', $queryBuilder->createNamedParameter($attributeIds))
             )
             ->execute()
             ->fetchAssociative();
@@ -184,6 +185,18 @@ class AttributeUtility
         }
 
         return null;
+    }
+
+    /**
+     * @param int $productId
+     * @param int $attributeId
+     * @param string $selectFields
+     * @return array|null
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): ?array
+    {
+        return self::findAttributeValues($productId, [$attributeId], $selectFields);
     }
 
     /**
