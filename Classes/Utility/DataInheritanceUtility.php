@@ -857,7 +857,7 @@ class DataInheritanceUtility
     }
 
     /**
-     * Fetch parent product with overlay to localized product if exist.
+     * Fetch ID of parent product. The ID will be that of the localized product in current language if it exist.
      *
      * @param int $productId
      * @return int
@@ -869,7 +869,7 @@ class DataInheritanceUtility
         $childRecord = BackendUtility::getRecord(
             ProductRepository::TABLE_NAME,
             $productId,
-            implode(',', ['parent', $languageField])
+            'parent,' . $languageField
         ) ?? [];
 
         // If child record is localized, fetch l10n_parent, use default record.

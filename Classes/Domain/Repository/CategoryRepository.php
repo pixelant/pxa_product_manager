@@ -37,7 +37,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class CategoryRepository extends Repository
 {
-    use AbleFindByUidList;
+    use CanFindByUidList;
 
     /**
      * Default orderings.

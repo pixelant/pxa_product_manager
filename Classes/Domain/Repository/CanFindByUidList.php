@@ -8,7 +8,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
-trait AbleFindByUidList
+trait CanFindByUidList
 {
     /**
      * Find by uids list.
