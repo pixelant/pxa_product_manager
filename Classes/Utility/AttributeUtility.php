@@ -42,35 +42,49 @@ class AttributeUtility
     }
 
     /**
+     * Returns all attribute id's for corresponding product.
+     *
      * @param int $productId
      * @param string $selectFields
      * @return array|null
      */
-    public static function findAllAttributesForProduct(int $productId, string $selectFields = '*'): ?array
-    {
+    public static function findAllAttributesForProduct(
+        int $productId,
+        array $attributeIds = [],
+        array $attributeIdentifiers = [],
+        string $selectFields = '*'
+    ): ?array {
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+        $selectFields = array_map(function ($field) use ($selectFields) {
+            return $selectFields !== '*' ? 'a.' . $field : $field;
+        }, GeneralUtility::trimExplode(',', $selectFields, true));
 
-        $attributesIds = $queryBuilder
-            ->select('attribute')
+        $queryBuilder
+            ->select(...$selectFields)
             ->from(AttributeValueRepository::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId))
+            ->join(
+                AttributeValueRepository::TABLE_NAME,
+                AttributeRepository::TABLE_NAME,
+                'a',
+                $queryBuilder->expr()->eq('a.uid', AttributeValueRepository::TABLE_NAME . '.attribute')
             )
-            ->execute()
-            ->fetchAllAssociativeIndexed();
-
-        $attributesIds = array_keys($attributesIds);
-
-        $queryBuilder = self::getQueryBuilderForTable(AttributeRepository::TABLE_NAME);
-
-        $attributes = $queryBuilder
-            ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
-            ->from(AttributeRepository::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->in('uid', $attributesIds)
-            )
-            ->execute()
-            ->fetchAllAssociativeIndexed();
+                $queryBuilder->expr()->eq(AttributeValueRepository::TABLE_NAME . '.product', $productId)
+            );
+
+        if (!empty($attributeIds)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(AttributeValueRepository::TABLE_NAME . '.attribute', $attributeIds)
+            );
+        }
+
+        if (!empty($attributeIdentifiers)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in('a.identifier', $attributeIdentifiers)
+            );
+        }
+
+        $attributes = $queryBuilder->execute()->fetchAllAssociativeIndexed();
 
         if (is_array($attributes)) {
             return array_keys($attributes);
@@ -196,7 +210,7 @@ class AttributeUtility
     }
 
     /**
-     * Find a specific attribute value for a product.
+     * Find all attribute values for product with attribute identifiers as keys.
      *
      * @param int $productId
      * @param array $attributeIds
@@ -233,6 +247,8 @@ class AttributeUtility
     }
 
     /**
+     * Find attribute value for product with given attribute id.
+     *
      * @param int $productId
      * @param int $attributeId
      * @param string $selectFields

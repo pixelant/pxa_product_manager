@@ -31,26 +31,25 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         }
 
         if ($arguments['attributeIdentifiers']) {
-            $attributeIdentifiers = $arguments['attributeIdentifiers'];
-            $attributes = AttributeUtility::findAllAttributesForProduct($arguments['uid'], 'uid,identifier');
-            $filteredAttributes = array_filter(
-                $attributes,
-                fn ($attribute) => in_array($attributeIdentifiers, $attribute['identifier'], true)
+            $attributes = AttributeUtility::findAllAttributesForProduct(
+                $arguments['uid'],
+                [],
+                $arguments['attributeIdentifiers'],
+                'uid,identifier'
             );
-            $attributeIds = array_column($filteredAttributes, 'uid');
+            $attributeIds = array_column($attributes, 'uid');
 
             $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], $attributeIds);
         } elseif ($arguments['attributeUids']) {
-            $attributeUids = $arguments['attributeUids'];
-            $attributes = AttributeUtility::findAllAttributesForProduct($arguments['uid'], 'uid');
-            $filteredAttributes = array_filter(
-                $attributes,
-                fn ($attribute) => in_array($attributeUids, $attribute['uid'], true)
+            $attributes = AttributeUtility::findAllAttributesForProduct(
+                $arguments['uid'],
+                $arguments['attributeUids'],
+                [],
+                'uid'
             );
-
-            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], $filteredAttributes);
+            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], $attributes);
         } else {
-            $attributes = AttributeUtility::findAllAttributesForProduct($arguments['uid'], 'uid');
+            $attributes = AttributeUtility::findAllAttributesForProduct($arguments['uid'], [], [], 'uid');
             $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], $attributes);
         }
 
