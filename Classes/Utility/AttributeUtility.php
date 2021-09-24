@@ -7,7 +7,6 @@ namespace Pixelant\PxaProductManager\Utility;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\FalMapper;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\SelectBoxMapper;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
-use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
@@ -47,7 +46,7 @@ class AttributeUtility
      * @param string $selectFields
      * @return array|null
      */
-    public static function findAllAttributesForProduct(int $productId, string $selectFields='*'): ?array
+    public static function findAllAttributesForProduct(int $productId, string $selectFields = '*'): ?array
     {
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
 
@@ -73,7 +72,7 @@ class AttributeUtility
             ->execute()
             ->fetchAllAssociativeIndexed();
 
-        if (is_array($attributes)){
+        if (is_array($attributes)) {
             return array_keys($attributes);
         }
 
@@ -217,7 +216,7 @@ class AttributeUtility
                 AttributeRepository::TABLE_NAME,
                 AttributeValueRepository::TABLE_NAME,
                 'av',
-                $queryBuilder->expr()->eq('av.attribute', AttributeRepository::TABLE_NAME.'.uid')
+                $queryBuilder->expr()->eq('av.attribute', AttributeRepository::TABLE_NAME . '.uid')
             )
             ->where(
                 $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId)),
@@ -225,7 +224,6 @@ class AttributeUtility
             )
             ->execute()
             ->fetchAllAssociative();
-
 
         if (is_array($attributeValues)) {
             return array_column($attributeValues, null, 'identifier');
@@ -264,7 +262,6 @@ class AttributeUtility
             )
             ->execute()
             ->fetchAssociative();
-
 
         $attribute = self::findAttribute($attributeValue['attribute']);
 
