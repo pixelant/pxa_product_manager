@@ -42,6 +42,57 @@ class AttributeUtility
     }
 
     /**
+     * Returns all attributes for corresponding product.
+     *
+     * @param int $productId
+     * @param string $selectFields
+     * @return array
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    public static function findAttributesForProduct(
+        int $productId,
+        array $attributeIds = [],
+        array $attributeIdentifiers = [],
+        string $selectFields = '*'
+    ): array {
+        $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+        $selectFields = array_map(fn ($field) => 'a.' . $field, GeneralUtility::trimExplode(',', $selectFields, true));
+
+        $queryBuilder
+            ->select(...$selectFields)
+            ->from(AttributeValueRepository::TABLE_NAME)
+            ->join(
+                AttributeValueRepository::TABLE_NAME,
+                AttributeRepository::TABLE_NAME,
+                'a',
+                $queryBuilder->expr()->eq('a.uid', AttributeValueRepository::TABLE_NAME . '.attribute')
+            )
+            ->where(
+                $queryBuilder->expr()->eq(AttributeValueRepository::TABLE_NAME . '.product', $productId)
+            );
+
+        if (!empty($attributeIds)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(AttributeValueRepository::TABLE_NAME . '.attribute', $attributeIds)
+            );
+        }
+
+        if (!empty($attributeIdentifiers)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in('a.identifier', $attributeIdentifiers)
+            );
+        }
+
+        $attributes = $queryBuilder->execute()->fetchAllAssociativeIndexed();
+
+        if (is_array($attributes)) {
+            return $attributes;
+        }
+
+        return [];
+    }
+
+    /**
      * Get all attribute records.
      *
      * @param string $selectFields List of fields to select (comma-separated)
@@ -158,32 +209,56 @@ class AttributeUtility
     }
 
     /**
-     * Find a specific attribute value for a product.
+     * Find all attribute values for product with attribute identifiers as keys.
+     *
+     * @param int $productId
+     * @param array $attributeIds
+     * @param string $selectFields
+     * @return array|null
+     * @throws \Doctrine\DBAL\Driver\Exception
+     */
+    public static function findAttributeValues(int $productId, array $attributeIds, string $selectFields = '*'): ?array
+    {
+        $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $attributeValues = $queryBuilder
+            ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
+            ->from(AttributeRepository::TABLE_NAME)
+            ->join(
+                AttributeRepository::TABLE_NAME,
+                AttributeValueRepository::TABLE_NAME,
+                'av',
+                $queryBuilder->expr()->eq('av.attribute', AttributeRepository::TABLE_NAME . '.uid')
+            )
+            ->where(
+                $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId)),
+                $queryBuilder->expr()->in('attribute', $attributeIds)
+            )
+            ->execute()
+            ->fetchAllAssociative();
+
+        if (is_array($attributeValues)) {
+            return array_column($attributeValues, null, 'identifier');
+        }
+
+        return null;
+    }
+
+    /**
+     * Find attribute value for product with given attribute id.
      *
      * @param int $productId
      * @param int $attributeId
      * @param string $selectFields
-     * @return array|null
+     * @return array
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): ?array
+    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): array
     {
-        $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+        $attributeValue = self::findAttributeValues($productId, [$attributeId], $selectFields);
 
-        $row = $queryBuilder
-            ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
-            ->from(AttributeValueRepository::TABLE_NAME)
-            ->where(
-                $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId)),
-                $queryBuilder->expr()->eq('attribute', $queryBuilder->createNamedParameter($attributeId))
-            )
-            ->execute()
-            ->fetchAssociative();
-
-        if (is_array($row)) {
-            return $row;
-        }
-
-        return null;
+        return array_pop($attributeValue);
     }
 
     /**
