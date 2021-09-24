@@ -7,6 +7,7 @@ namespace Pixelant\PxaProductManager\Utility;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\FalMapper;
 use Pixelant\PxaProductManager\Attributes\ValueMapper\SelectBoxMapper;
 use Pixelant\PxaProductManager\Domain\Model\Attribute;
+use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeSetRepository;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
@@ -39,6 +40,44 @@ class AttributeUtility
             $attributeId,
             $selectFields
         );
+    }
+
+    /**
+     * @param int $productId
+     * @param string $selectFields
+     * @return array|null
+     */
+    public static function findAllAttributesForProduct(int $productId, string $selectFields='*'): ?array
+    {
+        $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+
+        $attributesIds = $queryBuilder
+            ->select('attribute')
+            ->from(AttributeValueRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId))
+            )
+            ->execute()
+            ->fetchAllAssociativeIndexed();
+
+        $attributesIds = array_keys($attributesIds);
+
+        $queryBuilder = self::getQueryBuilderForTable(AttributeRepository::TABLE_NAME);
+
+        $attributes = $queryBuilder
+            ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
+            ->from(AttributeRepository::TABLE_NAME)
+            ->where(
+                $queryBuilder->expr()->in('uid', $attributesIds)
+            )
+            ->execute()
+            ->fetchAllAssociativeIndexed();
+
+        if (is_array($attributes)){
+            return array_keys($attributes);
+        }
+
+        return [];
     }
 
     /**
@@ -169,19 +208,27 @@ class AttributeUtility
     public static function findAttributeValues(int $productId, array $attributeIds, string $selectFields = '*'): ?array
     {
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
+        $queryBuilder->getRestrictions()->removeAll();
 
-        $row = $queryBuilder
+        $attributeValues = $queryBuilder
             ->select(...GeneralUtility::trimExplode(',', $selectFields, true))
-            ->from(AttributeValueRepository::TABLE_NAME)
+            ->from(AttributeRepository::TABLE_NAME)
+            ->join(
+                AttributeRepository::TABLE_NAME,
+                AttributeValueRepository::TABLE_NAME,
+                'av',
+                $queryBuilder->expr()->eq('av.attribute', AttributeRepository::TABLE_NAME.'.uid')
+            )
             ->where(
                 $queryBuilder->expr()->eq('product', $queryBuilder->createNamedParameter($productId)),
-                $queryBuilder->expr()->in('attribute', $queryBuilder->createNamedParameter($attributeIds))
+                $queryBuilder->expr()->in('attribute', $attributeIds)
             )
             ->execute()
-            ->fetchAssociative();
+            ->fetchAllAssociative();
 
-        if (is_array($row)) {
-            return $row;
+
+        if (is_array($attributeValues)) {
+            return array_column($attributeValues, null, 'identifier');
         }
 
         return null;
@@ -217,6 +264,7 @@ class AttributeUtility
             )
             ->execute()
             ->fetchAssociative();
+
 
         $attribute = self::findAttribute($attributeValue['attribute']);
 
