@@ -31,7 +31,7 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
         }
 
         if ($arguments['attributeIdentifiers']) {
-            $attributes = AttributeUtility::findAllAttributesForProduct(
+            $attributes = AttributeUtility::findAttributesForProduct(
                 $arguments['uid'],
                 [],
                 $arguments['attributeIdentifiers'],
@@ -39,18 +39,18 @@ class GetAttributeValuesForProductViewHelper extends AbstractViewHelper
             );
             $attributeIds = array_column($attributes, 'uid');
 
-            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], $attributeIds);
+            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], array_keys($attributeIds));
         } elseif ($arguments['attributeUids']) {
-            $attributes = AttributeUtility::findAllAttributesForProduct(
+            $attributes = AttributeUtility::findAttributesForProduct(
                 $arguments['uid'],
                 $arguments['attributeUids'],
                 [],
                 'uid'
             );
-            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], $attributes);
+            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], array_keys($attributes));
         } else {
-            $attributes = AttributeUtility::findAllAttributesForProduct($arguments['uid'], [], [], 'uid');
-            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], $attributes);
+            $attributes = AttributeUtility::findAttributesForProduct($arguments['uid'], [], [], 'uid');
+            $attributeValues = AttributeUtility::findAttributeValues($arguments['uid'], array_keys($attributes));
         }
 
         if ($attributeValues) {

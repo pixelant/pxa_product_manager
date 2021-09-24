@@ -42,22 +42,21 @@ class AttributeUtility
     }
 
     /**
-     * Returns all attribute id's for corresponding product.
+     * Returns all attributes for corresponding product.
      *
      * @param int $productId
      * @param string $selectFields
-     * @return array|null
+     * @return array
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public static function findAllAttributesForProduct(
+    public static function findAttributesForProduct(
         int $productId,
         array $attributeIds = [],
         array $attributeIdentifiers = [],
         string $selectFields = '*'
-    ): ?array {
+    ): array {
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
-        $selectFields = array_map(function ($field) use ($selectFields) {
-            return $selectFields !== '*' ? 'a.' . $field : $field;
-        }, GeneralUtility::trimExplode(',', $selectFields, true));
+        $selectFields = array_map(fn ($field) => 'a.' . $field, GeneralUtility::trimExplode(',', $selectFields, true));
 
         $queryBuilder
             ->select(...$selectFields)
@@ -87,7 +86,7 @@ class AttributeUtility
         $attributes = $queryBuilder->execute()->fetchAllAssociativeIndexed();
 
         if (is_array($attributes)) {
-            return array_keys($attributes);
+            return $attributes;
         }
 
         return [];
@@ -252,12 +251,14 @@ class AttributeUtility
      * @param int $productId
      * @param int $attributeId
      * @param string $selectFields
-     * @return array|null
+     * @return array
      * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): ?array
+    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): array
     {
-        return self::findAttributeValues($productId, [$attributeId], $selectFields);
+        $attributeValue = self::findAttributeValues($productId, [$attributeId], $selectFields);
+
+        return array_pop($attributeValue);
     }
 
     /**
