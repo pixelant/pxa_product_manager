@@ -26,6 +26,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -37,7 +38,7 @@ class UpdateInheritanceCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Checks and if needed, updates inheritance to child products.')
+            ->setDescription('Checks inheritance to child products and updates it if needed.')
             ->addOption(
                 'rebuild-queue',
                 'r',
@@ -95,20 +96,20 @@ class UpdateInheritanceCommand extends Command
                 )
             );
 
-            $inheritdData = DataInheritanceUtility::inheritDataFromParent($product['product_uid']);
+            $inheritedData = DataInheritanceUtility::inheritDataFromParent($product['product_uid']);
 
-            if (!empty($inheritdData)) {
+            if (!empty($inheritedData)) {
                 $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-                $dataHandler->start($inheritdData['data'], $inheritdData['cmd']);
+                $dataHandler->start($inheritedData['data'], $inheritedData['cmd']);
                 $dataHandler->process_datamap();
                 $dataHandler->process_cmdmap();
             }
 
             if (
-                !empty($inheritdData)
-                && isset($inheritdData['data'][ProductRepository::TABLE_NAME])
+                !empty($inheritedData)
+                && isset($inheritedData['data'][ProductRepository::TABLE_NAME])
             ) {
-                foreach ($inheritdData['data'][ProductRepository::TABLE_NAME] as $id => $data) {
+                foreach ($inheritedData['data'][ProductRepository::TABLE_NAME] as $id => $data) {
                     $updated++;
                     unset($data['is_inherited']);
                     $io->writeln(
@@ -142,15 +143,12 @@ class UpdateInheritanceCommand extends Command
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable(ProductRepository::TABLE_NAME);
         $queryBuilder->getRestrictions()->removeAll();
+        $queryBuilder->getRestrictions()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
 
         $records = $queryBuilder->select('uid')
             ->from(ProductRepository::TABLE_NAME)
             ->where(
-                $queryBuilder->expr()->eq(
-                    'deleted',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                ),
-                $queryBuilder->expr()->gt(
+                $queryBuilder->expr()->neq(
                     'parent',
                     $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
@@ -169,14 +167,14 @@ class UpdateInheritanceCommand extends Command
      */
     protected function rebuildInheritanceQueue(): int
     {
-        $this->emptyInheritanceQueue();
+        $this->truncateInheritanceQueue();
 
-        $allChilds = $this->fetchChildProducts();
-        foreach ($allChilds as $index => $child) {
+        $allChildren = $this->fetchChildProducts();
+        foreach ($allChildren as $index => $child) {
             $this->addProductToInheritanceQueue($child['uid']);
         }
 
-        return count($allChilds);
+        return count($allChildren);
     }
 
     /**
@@ -243,7 +241,7 @@ class UpdateInheritanceCommand extends Command
      *
      * @return void
      */
-    protected function emptyInheritanceQueue(): void
+    protected function truncateInheritanceQueue(): void
     {
         /** @var \TYPO3\CMS\Core\Database\Query\QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)

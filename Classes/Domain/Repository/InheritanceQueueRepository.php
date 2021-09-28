@@ -32,5 +32,5 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class InheritanceQueueRepository extends Repository
 {
-    public const TABLE_NAME = 'tx_pxaproductmanager_inheritancequeue_item';
+    public const TABLE_NAME = 'tx_pxaproductmanager_inheritance_queue_item';
 }

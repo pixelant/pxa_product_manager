@@ -898,9 +898,9 @@ class DataInheritanceUtility
     }
 
     /**
-     * Get parent product of localized product.
+     * Get id of the product input product was localized from.
      *
-     * @param int $identifier
+     * @param int $identifier Localized product uid
      * @return int
      */
     public static function getParentProductIdOfLocalizedProduct(int $identifier): int

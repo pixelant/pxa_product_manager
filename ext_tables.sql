@@ -225,9 +225,9 @@ CREATE TABLE tx_pxaproductmanager_relation_inheritance_index
 );
 
 #
-# Table structure for table 'tx_pxaproductmanager_inheritancequeue_item'
+# Table structure for table 'tx_pxaproductmanager_inheritance_queue_item'
 #
-CREATE TABLE tx_pxaproductmanager_inheritancequeue_item (
+CREATE TABLE tx_pxaproductmanager_inheritance_queue_item (
 	product_uid int(11) DEFAULT '0' NOT NULL,
 	indexed int(11) DEFAULT '0' NOT NULL,
 	errors text NOT NULL,

@@ -104,7 +104,7 @@ class ProductInheritanceProcessDatamap
                     }
 
                     // We need to know what parent to calculate hash for.
-                    $parentHashProductId = $this->calculateParentHashProductId(
+                    $parentHashProductId = $this->findCorrectParentHashProductId(
                         $recordIsChild,
                         $recordIsParent,
                         $parentProductId,
@@ -263,7 +263,7 @@ class ProductInheritanceProcessDatamap
      * @param int $language
      * @return int
      */
-    protected function calculateParentHashProductId(
+    protected function findCorrectParentHashProductId(
         bool $recordIsChild,
         bool $recordIsParent,
         int $parentProductId,
