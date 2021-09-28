@@ -3,11 +3,9 @@
 namespace Pixelant\PxaProductManager\Domain\Repository;
 
 /*
- *
  *  Copyright notice
  *
- *  (c) 2017
- *
+ *  (c) 2014
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -30,9 +28,9 @@ namespace Pixelant\PxaProductManager\Domain\Repository;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
- * The repository for Filters.
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class FilterRepository extends Repository
+class InheritanceQueueRepository extends Repository
 {
-    use CanFindByUidList;
+    public const TABLE_NAME = 'tx_pxaproductmanager_inheritance_queue_item';
 }

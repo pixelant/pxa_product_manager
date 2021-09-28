@@ -477,9 +477,8 @@ class DataInheritanceUtility
     ): array {
         $missingAttributes = [];
         $childAttributeIdList = array_column($resolvedChildItemsList, 'identifier');
-
         foreach ($inheritedAttributes as $attribute) {
-            $inheritedAttributeId = (int)array_pop(explode('.', (string)$attribute ?? ''));
+            $inheritedAttributeId = (string)array_pop(explode('.', (string)$attribute ?? ''));
             if (!in_array($inheritedAttributeId, $childAttributeIdList, true)) {
                 $missingAttributes[] = $inheritedAttributeId;
             }
@@ -603,7 +602,7 @@ class DataInheritanceUtility
             )[$identifierField] ?? [];
 
             if (!empty($identifier)) {
-                $resolvedRelationsItems[$index]['identifier'] = $identifier;
+                $resolvedRelationsItems[$index]['identifier'] = (string)$identifier;
             }
         }
     }
@@ -750,11 +749,7 @@ class DataInheritanceUtility
     {
         $inheritanceData = [];
 
-        $parentProductId = (int)BackendUtility::getRecord(
-            ProductRepository::TABLE_NAME,
-            $productId,
-            'parent'
-        )['parent'] ?? 0;
+        $parentProductId = self::getParentProductIdWithOverlay($productId);
 
         if ($parentProductId === 0) {
             return [];
@@ -859,5 +854,83 @@ class DataInheritanceUtility
         }
 
         return $row;
+    }
+
+    /**
+     * Fetch ID of parent product. The ID will be that of the localized product in current language if it exist.
+     *
+     * @param int $productId
+     * @return int
+     */
+    public static function getParentProductIdWithOverlay(int $productId): int
+    {
+        $languageField = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
+
+        $childRecord = BackendUtility::getRecord(
+            ProductRepository::TABLE_NAME,
+            $productId,
+            'parent,' . $languageField
+        ) ?? [];
+
+        // If child record is localized, fetch l10n_parent, use default record.
+        if (!empty($childRecord['parent'])) {
+            $parent = (int)array_pop(explode('_', (string)$childRecord['parent'] ?? ''));
+
+            if (!empty($parent)) {
+                // If child product is localized, fetch localized product of parent.
+                if ((int)$childRecord[$languageField] > 0) {
+                    $localizedParentRecord = BackendUtility::getRecordLocalization(
+                        ProductRepository::TABLE_NAME,
+                        $parent,
+                        $childRecord[$languageField]
+                    )[0] ?? [];
+
+                    if (!empty($localizedParentRecord)) {
+                        return (int)$localizedParentRecord['uid'];
+                    }
+                } else {
+                    return (int)$parent;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get id of the product input product was localized from.
+     *
+     * @param int $identifier Localized product uid
+     * @return int
+     */
+    public static function getParentProductIdOfLocalizedProduct(int $identifier): int
+    {
+        $translationSource = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['transOrigPointerField'];
+
+        $l10nParent = (int)BackendUtility::getRecord(
+            ProductRepository::TABLE_NAME,
+            $identifier,
+            $translationSource
+        )[$translationSource] ?? 0;
+
+        return (int)array_pop(explode('_', (string)$l10nParent ?? 0));
+    }
+
+    /**
+     * Get product language.
+     *
+     * @param int $identifier
+     * @return int
+     */
+    public static function getProductLanguage(int $identifier): int
+    {
+        $languageField = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
+        $language = (int)BackendUtility::getRecord(
+            ProductRepository::TABLE_NAME,
+            $identifier,
+            $languageField
+        )[$languageField] ?? 0;
+
+        return $language;
     }
 }

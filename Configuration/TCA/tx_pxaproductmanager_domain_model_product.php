@@ -374,6 +374,11 @@ return (function () {
                             'disabled' => true,
                         ],
                     ],
+                    'suggestOptions' => [
+                        'tx_pxaproductmanager_domain_model_product' => [
+                            'searchCondition' => 'sys_language_uid in (0,-1) AND parent = 0',
+                        ],
+                    ],
                 ],
             ],
             'keywords' => [

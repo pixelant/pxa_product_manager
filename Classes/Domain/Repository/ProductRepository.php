@@ -39,7 +39,7 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
  */
 class ProductRepository extends AbstractDemandRepository
 {
-    use AbleFindByUidList;
+    use CanFindByUidList;
 
     public const TABLE_NAME = 'tx_pxaproductmanager_domain_model_product';
 
