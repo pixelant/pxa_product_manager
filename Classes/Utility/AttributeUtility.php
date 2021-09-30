@@ -275,6 +275,12 @@ class AttributeUtility
      */
     public static function getAttributeValueRenderValue(int $uid)
     {
+        $cachedKey = "attribute_".$uid."_renderValue";
+
+        if (self::$cachedProperties[$cachedKey]){
+            return self::$cachedProperties[$cachedKey];
+        }
+
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
 
         $attributeValue = $queryBuilder
@@ -286,22 +292,30 @@ class AttributeUtility
             ->execute()
             ->fetchAssociative();
 
-        $attribute = self::findAttribute($attributeValue['attribute']);
+        if (self::$cachedProperties["attribute_".$attributeValue['attribute']]){
+            $attribute = self::$cachedProperties["attribute_".$attributeValue['attribute']];
+        } else{
+            $attribute = self::findAttribute($attributeValue['attribute']);
+            self::getCachedProperties("attribute_".$attributeValue['attribute'], $attribute);
+        }
 
         if (
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_IMAGE ||
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_FILE
         ) {
+            self::getCachedProperties($cachedKey, $attributeValue['value']);
             return GeneralUtility::makeInstance(FalMapper::class)->mapToArray($attributeValue['uid']);
         }
         if (
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_MULTISELECT ||
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_DROPDOWN
         ) {
+            self::getCachedProperties($cachedKey, $attributeValue['value']);
             return GeneralUtility::makeInstance(SelectBoxMapper::class)
                 ->mapToArray($attributeValue['value'], $attributeValue['attribute']);
         }
 
+        self::getCachedProperties($cachedKey, $attributeValue['value']);
         return $attributeValue['value'];
     }
 
@@ -373,8 +387,9 @@ class AttributeUtility
 
     /**
      * @param string $key
+     * @param $properties
      */
-    protected static function getCachedProperties(string $key, array $properties)
+    protected static function getCachedProperties(string $key, $properties)
     {
         self::$cachedProperties[$key] = $properties;
     }
