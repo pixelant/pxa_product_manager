@@ -25,6 +25,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class AttributeUtility
 {
+
+    /**
+     * @var array
+     */
+    protected static array $cachedProperties = [];
+
     /**
      * Get an attrib.
      *
@@ -308,6 +314,12 @@ class AttributeUtility
      */
     public static function findAttributeOptions(int $attributeId, string $selectFields = '*'): ?array
     {
+        $cachedKey = "attribute_".$attributeId."_options";
+
+        if (self::$cachedProperties[$cachedKey]){
+            return self::$cachedProperties[$cachedKey];
+        }
+
         $queryBuilder = self::getQueryBuilderForTable(OptionRepository::TABLE_NAME);
 
         $row = $queryBuilder
@@ -320,6 +332,7 @@ class AttributeUtility
             ->fetchAllAssociative();
 
         if (is_array($row)) {
+            self::getCachedProperties($cachedKey, $row);
             return $row;
         }
 
@@ -356,5 +369,13 @@ class AttributeUtility
     protected static function getQueryBuilderForTable(string $table)
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
+    }
+
+    /**
+     * @param string $key
+     */
+    protected static function getCachedProperties(string $key, array $properties)
+    {
+        self::$cachedProperties[$key] = $properties;
     }
 }
