@@ -225,6 +225,12 @@ class AttributeUtility
      */
     public static function findAttributeValues(int $productId, array $attributeIds, string $selectFields = '*'): ?array
     {
+        $cacheKey = "product_".$productId."_attributeValues";
+
+        if (self::$cachedProperties[$cacheKey]){
+            return self::$cachedProperties[$cacheKey];
+        }
+
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
         $queryBuilder->getRestrictions()->removeAll();
 
@@ -245,7 +251,9 @@ class AttributeUtility
             ->fetchAllAssociative();
 
         if (is_array($attributeValues)) {
-            return array_column($attributeValues, null, 'identifier');
+            $attributeValues = array_column($attributeValues, null, 'identifier');
+            self::getCachedProperties($cacheKey, $attributeValues);
+            return $attributeValues;
         }
 
         return null;
@@ -303,16 +311,18 @@ class AttributeUtility
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_IMAGE ||
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_FILE
         ) {
-            self::getCachedProperties($cachedKey, $attributeValue['value']);
-            return GeneralUtility::makeInstance(FalMapper::class)->mapToArray($attributeValue['uid']);
+            $attributeRenderValue = GeneralUtility::makeInstance(FalMapper::class)->mapToArray($attributeValue['uid']);
+            self::getCachedProperties($cachedKey, $attributeRenderValue);
+            return $attributeRenderValue;
         }
         if (
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_MULTISELECT ||
             $attribute['type'] === Attribute::ATTRIBUTE_TYPE_DROPDOWN
         ) {
-            self::getCachedProperties($cachedKey, $attributeValue['value']);
-            return GeneralUtility::makeInstance(SelectBoxMapper::class)
+            $attributeRenderValue =GeneralUtility::makeInstance(SelectBoxMapper::class)
                 ->mapToArray($attributeValue['value'], $attributeValue['attribute']);
+            self::getCachedProperties($cachedKey, $attributeRenderValue);
+            return $attributeRenderValue;
         }
 
         self::getCachedProperties($cachedKey, $attributeValue['value']);
