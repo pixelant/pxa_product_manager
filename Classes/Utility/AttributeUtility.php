@@ -225,12 +225,6 @@ class AttributeUtility
      */
     public static function findAttributeValues(int $productId, array $attributeIds, string $selectFields = '*'): ?array
     {
-        $cacheKey = "product_".$productId."_attributeValues";
-
-        if (self::$cachedProperties[$cacheKey]){
-            return self::$cachedProperties[$cacheKey];
-        }
-
         $queryBuilder = self::getQueryBuilderForTable(AttributeValueRepository::TABLE_NAME);
         $queryBuilder->getRestrictions()->removeAll();
 
@@ -251,9 +245,7 @@ class AttributeUtility
             ->fetchAllAssociative();
 
         if (is_array($attributeValues)) {
-            $attributeValues = array_column($attributeValues, null, 'identifier');
-            self::getCachedProperties($cacheKey, $attributeValues);
-            return $attributeValues;
+            return array_column($attributeValues, null, 'identifier');
         }
 
         return null;
