@@ -26,7 +26,6 @@ return (function () {
                 'endtime' => 'endtime',
             ],
             'searchFields' => 'name,sku,teaser,description',
-            'thumbnail' => 'images',
             'iconfile' => 'EXT:pxa_product_manager/Resources/Public/Icons/Svg/product.svg',
         ],
         'types' => [
