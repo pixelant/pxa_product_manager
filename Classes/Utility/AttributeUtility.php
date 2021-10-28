@@ -251,10 +251,10 @@ class AttributeUtility
      * @param int $productId
      * @param int $attributeId
      * @param string $selectFields
-     * @return array
+     * @return array|null
      * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): array
+    public static function findAttributeValue(int $productId, int $attributeId, string $selectFields = '*'): ?array
     {
         $attributeValue = self::findAttributeValues($productId, [$attributeId], $selectFields);
 
