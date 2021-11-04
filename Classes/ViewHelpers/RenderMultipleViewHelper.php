@@ -49,7 +49,7 @@ class RenderMultipleViewHelper extends AbstractViewHelper
     /**
      * Render viewhelper.
      *
-     * @return null|string
+     * @return string|null
      */
     public function render(): ?string
     {
