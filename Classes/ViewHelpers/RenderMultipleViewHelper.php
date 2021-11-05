@@ -49,34 +49,37 @@ class RenderMultipleViewHelper extends AbstractViewHelper
     /**
      * Render viewhelper.
      *
-     * @return string
+     * @return string|null
      */
-    public function render(): string
+    public function render(): ?string
     {
         $config = $this->extbaseConfiguration['view']['renderingStacks'];
         $renderingStack = $config[$this->arguments['key']] ?? false;
 
-        if (!empty($renderingStack)) {
-            $parts = 0;
-            $output = '';
-            $childContent = false;
+        if (empty($renderingStack)) {
+            return null;
+        }
 
-            krsort($renderingStack, SORT_NUMERIC);
-            foreach ($renderingStack as $index => $renderingParts) {
-                if ($parts === 0) {
-                    $this->arguments['arguments']['childContent'] = $this->renderChildren();
-                } else {
-                    $this->arguments['arguments']['childContent'] = $childContent[$parts - 1] ?? '';
-                }
+        $parts = 0;
+        $output = '';
+        $childContent = false;
 
-                $childContent[$parts] = htmlspecialchars_decode(
-                    $this->getView($renderingParts['template'], $this->arguments)
-                );
-                $parts++;
+        krsort($renderingStack, SORT_NUMERIC);
+
+        foreach ($renderingStack as $renderingParts) {
+            if ($parts === 0) {
+                $this->arguments['arguments']['childContent'] = $this->renderChildren();
+            } else {
+                $this->arguments['arguments']['childContent'] = $childContent[$parts - 1] ?? '';
             }
-            if (is_array($childContent)) {
-                $output = $childContent[count($childContent) - 1];
-            }
+
+            $childContent[$parts] = htmlspecialchars_decode(
+                $this->getView($renderingParts['template'], $this->arguments)
+            );
+            $parts++;
+        }
+        if (is_array($childContent)) {
+            $output = $childContent[count($childContent) - 1];
         }
 
         return $output;
