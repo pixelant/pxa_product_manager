@@ -42,8 +42,13 @@ class RenderMultipleViewHelper extends AbstractViewHelper
     public function initialize(): void
     {
         $configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
-        $this->extbaseConfiguration = $configurationManager
-            ->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_FRAMEWORK);
+        // Include ExtensionName and set PluginName to prevent missing extbaseConfiguration
+        // when other plugins are rendered on the same page.
+        $this->extbaseConfiguration = $configurationManager->getConfiguration(
+            ConfigurationManager::CONFIGURATION_TYPE_FRAMEWORK,
+            'PxaProductManager',
+            'RenderMultiple'
+        );
     }
 
     /**
