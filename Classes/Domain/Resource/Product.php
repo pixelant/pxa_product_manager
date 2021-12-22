@@ -82,19 +82,8 @@ class Product extends AbstractResource
     {
         $this->settings = $this->getPluginSettings();
 
-        /** @codingStandardsIgnoreStart */
-        $listImages = ($this->settings['listView']['fetchAllImagesAsListImage'])
-            ? $this->entity->getImagesAsArray() : $this->entity->getListImage();
-        // @codingStandardsIgnoreEnd
-
-        if (is_array($listImages)) {
-            $listImages = $this->getProcessedImagesUri($listImages);
-        } else {
-            $listImages = $this->getProcessedImageUri($listImages);
-        }
-
         $resource = [
-            'listImage' => $listImages,
+            'listImage' => $this->getProductListImages($this->entity),
             'url' => $this->getUrl(),
         ];
 
@@ -103,11 +92,7 @@ class Product extends AbstractResource
         if (!empty($additionalFields)) {
             $additionalFields = GeneralUtility::underscoredToLowerCamelCase($additionalFields);
             $additionalFieldsList = GeneralUtility::trimExplode(',', $additionalFields, true);
-            foreach ($additionalFieldsList as $additionalField) {
-                $additional[$additionalField] = $this->convertPropertyValue(
-                    ObjectAccess::getProperty($this->entity, $additionalField)
-                );
-            }
+            $additional = $this->getAdditionalFieldsValues($additionalFieldsList);
         }
 
         // Add additional attributes to result.
@@ -187,6 +172,48 @@ class Product extends AbstractResource
         }
 
         return $processedReferences;
+    }
+
+    /**
+     * Return product list images.
+     *
+     * @return array|string|null
+     */
+    protected function getProductListImages()
+    {
+        /** @codingStandardsIgnoreStart */
+        $listImages = ($this->settings['listView']['fetchAllImagesAsListImage'])
+            ? $this->entity->getImagesAsArray()
+            : $this->entity->getListImage();
+        // @codingStandardsIgnoreEnd
+
+        if (is_array($listImages)) {
+            $listImages = $this->getProcessedImagesUri($listImages);
+        } else {
+            $listImages = $this->getProcessedImageUri($listImages);
+        }
+
+        return $listImages;
+    }
+
+    /**
+     * Return additional fields values.
+     *
+     * @param array $additionalFields
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Reflection\Exception\PropertyNotAccessibleException
+     */
+    protected function getAdditionalFieldsValues(array $additionalFields): array
+    {
+        $values = [];
+
+        foreach ($additionalFields as $additionalField) {
+            $values[$additionalField] = $this->convertPropertyValue(
+                ObjectAccess::getProperty($this->entity, $additionalField)
+            );
+        }
+
+        return $values;
     }
 
     /**
