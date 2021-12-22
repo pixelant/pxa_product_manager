@@ -990,6 +990,16 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Return array of all product images.
+     *
+     * @return array
+     */
+    public function getImagesAsArray(): array
+    {
+        return $this->collection($this->images)->toArray();
+    }
+
+    /**
      * Return main image if found.
      *
      * @return Image|null

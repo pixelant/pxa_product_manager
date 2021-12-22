@@ -176,6 +176,8 @@ plugin.tx_pxaproductmanager {
             menuPageId =
             # List of comma-separated page Id's that must be excluded from menu page tree.
             excludeUidList =
+            # Fetching all product images for list view
+            fetchAllImagesAsListImage =
         }
 
         wishList {

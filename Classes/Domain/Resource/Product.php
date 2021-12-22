@@ -82,8 +82,19 @@ class Product extends AbstractResource
     {
         $this->settings = $this->getPluginSettings();
 
+        /** @codingStandardsIgnoreStart */
+        $listImages = ($this->settings['listView']['fetchAllImagesAsListImage'])
+            ? $this->entity->getImagesAsArray() : $this->entity->getListImage();
+        // @codingStandardsIgnoreEnd
+
+        if (is_array($listImages)) {
+            $listImages = $this->getProcessedImagesUri($listImages);
+        } else {
+            $listImages = $this->getProcessedImageUri($listImages);
+        }
+
         $resource = [
-            'listImage' => $this->getProcessedImageUri($this->entity->getListImage()),
+            'listImage' => $listImages,
             'url' => $this->getUrl(),
         ];
 
@@ -161,6 +172,21 @@ class Product extends AbstractResource
         );
 
         return $this->imageService->getImageUri($processedImage);
+    }
+
+    /**
+     * @param FileReference[] $references
+     * @return array
+     */
+    protected function getProcessedImagesUri(array $references): array
+    {
+        $processedReferences = [];
+
+        foreach ($references as $reference) {
+            $processedReferences[] = $this->getProcessedImageUri($reference);
+        }
+
+        return $processedReferences;
     }
 
     /**
