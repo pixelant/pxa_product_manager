@@ -76,6 +76,7 @@ final class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvide
     /**
      * @throws MissingConfigurationException
      */
+    // phpcs:ignore
     public function generateItems(): void
     {
         $table = ProductRepository::TABLE_NAME;
@@ -138,16 +139,15 @@ final class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvide
 
         $rows = $queryBuilder->orderBy($sortField)
             ->execute()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
-        foreach ($rows as $row) {
-            $item = [
+        $this->items = array_map(function (array $row) use ($lastModifiedField): array {
+            return [
                 'data' => $row,
                 'lastMod' => (int)$row[$lastModifiedField],
                 'priority' => 0.5,
             ];
-            $this->items[] = $item;
-        }
+        }, $rows);
     }
 
     /**

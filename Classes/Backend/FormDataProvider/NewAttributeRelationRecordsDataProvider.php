@@ -68,14 +68,11 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         // don't display attributevalues for attributes not included for product type
         foreach ($result['processedTca']['columns']['attributes_values']['children'] as $key => $attributeValueResult) {
-            $attributeStillExist = false;
-            foreach ($attributes as $attribute) {
-                if ((int)$attributeValueResult['databaseRow']['attribute'][0] === $attribute['uid']) {
-                    $attributeStillExist = true;
+            $attributeStillExist = $this->checkIfAttributeStillExist(
+                $attributes,
+                (int)$attributeValueResult['databaseRow']['attribute'][0]
+            );
 
-                    continue;
-                }
-            }
             if (!$attributeStillExist) {
                 unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
             } else {
@@ -99,6 +96,19 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         }
 
         return $result;
+    }
+
+    private function checkIfAttributeStillExist(array $attributes, int $attributeUid): bool
+    {
+        $attributeStillExist = false;
+
+        foreach ($attributes as $attribute) {
+            if ($attributeUid === $attribute['uid']) {
+                $attributeStillExist = true;
+            }
+        }
+
+        return $attributeStillExist;
     }
 
     /**
