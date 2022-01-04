@@ -92,11 +92,7 @@ class Product extends AbstractResource
         if (!empty($additionalFields)) {
             $additionalFields = GeneralUtility::underscoredToLowerCamelCase($additionalFields);
             $additionalFieldsList = GeneralUtility::trimExplode(',', $additionalFields, true);
-            foreach ($additionalFieldsList as $additionalField) {
-                $additional[$additionalField] = $this->convertPropertyValue(
-                    ObjectAccess::getProperty($this->entity, $additionalField)
-                );
-            }
+            $additional = $this->getAdditionalFieldsValues($additionalFieldsList);
         }
 
         // Add additional attributes to result.
@@ -161,6 +157,26 @@ class Product extends AbstractResource
         );
 
         return $this->imageService->getImageUri($processedImage);
+    }
+
+    /**
+     * Return additional fields values.
+     *
+     * @param array $additionalFields
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Reflection\Exception\PropertyNotAccessibleException
+     */
+    protected function getAdditionalFieldsValues(array $additionalFields): array
+    {
+        $values = [];
+
+        foreach ($additionalFields as $additionalField) {
+            $values[$additionalField] = $this->convertPropertyValue(
+                ObjectAccess::getProperty($this->entity, $additionalField)
+            );
+        }
+
+        return $values;
     }
 
     /**
