@@ -60,6 +60,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         }
 
         $attributes = AttributeUtility::findAttributesForProductType((int)$result['databaseRow']['product_type'][0]);
+        $attributeUidList = array_column($attributes, 'uid');
 
         $productLanguageFieldName = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
         $sysLanguageUid = (int)$result['databaseRow'][$productLanguageFieldName]['0'] ?? 0;
@@ -68,15 +69,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         // don't display attributevalues for attributes not included for product type
         foreach ($result['processedTca']['columns']['attributes_values']['children'] as $key => $attributeValueResult) {
-            $attributeStillExist = false;
-            foreach ($attributes as $attribute) {
-                if ((int)$attributeValueResult['databaseRow']['attribute'][0] === $attribute['uid']) {
-                    $attributeStillExist = true;
-
-                    continue;
-                }
-            }
-            if (!$attributeStillExist) {
+            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'][0], $attributeUidList)) {
                 unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
             } else {
                 // Make sure attributevalue has same language as edited product.
