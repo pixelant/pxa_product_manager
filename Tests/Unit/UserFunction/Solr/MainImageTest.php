@@ -50,7 +50,7 @@ class MainImageTest extends UnitTestCase
         ]);
         $this->subject->expects(self::once())->method('findMatchedImage')->willReturn($file3);
 
-        $file3->expects(self::once())->method('getPublicUrl')->willReturn('url');
+        $file3->expects(self::once())->method('getCombinedIdentifier')->willReturn('url');
         self::assertEquals('url', $this->subject->getUrl());
     }
 
@@ -69,7 +69,7 @@ class MainImageTest extends UnitTestCase
         ]);
         $this->subject->expects(self::once())->method('findMatchedImage')->willReturn(null);
 
-        $file1->expects(self::once())->method('getPublicUrl')->willReturn('file1');
+        $file1->expects(self::once())->method('getCombinedIdentifier')->willReturn('file1');
         self::assertEquals('file1', $this->subject->getUrl());
     }
 }

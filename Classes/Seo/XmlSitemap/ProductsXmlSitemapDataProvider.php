@@ -24,6 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\WorkspaceAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\WorkspaceRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -78,76 +79,45 @@ final class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvide
      */
     public function generateItems(): void
     {
-        $table = ProductRepository::TABLE_NAME;
-        $pids = !empty($this->config['pid']) ? GeneralUtility::intExplode(',', $this->config['pid']) : [];
-        $lastModifiedField = $this->config['lastModifiedField'] ?? 'tstamp';
-        $sortField = $this->config['sortField'] ?? 'sorting';
-
+        /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable($table);
-
-        $constraints = [];
-        if (!empty($GLOBALS['TCA'][$table]['ctrl']['languageField'])) {
-            $constraints[] = $queryBuilder->expr()->in(
-                $GLOBALS['TCA'][$table]['ctrl']['languageField'],
-                [
-                    -1,
-                    $this->getLanguageId(),
-                ]
-            );
-        }
-
-        if (!empty($pids)) {
-            $recursiveLevel = isset($this->config['recursive']) ? (int)$this->config['recursive'] : 0;
-            if ($recursiveLevel) {
-                $pids = array_merge($pids, $this->fetchRecursivePids($pids, $recursiveLevel));
-            }
-
-            $constraints[] = $queryBuilder->expr()->in('pid', $pids);
-        }
-
-        if (!empty($this->config['excludedProductTypes'])) {
-            $excludedProductTypes = GeneralUtility::trimExplode(',', $this->config['excludedProductTypes'], true);
-            if (!empty($excludedProductTypes)) {
-                $constraints[] = $queryBuilder->expr()->notIn(
-                    'product_type',
-                    $queryBuilder->createNamedParameter(
-                        $excludedProductTypes,
-                        \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY
-                    )
-                );
-            }
-        }
-
-        if (!empty($this->config['additionalWhere'])) {
-            $constraints[] = QueryHelper::stripLogicalOperatorPrefix($this->config['additionalWhere']);
-        }
+            ->getQueryBuilderForTable(ProductRepository::TABLE_NAME);
 
         $queryBuilder->getRestrictions()->add(
             GeneralUtility::makeInstance(WorkspaceRestriction::class, $this->getCurrentWorkspaceAspect()->getId())
         );
 
-        $queryBuilder->select('*')
-            ->from($table);
+        $queryBuilder
+            ->select('*')
+            ->addSelect()
+            ->from(ProductRepository::TABLE_NAME);
 
-        if (!empty($constraints)) {
-            $queryBuilder->where(
-                ...$constraints
-            );
-        }
+        $this->addLanguageExpression($queryBuilder);
+
+        $this->addPidExpression($queryBuilder);
+
+        $this->addProductTypeExpression($queryBuilder);
+
+        $this->addAdditionalWhereExpression($queryBuilder);
+
+        $sortField = $this->config['sortField'] ?? 'sorting';
 
         $rows = $queryBuilder->orderBy($sortField)
             ->execute()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
-        foreach ($rows as $row) {
-            $item = [
-                'data' => $row,
-                'lastMod' => (int)$row[$lastModifiedField],
-                'priority' => 0.5,
-            ];
-            $this->items[] = $item;
-        }
+        $lastModifiedField = $this->config['lastModifiedField'] ?? 'tstamp';
+
+        $this->items = array_map(
+            function (array $row) use ($lastModifiedField): array {
+                return [
+                    'data' => $row,
+                    'lastMod' => (int)$row[$lastModifiedField],
+                    'priority' => 0.5,
+                ];
+            },
+            $rows
+        );
     }
 
     /**
@@ -185,6 +155,88 @@ final class ProductsXmlSitemapDataProvider extends AbstractXmlSitemapDataProvide
         }
 
         return $newList;
+    }
+
+    /**
+     * Add language expression based on current site language.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function addLanguageExpression(QueryBuilder $queryBuilder): void
+    {
+        if (!empty($GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'])) {
+            $languageId = GeneralUtility::makeInstance(Context::class)->getAspect('language')->getId();
+
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'],
+                    [$languageId, -1]
+                )
+            );
+        }
+    }
+
+    /**
+     * Add pid to querybuilder expression if set.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function addPidExpression(QueryBuilder $queryBuilder): void
+    {
+        $pids = !empty($this->config['pid']) ? GeneralUtility::intExplode(',', $this->config['pid']) : [];
+        if (!empty($pids)) {
+            $recursiveLevel = isset($this->config['recursive']) ? (int)$this->config['recursive'] : 0;
+            if ($recursiveLevel) {
+                $pids = array_merge($pids, $this->fetchRecursivePids($pids, $recursiveLevel));
+            }
+
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    'pid',
+                    $queryBuilder->createNamedParameter(
+                        $pids,
+                        \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY
+                    )
+                )
+            );
+        }
+    }
+
+    /**
+     * Add productType to querybuilder expression if set.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function addProductTypeExpression(QueryBuilder $queryBuilder): void
+    {
+        if (!empty($this->config['excludedProductTypes'])) {
+            $excludedProductTypes = GeneralUtility::trimExplode(',', $this->config['excludedProductTypes'], true);
+            if (!empty($excludedProductTypes)) {
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->notIn(
+                        'product_type',
+                        $queryBuilder->createNamedParameter(
+                            $excludedProductTypes,
+                            \TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY
+                        )
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * Add additionalWhere to querybuilder expression if set.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
+    protected function addAdditionalWhereExpression(QueryBuilder $queryBuilder): void
+    {
+        if (!empty($this->config['additionalWhere'])) {
+            $queryBuilder->andWhere(
+                QueryHelper::stripLogicalOperatorPrefix($this->config['additionalWhere'])
+            );
+        }
     }
 
     /**

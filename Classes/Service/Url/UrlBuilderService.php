@@ -68,9 +68,9 @@ class UrlBuilderService implements UrlBuilderServiceInterface
     public function url(Product $product): string
     {
         $pageUid = 0;
-        $params = [];
+        $params = '';
 
-        if (!empty($product)) {
+        if (!empty($product) && !empty($product->getFirstSingleviewPage())) {
             $dokType = $product->getFirstSingleviewPage()->getDoktype() ?? 1;
             $namespace = static::NAMESPACES[$dokType];
             $params = static::NAMESPACE_PARAMS[$namespace];
