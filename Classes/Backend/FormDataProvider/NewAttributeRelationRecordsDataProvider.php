@@ -69,7 +69,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         // don't display attributevalues for attributes not included for product type
         foreach ($result['processedTca']['columns']['attributes_values']['children'] as $key => $attributeValueResult) {
-            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'][0], $attributeUidList)) {
+            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'][0], $attributeUidList, true)) {
                 unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
             } else {
                 // Make sure attributevalue has same language as edited product.
