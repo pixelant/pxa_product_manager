@@ -31,11 +31,12 @@ abstract class AbstractImage
         }
 
         $matchedImage = $this->findMatchedImage($images);
+
         if ($matchedImage) {
-            return $matchedImage->getPublicUrl();
+            return $matchedImage->getCombinedIdentifier();
         }
 
-        return $images[0]->getPublicUrl();
+        return $images[0]->getCombinedIdentifier();
     }
 
     /**
