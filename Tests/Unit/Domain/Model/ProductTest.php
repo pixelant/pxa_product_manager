@@ -83,7 +83,7 @@ class ProductTest extends UnitTestCase
 
         $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        self::assertSame($image2, $this->callInaccessibleMethod($this->subject, 'findImageByType', Image::MAIN_IMAGE));
+        self::assertSame($image2, $this->callInaccessibleMethod($this->subject, 'findImagesByType', Image::MAIN_IMAGE)[0]);
     }
 
     /**
@@ -97,7 +97,7 @@ class ProductTest extends UnitTestCase
 
         $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        self::assertNull($this->callInaccessibleMethod($this->subject, 'findImageByType', Image::LISTING_IMAGE));
+        self::assertNull($this->callInaccessibleMethod($this->subject, 'findImagesByType', Image::LISTING_IMAGE));
     }
 
     /**
@@ -139,7 +139,7 @@ class ProductTest extends UnitTestCase
 
         $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
-        self::assertSame($image3, $this->subject->getListImage());
+        self::assertSame($image3, $this->subject->getListImages()[0]);
     }
 
     /**
@@ -152,7 +152,7 @@ class ProductTest extends UnitTestCase
 
         $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2));
 
-        self::assertSame($image2, $this->subject->getListImage());
+        self::assertSame($image2, $this->subject->getListImages()[0]);
     }
 
     /**
@@ -165,7 +165,7 @@ class ProductTest extends UnitTestCase
 
         $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2));
 
-        self::assertSame($image1, $this->subject->getListImage());
+        self::assertSame($image1, $this->subject->getListImages()[0]);
     }
 
     /**
