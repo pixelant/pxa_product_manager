@@ -86,7 +86,8 @@ class Product extends AbstractResource
         $processedUris = $this->getProcessedImageUris($this->entity->getListImages());
 
         $resource = [
-            'listImage' => $processedUris,
+            'listImage' => $processedUris[0] ?? '',
+            'listImages' => $processedUris,
             'url' => $this->getUrl(),
         ];
 
