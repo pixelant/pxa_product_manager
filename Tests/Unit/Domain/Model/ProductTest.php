@@ -84,7 +84,8 @@ class ProductTest extends UnitTestCase
         $this->subject->setImages(TestsUtility::createObjectStorage($image1, $image2, $image3));
 
         self::assertSame(
-            $image2, $this->callInaccessibleMethod($this->subject, 'findImagesByType', Image::MAIN_IMAGE)[0]
+            $image2,
+            $this->callInaccessibleMethod($this->subject, 'findImagesByType', Image::MAIN_IMAGE)[0]
         );
     }
 
