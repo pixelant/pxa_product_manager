@@ -986,11 +986,13 @@ class Product extends AbstractEntity
      */
     public function getListImages(): array
     {
-        return empty(
-        $this->findImagesByType(Image::LISTING_IMAGE)
-        )
-            ? [$this->getMainImage()]
-            : $this->findImagesByType(Image::LISTING_IMAGE);
+        $images = $this->findImagesByType(Image::LISTING_IMAGE);
+
+        if (count($images) > 0) {
+            return $images;
+        }
+
+        return [$this->getMainImage()];
     }
 
     /**
