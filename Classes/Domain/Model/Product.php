@@ -982,11 +982,11 @@ class Product extends AbstractEntity
     /**
      * Return listing image if found.
      *
-     * @return Image|null
+     * @return Image[]|null
      */
-    public function getListImage(): ?Image
+    public function getListImages(): ?array
     {
-        return $this->findImageByType(Image::LISTING_IMAGE) ?? $this->getMainImage();
+        return $this->findImagesByType(Image::LISTING_IMAGE) ?? [$this->getMainImage()];
     }
 
     /**
@@ -996,7 +996,7 @@ class Product extends AbstractEntity
      */
     public function getMainImage(): ?Image
     {
-        return $this->findImageByType(Image::MAIN_IMAGE) ?? $this->images->current();
+        return $this->findImagesByType(Image::MAIN_IMAGE)[0] ?? $this->images->current();
     }
 
     /**
@@ -1075,19 +1075,19 @@ class Product extends AbstractEntity
     }
 
     /**
-     * Find image by type.
+     * Find images by type.
      *
-     * @return Image|null
+     * @return Image[]|null
      */
-    protected function findImageByType(int $type): ?Image
+    protected function findImagesByType(int $type): ?array
     {
         $images = $this->collection($this->images);
-        $image = $images->searchByProperty('type', $type)->first();
+        $imagesArray = $images->searchByProperty('type', $type)->rewind();
 
         // Reset storage
         $this->images->rewind();
 
-        return $image;
+        return $imagesArray;
     }
 
     /**
