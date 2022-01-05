@@ -201,12 +201,12 @@ class Collection implements Arrayable
     /**
      * Reset array pointer.
      *
-     * @return array|null
+     * @return array
      */
-    public function rewind(): ?array
+    public function rewind(): array
     {
         if (empty($this->collection)) {
-            return null;
+            return [];
         }
 
         reset($this->collection);

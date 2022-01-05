@@ -980,13 +980,25 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Return listing images if found.
+     *
+     * @return array
+     */
+    public function  getListImages(): array
+    {
+        return empty($this->findImagesByType(Image::LISTING_IMAGE))
+            ? [$this->getMainImage()]
+            : $this->findImagesByType(Image::LISTING_IMAGE);
+    }
+
+    /**
      * Return listing image if found.
      *
-     * @return Image[]|null
+     * @return Image|null
      */
-    public function getListImages(): ?array
+    public function getListImage(): ?Image
     {
-        return $this->findImagesByType(Image::LISTING_IMAGE) ?? [$this->getMainImage()];
+        return $this->findImageByType(Image::LISTING_IMAGE) ?? $this->getMainImage();
     }
 
     /**
@@ -996,7 +1008,7 @@ class Product extends AbstractEntity
      */
     public function getMainImage(): ?Image
     {
-        return $this->findImagesByType(Image::MAIN_IMAGE)[0] ?? $this->images->current();
+        return $this->findImageByType(Image::MAIN_IMAGE) ?? $this->images->current();
     }
 
     /**
@@ -1077,17 +1089,33 @@ class Product extends AbstractEntity
     /**
      * Find images by type.
      *
-     * @return Image[]|null
+     * @return array
      */
-    protected function findImagesByType(int $type): ?array
+    protected function findImagesByType(int $type): array
     {
-        $images = $this->collection($this->images);
-        $imagesArray = $images->searchByProperty('type', $type)->rewind();
+        $imagesCollection = $this->collection($this->images);
+        $images = $imagesCollection->searchByProperty('type', $type)->rewind();
 
         // Reset storage
         $this->images->rewind();
 
-        return $imagesArray;
+        return $images;
+    }
+
+    /**
+     * Find image by type.
+     *
+     * @return Image|null
+     */
+    protected function findImageByType(int $type): ?Image
+    {
+        $images = $this->collection($this->images);
+        $image = $images->searchByProperty('type', $type)->first();
+
+        // Reset storage
+        $this->images->rewind();
+
+        return $image;
     }
 
     /**

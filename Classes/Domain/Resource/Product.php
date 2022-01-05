@@ -83,11 +83,7 @@ class Product extends AbstractResource
     {
         $this->settings = $this->getPluginSettings();
 
-        $processedUri = $this->getProcessedImagesUri($this->entity->getListImages());
-
-        if (count($processedUri) === 1) {
-            $processedUri = $processedUri[array_key_first($processedUri)];
-        }
+        $processedUri = $this->getProcessedImageUris($this->entity->getListImages());
 
         $resource = [
             'listImage' => $processedUri,
@@ -204,14 +200,14 @@ class Product extends AbstractResource
     /**
      * Returns an array of processed images uri.
      *
-     * @param array $imagesUri
+     * @param array $imageUris
      * @return array
      */
-    protected function getProcessedImagesUri(array $imagesUri): array
+    protected function getProcessedImageUris(array $imageUris): array
     {
         $processedUri = [];
 
-        foreach ($imagesUri as $uri) {
+        foreach ($imageUris as $uri) {
             $processedUri[] = $this->getProcessedImageUri($uri);
         }
 
