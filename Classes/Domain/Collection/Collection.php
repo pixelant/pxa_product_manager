@@ -199,6 +199,22 @@ class Collection implements Arrayable
     }
 
     /**
+     * Reset array pointer.
+     *
+     * @return array
+     */
+    public function rewind(): array
+    {
+        if (empty($this->collection)) {
+            return [];
+        }
+
+        reset($this->collection);
+
+        return $this->collection;
+    }
+
+    /**
      * Filter collection by given callback.
      *
      * @param callable $callback

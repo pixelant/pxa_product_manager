@@ -980,6 +980,22 @@ class Product extends AbstractEntity
     }
 
     /**
+     * Return listing images if found.
+     *
+     * @return array
+     */
+    public function getListImages(): array
+    {
+        $images = $this->findImagesByType(Image::LISTING_IMAGE);
+
+        if (count($images) > 0) {
+            return $images;
+        }
+
+        return [$this->getMainImage()];
+    }
+
+    /**
      * Return listing image if found.
      *
      * @return Image|null
@@ -1072,6 +1088,22 @@ class Product extends AbstractEntity
         return array_values(
             $this->attributesValues->toArray()
         );
+    }
+
+    /**
+     * Find images by type.
+     *
+     * @return array
+     */
+    protected function findImagesByType(int $type): array
+    {
+        $imagesCollection = $this->collection($this->images);
+        $images = $imagesCollection->searchByProperty('type', $type)->rewind();
+
+        // Reset storage
+        $this->images->rewind();
+
+        return $images;
     }
 
     /**

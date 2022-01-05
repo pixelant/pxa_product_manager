@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Domain\Resource;
 
 use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
+use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
 use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -82,8 +83,11 @@ class Product extends AbstractResource
     {
         $this->settings = $this->getPluginSettings();
 
+        $processedUris = $this->getProcessedImageUris($this->entity->getListImages());
+
         $resource = [
-            'listImage' => $this->getProcessedImageUri($this->entity->getListImage()),
+            'listImage' => $processedUris[0] ?? '',
+            'listImages' => $processedUris,
             'url' => $this->getUrl(),
         ];
 
@@ -100,20 +104,20 @@ class Product extends AbstractResource
         if (!empty($additionalAttributes)) {
             $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
             foreach ($additionalAttributesList as $attributeIdentifier) {
-                foreach ($this->entity->getAttributes() as $attribute) {
-                    if ($attribute->getIdentifier() === $attributeIdentifier) {
-                        $attributeValue = AttributeUtility::findAttributeValue(
-                            $this->entity->getUid(),
-                            $attribute->getUid()
-                        );
+                $attribute = $this->getEntityAttributeByAttributeIdentifier($attributeIdentifier);
 
-                        $resource[$attributeIdentifier] = [
-                            'label' => $attribute->getLabel() ?? $attribute->getName(),
-                            'data' => AttributeUtility::getAttributeValueRenderValue(
-                                $attributeValue['uid']
-                            ),
-                        ];
-                    }
+                if ($attribute !== null) {
+                    $attributeValue = AttributeUtility::findAttributeValue(
+                        $this->entity->getUid(),
+                        $attribute->getUid()
+                    );
+
+                    $resource[$attributeIdentifier] = [
+                        'label' => $attribute->getLabel() ?? $attribute->getName(),
+                        'data' => AttributeUtility::getAttributeValueRenderValue(
+                            $attributeValue['uid']
+                        ),
+                    ];
                 }
             }
         }
@@ -177,6 +181,38 @@ class Product extends AbstractResource
         }
 
         return $values;
+    }
+
+    /**
+     * @param string $attributeIdentifier
+     * @return Attribute|null
+     */
+    protected function getEntityAttributeByAttributeIdentifier(string $attributeIdentifier): ?Attribute
+    {
+        foreach ($this->entity->getAttributes() as $attribute) {
+            if ($attribute->getIdentifier() === $attributeIdentifier) {
+                return $attribute;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns an array of processed images uri.
+     *
+     * @param array $imageUris
+     * @return array
+     */
+    protected function getProcessedImageUris(array $imageUris): array
+    {
+        $processedUri = [];
+
+        foreach ($imageUris as $uri) {
+            $processedUri[] = $this->getProcessedImageUri($uri);
+        }
+
+        return $processedUri;
     }
 
     /**
