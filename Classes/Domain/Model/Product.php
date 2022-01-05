@@ -990,7 +990,8 @@ class Product extends AbstractEntity
         return empty(
             $this->findImagesByType(Image::LISTING_IMAGE))
             ? [$this->getMainImage()]
-            : $this->findImagesByType(Image::LISTING_IMAGE
+            : $this->findImagesByType(
+                Image::LISTING_IMAGE
             );
         // @codingStandardsIgnoreEnd
     }
