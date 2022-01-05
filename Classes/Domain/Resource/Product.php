@@ -83,10 +83,10 @@ class Product extends AbstractResource
     {
         $this->settings = $this->getPluginSettings();
 
-        $processedUri = $this->getProcessedImageUris($this->entity->getListImages());
+        $processedUris = $this->getProcessedImageUris($this->entity->getListImages());
 
         $resource = [
-            'listImage' => $processedUri,
+            'listImage' => $processedUris,
             'url' => $this->getUrl(),
         ];
 
