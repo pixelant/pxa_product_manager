@@ -7,6 +7,7 @@ defined('TYPO3_MODE') || die;
 
     $columns = [
         'pxapm_type' => [
+            'exclude' => false,
             'label' => $ll . 'sys_file_reference.pxapm_type',
             'config' => [
                 'type' => 'select',
