@@ -1,122 +1,65 @@
 {
-  "_args": [
-    [
-      "select2@4.0.3",
-      "/Users/mosaalhusseini/Documents/vagrant/pixelant/shared/site/typo3conf/ext/pxa_product_manager"
-    ]
-  ],
-  "_from": "select2@4.0.3",
-  "_id": "select2@4.0.3",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/select2",
-  "_npmOperationalInternal": {
-    "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/select2-4.0.3.tgz_1464312014558_0.3680991888977587"
-  },
-  "_npmUser": {
-    "email": "kevin+npm@kevin-brown.com",
-    "name": "kevin-brown"
-  },
-  "_npmVersion": "1.4.28",
-  "_phantomChildren": {},
-  "_requested": {
-    "name": "select2",
-    "raw": "select2@4.0.3",
-    "rawSpec": "4.0.3",
-    "scope": null,
-    "spec": "4.0.3",
-    "type": "version"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/select2/-/select2-4.0.3.tgz",
-  "_shasum": "207733fe91eacb9cb1a13f12463401f472449e0f",
-  "_shrinkwrap": null,
-  "_spec": "select2@4.0.3",
-  "_where": "/Users/mosaalhusseini/Documents/vagrant/pixelant/shared/site/typo3conf/ext/pxa_product_manager",
+  "name": "select2",
+  "description": "Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results.",
+  "homepage": "https://select2.org",
   "author": {
     "name": "Kevin Brown",
     "url": "https://github.com/kevin-brown"
-  },
-  "bugs": {
-    "url": "https://github.com/select2/select2/issues"
   },
   "contributors": [
     {
       "name": "Igor Vaynberg",
       "url": "https://github.com/ivaynberg"
-    }
-  ],
-  "dependencies": {
-    "almond": "~0.3.1",
-    "jquery-mousewheel": "~3.1.13"
-  },
-  "description": "Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results.",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-concat": "^0.4.0",
-    "grunt-contrib-connect": "^0.9.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-nodeunit": "~0.3.3",
-    "grunt-contrib-qunit": "~0.4.0",
-    "grunt-contrib-requirejs": "^0.4.4",
-    "grunt-contrib-symlink": "^0.3.0",
-    "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-watch": "~0.6.0",
-    "grunt-gh-pages": "^0.9.1",
-    "grunt-jekyll": "^0.4.2",
-    "grunt-sass": "^1.0.0",
-    "grunt-saucelabs": "^8.6.0"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "207733fe91eacb9cb1a13f12463401f472449e0f",
-    "tarball": "https://registry.npmjs.org/select2/-/select2-4.0.3.tgz"
-  },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "gitHead": "566c7846fbf8c3b7674346f26d0ee872c0a77629",
-  "homepage": "https://select2.github.io",
-  "jspm": {
-    "directories": {
-      "lib": "dist"
-    },
-    "main": "js/select2"
-  },
-  "keywords": [
-    "autocomplete",
-    "dropdown",
-    "multiselect",
-    "select",
-    "tag",
-    "tagging",
-    "typeahead"
-  ],
-  "license": "MIT",
-  "main": "dist/js/select2.js",
-  "maintainers": [
-    {
-      "name": "chrisjbaik",
-      "email": "chrisjbaik@gmail.com"
     },
     {
-      "name": "kevin-brown",
-      "email": "kevin+npm@kevin-brown.com"
+      "name": "Alex Weissman",
+      "url": "https://github.com/alexweissman"
     }
   ],
-  "name": "select2",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git://github.com/select2/select2.git"
   },
-  "scripts": {},
-  "version": "4.0.3"
+  "bugs": {
+    "url": "https://github.com/select2/select2/issues"
+  },
+  "keywords": [
+    "select",
+    "autocomplete",
+    "typeahead",
+    "dropdown",
+    "multiselect",
+    "tag",
+    "tagging"
+  ],
+  "license": "MIT",
+  "main": "dist/js/select2.js",
+  "style": "dist/css/select2.css",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "version": "4.0.13",
+  "jspm": {
+    "main": "js/select2",
+    "directories": {
+      "lib": "dist"
+    }
+  },
+  "devDependencies": {
+    "almond": "~0.3.1",
+    "grunt": "^1.0.4",
+    "grunt-cli": "^1.3.2",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-connect": "^2.0.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-qunit": "^1.3.0",
+    "grunt-contrib-requirejs": "^1.0.0",
+    "grunt-contrib-uglify": "~4.0.1",
+    "grunt-contrib-watch": "~1.1.0",
+    "grunt-sass": "^2.1.0",
+    "jquery-mousewheel": "~3.1.13",
+    "node-sass": "^4.12.0"
+  },
+  "dependencies": {}
 }
