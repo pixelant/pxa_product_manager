@@ -263,6 +263,9 @@ return (function () {
                             'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
                             'collapseAll' => true,
                         ],
+                        'behaviour' => [
+                            'allowLanguageSynchronization' => true,
+                        ],
                         'overrideChildTca' => [
                             'types' => [
                                 \TYPO3\CMS\Core\Resource\File::FILETYPE_UNKNOWN => [
