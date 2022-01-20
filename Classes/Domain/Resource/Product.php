@@ -112,11 +112,16 @@ class Product extends AbstractResource
                         $attribute->getUid()
                     );
 
+                    $data = '';
+                    if (!empty($attributeValue)) {
+                        $data = AttributeUtility::getAttributeValueRenderValue(
+                            $attributeValue['uid']
+                        );
+                    }
+
                     $resource[$attributeIdentifier] = [
                         'label' => $attribute->getLabel() ?? $attribute->getName(),
-                        'data' => AttributeUtility::getAttributeValueRenderValue(
-                            $attributeValue['uid']
-                        ),
+                        'data' => $data,
                     ];
                 }
             }
