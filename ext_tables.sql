@@ -74,7 +74,8 @@ CREATE TABLE tx_pxaproductmanager_domain_model_attributevalue
 
     KEY product(product),
     KEY attribute(attribute),
-    KEY attribute_value(value(40))
+    KEY attribute_value(value(40)),
+    KEY language_identifier (l10n_parent,sys_language_uid),
 );
 
 #
