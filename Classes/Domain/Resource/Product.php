@@ -105,29 +105,40 @@ class Product extends AbstractResource
             $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
             foreach ($additionalAttributesList as $attributeIdentifier) {
                 $attribute = $this->getEntityAttributeByAttributeIdentifier($attributeIdentifier);
-
                 if ($attribute !== null) {
-                    $attributeValue = AttributeUtility::findAttributeValue(
-                        $this->entity->getUid(),
-                        $attribute->getUid()
-                    );
-
-                    $data = '';
-                    if (!empty($attributeValue)) {
-                        $data = AttributeUtility::getAttributeValueRenderValue(
-                            $attributeValue['uid']
-                        );
-                    }
-
-                    $resource[$attributeIdentifier] = [
-                        'label' => $attribute->getLabel() ?? $attribute->getName(),
-                        'data' => $data,
-                    ];
+                    $resource[$attributeIdentifier] = $this->getResourceDataArray($attribute);
                 }
             }
         }
 
         return parent::extractProperties($resource + ($additional ?? []));
+    }
+
+    /**
+     * Get resource label and data array.
+     *
+     * @param Attribute $attribute
+     * @return array
+     */
+    protected function getResourceDataArray(Attribute $attribute): array
+    {
+        $data = '';
+
+        $attributeValue = AttributeUtility::findAttributeValue(
+            $this->entity->getUid(),
+            $attribute->getUid()
+        );
+
+        if (!empty($attributeValue)) {
+            $data = AttributeUtility::getAttributeValueRenderValue(
+                $attributeValue['uid']
+            );
+        }
+
+        return [
+            'label' => $attribute->getLabel() ?? $attribute->getName(),
+            'data' => $data,
+        ];
     }
 
     /**
