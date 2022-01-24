@@ -189,4 +189,9 @@ defined('TYPO3_MODE') || die;
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
         'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $pdDokType . ')'
     );
+
+    // Add doktype to yoast_seo:s allowedDoktypes.
+    if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('yoast_seo')) {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['yoast_seo']['allowedDoktypes']['product_display'] = $pdDokType;
+    }
 })();
