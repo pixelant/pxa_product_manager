@@ -70,10 +70,10 @@ abstract class AbstractValue
         }
 
         $identifier = $params['identifier'];
-        $productUid = (int)$this->cObj->data['_LOCALIZED_UID'] ?? (int)$this->cObj->data['uid'];
+        $productUid = $this->cObj->data['_LOCALIZED_UID'] ?? $this->cObj->data['uid'];
 
         $row = $this->repository->findRawByProductAndAttributeIdentifier(
-            $productUid,
+            (int)$productUid,
             $identifier
         );
 
