@@ -13,10 +13,10 @@
     }
   ],
   "repositories": [
-	{
-	  "type": "git",
-	  "url": "https://github.com/pixelant/demander.git"
-	}
+    {
+      "type": "git",
+      "url": "https://github.com/pixelant/demander.git"
+    }
   ],
   "require": {
     "php": "^7.4",
