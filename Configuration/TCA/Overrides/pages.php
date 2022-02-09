@@ -11,7 +11,7 @@ defined('TYPO3_MODE') || die;
         [
             'LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:be.product_display_page_type',
             $pdDokType,
-            'EXT:pxa_product_manager/Resources/Public/Icons/ProductListPage.svg',
+            'EXT:pxa_product_manager/Resources/Public/Icons/Svg/product.svg',
         ],
         '1',
         'after'
