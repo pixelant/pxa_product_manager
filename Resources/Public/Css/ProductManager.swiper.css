@@ -53,6 +53,9 @@
     width: 25%;
 }
 
+.tx-pxa-product-manager .product-gallery-thumbs .product-gallery-thumbs-swiper-slide:hover {
+    cursor: pointer;
+}
 
 .tx-pxa-product-manager .product-gallery-thumbs .swiper-slide-thumb-active {
     opacity: 1;
