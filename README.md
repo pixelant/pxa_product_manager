@@ -24,12 +24,6 @@ https://docs.google.com/document/d/1WuOBeH5oJ8b_yLczXVZkPRhiR12IjCa6ltb4IBuvvDk/
 
 ## Installation
 
-We rely on node.js for a lot of our tooling. So if you haven't got it installed(shame on you!!) go to http://nodejs.org/ and fetch it.
-
-To install tooling dependencies, run:
-
-    npm install
-
 Then install the composer dependencies:
 
     composer install
@@ -39,38 +33,48 @@ Then install the composer dependencies:
 It's not allowed to push directly to master branch.
 All feature implementing and bugs fixing should be done using pull request.
 
-### Test
+### Commands
 
 For working with the extension, the following can be run to accomplish common tasks.
 
-To run the PHP codesniffer run the following command:
+To run the PHP linter:
 
-    npm run php:codesniffer
+    composer run ci:php:lint
+
+To run the PHP code style fixer:
+
+    composer run ci:php:codestyle
+
+To run the PHP codesniffer:
+
+    composer run ci:php:sniff
+
+To run the JSON linter:
+
+    composer run ci:json:lint
+
+To run the YAML linter:
+
+    composer run ci:yaml:lint
+
+To run the TypoScript linter:
+
+    composer run ci:ts:lint
 
 To run the PHP Unit tests run the following command:
 
-    npm run php:unittests
+    composer run ci:tests:unit
 
 To run the PHP Functional tests run the following command:
 
-    npm run php:functionaltests
+    composer run ci:tests:functional
 
-To simulate the build process without functional tests locally, then run this packaged command:
+### Filter interface
 
-    npm run build:suite_no_functional --silent
+The filtering options in the Product listing are made in [Vue.js](https://vuejs.org/).
 
-To simulate the full build process locally, then run this packaged command:
-
-    npm run build:suite --silent
-
-To watch and compile the main .less file to .css:
-
-    npm run watch:css
-
-When using t3kit and themes with the less compiler, three variables needs to be set (otherwise, the .less file will not be compiled):
-  @main-color
-  @main-text-color
-  @border-color
+Path to the [application](Resources/Private/product_manager) and more
+information regarding the [workflow](Resources/Private/product_manager/README.md).
 
 ### Products preview
 
