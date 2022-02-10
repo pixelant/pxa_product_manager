@@ -1,10 +1,11 @@
----
-name: CI
+name: Continuous Integration
+
 on:
   push:
     branches:
-      - v10_alpha
-  pull_request:
+      - '*'
+      - '!master'
+
 jobs:
   php-lint:
     name: "PHP linter"
