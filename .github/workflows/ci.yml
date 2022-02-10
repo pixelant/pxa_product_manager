@@ -23,6 +23,7 @@ jobs:
       matrix:
         php-version:
           - 7.4
+
   code-quality:
     name: "Code quality checks"
     runs-on: ubuntu-20.04
@@ -61,6 +62,7 @@ jobs:
           - "php:codestyle"
         php-version:
           - 7.4
+
   #code-quality-frontend:
   #  name: "Code quality frontend checks"
   #  runs-on: ubuntu-20.04
@@ -81,6 +83,7 @@ jobs:
   #      name: "Run command"
   #      working-directory: ./Resources/Private
   #      run: "yarn lint:${{ matrix.command }}"
+
   xliff-lint:
     name: "Xliff linter"
     runs-on: ubuntu-20.04
@@ -98,6 +101,7 @@ jobs:
         name: "Run lint"
         run: "xmllint --schema ./xliff-core-1.2-strict.xsd
               --noout $(find Resources -name '*.xlf')"
+
   unit-tests:
     name: "Unit tests"
     runs-on: ubuntu-20.04
@@ -152,6 +156,7 @@ jobs:
           - 7.4
         typo3-version:
           - ^10.4
+
   functional-tests:
     name: "Functional tests"
     runs-on: ubuntu-20.04
