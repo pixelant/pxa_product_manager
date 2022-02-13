@@ -51,3 +51,4 @@ a GNU/GPL CMS/Framework available from `www.typo3.org
    :glob:
 
    Introduction/Index
+   Products/Index
