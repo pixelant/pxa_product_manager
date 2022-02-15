@@ -52,3 +52,5 @@ a GNU/GPL CMS/Framework available from `www.typo3.org
 
    Introduction/Index
    Products/Index
+   Installation/Index
+   LegacyInstallation/Index
