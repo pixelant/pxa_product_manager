@@ -26,9 +26,9 @@ The Product record overview in TYPO3 Backend.
 General tab
 -----------
 
-Name - The name of the product
-SKU - a.k.a. article number, what uniquely identifies the product
-Description - Product description displayed on the product single view
+* Name - The name of the product
+* SKU - a.k.a. article number, what uniquely identifies the product
+* Description - Product description displayed on the product single view
 
 .. _attributes-tab:
 
@@ -56,10 +56,10 @@ If a product can’t find an image with the checkbox checked it will just use th
 Relations tab
 -------------
 
-Related products: To show related products on the product single view page
-Sub-products (Accessories): Sub-products are just other products, but are displayed in another section on the product single view page.
-Files: FAL objects associated with the products.
-Links: Links associated with the products can be files and/or internal/external pages, and are displayed on the product single view page.
+* Related products: To show related products on the product single view page
+* Sub-products (Accessories): Sub-products are just other products, but are displayed in another section on the product single view page.
+* Files: FAL objects associated with the products.
+* Links: Links associated with the products can be files and/or internal/external pages, and are displayed on the product single view page.
 
 .. _metadata-tab:
 
