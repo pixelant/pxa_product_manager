@@ -3,24 +3,14 @@
 ## Pixelant Product Manager (pxa_product_manager)
 This is an extension that shows products with a lot of filter and sorting possibilities.
 
-https://docs.google.com/document/d/1WuOBeH5oJ8b_yLczXVZkPRhiR12IjCa6ltb4IBuvvDk/edit
+## Documentation
 
-## Changelog
-# Version ~ 2
-- Full extension rebuild
-- Use new hook to generate TCA data, no need to clear cache anymore
-- Attribute type with FAL files support
-- CKEditor products and categories linking
-- Improvements for Solr search
-- Support of product links with category tree in URL "category1/sub-category/product/product-name"
-- Wish list
-- Compare list
-- Grouped list
-- Breadcrumbs
-- Divide TCA tabs according to attribute sets
-- Functional tests
-- Support of TYPO3 >= 8.7
-- PHP version >= 7.0
+For all kind of documentation which covers install to how to develop the extension:
+
+[Local Documentation](Documentation/Index.rst)
+
+[Online Documentation](https://docs.typo3.org/p/pixelant/pxa-product-manager/master/en-us/)
+
 
 ## Installation
 

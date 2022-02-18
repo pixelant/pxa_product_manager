@@ -1,57 +1,56 @@
-.. test documentation master file, created by
-   sphinx-quickstart on Wed May  9 13:01:40 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+﻿.. include:: Includes.txt
 
+
+.. _start:
+
+=========================
 Product Manager
-================
+=========================
 
-.. only:: html
-
-:Classification:
-    <extension key>
+:Extension key:
+      pxa_product_manager
 
 :Version:
-    |release|
+      |release|
 
 :Language:
-    en
+      en
 
 :Description:
-    Manual covering TYPO3 extension <extension name>
+      Create and list products in a TYPO3 installation.
 
 :Keywords:
-    product manager
+      product, ecommerce
 
 :Copyright:
-    2015
+      2018
 
 :Author:
-    Your name
-
-:Email:
-    you@domain.tld
+      Pixelant AB
 
 :License:
-    This document is published under the Open Publication License
-    available from http://www.opencontent.org/openpub/
+      Open Content License available from `www.opencontent.org/opl.shtml
+      <http://www.opencontent.org/opl.shtml>`_
 
 :Rendered:
-    |today|
+      |today|
+
+The content of this document is related to TYPO3,
+
+a GNU/GPL CMS/Framework available from `www.typo3.org
+<http://www.typo3.org/>`_
+
+
+
 
 **Table of Contents**
 
 .. toctree::
-	:maxdepth: 3
-	:titlesonly:
+   :maxdepth: 5
+   :titlesonly:
+   :glob:
 
-	Introduction/Index
-	Editors/Index
-	Integrators/Index
-	Configuration/Index
-	Developers/Index
-	KnownProblems/Index
-	ToDoList/Index
-	ChangeLog/Index
-	Links
-
+   Introduction/Index
+   Products/Index
+   Installation/Index
+   LegacyInstallation/Index
