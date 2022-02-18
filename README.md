@@ -12,13 +12,15 @@ For all kind of documentation which covers install to how to develop the extensi
 [Online Documentation](https://docs.typo3.org/p/pixelant/pxa-product-manager/master/en-us/)
 
 
-## Installation
+## Developing the extension
 
-Then install the composer dependencies:
+### Installation
+
+Install the composer dependencies:
 
     composer install
 
-## Workflow
+### Workflow
 
 It's not allowed to push directly to master branch.
 All feature implementing and bugs fixing should be done using pull request.
