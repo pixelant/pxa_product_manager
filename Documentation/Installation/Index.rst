@@ -25,7 +25,7 @@ Add the clear cache command in the Page TSConfig of the sysfolder:
 .. _product-render:
 
 Product Render
------------------
+--------------
 
 The product render is the SEO friendly page based setup of handling products! The first
 step is to create the necessary category pages (in the PageTree) for the products.
