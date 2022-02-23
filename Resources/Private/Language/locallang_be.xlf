@@ -125,7 +125,7 @@
 				<source>No menu</source>
 			</trans-unit>
 			<trans-unit id="flexform.menuLevels.1">
-				<source>Display list of subpages of current page, if on "last level" use parent page as statingpoint</source>
+				<source>Display list of subpages of current page, if on "last level" use parent page as startingpoint</source>
 			</trans-unit>
 			<!--FlexForm:Plugin modes:END-->
 

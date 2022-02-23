@@ -2,7 +2,7 @@
     <div id="filterCheckbox">
         <div class="checkbox-filter-wrapper" :class="accordionClasses">
             <div class="checkbox-filter-header" @click="toggleAccordion">
-                <span class="toggle-icon"></span><span class="filter-name">{{ placeholder }}</span>
+                <span class="filter-name">{{ placeholder }}</span><span class="toggle-icon"></span>
             </div>
             <div class="checkbox-filter-body">
                 <div class="checkbox-filter-content">
@@ -123,12 +123,6 @@
   }
   .is-closed .checkbox-filter-body {
     max-height: 0;
-  }
-  .checkbox-filter-wrapper.is-closed .toggle-icon:before {
-      content: "+";
-  }
-  .checkbox-filter-wrapper.is-open .toggle-icon:before {
-      content: "-";
   }
   .checkbox-filter-wrapper.is-open.is-static .toggle-icon:before {
       content: "";

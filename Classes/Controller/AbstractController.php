@@ -223,13 +223,38 @@ abstract class AbstractController extends ActionController
     }
 
     /**
+     * Get number of menu levels.
+     *
+     * @return int
+     */
+    protected function getMenuLevels(): int
+    {
+        return (int)$this->settings['menuLevels'] ?? 0;
+    }
+
+    /**
+     * Get number of menu levels for list view.
+     *
+     * @return int
+     */
+    protected function getListViewMenuLevels(): int
+    {
+        return (int)$this->settings['listView']['menuLevels'] ?? 0;
+    }
+
+    /**
      * Generate menu for fluid variable based on flexform settings.
      *
      * @return array
      */
     protected function generateMenu(): array
     {
-        $levels = (int)$this->settings['menuLevels'] ?? 0;
+        $levels = $this->getMenuLevels();
+        $menuLevels = $this->getListViewMenuLevels();
+        if ($menuLevels > 0 && $menuLevels < 4) {
+            $levels = $menuLevels;
+        }
+
         $data = [];
 
         if ((int)$levels > 0) {
