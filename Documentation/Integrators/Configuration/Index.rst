@@ -77,7 +77,7 @@ Create page and add plugin
 ---------------------------
 After inserting the plugin on a page, you need to select “Plugin mode” from available options:
 
-.. figure:: ../../Images/Configuration/Image1.png
+.. figure:: ../../Images/Configuration/image1.png
 
 .. _ProductListView:
 
@@ -86,7 +86,7 @@ Product List View
 This is the main list view. It could show just a list of product or together with navigation bar depends on flexform settings.
 This view has a lot of settings which help user to control plugin output. If product single view page and storage is not set by TS you will need to set it in plugin settings. 
 
-.. figure:: ../../Images/Configuration/Image2.png
+.. figure:: ../../Images/Configuration/image2.png
 
 By default **List view (possible navigation)** product page is **Single view** at same time and can switch to single view automatically.
 This allow to use a “deep link” mode. It means that we can have links like:
@@ -94,7 +94,7 @@ This allow to use a “deep link” mode. It means that we can have links like:
 “deep link” mode require realurl to be configured.
 In T3kit it can be done automatically just choosing a “Product page” fixed post var configuration.
 
-.. figure:: ../../Images/Configuration/Image3.png
+.. figure:: ../../Images/Configuration/image3.png
 
 .. _LazyLoadingView:
 
@@ -115,7 +115,7 @@ In order to change loading products event from page scrolling to “load more”
     	}
     }
 
-.. figure:: ../../Images/Configuration/Image4.png
+.. figure:: ../../Images/Configuration/image4.png
 
 .. _WishList:
 
@@ -130,7 +130,7 @@ You can enable wish list function using constant editor, or directly changing Ty
     plugin.tx_pxaproductmanager.settings.wishList.limit = 10 // Limit of products can be added
     plugin.tx_pxaproductmanager.settings.wishList.pagePid = 101 // Page UID with wish list plugin
 
-.. figure:: ../../Images/Configuration/Image5.png
+.. figure:: ../../Images/Configuration/image5.png
 
 Wish list cart is configured by TypoScript library. It’s used to count current number of products in wish list and as a link to wish list page. 
 In order to get it displayed on a page use something like:
@@ -139,7 +139,7 @@ In order to get it displayed on a page use something like:
 
     <f:cObject typoscriptObjectPath="lib.pxaProductManager.wishListCart"/>
 
-.. figure:: ../../Images/Configuration/Image6.png
+.. figure:: ../../Images/Configuration/image6.png
 
 .. _CompareView:
 
@@ -156,7 +156,7 @@ You can enable compare function using constant editor, or directly changing Typo
     plugin.tx_pxaproductmanager.settings.compareList.enable = 0 // or 1 . Enable/ Disable
     plugin.tx_pxaproductmanager.settings.compareList.pagePid = 101 //. Page Uid of plugin with compare pre-view
 
-.. figure:: ../../Images/Configuration/Image7.png
+.. figure:: ../../Images/Configuration/image7.png
 
 Compare cart is configured by TypoScript library. It’s used to count current number of products in compare view and as a link to compare pre-view page. 
 In order to get it displayed on a page use something like:
@@ -177,7 +177,7 @@ This allow to use a “deep link” mode. It means that we can have links like:
 “deep link” mode require realurl to be configured. 
 In T3kit it can be done automatically just choosing a “Product page” fixed post var configuration. 
 
-.. figure:: ../../Images/Configuration/Image3.png
+.. figure:: ../../Images/Configuration/image3.png
 
 .. _Navigation:
 
@@ -186,7 +186,7 @@ Navigation
 In most cases it’ll be enough to use List mode with enabled navigation. 
 But if you need just navigation, you can use “Navigation” mode plugin. This mode has also flexform settings:
 
-.. figure:: ../../Images/Configuration/Image8.png
+.. figure:: ../../Images/Configuration/image8.png
 
 .. _Breadcrumb:
 
@@ -282,4 +282,4 @@ It’s required to have configured product single view Pid TypoScript constant.
 
     plugin.tx_pxaproductmanager.settings.pagePid = 101
 
-.. figure:: ../../Images/Configuration/Image9.png
+.. figure:: ../../Images/Configuration/image9.png
