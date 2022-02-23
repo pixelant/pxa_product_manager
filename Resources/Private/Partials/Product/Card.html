@@ -15,8 +15,40 @@
         </f:if>
     </div>
     <div class="item-body">
-        <div class="item-title">
-            <span {f:if(condition: '!{product}', then: 'v-text="product.name"')}><f:if condition="{product}">{product.name}</f:if></span>
+        <f:render section="productName" arguments="{_all}" />
+        <f:render section="productPrice" arguments="{_all}" />
         </div>
     </div>
 </div>
+
+<f:section name="productName">
+    <f:if condition="!{product}">
+        <f:then>
+            <div class="item-title">
+                <span class="product-item-text product-item-title" v-text="product.name"></span>
+            </div>
+        </f:then>
+        <f:else>
+            <div class="item-title">
+                <span class="product-item-text product-item-title">{product.name}</span>
+            </div>
+        </f:else>
+    </f:if>
+</f:section>
+
+<f:section name="productPrice">
+    <f:if condition="!{product}">
+        <f:then>
+            <div class="item-price pm-text-end">
+                <span class="product-item-text product-item-price" v-if="product.price > 0" v-text="product.formattedPrice"></span>
+            </div>
+        </f:then>
+        <f:else>
+            <f:if condition="{product.price}">
+                <div class="item-price pm-text-end">
+                    <span class="product-item-text product-item-price">{product.formattedPrice}</span>
+                </div>
+            </f:if>
+        </f:else>
+    </f:if>
+</f:section>

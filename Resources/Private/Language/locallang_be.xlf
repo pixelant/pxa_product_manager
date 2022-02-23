@@ -198,7 +198,7 @@
 				<source>Product ordering</source>
 			</trans-unit>
 			<trans-unit id="flexform.product_orderings.order_by">
-				<source>Sort by</source>
+				<source>Sort by:</source>
 			</trans-unit>
 			<trans-unit id="flexform.product_orderings.order_direction">
 				<source>Sort direction</source>
@@ -210,7 +210,7 @@
 				<source>Categories ordering</source>
 			</trans-unit>
 			<trans-unit id="flexform.categories_orderings.order_by">
-				<source>Sort by</source>
+				<source>Sort by:</source>
 			</trans-unit>
 			<trans-unit id="flexform.categories_orderings.order_direction">
 				<source>Sort direction</source>

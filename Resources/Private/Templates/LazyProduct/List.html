@@ -9,61 +9,56 @@
                       inlineLanguageLabelFiles="{0: 'EXT:pxa_product_manager/Resources/Private/Language/locallang.xlf'}"
                       cssLibs="{0: 'EXT:pxa_product_manager/Resources/Public/Assets/css/chunk-vendors.css', 1: 'EXT:pxa_product_manager/Resources/Public/Assets/css/app.css'}"
     />
+    <f:asset.script identifier="pm-collapse" async="true" src="EXT:pxa_product_manager/Resources/Public/JavaScript/collapse.js" />
 
     <div id="pm-lazy-loading-app" class="list-product-wrapper">
         <div class="pm-bs-container">
             <div class="pm-bs-row">
-                <div class="pm-bs-col-md-3">
+                <div class="pm-bs-col-lg-3">
                     <f:if condition="{menu.children}">
                         <div class="pm-bs-col-md-12 product-list-menu">
-                            <span class="product-list-menu-current-title">{menu.title}</span>
-                            <div class="menu-subpages">
-                                <ul class="product-list-menu-submenu">
-                                    <f:for each="{menu.children}" as="menuItem">
-                                        <f:variable name="activeClass">{f:if(condition: '{menuItem.active}', then: ' product-list-menu-submenu-item__active')}</f:variable>
-                                        <f:variable name="currentClass">{f:if(condition: '{menuItem.current}', then: ' product-list-menu-submenu-item__current')}</f:variable>
-                                        <li class="product-list-menu-submenu-item{activeClass}{currentClass}">
-                                            <a class="product-list-menu-submenu-item-link" href="{menuItem.link}">
-                                                <span class="product-list-menu-submenu-item-title">{menuItem.title}</span>
-                                            </a>
-                                        </li>
-                                    </f:for>
-                                </ul>
+                            <div class="product-list-menu-wrp product-list-menu-current-title-wrp">
+                                <span class="product-list-menu-current-title">{menu.title}</span>
+                                <f:render section="collapseButton" arguments="{collapseId: menu.data.uid, collapseState: settings.listView.menuCollapsible}" />
                             </div>
+                            <nav class="menu-subpages {f:render(section: 'collapseClass', arguments: {collapseId: menu.data.uid, collapseState: settings.listView.menuCollapsible})}">
+                                <f:render section="menuItemChildren" arguments="{menu: menu, level:1, collapseState: settings.listView.menuCollapsible}" />
+                            </nav>
                         </div>
                     </f:if>
 
                     <f:if condition="{filters}">
                         <div class="pm-bs-col-md-12">
-                            <span class="product-list-menu-current-title"><f:translate key="fe.filters" /></span>
-                        </div>
-
-                        <div class="pm-bs-col-md-12">
-                            <clear-all></clear-all>
-                        </div>
-                        <f:for as="filter" each="{filters}">
-                            <div class="pm-bs-col-md-12">
-                                <f:switch expression="{filter.guiType}">
-                                    <f:case value="checkbox">
-                                        <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
-                                    </f:case>
-                                    <f:case value="option">
-                                        <lazy-radio-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
-                                    </f:case>
-                                    <f:defaultCase>
-                                        <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
-                                    </f:defaultCase>
-                                </f:switch>
+                            <div class="product-list-menu-wrp product-filters-menu-current-title-wrp">
+                                <span class="product-list-menu-current-title"><f:translate key="fe.filters" /></span>
+                                <f:render section="collapseButton" arguments="{collapseId: 'filter-container', collapseState: settings.listView.filterCollapsible}" />
                             </div>
-                        </f:for>
+
+                            <div class="product-list-filter-wrp {f:render(section: 'collapseClass', arguments: {collapseId: 'filter-container', collapseState: settings.listView.filterCollapsible})}">
+                                <f:for as="filter" each="{filters}">
+                                    <f:switch expression="{filter.guiType}">
+                                        <f:case value="checkbox">
+                                            <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
+                                        </f:case>
+                                        <f:case value="option">
+                                            <lazy-radio-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
+                                        </f:case>
+                                        <f:defaultCase>
+                                            <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
+                                        </f:defaultCase>
+                                    </f:switch>
+                                </f:for>
+                            </div>
+                            <clear-all class="{filterCollapseClass}"></clear-all>
+                        </div>
                     </f:if>
                 </div>
-                <div class="pm-bs-col-md-9">
-                    <div class="pm-bs-row">
+                <div class="pm-bs-col-lg-9">
+                    <div class="pm-bs-row product-counter-sorting-wrp">
                         <div class="pm-bs-col-md-6">
                             <counter></counter>
                         </div>
-                        <div class="pm-bs-col-md-6">
+                        <div class="pm-bs-col-md-6 pm-text-end">
                             <sorting :options="{orderBy}" :settings="{settingsJson}"></sorting>
                         </div>
                     </div>
@@ -76,7 +71,7 @@
                                 --></f:comment>
 
                                 <div class="pm-bs-row" v-cloak>
-                                    <div class="pm-bs-col-md-4" v-for="product in products" :key="product.uid">
+                                    <div class="pm-bs-col-lg-4 pm-bs-col-md-6" v-for="product in products" :key="product.uid">
                                         <div class="product-item-wrp">
                                             <a :href="product.url">
                                                 <f:render partial="Product/Card" arguments="{product: product}" />
@@ -96,5 +91,42 @@
             </div>
         </div>
     </div>
+</f:section>
+
+<f:comment><!-- Generates the collapse button --></f:comment>
+<f:section name="collapseButton">
+    <f:if condition="{collapseState} > 0">
+        <f:variable name="activeBtnClass">{f:if(condition: '{collapseState} == 2', then: ' active invert-mobile', else: '')}</f:variable>
+        <button class="product-list-menu-collapse-btn{activeBtnClass}" data-pm-toggle="collapse" data-pm-target=".menu-collapse-{collapseId}" aria-controls="menu-collapse-{collapseId}"></button>
+    </f:if>
+</f:section>
+
+<f:comment><!-- Generates the collapse class --></f:comment>
+<f:section name="collapseClass"><f:if condition="{collapseState} > 0">pm-collapse menu-collapse-{collapseId}{f:if(condition: '{collapseState} == 2', then: ' show invert-mobile', else: '')}</f:if></f:section>
+
+<f:comment><!-- Generates the page menu below parent page --></f:comment>
+<f:section name="menuItemChildren">
+    <ul class="product-list-menu-submenu product-list-menu-level-{level} {f:render(section: 'collapseClass', arguments: {collapseId: menu.data.uid, collapseState: collapseState})}">
+        <f:for each="{menu.children}" as="menuItem">
+            <f:variable name="activeClass">{f:if(condition: '{menuItem.active}', then: ' product-list-menu-submenu-item__active')}</f:variable>
+            <f:variable name="currentClass">{f:if(condition: '{menuItem.current}', then: ' product-list-menu-submenu-item__current')}</f:variable>
+            <f:variable name="childrenClass">{f:if(condition: '{menuItem.children}', then: ' product-list-menu-submenu-item__children')}</f:variable>
+            <f:variable name="menuLevel">{level+1}</f:variable>
+
+            <li class="product-list-menu-submenu-item{activeClass}{childrenClass}">
+                <div class="product-list-menu-wrp">
+                    <a class="product-list-menu-submenu-item-link{currentClass} product-list-menu-level-{level}" href="{menuItem.link}">
+                        <span class="product-list-menu-submenu-item-title">{menuItem.title}</span>
+                    </a>
+                    <f:if condition="{settings.listView.menuItemCollapsible} == 1 && {menuItem.children}">
+                        <f:render section="collapseButton" arguments="{collapseId: menuItem.data.uid, collapseState: settings.listView.menuItemCollapsible}" />
+                    </f:if>
+                </div>
+                <f:if condition="{menuItem.children}">
+                    <f:render section="menuItemChildren" arguments="{menu: menuItem, level:menuLevel, collapseState: settings.listView.menuItemCollapsible}" />
+                </f:if>
+            </li>
+        </f:for>
+    </ul>
 </f:section>
 </html>
