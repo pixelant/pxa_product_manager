@@ -223,7 +223,7 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * Get number of menu levels
+     * Get number of menu levels.
      *
      * @return int
      */
@@ -233,7 +233,7 @@ abstract class AbstractController extends ActionController
     }
 
     /**
-     * Get number of menu levels for list view
+     * Get number of menu levels for list view.
      *
      * @return int
      */
