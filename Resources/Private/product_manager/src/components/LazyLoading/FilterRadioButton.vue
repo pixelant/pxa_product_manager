@@ -2,7 +2,7 @@
     <div id="filterRadioButton">
         <div class="radiobutton-filter-wrapper" :class="accordionClasses">
             <div class="radiobutton-filter-header" @click="toggleAccordion">
-                <span class="toggle-icon"></span><span class="filter-name">{{ placeholder }}</span>
+                <span class="filter-name">{{ placeholder }}</span><span class="toggle-icon"></span>
             </div>
             <div class="radiobutton-filter-body">
                 <div class="radiobutton-filter-content">
@@ -124,12 +124,6 @@
   }
   .is-closed .radiobutton-filter-body {
     max-height: 0;
-  }
-  .radiobutton-filter-wrapper.is-closed .toggle-icon:before {
-      content: "+";
-  }
-  .radiobutton-filter-wrapper.is-open .toggle-icon:before {
-      content: "-";
   }
   .checkbox-filter-wrapper.is-open.is-static .toggle-icon:before {
       content: "";
