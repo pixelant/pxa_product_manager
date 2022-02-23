@@ -231,7 +231,7 @@ abstract class AbstractController extends ActionController
     {
         $levels = (int)$this->settings['menuLevels'] ?? 0;
         $menuLevels = (int)$this->settings['listView']['menuLevels'] ?? 0;
-        if($menuLevels > 0 && $menuLevels < 4) {
+        if ($menuLevels > 0 && $menuLevels < 4) {
             $levels = $menuLevels;
         }
 

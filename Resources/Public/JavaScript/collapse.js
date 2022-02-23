@@ -3,7 +3,6 @@
 const btnTriggers = Array.from(document.querySelectorAll('.product-list-menu-collapse-btn'));
 const triggers = Array.from(document.querySelectorAll('[data-pm-toggle="collapse"]'));
 
-
 window.addEventListener('click', (ev) => {
   const elm = ev.target;
   if (triggers.includes(elm)) {
@@ -14,7 +13,6 @@ window.addEventListener('click', (ev) => {
     elm.classList[fnmap['toggle']]('active');
   }
 }, false);
-
 
 const fnmap = {
   'toggle': 'toggle',
