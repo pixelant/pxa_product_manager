@@ -219,7 +219,7 @@
             </trans-unit>
 
             <trans-unit id="js.sort_by">
-                <source>Sort by</source>
+                <source>Sort by:</source>
             </trans-unit>
             <trans-unit id="js.showing">
                 <source>Showing</source>
