@@ -5,29 +5,18 @@
         <f:then>
             <f:for each="{product.listingAttributeSets}" as="attributeset">
                 <f:if condition="{attributeset.listingAttributes}">
-                    <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
+                    <h5><f:if condition="{attributeset.label}" then="{attributeset.label}" else="{attributeset.name}"/></h5>
+                    <dl class="pm-bs-row">
+                        <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
+                    </dl>
                 </f:if>
             </f:for>
         </f:then>
         <f:else>
-            <dl class="row">
+            <dl class="pm-bs-row">
                 <f:for each="{product.listingAttributeSets}" as="attributeset">
                     <f:if condition="{attributeset.listingAttributes}">
-                        <f:for each="{attributeset.listingAttributes}" as="attribute">
-                            <dt class="col-sm-3">
-                                <f:if condition="{attribute.image}">
-                                    <f:image image="{attribute.image}"
-                                            maxWidth="{settings.attributes.imageMaxSize}"
-                                            maxHeight="{settings.attributes.imageMaxSize}"
-                                            alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
-                                </f:if>
-                                <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <f:render partial="Product/Attribute/Type{attribute.type}"
-                                        arguments="{attribute: attribute, product: product}"/>
-                            </dd>
-                        </f:for>
+                        <f:render partial="Product/AttributeSet/Default" arguments="{_all}" />
                     </f:if>
                 </f:for>
             </dl>

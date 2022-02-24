@@ -66,11 +66,6 @@
     word-break: break-all;
     padding-left: 5px;
 }
-.tx-pxa-product-manager .product-item-sku {
-    display: inline-block;
-    width: 100%;
-    text-align: right;
-}
 
 .tx-pxa-product-manager .product-related-file svg,
 .tx-pxa-product-manager .product-related-link svg {
@@ -246,6 +241,28 @@ ul.product-list-menu-level-3 .product-list-menu-wrp {
 .product-counter-sorting-wrp {
     padding-top: 30px;
     padding-bottom: 30px;
+}
+
+.product-item-sku-number-label {
+    font-weight: bold;
+}
+
+.attribute-listing-odd {
+    background: #f5f5f5;
+}
+
+.attribute-listing-even {
+    background: transparent;
+}
+
+.attribute-listing-label {
+    border-right: 2px solid #fff;
+}
+
+.attribute-listing-label,
+.attribute-listing-value {
+    margin: 0;
+    padding: 24px 20px 24px;
 }
 
 /*!

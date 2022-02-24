@@ -119,11 +119,25 @@
                         <span class="product-list-menu-submenu-item-title">{menuItem.title}</span>
                     </a>
                     <f:if condition="{settings.listView.menuItemCollapsible} == 1 && {menuItem.children}">
-                        <f:render section="collapseButton" arguments="{collapseId: menuItem.data.uid, collapseState: settings.listView.menuItemCollapsible}" />
+                        <f:if condition="{menuItem.active}">
+                            <f:then>
+                                <f:render section="collapseButton" arguments="{collapseId: menuItem.data.uid, collapseState: 2}" />
+                            </f:then>
+                            <f:else>
+                                <f:render section="collapseButton" arguments="{collapseId: menuItem.data.uid, collapseState: settings.listView.menuItemCollapsible}" />
+                            </f:else>
+                        </f:if>
                     </f:if>
                 </div>
                 <f:if condition="{menuItem.children}">
-                    <f:render section="menuItemChildren" arguments="{menu: menuItem, level:menuLevel, collapseState: settings.listView.menuItemCollapsible}" />
+                    <f:if condition="{menuItem.active}">
+                        <f:then>
+                            <f:render section="menuItemChildren" arguments="{menu: menuItem, level:menuLevel, collapseState: 2}" />
+                        </f:then>
+                        <f:else>
+                            <f:render section="menuItemChildren" arguments="{menu: menuItem, level:menuLevel, collapseState: settings.listView.menuItemCollapsible}" />
+                        </f:else>
+                    </f:if>
                 </f:if>
             </li>
         </f:for>

@@ -3,15 +3,21 @@
     <div class="swiper-container product-gallery-top">
         <div class="swiper-wrapper product-gallery-wrapper">
             <f:for each="{product.galleryImages}" as="image" iteration="iteration">
-                <div
-                    class="swiper-slide product-gallery-swiper-slide"
-                    style="background-image:url({f:uri.image(src: '{image.uid}', treatIdAsReference: 1, maxWidth='{settings.singleView.images.mainMaxWidth}', absolute: 1)})">
+                <div class="swiper-slide product-gallery-swiper-slide">
+                    <a href="{f:uri.image(image: image, maxWidth: '{data.image_zoom_width}')}"
+                      data-caption="{image.properties.description}"
+                      rel="picture-partial__zoom-{data.uid}"
+                      class="picture-partial__zoom-link">
+                      <f:image image="{image}"
+                        maxWidth="522"
+                        class="product-gallery-swiper-item"
+                        maxWidth="{settings.singleView.images.mainMaxWidth}"
+                        loading="lazy"
+                        alt="{product.name}"/>
+                    </a>
                 </div>
             </f:for>
         </div>
-        <!-- Add Arrows -->
-        <div class="swiper-button-next product-gallery-button-next"></div>
-        <div class="swiper-button-prev product-gallery-button-prev"></div>
     </div>
 
     <div class="swiper-container product-gallery-thumbs">
@@ -23,6 +29,9 @@
                 </div>
             </f:for>
         </div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next product-gallery-button-next"></div>
+        <div class="swiper-button-prev product-gallery-button-prev"></div>
     </div>
 </div>
 {childContent}

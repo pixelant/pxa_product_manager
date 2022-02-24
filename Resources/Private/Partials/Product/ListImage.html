@@ -1,20 +1,20 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-<div class="item-img">
-    <f:if condition="{image}">
-        <f:then>
-            <f:image image="{image}"
-                     maxHeight="{settings.listView.images.maxHeight}"
-                     maxWidth="{settings.listView.images.maxWidth}"
-                     alt="{title}"
-                     title="{title}" />
-        </f:then>
-        <f:else if="{settings.noImagePath}">
-            <f:image src="{settings.noImagePath}"
-                     maxHeight="{settings.listView.images.maxHeight}"
-                     maxWidth="{settings.listView.images.maxWidth}"
-                     alt="{title}"
-                     title="{title}" />
-        </f:else>
-    </f:if>
-</div>
+<f:if condition="{image}">
+    <f:then>
+        <f:image image="{image}"
+                    maxHeight="{settings.listView.images.maxHeight}"
+                    maxWidth="{settings.listView.images.maxWidth}"
+                    alt="{title}"
+                    title="{title}"
+                    loading="lazy" />
+    </f:then>
+    <f:else if="{settings.noImagePath}">
+        <f:image src="{settings.noImagePath}"
+                    maxHeight="{settings.listView.images.maxHeight}"
+                    maxWidth="{settings.listView.images.maxWidth}"
+                    alt="{title}"
+                    title="{title}"
+                    loading="lazy" />
+    </f:else>
+</f:if>
 </html>

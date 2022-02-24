@@ -14,11 +14,12 @@
                     <div class="pm-bs-col-md-3">
                         <a href="{f:uri.image(image: image, maxWidth: s.mainMaxWidth, maxHeight: s.mainMaxHeight)}" class="lightbox">
                             <f:image image="{image}"
-                                        width="40c"
-                                        height="40c"
-                                        class="img-thumbnail"
-                                        alt="{image.alternative}"
-                                        title="{image.title}" />
+                                width="40c"
+                                height="40c"
+                                class="img-thumbnail"
+                                alt="{image.alternative}"
+                                title="{image.title}"
+                                loading="lazy" />
                         </a>
                     </div>
                 </f:for>
