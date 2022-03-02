@@ -1,0 +1,25 @@
+<f:comment>
+<!--
+    #decides if product data table/documents section in Show view can be collapsed.
+    0 disabled
+    1 enabled collapsed
+    2 enabled expanded
+-->
+</f:comment>
+
+<f:if condition="{collapseState} > 0">
+    <f:variable name="activeBtnClass">{f:if(condition: '{collapseState} == 2', then: ' active invert-mobile', else: '')}</f:variable>
+    <button class="product-single-view-collapse-btn{activeBtnClass}" data-pm-toggle="collapse" data-pm-target=".menu-collapse-{collapseId}" aria-controls="menu-collapse-{collapseId}"></button>
+</f:if>
+<f:variable name="collapseClass"><f:if condition="{collapseState} > 0">pm-collapse menu-collapse-{collapseId}{f:if(condition: '{collapseState} == 2', then: ' show invert-mobile', else: '')}</f:if></f:variable>
+<f:if condition="{collapseClass}">
+    <f:then>
+        <div class="{collapseClass}">
+            {childContent}
+        </div>
+    </f:then>
+    <f:else>
+        {childContent}
+    </f:else>
+</f:if>
+
