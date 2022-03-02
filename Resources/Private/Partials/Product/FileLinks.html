@@ -3,7 +3,7 @@
 
 <f:if condition="{files}">
     <f:for each="{files}" as="file">
-        <li class="product-related-file">
+        <li class="product-related-file {f:if(condition: '{settings.singleView.productDataTableDocumentRow} == 1', then: 'pm-bs-col-lg-12', else: 'pm-bs-col-lg-4')}">
             <f:link.typolink parameter="{file.originalResource.publicUrl} _blank">
                 <f:if condition="{f:uri.image(src: 'EXT:pxa_product_manager/Resources/Public/Icons/FileIcons/{file.originalResource.properties.extension}.svg')}">
                     <f:then>

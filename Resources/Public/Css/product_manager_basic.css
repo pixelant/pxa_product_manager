@@ -54,24 +54,33 @@
     padding: 15px;
 }
 
-.tx-pxa-product-manager .single-product-gallery__links ul {
+.tx-pxa-product-manager .single-product-document__links ul {
     padding-left: 0;
-}
-
-.tx-pxa-product-manager .single-product-gallery__links li {
     list-style: none;
 }
 
-.tx-pxa-product-manager .single-product-gallery__links span {
+.tx-pxa-product-manager .single-product-document__links span {
     word-break: break-all;
     padding-left: 5px;
 }
 
+.tx-pxa-product-manager .product-related-link,
+.tx-pxa-product-manager .product-related-file {
+    padding-bottom: 20px;
+}
+
 .tx-pxa-product-manager .product-related-file svg,
 .tx-pxa-product-manager .product-related-link svg {
-    height: 24px;
+    height: 38px;
     fill: var(--pm-dark);
     text-decoration: none;
+}
+
+.tx-pxa-product-manager .product-related-file a,
+.tx-pxa-product-manager .product-related-link a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
 .tx-pxa-product-manager .product-img-fluid {
@@ -99,7 +108,6 @@
 .product-list-menu-collapse-btn {
     border: 0;
     background: transparent;
-
 }
 
 .product-list-menu-collapse-btn:before,
@@ -120,6 +128,34 @@
 .radiobutton-filter-wrapper.is-open .toggle-icon:before {
     transform:rotate(0deg);
     transform-origin: center;
+    display: inline-block;
+}
+
+.product-single-view-collapse-btn {
+    float: right;
+    position: relative;
+    border: 0;
+    background: transparent;
+    width: 30px;
+    height: 30px;
+    background-image: url(/typo3conf/ext/pxa_product_manager/Resources/Public/Icons/Svg/chevron-up.svg);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    transition: all .3s ease-in-out;
+    transform-origin: center center;
+    transform:rotate(180deg);
+    text-align: center;
+}
+
+.product-single-view-collapse-btn.active {
+    transform:rotate(0deg);
+    transform-origin: center;
+    display: inline-block;
+}
+
+.product-gallery .product-header,
+.product-attribute-listing .product-header,
+.single-product-document__links .product-header {
     display: inline-block;
 }
 
@@ -216,7 +252,8 @@ ul.product-list-menu-level-3 .product-list-menu-wrp {
 }
 
 .btn-clear-all,
-.btn-clear {
+.btn-clear,
+.btn-load-more {
     background: #ededed;
     border: 0;
     width: 100%;
@@ -226,7 +263,17 @@ ul.product-list-menu-level-3 .product-list-menu-wrp {
     padding-bottom: 5px;
 }
 
+.btn-load-more {
+    padding: 5px 20px;
+    width: auto;
+}
+
 .product-list-menu {
+    border-bottom: 1px solid #ededed;
+    margin-bottom: 20px;
+}
+
+.product-filter-menu {
     border-bottom: 1px solid #ededed;
     margin-bottom: 20px;
 }
@@ -241,6 +288,12 @@ ul.product-list-menu-level-3 .product-list-menu-wrp {
 .product-counter-sorting-wrp {
     padding-top: 30px;
     padding-bottom: 30px;
+}
+
+.product-item-sku {
+    padding-bottom: 20px;
+    position: relative;
+    display: block;
 }
 
 .product-item-sku-number-label {
@@ -264,6 +317,37 @@ ul.product-list-menu-level-3 .product-list-menu-wrp {
     margin: 0;
     padding: 24px 20px 24px;
 }
+
+.product-attribute-listing-set {
+    padding-right: calc(var(--bs-gutter-x) / 2);
+    padding-left: calc(var(--bs-gutter-x) / 2);
+}
+
+.product-gallery:before,
+.product-attribute-listing:before,
+.single-product-document__links:before,
+.single-product-related:before {
+    height: 1px;
+    position: relative;
+    display: block;
+    content: '';
+    color: inherit;
+    background-color: currentColor;
+    border: 0;
+    opacity: 0.25;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.product-main-image {
+    display: block;
+    margin: 0 auto;
+}
+
+.product-main-image-item {
+    border: 1px solid var(--pm-border-color);
+}
+
 
 /*!
  * Include some used parts from Bootstrap Grid v5.0.0-beta1 (https://getbootstrap.com/)
@@ -522,6 +606,14 @@ ul.product-list-menu-level-3 .product-list-menu-wrp {
 @media (max-width: 991px) {
     .product-list-menu-collapse-btn.active.invert-mobile:before {
         transform: rotate(45deg);
+    }
+
+    .product-single-view-collapse-btn.active.invert-mobile {
+        transform: rotate(180deg);
+    }
+
+    .product-single-view-collapse-btn.invert-mobile {
+        transform: rotate(0deg);
     }
 
     .product-list-menu-collapse-btn.invert-mobile:before {

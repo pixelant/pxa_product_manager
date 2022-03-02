@@ -5,21 +5,29 @@
         <f:then>
             <f:for each="{product.listingAttributeSets}" as="attributeset">
                 <f:if condition="{attributeset.listingAttributes}">
-                    <h5><f:if condition="{attributeset.label}" then="{attributeset.label}" else="{attributeset.name}"/></h5>
-                    <dl class="pm-bs-row">
-                        <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
-                    </dl>
+                    <div class="product-attribute-listing-set-wrapper">
+                        <h5><f:if condition="{attributeset.label}" then="{attributeset.label}" else="{attributeset.name}"/></h5>
+                        <div class="product-attribute-listing-set">
+                            <dl class="pm-bs-row">
+                                <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
+                            </dl>
+                        </div>
+                    </div>
                 </f:if>
             </f:for>
         </f:then>
         <f:else>
-            <dl class="pm-bs-row">
-                <f:for each="{product.listingAttributeSets}" as="attributeset">
-                    <f:if condition="{attributeset.listingAttributes}">
-                        <f:render partial="Product/AttributeSet/Default" arguments="{_all}" />
-                    </f:if>
-                </f:for>
-            </dl>
+            <div class="product-attribute-listing-set-wrapper">
+                <div class="product-attribute-listing-set">
+                    <dl class="pm-bs-row">
+                        <f:for each="{product.listingAttributeSets}" as="attributeset">
+                            <f:if condition="{attributeset.listingAttributes}">
+                                <f:render partial="Product/AttributeSet/Default" arguments="{_all}" />
+                            </f:if>
+                        </f:for>
+                    </dl>
+                </div>
+            </div>
         </f:else>
     </f:if>
 </f:if>

@@ -175,6 +175,9 @@
             <trans-unit id="fe.filters">
                 <source>Filters</source>
             </trans-unit>
+            <trans-unit id="fe.gallery">
+                <source>Inspiration gallery</source>
+            </trans-unit>
 
             <trans-unit id="fe.userEmail.orderForm.subject">
                 <source>Thank you for your order</source>
