@@ -7,10 +7,11 @@ This is an extension that shows products with a lot of filter and sorting possib
 
 For all kind of documentation which covers install to how to develop the extension:
 
-[Local Documentation](Documentation/Index.rst)
-
-[Online Documentation](https://docs.typo3.org/p/pixelant/pxa-product-manager/master/en-us/)
-
+| Source           | URL                                                                |
+|------------------|--------------------------------------------------------------------|
+| **Repository:**  | https://github.com/pixelant/pxa_product_manager                    |
+| **Read online:** | https://docs.typo3.org/p/pixelant/pxa-product-manager/master/en-us |
+| **TER:**         | https://extensions.typo3.org/extension/pxa_product_manager         |
 
 ## Developing the extension
 
