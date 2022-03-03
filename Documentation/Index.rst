@@ -23,7 +23,7 @@ Product Manager
       product, ecommerce
 
 :Copyright:
-      2018
+      2016
 
 :Author:
       Pixelant AB
