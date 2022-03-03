@@ -45,5 +45,5 @@ Contribution
 
 `Pull requests <https://github.com/pixelant/pxa_product_manager/pulls>`__ are very welcome indeed. Please feel free to contribute features, bug fixes, and improvements.
 
-`Donate to the project through PayPal <https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WPXRSUTAJNRES&source=url>`__
+`Donate to the project through PayPal <https://www.paypal.com/donate/?hosted_button_id=B7YZKNCHTYHRW>`__
 
