@@ -4,46 +4,57 @@
 
 <f:section name="main">
     <f:render partial="SEO/ProductTitleMataTags" arguments="{product: product}" />
+    <f:asset.script identifier="pm-collapse" async="true" src="EXT:pxa_product_manager/Resources/Public/JavaScript/collapse.js" />
 
     <div class="single-product-wrapper pm-bs-container">
         <div class="pm-bs-row">
-            <div class="pm-bs-col-md-8">
+            <div class="pm-bs-col-md-12">
                 <pxa:renderMultiple key="productName" arguments="{_all}">{product.name}</pxa:renderMultiple>
             </div>
-            <div class="pm-bs-col-md-4">
+            <div class="pm-bs-col-md-12">
                 <pxa:renderMultiple key="productSku" arguments="{_all}">{product.sku}</pxa:renderMultiple>
             </div>
         </div>
 
         <div class="pm-bs-row">
-            <div class="pm-bs-col-md-4">
+            <div class="pm-bs-col-lg-6">
                 <pxa:renderMultiple key="productImages" arguments="{_all}"></pxa:renderMultiple>
             </div>
 
-            <div class="pm-bs-col-md-8">
+            <div class="pm-bs-col-lg-6">
                 <div class="content">
                     <pxa:renderMultiple key="productTeaser" arguments="{_all}"><f:format.html>{product.teaser}</f:format.html></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productDescription" arguments="{_all}"><f:format.html>{product.description}</f:format.html></pxa:renderMultiple>
+                    <pxa:renderMultiple key="productUspList" arguments="{_all}"></pxa:renderMultiple>
+                    <div class="product-shortcuts">
+                        <pxa:renderMultiple key="productShortcuts" arguments="{_all}"></pxa:renderMultiple>
+                    </div>
                     <pxa:renderMultiple key="productPrice" arguments="{_all}">{product.formattedPrice}</pxa:renderMultiple>
                     <div class="product-actions">
                         <pxa:renderMultiple key="productActions" arguments="{_all}"></pxa:renderMultiple>
                     </div>
-                    <div class="product-shortcuts">
-                        <pxa:renderMultiple key="productShortcuts" arguments="{_all}"></pxa:renderMultiple>
-                    </div>
-                    <pxa:renderMultiple key="productDescription" arguments="{_all}"><f:format.html>{product.description}</f:format.html></pxa:renderMultiple>
-                    <pxa:renderMultiple key="productUspList" arguments="{_all}"></pxa:renderMultiple>
                 </div>
             </div>
         </div>
 
         <div class="pm-bs-row">
-            <div class="pm-bs-col-md-6">
+            <f:variable name="collapseId">galleryImages</f:variable>
+            <f:variable name="collapseState">{settings.singleView.galleryCollapsible}</f:variable>
+            <pxa:renderMultiple key="productGallery" arguments="{_all}"></pxa:renderMultiple>
+        </div>
+
+        <div class="pm-bs-row">
+            <div class="{f:if(condition: '{settings.singleView.productDataTableDocumentRow} == 1', then: 'pm-bs-col-lg-8', else: 'pm-bs-col-lg-12')}">
+                <f:variable name="collapseId">attributeListing</f:variable>
+                <f:variable name="collapseState">{settings.singleView.productDataTableCollapsible}</f:variable>
                 <pxa:renderMultiple key="productAttributeListing" arguments="{_all}">
                     <f:render partial="Product/AttributeListing" arguments="{product: product}" />
                 </pxa:renderMultiple>
             </div>
 
-            <div class="pm-bs-col-md-6">
+            <div class="{f:if(condition: '{settings.singleView.productDataTableDocumentRow} == 1', then: 'pm-bs-col-lg-4', else: 'pm-bs-col-lg-12')}">
+                <f:variable name="collapseId">productLinks</f:variable>
+                <f:variable name="collapseState">{settings.singleView.documentCollapsible}</f:variable>
                 <pxa:renderMultiple key="productLinks" arguments="{_all}"></pxa:renderMultiple>
             </div>
         </div>

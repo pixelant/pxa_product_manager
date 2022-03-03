@@ -16,7 +16,8 @@
     }
 
     plugin.tx_pxaproductmanager {
-        view.renderingStacks.productImages.10.template = Stacks/Product/SwiperImages
+        view.renderingStacks.productImages.50.template = Stacks/Product/SwiperImages
         settings.singleView.related.partial = SwiperRelated
+        view.renderingStacks.productGallery >
     }
 [end]

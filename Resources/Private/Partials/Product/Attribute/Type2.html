@@ -2,7 +2,7 @@
 <f:comment>Text</f:comment>
 <f:if condition="{product.attributeValue.{attribute.identifier}.renderValue}">
     <f:then>
-        <f:format.html>{product.attributeValue.{attribute.identifier}.renderValue}</f:format.html>
+        <f:format.nl2br>{product.attributeValue.{attribute.identifier}.renderValue}</f:format.nl2br>
     </f:then>
     <f:else>-</f:else>
 </f:if>

@@ -1,7 +1,9 @@
-<f:if condition="{product.links}">
-    <f:render partial="Product/Links" arguments="{links: product.links}" />
-</f:if>
-<f:if condition="{product.falLinks}">
-    <f:render partial="Product/FileLinks" arguments="{files: product.falLinks}" />
-</f:if>
+<ul class="pm-bs-row">
+    <f:if condition="{product.links}">
+        <f:render partial="Product/Links" arguments="{links: product.links}" />
+    </f:if>
+    <f:if condition="{product.falLinks}">
+        <f:render partial="Product/FileLinks" arguments="{files: product.falLinks}" />
+    </f:if>
+</ul>
 {childContent}

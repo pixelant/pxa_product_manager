@@ -28,7 +28,7 @@
                     </f:if>
 
                     <f:if condition="{filters}">
-                        <div class="pm-bs-col-md-12">
+                        <div class="pm-bs-col-md-12 product-filter-menu">
                             <div class="product-list-menu-wrp product-filters-menu-current-title-wrp">
                                 <span class="product-list-menu-current-title"><f:translate key="fe.filters" /></span>
                                 <f:render section="collapseButton" arguments="{collapseId: 'filter-container', collapseState: settings.listView.filterCollapsible}" />
@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
 
-                                <button @click="loadMore" v-if="hasMore" class="btn btn-default" :disabled="nextQueueLoading" v-text="loadMoreText" v-cloak></button>
+                                <button @click="loadMore" v-if="hasMore" class="btn-load-more" :disabled="nextQueueLoading" v-text="loadMoreText" v-cloak></button>
 
                                 <loader v-show="loading"></loader>
                             </div>

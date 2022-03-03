@@ -1,0 +1,25 @@
+<div class="product-gallery-item">
+
+  <f:alias map="{s: settings.singleView.images}">
+    <div class="pm-bs-row">
+      <f:for as="image" each="{product.galleryImages}" iteration="iteration">
+        <f:if condition="!{iteration.isFirst}">
+          <div class="pm-bs-col-md-4">
+              <a href="{f:uri.image(image: image, maxWidth: s.mainMaxWidth, maxHeight: s.mainMaxHeight)}"
+                data-caption="{image.properties.description}"
+                rel="picture-partial__zoom-{data.uid}"
+                class="picture-partial__zoom-link">
+                  <f:image image="{image}"
+                      maxWidth="{s.mainMaxWidth}"
+                      class="img-fluid"
+                      alt="{image.alternative}"
+                      title="{image.title}"
+                      loading="lazy" />
+              </a>
+          </div>
+        </f:if>
+      </f:for>
+    </div>
+  </f:alias>
+</div>
+{childContent}

@@ -5,32 +5,29 @@
         <f:then>
             <f:for each="{product.listingAttributeSets}" as="attributeset">
                 <f:if condition="{attributeset.listingAttributes}">
-                    <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
+                    <div class="product-attribute-listing-set-wrapper">
+                        <h5><f:if condition="{attributeset.label}" then="{attributeset.label}" else="{attributeset.name}"/></h5>
+                        <div class="product-attribute-listing-set">
+                            <dl class="pm-bs-row">
+                                <f:render partial="Product/AttributeSet/{attributeset.layout}" arguments="{_all}" />
+                            </dl>
+                        </div>
+                    </div>
                 </f:if>
             </f:for>
         </f:then>
         <f:else>
-            <dl class="row">
-                <f:for each="{product.listingAttributeSets}" as="attributeset">
-                    <f:if condition="{attributeset.listingAttributes}">
-                        <f:for each="{attributeset.listingAttributes}" as="attribute">
-                            <dt class="col-sm-3">
-                                <f:if condition="{attribute.image}">
-                                    <f:image image="{attribute.image}"
-                                            maxWidth="{settings.attributes.imageMaxSize}"
-                                            maxHeight="{settings.attributes.imageMaxSize}"
-                                            alt="{f:if(condition: attribute.label, then: attribute.label, else: attribute.name)}"/>
-                                </f:if>
-                                <f:if condition="{attribute.label}" then="{attribute.label}" else="{attribute.name}"/>
-                            </dt>
-                            <dd class="col-sm-9">
-                                <f:render partial="Product/Attribute/Type{attribute.type}"
-                                        arguments="{attribute: attribute, product: product}"/>
-                            </dd>
+            <div class="product-attribute-listing-set-wrapper">
+                <div class="product-attribute-listing-set">
+                    <dl class="pm-bs-row">
+                        <f:for each="{product.listingAttributeSets}" as="attributeset">
+                            <f:if condition="{attributeset.listingAttributes}">
+                                <f:render partial="Product/AttributeSet/Default" arguments="{_all}" />
+                            </f:if>
                         </f:for>
-                    </f:if>
-                </f:for>
-            </dl>
+                    </dl>
+                </div>
+            </div>
         </f:else>
     </f:if>
 </f:if>

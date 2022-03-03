@@ -57,6 +57,17 @@ plugin.tx_pxaproductmanager {
                     template = Stacks/Product/Images
                 }
             }
+            productGallery {
+                50 {
+                    template = Stacks/Product/Gallery
+                }
+                60 {
+                    template = Stacks/Product/Collapsible
+                }
+                70 {
+                    template = Stacks/Product/GalleryItem
+                }
+            }
             productActions {
                 50 {
                     template = Stacks/Product/Actions
@@ -76,10 +87,16 @@ plugin.tx_pxaproductmanager {
                 50 {
                     template = Stacks/Product/AttributeListing
                 }
+                60 {
+                    template = Stacks/Product/Collapsible
+                }
             }
             productLinks {
                 50 {
                     template = Stacks/Product/LinksList
+                }
+                55 {
+                    template = Stacks/Product/Collapsible
                 }
                 60 {
                     template = Stacks/Product/LinksListItems
@@ -145,6 +162,14 @@ plugin.tx_pxaproductmanager {
             related {
                 partial = Related
             }
+            # decides if product data table section can be collapsed, 0 disabled, 1 enabled collapsed, 2 enabled expanded
+            galleryCollapsible = 0
+            # decides if product data table section can be collapsed, 0 disabled, 1 enabled collapsed, 2 enabled expanded
+            productDataTableCollapsible = 0
+            # decides if documents section can be collapsed, 0 disabled, 1 enabled collapsed, 2 enabled expanded
+            documentCollapsible = 0
+            # decides if product data table section and document section is in the same row, 0 seperate row, 1 same row
+            productDataTableDocumentRow = 0
         }
 
         listView {

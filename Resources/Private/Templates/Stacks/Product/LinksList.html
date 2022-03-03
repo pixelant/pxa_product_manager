@@ -2,12 +2,9 @@
       xmlns:pxa="http://typo3.org/ns/Pixelant/PxaProductManager/ViewHelpers" data-namespace-typo3-fluid="true">
 
 <f:if condition="{product.links} || {product.falLinks}">
-    <div class="single-product-gallery__links">
+    <div class="single-product-document__links">
         <pxa:renderMultiple key="productHeader" arguments="{headerLabel: 'fe.related_links', subheaderLabel: ''}"></pxa:renderMultiple>
-
-        <ul>
-            {childContent}
-        </ul>
+        {childContent}
     </div>
 </f:if>
 </html>
