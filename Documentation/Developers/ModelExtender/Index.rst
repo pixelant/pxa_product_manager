@@ -28,8 +28,8 @@ Basically, all that you to extend model is add following code in your **ext_loca
 
 .. code-block:: php
 
-   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['EXTKEY1']['extender']['CLASSNAME']['EXTKEY2'] =
-        '\Vendor\ExtensionKey\Domain\Model\YourModel';
+   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['<EXTKEY1>']['extender']['<CLASSNAME>']['<EXTKEY2>'] =
+        '\<Vendor>\<ExtensionKey>\Domain\Model\<YourModel>';
 
 *  EXTKEY1 - extension key of the extension in which the domain model should be extended
 *  EXTKEY2 - extension key of the extension in which the extending domain model resides

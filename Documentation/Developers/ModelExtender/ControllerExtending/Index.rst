@@ -28,14 +28,14 @@ Example:
 
 .. code-block:: php
 
-       \Pixelant\PxaProductManager\Utility\ExtensionUtility::addControllerAction(
-        'PxaProductManager',
-        'ProductRender',
-        'Pixelant\PxaProductManager\Controller\TestController',
-        [
-            'test', 'testy'
-        ]
-    );
+   \Pixelant\PxaProductManager\Utility\ExtensionUtility::addControllerAction(
+      'PxaProductManager',
+      'ProductRender',
+      'Pixelant\PxaProductManager\Controller\TestController',
+      [
+         'test', 'testy'
+      ]
+   );
 
 *  **test** - action that exists in *TestController*.
 *  **testy** - action that we extend from parent controller *EXT:t3kit/Classes/Controller/TestyController.php*

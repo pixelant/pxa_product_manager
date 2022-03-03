@@ -28,7 +28,7 @@ Add the clear cache command in the Page TSConfig of the sysfolder:
 
 .. code-block:: typoscript
 
-    TCEMAIN.clearCacheCmd = [ comma separated page uid of product single single and list view ]
+    TCEMAIN.clearCacheCmd = <comma separated page uid of product single and list view>
 
 .. _RootCategory:
 
