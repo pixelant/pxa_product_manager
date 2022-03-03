@@ -25,7 +25,7 @@ This is a short explanation of the "non standard" TYPO3 fields.
    Field
         Name
    Description
-        Name of attribute set, displayed in FE if ```plugin.tx_pxaproductmanager.settings.attributes.divideAttributesBySets``` is enabled.
+        Name of attribute set, displayed in FE if ``plugin.tx_pxaproductmanager.settings.attributes.divideAttributesBySets`` is enabled.
 
 .. container:: table-row
 

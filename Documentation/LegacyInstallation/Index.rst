@@ -2,7 +2,7 @@
 
 
 
-.. _products:
+.. _legacy-installation:
 
 
 Legacy Installation
@@ -26,9 +26,9 @@ Create one system folder (sys folder) for the products, categories, filters, att
 
 Add the clear cache command in the Page TSConfig of the sysfolder:
 
-  .. code-block:: typoscript
+.. code-block:: typoscript
 
-     TCEMAIN.clearCacheCmd = [ comma separated page uid of product single single and list view ]
+   TCEMAIN.clearCacheCmd = <comma separated page uid of product single and list view>
 
 
 .. _product-list-view:

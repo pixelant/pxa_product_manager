@@ -48,7 +48,7 @@ Add partialRootPaths to typoscript setup of your extension.
     plugin.tx_pxaproductmanager {
         view {
             partialRootPaths {
-                20 = EXT:yourextension/Resources/Private/Extensions/pxa_product_manager/Partials/
+                20 = EXT:<yourextension>/Resources/Private/Extensions/pxa_product_manager/Partials/
             }
         }
     }
@@ -60,6 +60,6 @@ Create the new partial template in your extension.
 Partial should to be created in folder Product/AttributeSet/ inside the partialRootPaths set in typoscript.
 
 In this example a file with the name MyCustomLayout.html should be created in folder:
-```yourextension/Resources/Private/Extensions/pxa_product_manager/Partials/Product/AttributeSet/```
+``<yourextension>/Resources/Private/Extensions/pxa_product_manager/Partials/Product/AttributeSet/``
 
-To have something to start with, copy the Default Layout ```pxa_product_manager/Resources/Private/Partials/Product/AttributeSet/Default.html``` to your new Layout.
+To have something to start with, copy the Default Layout ``pxa_product_manager/Resources/Private/Partials/Product/AttributeSet/Default.html`` to your new layout.

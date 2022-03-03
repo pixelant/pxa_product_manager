@@ -3,7 +3,7 @@
 .. _model-extender:
 
 Model extender
-================
+==============
 
 .. toctree::
   :maxdepth: 2
@@ -14,7 +14,7 @@ Model extender
 .. _developer-hooks-model-extender-api-overview:
 
 API overview
------
+------------
 
 We're using `evoWeb/extender <https://github.com/evoWeb/extender/>`__ extension as API for model extending.
 Additional documentation can be found `here <https://docs.typo3.org/typo3cms/extensions/extender/stable/Index.html>`__.
@@ -22,14 +22,14 @@ Additional documentation can be found `here <https://docs.typo3.org/typo3cms/ext
 .. _developer-hooks-model-extender-api-usage:
 
 API usage
------
+---------
 
 Basically, all that you to extend model is add following code in your **ext_localconf.php**:
 
 .. code-block:: php
 
-   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['EXTKEY1']['extender']['CLASSNAME']['EXTKEY2'] =
-        '\Vendor\ExtensionKey\Domain\Model\YourModel';
+   $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['<EXTKEY1>']['extender']['<CLASSNAME>']['<EXTKEY2>'] =
+        '\<Vendor>\<ExtensionKey>\Domain\Model\<YourModel>';
 
 *  EXTKEY1 - extension key of the extension in which the domain model should be extended
 *  EXTKEY2 - extension key of the extension in which the extending domain model resides

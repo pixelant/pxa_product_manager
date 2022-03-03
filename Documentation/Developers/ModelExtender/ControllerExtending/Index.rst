@@ -3,7 +3,7 @@
 .. _controller-extending:
 
 Controller extending
-================
+====================
 
 .. _controller-usage:
 
@@ -28,20 +28,20 @@ Example:
 
 .. code-block:: php
 
-       \Pixelant\PxaProductManager\Utility\ExtensionUtility::addControllerAction(
-        'PxaProductManager',
-        'ProductRender',
-        'Pixelant\PxaProductManager\Controller\TestController',
-        [
-            'test', 'testy'
-        ]
-    );
+   \Pixelant\PxaProductManager\Utility\ExtensionUtility::addControllerAction(
+      'PxaProductManager',
+      'ProductRender',
+      'Pixelant\PxaProductManager\Controller\TestController',
+      [
+         'test', 'testy'
+      ]
+   );
 
 *  **test** - action that exists in *TestController*.
 *  **testy** - action that we extend from parent controller *EXT:t3kit/Classes/Controller/TestyController.php*
 
 Controller interface
------
+--------------------
 
 Actually, this way of controller extending have an issue that distinguish it from straight class extending.
 
