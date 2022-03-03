@@ -2,7 +2,7 @@
 
 
 
-.. _products:
+.. _legacy-installation:
 
 
 Legacy Installation

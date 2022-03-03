@@ -78,7 +78,7 @@ Disable Single View: A checkbox to disable the linking of a product to the singl
 .. _categories-tab:
 
 Categories tab
------------
+--------------
 
 Categories - The category the product belongs to. It uses the System Record Category
 which exists natively in TYPO3.

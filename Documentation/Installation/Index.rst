@@ -2,7 +2,7 @@
 
 
 
-.. _products:
+.. _installation:
 
 
 Installation

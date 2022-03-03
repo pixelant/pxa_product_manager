@@ -3,7 +3,7 @@
 .. _controller-extending:
 
 Controller extending
-================
+====================
 
 .. _controller-usage:
 
@@ -41,7 +41,7 @@ Example:
 *  **testy** - action that we extend from parent controller *EXT:t3kit/Classes/Controller/TestyController.php*
 
 Controller interface
------
+--------------------
 
 Actually, this way of controller extending have an issue that distinguish it from straight class extending.
 

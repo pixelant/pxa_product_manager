@@ -2,25 +2,21 @@
 
 .. _product-attribute:
 
-.. include:: ../../Includes.txt
-
-.. _product-attribute-sets:
-
-=======================
+==================
 Product Attributes
-=======================
+==================
 
 Attributes are used as additions to the standard product information (mainly name, article number, description and images)
 and shown in a table below the general product information. Attributes can for example be available colors, sizes, measurements etc.
 
 Add new attribute
-=======================
+=================
 
 To create a new attribute, go to List view and select the product manager (or equivalent) folder in the page tree.
 Either click "Create new record" in top of page or "New record" in the Attributes section.
 
 Fields
-=======================
+======
 
 This is a short explanation of the "non standard" TYPO3 fields.
 
