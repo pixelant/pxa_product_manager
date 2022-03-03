@@ -86,16 +86,16 @@ indicate how they will be presented in the backend of the product, when creating
 
 **Here is a list of the different types, and what they are used for:**
 
-  - Input - used to add a line of free text in the product.
-  - Text - allows you to add a text mass.
-  - Date Time - adds a calendar field, for example to specify a release date.
-  - Dropdown - options are added in the attribute, and in the product, one option can be selected through a dropdown menu (type to use for filter function).
-  - Multiselect - options are added in the attribute, and in the product, multiple options can be selected (type to use for filter function).
-  - Checkbox - like the multiselect, this allows you to select more than one option, but the options are shown as checkboxes instead in the backend of the product.
-  - Link - adds a link field in the product backend, and a link on the frontend.
-  - Image - an image can be added in the table of product information. Note that this is not the image that will be shown in the box for product listing views.
+- Input - used to add a line of free text in the product.
+- Text - allows you to add a text mass.
+- Date Time - adds a calendar field, for example to specify a release date.
+- Dropdown - options are added in the attribute, and in the product, one option can be selected through a dropdown menu (type to use for filter function).
+- Multiselect - options are added in the attribute, and in the product, multiple options can be selected (type to use for filter function).
+- Checkbox - like the multiselect, this allows you to select more than one option, but the options are shown as checkboxes instead in the backend of the product.
+- Link - adds a link field in the product backend, and a link on the frontend.
+- Image - an image can be added in the table of product information. Note that this is not the image that will be shown in the box for product listing views.
 
 .. important::
 
-  **NOTE!** If the attribute is to be used as a filter, the attribute needs to use the dropdown or multiselect options
-  and not for example a free text field.
+   **NOTE!** If the attribute is to be used as a filter, the attribute needs to use the dropdown or multiselect options
+   and not for example a free text field.

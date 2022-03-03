@@ -18,9 +18,9 @@ Create one system folder (sys folder) for the products, categories, filters, att
 
 Add the clear cache command in the Page TSConfig of the sysfolder:
 
-  .. code-block:: typoscript
+.. code-block:: typoscript
 
-     TCEMAIN.clearCacheCmd = [ comma separated page uid of product single single and list view ]
+   TCEMAIN.clearCacheCmd = [ comma separated page uid of product single single and list view ]
 
 .. _product-render:
 
@@ -30,11 +30,13 @@ Product Render
 The product render is the SEO friendly page based setup of handling products! The first
 step is to create the necessary category pages (in the PageTree) for the products.
 
-Create the set of pages needed with the dok type called **Product Display**. Then make
-sure that the provided backend layout also is added called **Product Display Sample BE Layout**.
+Create the set of pages needed with the dok type called **Product Display**.
 
 .. figure:: ../Images/category-page.png
    :alt: Creating a Category Page in the PageTree.
+
+Then make sure that the provided backend layout also is added called
+**Product Display Sample BE Layout**.
 
 .. figure:: ../Images/category-page-backend-layout.png
    :alt: Adding backend layout to a Category Page in the PageTree.

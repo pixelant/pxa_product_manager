@@ -244,6 +244,7 @@ When adding attributes to an attribute set, the order of the attributes can be a
 
 Categories
 -----------
+
 The System Records Category is extended with few tabs.
 Category information tab
 “Category information” tab has image and description fields.
@@ -252,11 +253,11 @@ Also categories has “Products attributes” tab where you need to assign attri
 All sub-categories of parent category will inherit all attribute sets.
 For example if we have next structure
 
-Root category: Attribute set 1
+.. code-block:: none
 
-	-- Sub-category 1: Attribute set 2
-
-	    -- Sub-sub-category 2: Attribute set 3
+   Root category: Attribute set 1
+   └── Sub-category 1: Attribute set 2
+       └── Sub-sub-category 2: Attribute set 3
 
 Products that belongs to “Sub-sub-category 2” will have all three attribute sets.
 
