@@ -74,3 +74,13 @@ To run the PHP Functional tests run the following command.
 .. code-block::
 
    composer run ci:tests:functional
+
+.. _filter-interface:
+
+Filter interface
+================
+
+The filtering options in the Product listing are made in [Vue.js](https://vuejs.org/).
+
+Path to the application(https://github.com/pixelant/pxa_product_manager/Resources/Private/product_manager) and more
+information regarding the workflow(https://github.com/pixelant/pxa_product_manager/Resources/Private/product_manager/README.md).
