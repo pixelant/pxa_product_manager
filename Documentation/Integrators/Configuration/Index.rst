@@ -171,7 +171,17 @@ But if you need just navigation, you can use “Navigation” mode plugin. This 
 
 Breadcrumb
 ^^^^^^^^^^
-Breadcrumbs are generate automatically with “lib.pxaProductManager.breadcrumbs”
+For the SEO-friendly page based setup, use the following typoscript to add the products to the breadcrumb. It will give the user the possibility to go up one level to the product type-page, when in detail view.
+
+.. code-block:: typoscript
+
+    # Add product to breadcrumbs (in detail view)
+        page.10.dataProcessing {
+        1646821380 = Pixelant\PxaProductManager\DataProcessing\AddProductToMenuProcessor
+        1646821380.menus = breadcrumb
+    }
+
+When using categories, breadcrumbs are generate automatically with “lib.pxaProductManager.breadcrumbs”
 Usage:
 
 .. code-block:: html
