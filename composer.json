@@ -17,7 +17,8 @@
     "ext-intl" : "*",
     "evoweb/extender": "^7.0",
     "typo3/cms-core": "^10.4.6",
-    "pixelant/demander": "^0.1"
+    "pixelant/demander": "^0.1",
+    "doctrine/dbal": "~2.13.1"
   },
   "require-dev": {
     "codeception/codeception": "^4.1.5",
