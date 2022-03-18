@@ -128,14 +128,14 @@ class SvgViewHelper extends AbstractViewHelper
         // Disables the functionality to allow external entities to be loaded when parsing the XML, must be kept.
         // Not needed since PHP 8.0 and libxml 2.9.0 entity substitution is disabled by default.
         if (PHP_VERSION_ID < 80000) {
-            // @codingStandardsIgnoreLine
+            /** @codingStandardsIgnoreLine */
             $previousValueOfEntityLoader = libxml_disable_entity_loader(true);
         };
 
         $svgElement = simplexml_load_string($svgContent, 'SimpleXMLElement', LIBXML_NOENT);
 
         if (PHP_VERSION_ID < 80000) {
-            // @codingStandardsIgnoreLine
+            /** @codingStandardsIgnoreLine */
             libxml_disable_entity_loader($previousValueOfEntityLoader);
         }
 
@@ -203,7 +203,7 @@ class SvgViewHelper extends AbstractViewHelper
         }
 
         $finfo = \mime_content_type($absoluteSrc);
-        if (!in_array($finfo, ['image/svg+xml','image/svg'])) {
+        if (!in_array($finfo, ['image/svg+xml', 'image/svg'])) {
             throw new \Exception('<!-- unable to render file: ' . $relativeSrc . ' (' . $finfo . ') -->', 1647596185);
         }
 
