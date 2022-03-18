@@ -45,10 +45,21 @@ class SvgViewHelper extends AbstractViewHelper
      */
     public function initializeArguments(): void
     {
-        $this->registerArgument('source', 'string', 'File path', true);
+        $this->registerArgument('source', 'string', 'Specifies the source file', false);
+        $this->registerArgument('src', 'string', 'Specifies the source file', false);
+        $this->registerArgument(
+            'fileExtension',
+            'string',
+            'Specifies the file extension to display a file icon for, if not found fallbacks to default.svg',
+            false
+        );
         $this->registerArgument('class', 'string', 'Specifies an alternate class for the svg', false);
-        $this->registerArgument('width', 'int', 'Specifies a width for the svg', false);
-        $this->registerArgument('height', 'int', 'Specifies a height for the svg', false);
+        $this->registerArgument('width', 'float', 'Specifies a width for the svg', false);
+        $this->registerArgument('height', 'float', 'Specifies a height for the svg', false);
+        $this->registerArgument('aria-label', 'string', 'Specifies an aria-label for the svg', false);
+        $this->registerArgument('aria-hidden', 'bool', 'Specifies aria-hidden for the svg', false);
+        $this->registerArgument('role', 'string', 'Specifies role attr for the svg', false);
+        $this->registerArgument('focusable', 'string', 'Specifies focusable for the svg', false);
     }
 
     /**
@@ -65,34 +76,92 @@ class SvgViewHelper extends AbstractViewHelper
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
     ) {
-        $arguments['source'] = ltrim($arguments['source'], '/');
-        $sourceAbs = GeneralUtility::getFileAbsFileName($arguments['source']);
+        $relativeSrc = $arguments['src'] ?? ltrim($arguments['source'], '/') ?? '';
+        $extension = $arguments['fileExtension'] ?? '';
 
-        if (!file_exists($sourceAbs)) {
-            return 'no SVG file on /' . $arguments['source'];
+        if (empty($relativeSrc) && empty($extension)) {
+            return '<!-- nothing to render -->';
         }
 
-        return self::getInlineSvg($sourceAbs, $arguments);
+        if (!empty($relativeSrc)) {
+            try {
+                $absoluteSrc = self::getValidatedAbsoluteFile($relativeSrc);
+            } catch (\Throwable $th) {
+                return $th->getMessage();
+            }
+        }
+
+        if (empty($absoluteSrc) && !empty($extension)) {
+            try {
+                $absoluteSrc = self::getValidatedAbsoluteFile(
+                    sprintf(
+                        'EXT:pxa_product_manager/Resources/Public/Icons/FileIcons/%s.svg',
+                        $extension
+                    )
+                );
+            } catch (\Throwable $th) {
+                $absoluteSrc = self::getValidatedAbsoluteFile(
+                    'EXT:pxa_product_manager/Resources/Public/Icons/FileIcons/default.svg'
+                );
+            }
+        }
+
+        return self::getInlineSvg($absoluteSrc, $arguments);
     }
 
     /**
-     * @param string $source
+     * Get inline svg by absolute url.
+     *
+     * @param string $absoluteSrc
      * @param array $arguments
      * @return string
+     * @throws \Exception
      */
-    protected static function getInlineSvg($source, $arguments)
+    protected static function getInlineSvg(string $absoluteSrc, array $arguments): string
     {
-        $svgContent = file_get_contents($source);
+        // Load svg content.
+        $svgContent = GeneralUtility::getUrl($absoluteSrc);
+
+        // Try and remove script tags.
         $svgContent = preg_replace('/<script[\s\S]*?>[\s\S]*?<\/script>/i', '', $svgContent);
-        // Disables the functionality to allow external entities to be loaded when parsing the XML, must be kept
-        $previousValueOfEntityLoader = libxml_disable_entity_loader(true);
-        $svgElement = simplexml_load_string($svgContent);
-        libxml_disable_entity_loader($previousValueOfEntityLoader);
+
+        // Disables the functionality to allow external entities to be loaded when parsing the XML, must be kept.
+        // Not needed since PHP 8.0 and libxml 2.9.0 entity substitution is disabled by default.
+        if (PHP_VERSION_ID < 80000) {
+            // @codingStandardsIgnoreLine
+            $previousValueOfEntityLoader = libxml_disable_entity_loader(true);
+        };
+
+        $svgElement = simplexml_load_string($svgContent, 'SimpleXMLElement', LIBXML_NOENT);
+
+        if (PHP_VERSION_ID < 80000) {
+            // @codingStandardsIgnoreLine
+            libxml_disable_entity_loader($previousValueOfEntityLoader);
+        }
 
         // remove xml version tag
         $domXml = dom_import_simplexml($svgElement);
-        if (isset($arguments['class'])) {
-            $domXml->setAttribute('class', $arguments['class']);
+
+        self::setElementAttributes($domXml, $arguments);
+
+        return $domXml->ownerDocument->saveXML($domXml->ownerDocument->documentElement);
+    }
+
+    /**
+     * Set attributes on DOMElement.
+     *
+     * @param \DOMElement $domXml
+     * @param array $arguments
+     * @return void
+     */
+    protected static function setElementAttributes(\DOMElement $domXml, array $arguments): void
+    {
+        if (!empty($arguments['class'])) {
+            if (empty($domXml->getAttribute('class'))) {
+                $domXml->setAttribute('class', $arguments['class']);
+            } else {
+                $domXml->setAttribute('class', $domXml->getAttribute('class') . ' ' . $arguments['class']);
+            }
         }
         if (isset($arguments['width'])) {
             $domXml->setAttribute('width', $arguments['width']);
@@ -100,7 +169,44 @@ class SvgViewHelper extends AbstractViewHelper
         if (isset($arguments['height'])) {
             $domXml->setAttribute('height', $arguments['height']);
         }
+        if (!empty($arguments['role'])) {
+            $domXml->setAttribute('role', $arguments['role']);
+        }
+        if (!empty($arguments['aria-label'])) {
+            $domXml->setAttribute('aria-label', $arguments['aria-label']);
+        }
+        if (!empty($arguments['focusable'])) {
+            $domXml->setAttribute('focusable', $arguments['focusable']);
+        }
+        if (!empty($arguments['aria-hidden']) && $arguments['aria-hidden'] === true) {
+            $domXml->setAttribute('aria-hidden', 'true');
+        }
+    }
 
-        return $domXml->ownerDocument->saveXML($domXml->ownerDocument->documentElement);
+    /**
+     * Get absoulute file name if file exists, and path is allowed and type is correct.
+     *
+     * @param string $relativeSrc
+     * @return string
+     * @throws \Exception
+     */
+    protected static function getValidatedAbsoluteFile(string $relativeSrc): string
+    {
+        $absoluteSrc = GeneralUtility::getFileAbsFileName($relativeSrc);
+
+        if (!file_exists($absoluteSrc)) {
+            throw new \Exception('<!-- unable to render file: ' . $relativeSrc . ' (missing) -->', 1647596185);
+        }
+
+        if (!GeneralUtility::isAllowedAbsPath($absoluteSrc)) {
+            throw new \Exception('<!-- unable to render file: ' . $relativeSrc . ' (disallowed) -->', 1647596185);
+        }
+
+        $finfo = \mime_content_type($absoluteSrc);
+        if (!in_array($finfo, ['image/svg+xml','image/svg'])) {
+            throw new \Exception('<!-- unable to render file: ' . $relativeSrc . ' (' . $finfo . ') -->', 1647596185);
+        }
+
+        return $absoluteSrc;
     }
 }
