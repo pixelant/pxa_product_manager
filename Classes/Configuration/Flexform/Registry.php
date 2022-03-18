@@ -89,7 +89,10 @@ class Registry
     public function registerDefaultActions(): void
     {
         $scaKey = 'switchableControllerActions';
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'])
+            && !is_array($GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'])
+        ) {
             $GLOBALS['TYPO3_CONF_VARS']['EXT']['pxa_product_manager'][$scaKey]['items'] = [];
         }
 

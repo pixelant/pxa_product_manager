@@ -6,7 +6,7 @@
 					<settings.wishList.enableOrderFunction>
 						<TCEforms>
 							<label>LLL:EXT:pxa_product_manager/Resources/Private/Language/locallang_be.xlf:flexform.wish_list.enable_order_function</label>
-							<displayCond>FIELD:sDEF.switchableControllerActions:=:Product->wishList;Product->finishOrder</displayCond>
+							<displayCond>FIELD:sDEF.switchableControllerActions:=:\Product->wishList;Product->finishOrder</displayCond>
 							<config>
 								<type>check</type>
 								<default>0</default>

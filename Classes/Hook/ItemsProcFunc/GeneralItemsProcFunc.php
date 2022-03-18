@@ -36,7 +36,7 @@ class GeneralItemsProcFunc
         $excludeFields = [
             $GLOBALS['TCA'][$tableName]['ctrl']['languageField'],
             $GLOBALS['TCA'][$tableName]['ctrl']['transOrigPointerField'],
-            $GLOBALS['TCA'][$tableName]['ctrl']['type'],
+            $GLOBALS['TCA'][$tableName]['ctrl']['type'] ?? [],
         ];
 
         if ($configuration['config']['itemsProcConfig']['exclude'] ?? '' !== '') {

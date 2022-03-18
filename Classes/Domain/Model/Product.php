@@ -29,6 +29,7 @@ namespace Pixelant\PxaProductManager\Domain\Model;
 
 use DateTime;
 use Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface;
+use Pixelant\PxaProductManager\Attributes\ValueUpdater\ValueUpdaterService;
 use Pixelant\PxaProductManager\Domain\Collection\CanCreateCollection;
 use Pixelant\PxaProductManager\Domain\Repository\ProductRepository;
 use Pixelant\PxaProductManager\Formatter\PriceFormatter;
@@ -212,6 +213,7 @@ class Product extends AbstractEntity
     {
         //Do not remove the next line: It would break the functionality
         $this->initStorageObjects();
+        $this->attributeValueUpdater = GeneralUtility::makeInstance(ValueUpdaterService::class);
     }
 
     /**
@@ -227,14 +229,6 @@ class Product extends AbstractEntity
         // "Workaround" to be able to extend e.g. Product Model with a ObjectStorage
         // property using the Extender extension.
         $this->__construct();
-    }
-
-    /**
-     * @param UpdaterInterface $updaterInterface
-     */
-    public function injectUpdaterInterface(UpdaterInterface $updaterInterface): void
-    {
-        $this->attributeValueUpdater = $updaterInterface;
     }
 
     /**

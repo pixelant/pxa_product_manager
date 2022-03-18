@@ -4,12 +4,9 @@ defined('TYPO3_MODE') || die;
 
 (function () {
     // Extbase
+
     $extbaseContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
         \TYPO3\CMS\Extbase\Object\Container\Container::class
-    );
-    $extbaseContainer->registerImplementation(
-        \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperServiceInterface::class,
-        \Pixelant\PxaProductManager\Attributes\ValueMapper\MapperService::class
     );
     $extbaseContainer->registerImplementation(
         \Pixelant\PxaProductManager\Attributes\ValueUpdater\UpdaterInterface::class,
@@ -21,10 +18,10 @@ defined('TYPO3_MODE') || die;
         'Pixelant.pxa_product_manager',
         'LazyLoading',
         [
-            'Api\\LazyLoading' => 'list',
+            \Pixelant\PxaProductManager\Controller\Api\LazyLoadingController::class => 'list',
         ],
         [
-            'Api\\LazyLoading' => 'list',
+            \Pixelant\PxaProductManager\Controller\Api\LazyLoadingController::class => 'list',
         ]
     );
 
@@ -32,10 +29,10 @@ defined('TYPO3_MODE') || die;
         'Pixelant.pxa_product_manager',
         'LazyAvailableFilters',
         [
-            'Api\\LazyAvailableFilters' => 'list',
+            \Pixelant\PxaProductManager\Controller\Api\LazyAvailableFiltersController::class => 'list',
         ],
         [
-            'Api\\LazyAvailableFilters' => 'list',
+            \Pixelant\PxaProductManager\Controller\Api\LazyAvailableFiltersController::class => 'list',
         ]
     );
 
@@ -43,7 +40,7 @@ defined('TYPO3_MODE') || die;
         'Pixelant.pxa_product_manager',
         'ProductShow',
         [
-            'ProductShow' => 'show'
+            \Pixelant\PxaProductManager\Controller\ProductShowController::class => 'show'
         ]
     );
 
@@ -51,7 +48,7 @@ defined('TYPO3_MODE') || die;
         'Pixelant.pxa_product_manager',
         'ProductList',
         [
-            'LazyProduct' => 'list'
+            \Pixelant\PxaProductManager\Controller\LazyProductController::class => 'list'
         ]
     );
 
@@ -59,7 +56,7 @@ defined('TYPO3_MODE') || die;
         'Pixelant.pxa_product_manager',
         'ProductRender',
         [
-            'ProductRender' => 'init'
+            \Pixelant\PxaProductManager\Controller\ProductRenderController::class => 'init'
         ]
     );
 
@@ -67,7 +64,7 @@ defined('TYPO3_MODE') || die;
         'Pixelant.pxa_product_manager',
         'CustomProductList',
         [
-            'CustomProduct' => 'list'
+            \Pixelant\PxaProductManager\Controller\CustomProductController::class => 'list'
         ]
     );
 
@@ -168,14 +165,17 @@ defined('TYPO3_MODE') || die;
 
     // Cache framework
     $cacheIdentifier = 'pm_cache_categories';
-    if (! is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier])) {
+    if (
+        isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier])
+        && !is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier])
+    ) {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] = [];
     }
-    if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend'])) {
+    if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend'])) {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['frontend']
             = \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class;
     }
-    if (! isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'])) {
+    if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'])) {
         $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options']
             = ['defaultLifetime' => 0];
     }
