@@ -130,7 +130,7 @@ class SvgViewHelper extends AbstractViewHelper
         if (PHP_VERSION_ID < 80000) {
             /** @codingStandardsIgnoreLine */
             $previousValueOfEntityLoader = libxml_disable_entity_loader(true);
-        };
+        }
 
         $svgElement = simplexml_load_string($svgContent, 'SimpleXMLElement', LIBXML_NOENT);
 
@@ -139,7 +139,7 @@ class SvgViewHelper extends AbstractViewHelper
             libxml_disable_entity_loader($previousValueOfEntityLoader);
         }
 
-        // remove xml version tag
+        // Remove xml version tag.
         $domXml = dom_import_simplexml($svgElement);
 
         self::setElementAttributes($domXml, $arguments);
