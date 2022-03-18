@@ -135,7 +135,7 @@ class SvgViewHelper extends AbstractViewHelper
         $svgElement = simplexml_load_string($svgContent, 'SimpleXMLElement', LIBXML_NOENT);
 
         if (PHP_VERSION_ID < 80000) {
-            /** @codingStandardsIgnoreLine */
+            // @codingStandardsIgnoreLine
             libxml_disable_entity_loader($previousValueOfEntityLoader);
         }
 
@@ -203,7 +203,7 @@ class SvgViewHelper extends AbstractViewHelper
         }
 
         $finfo = \mime_content_type($absoluteSrc);
-        if (!in_array($finfo, ['image/svg+xml', 'image/svg'])) {
+        if (!in_array($finfo, ['image/svg+xml', 'image/svg'], true)) {
             throw new \Exception('<!-- unable to render file: ' . $relativeSrc . ' (' . $finfo . ') -->', 1647596185);
         }
 
