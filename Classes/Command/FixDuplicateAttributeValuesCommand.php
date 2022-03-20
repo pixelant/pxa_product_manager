@@ -25,6 +25,7 @@ use Pixelant\PxaProductManager\Utility\DataInheritanceUtility;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -65,6 +66,26 @@ class FixDuplicateAttributeValuesCommand extends Command
         $records = $this->fetchDuplicateAttributeValues();
         if (count($records) > 0) {
             $io->writeLn(sprintf('Found %s product attributes with multiple attribute values', count($records)));
+
+            $warningMessage = 'This console command is WIP!';
+            $warningMessage .= PHP_EOL . PHP_EOL;
+            $warningMessage .= 'Running this console command might not give the desired result since the ';
+            $warningMessage .= 'calculations of what attribute values to remove will vary depending ';
+            $warningMessage .= 'on the data, extension configuration and CMS setup.';
+            $warningMessage .= PHP_EOL . PHP_EOL;
+            $warningMessage .= 'Never run this console command in a production environment unless ';
+            $warningMessage .= 'the result of executing it is carefully evaluated and controlled ';
+            $warningMessage .= 'in a development environment';
+
+            $io->warning($warningMessage);
+
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion('Continue with this action? (y/N)', false);
+
+            if (!$helper->ask($input, $output, $question)) {
+                return Command::SUCCESS;
+            }
+
             $io->section('Try and determine correct attribute value');
             $io->progressStart(count($records));
             foreach ($records as $index => $record) {
@@ -130,7 +151,7 @@ class FixDuplicateAttributeValuesCommand extends Command
             $io->success('No duplicate attribute values found');
         }
 
-        return true;
+        return Command::SUCCESS;
     }
 
     /**
@@ -211,7 +232,7 @@ class FixDuplicateAttributeValuesCommand extends Command
                     $queryBuilder->createNamedParameter($attribute, \PDO::PARAM_INT)
                 )
             )
-            ->orderBy('crdate')
+            ->orderBy('tstamp', 'DESC')
             ->execute()
             ->fetchAllAssociative();
 
@@ -363,6 +384,11 @@ class FixDuplicateAttributeValuesCommand extends Command
             if ($allLanguagesAreSame && $allLocalizedFromSame && $allCopiedFromSame) {
                 $score += (100 - ($index * 1));
             }
+        }
+
+        // If attribue values differs, the index indicates how important value is (according to query).
+        if (!$allValuesAreSame && $allLanguagesAreSame) {
+            $score += (100 - ($index * 1));
         }
 
         // Wasn't necessary to calculate any more scores for the duplicates found in current project.
