@@ -14,46 +14,47 @@
     <div id="pm-lazy-loading-app" class="list-product-wrapper">
         <div class="pm-bs-container">
             <div class="pm-bs-row">
-                <div class="pm-bs-col-lg-3">
-                    <f:if condition="{menu.children}">
-                        <div class="pm-bs-col-md-12 product-list-menu">
-                            <div class="product-list-menu-wrp product-list-menu-current-title-wrp">
-                                <span class="product-list-menu-current-title">{menu.title}</span>
-                                <f:render section="collapseButton" arguments="{collapseId: menu.data.uid, collapseState: settings.listView.menuCollapsible}" />
+                <f:if condition="{menu} || {filters}">
+                    <div class="pm-bs-col-lg-3">
+                        <f:if condition="{menu.children}">
+                            <div class="pm-bs-col-md-12 product-list-menu">
+                                <div class="product-list-menu-wrp product-list-menu-current-title-wrp">
+                                    <span class="product-list-menu-current-title">{menu.title}</span>
+                                    <f:render section="collapseButton" arguments="{collapseId: menu.data.uid, collapseState: settings.listView.menuCollapsible}" />
+                                </div>
+                                <nav class="menu-subpages {f:render(section: 'collapseClass', arguments: {collapseId: menu.data.uid, collapseState: settings.listView.menuCollapsible})}">
+                                    <f:render section="menuItemChildren" arguments="{menu: menu, level:1, collapseState: settings.listView.menuCollapsible}" />
+                                </nav>
                             </div>
-                            <nav class="menu-subpages {f:render(section: 'collapseClass', arguments: {collapseId: menu.data.uid, collapseState: settings.listView.menuCollapsible})}">
-                                <f:render section="menuItemChildren" arguments="{menu: menu, level:1, collapseState: settings.listView.menuCollapsible}" />
-                            </nav>
-                        </div>
-                    </f:if>
+                        </f:if>
+                        <f:if condition="{filters}">
+                            <div class="pm-bs-col-md-12 product-filter-menu">
+                                <div class="product-list-menu-wrp product-filters-menu-current-title-wrp">
+                                    <span class="product-list-menu-current-title"><f:translate key="fe.filters" /></span>
+                                    <f:render section="collapseButton" arguments="{collapseId: 'filter-container', collapseState: settings.listView.filterCollapsible}" />
+                                </div>
 
-                    <f:if condition="{filters}">
-                        <div class="pm-bs-col-md-12 product-filter-menu">
-                            <div class="product-list-menu-wrp product-filters-menu-current-title-wrp">
-                                <span class="product-list-menu-current-title"><f:translate key="fe.filters" /></span>
-                                <f:render section="collapseButton" arguments="{collapseId: 'filter-container', collapseState: settings.listView.filterCollapsible}" />
+                                <div class="product-list-filter-wrp {f:render(section: 'collapseClass', arguments: {collapseId: 'filter-container', collapseState: settings.listView.filterCollapsible})}">
+                                    <f:for as="filter" each="{filters}">
+                                        <f:switch expression="{filter.guiType}">
+                                            <f:case value="checkbox">
+                                                <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
+                                            </f:case>
+                                            <f:case value="option">
+                                                <lazy-radio-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-radio-filter>
+                                            </f:case>
+                                            <f:defaultCase>
+                                                <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
+                                            </f:defaultCase>
+                                        </f:switch>
+                                    </f:for>
+                                    <clear-all class="{filterCollapseClass}"></clear-all>
+                                </div>
                             </div>
-
-                            <div class="product-list-filter-wrp {f:render(section: 'collapseClass', arguments: {collapseId: 'filter-container', collapseState: settings.listView.filterCollapsible})}">
-                                <f:for as="filter" each="{filters}">
-                                    <f:switch expression="{filter.guiType}">
-                                        <f:case value="checkbox">
-                                            <lazy-checkbox-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-checkbox-filter>
-                                        </f:case>
-                                        <f:case value="option">
-                                            <lazy-radio-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-radio-filter>
-                                        </f:case>
-                                        <f:defaultCase>
-                                            <lazy-filter :filter="{filter -> pxa:resourceEncode()}"></lazy-filter>
-                                        </f:defaultCase>
-                                    </f:switch>
-                                </f:for>
-                                <clear-all class="{filterCollapseClass}"></clear-all>
-                            </div>
-                        </div>
-                    </f:if>
-                </div>
-                <div class="pm-bs-col-lg-9">
+                        </f:if>
+                    </div>
+                </f:if>
+                <div class="{f:if(condition: '{menu} || {filters}', then: 'pm-bs-col-lg-9', else: 'pm-bs-col-lg-12')}">
                     <div class="pm-bs-row product-counter-sorting-wrp">
                         <div class="pm-bs-col-md-6">
                             <counter></counter>
