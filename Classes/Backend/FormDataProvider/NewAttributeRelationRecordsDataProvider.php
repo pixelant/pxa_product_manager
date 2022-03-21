@@ -63,7 +63,9 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         $attributeUidList = array_column($attributes, 'uid');
 
         $productLanguageFieldName = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
-        $sysLanguageUid = isset($result['databaseRow'][$productLanguageFieldName]['0']) ? (int)$result['databaseRow'][$productLanguageFieldName]['0'] : 0;
+        $sysLanguageUid = isset(
+            $result['databaseRow'][$productLanguageFieldName]['0']
+        ) ? (int)$result['databaseRow'][$productLanguageFieldName]['0'] : 0;
 
         $attrLangField = $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['languageField'] ?? null;
 

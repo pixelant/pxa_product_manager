@@ -129,14 +129,14 @@ class SvgViewHelper extends AbstractViewHelper
         // Not needed since PHP 8.0 and libxml 2.9.0 entity substitution is disabled by default.
         if (PHP_VERSION_ID < 80000) {
             /** @codingStandardsIgnoreLine */
-            $previousValueOfEntityLoader = libxml_disable_entity_loader(true);
+            $previousValueOfEntityLoader = libxml_disable_entity_loader(true); // phpcs:disable
         }
 
         $svgElement = simplexml_load_string($svgContent, 'SimpleXMLElement', LIBXML_NOENT);
 
         if (PHP_VERSION_ID < 80000) {
             // @codingStandardsIgnoreLine
-            libxml_disable_entity_loader($previousValueOfEntityLoader);
+            libxml_disable_entity_loader($previousValueOfEntityLoader); // phpcs:disable
         }
 
         // Remove xml version tag.
