@@ -6,7 +6,6 @@ namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Model\Option;
-use Pixelant\PxaProductManager\Domain\Model\Product;
 use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -18,7 +17,7 @@ class SelectBoxMapper extends AbstractMapper
     /**
      * {@inheritdoc}
      */
-    public function map(Product $product, AttributeValue $attributeValue): void
+    public function map(AttributeValue $attributeValue): void
     {
         if ($attributeValue) {
             $selectedOptions = array_filter(

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaProductManager\UserFunction\Solr;
 
-use Pixelant\PxaProductManager\Attributes\ValueMapper\MapperFactory;
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
 use Pixelant\PxaProductManager\Domain\Repository\AttributeValueRepository;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
@@ -21,11 +20,6 @@ abstract class AbstractValue
      * @var DataMapper
      */
     public DataMapper $dataMapper;
-
-    /**
-     * @var MapperFactory
-     */
-    protected MapperFactory $factory;
 
     /**
      * @var AttributeValueRepository
@@ -46,14 +40,6 @@ abstract class AbstractValue
     public function injectAttributeValueRepository(AttributeValueRepository $repository): void
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @param MapperFactory $repository
-     */
-    public function injectMapperFactory(MapperFactory $factory): void
-    {
-        $this->factory = $factory;
     }
 
     /**
@@ -84,9 +70,9 @@ abstract class AbstractValue
                 [$row]
             )[0];
 
-            $this->factory->create($obj)->map($obj->getProduct(), $obj);
-
-            return $obj;
+            if ($obj instanceof \Pixelant\PxaProductManager\Domain\Model\AttributeValue) {
+                return $obj;
+            }
         }
 
         return null;

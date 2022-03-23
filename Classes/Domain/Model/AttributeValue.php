@@ -257,6 +257,6 @@ class AttributeValue extends AbstractEntity
 
         GeneralUtility::makeInstance(MapperFactory::class)
             ->create($this)
-            ->map($this->getProduct(), $this);
+            ->map($this);
     }
 }
