@@ -23,6 +23,7 @@ jobs:
       matrix:
         php-version:
           - 7.4
+          - 8.0
 
   code-quality:
     name: "Code quality checks"
@@ -62,27 +63,7 @@ jobs:
           - "php:codestyle"
         php-version:
           - 7.4
-
-  #code-quality-frontend:
-  #  name: "Code quality frontend checks"
-  #  runs-on: ubuntu-20.04
-  #  strategy:
-  #    matrix:
-  #      command:
-  #        - "style"
-  #        - "js"
-  #  steps:
-  #    -
-  #      name: Checkout
-  #      uses: actions/checkout@v2
-  #    -
-  #      name: "Install modules"
-  #      working-directory: ./Resources/Private
-  #      run: yarn
-  #    -
-  #      name: "Run command"
-  #      working-directory: ./Resources/Private
-  #      run: "yarn lint:${{ matrix.command }}"
+          - 8.0
 
   xliff-lint:
     name: "Xliff linter"
@@ -145,8 +126,13 @@ jobs:
           - highest
         php-version:
           - 7.4
+          - 8.0
         typo3-version:
           - ^10.4
+          - ^11.5
+        exclude:
+          - typo3-version: "^10.4"
+            php-version: 8.0
 
   functional-tests:
     name: "Functional tests"
@@ -205,5 +191,10 @@ jobs:
           - highest
         php-version:
           - 7.4
+          - 8.0
         typo3-version:
           - ^10.4
+          - ^11.5
+        exclude:
+          - typo3-version: "^10.4"
+            php-version: 8.0
