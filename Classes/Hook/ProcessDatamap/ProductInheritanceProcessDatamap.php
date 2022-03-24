@@ -81,8 +81,9 @@ class ProductInheritanceProcessDatamap
                     $language = DataInheritanceUtility::getProductLanguage($productId);
                 }
 
-                $inheritStatus = (int)$dataHandler
-                    ->datamap[ProductRepository::TABLE_NAME][$productId]['is_inherited'] ?? 0;
+                $inheritStatus = isset(
+                    $dataHandler->datamap[ProductRepository::TABLE_NAME][$productId]['is_inherited']
+                ) ? (int)$dataHandler->datamap[ProductRepository::TABLE_NAME][$productId]['is_inherited'] : 0;
 
                 if (!empty($productId) && $inheritStatus === 0) {
                     $parentProductId = (int)BackendUtility::getRecord(

@@ -139,7 +139,7 @@ abstract class AbstractProvider implements ProviderInterface
         $configuration = $this->tca[$this->attribute['type']];
         $configuration['label'] = $this->attribute['name'];
 
-        if ($this->attribute['default_value']) {
+        if (isset($this->attribute['default_value'])) {
             $configuration['config']['default'] = $this->attribute['default_value'];
         }
 

@@ -10,7 +10,7 @@ use Pixelant\PxaProductManager\Domain\Model\Product;
 /**
  * Interface for product attribute value update.
  */
-interface UpdaterInterface
+interface UpdaterInterface extends \TYPO3\CMS\Core\SingletonInterface
 {
     /**
      * Update attribute value.

@@ -210,7 +210,6 @@ class Product extends AbstractEntity
      */
     public function __construct()
     {
-        //Do not remove the next line: It would break the functionality
         $this->initStorageObjects();
     }
 
@@ -220,7 +219,6 @@ class Product extends AbstractEntity
      */
     public function initializeObject(): void
     {
-        // $this->initStorageObjects();
         // Run __construct instead due to the use of the extender extension.
         // It is possible to "extend" the constructor in Extended classes but
         // not the initStorageObjects() used by Extbase.
@@ -230,19 +228,19 @@ class Product extends AbstractEntity
     }
 
     /**
-     * @param UpdaterInterface $updaterInterface
-     */
-    public function injectUpdaterInterface(UpdaterInterface $updaterInterface): void
-    {
-        $this->attributeValueUpdater = $updaterInterface;
-    }
-
-    /**
      * @param ObjectManager $objectManager
      */
     public function injectObjectManager(ObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
+    }
+
+    /**
+     * @param UpdaterInterface $attributeValueUpdater
+     */
+    public function injectUpdaterInterface(UpdaterInterface $attributeValueUpdater): void
+    {
+        $this->attributeValueUpdater = $attributeValueUpdater;
     }
 
     /**

@@ -65,7 +65,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
      */
     protected function handleInheritedFields(array $result)
     {
-        $parentRow = $result['databaseRow']['parent'][0]['row'];
+        $parentRow = isset($result['databaseRow']['parent'][0]) ? $result['databaseRow']['parent'][0]['row'] : [];
 
         if (!$result['databaseRow']['product_type'] || !$parentRow) {
             return $result;

@@ -46,7 +46,7 @@ class ConfigurationProviderFactory
             );
         }
 
-        $className = self::TYPE_TO_PROVIDER[$attribute['type']];
+        $className = self::TYPE_TO_PROVIDER[$attribute['type']] ?? null;
 
         if ($className === null) {
             throw new \UnexpectedValueException(

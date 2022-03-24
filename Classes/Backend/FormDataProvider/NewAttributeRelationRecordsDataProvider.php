@@ -63,7 +63,9 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         $attributeUidList = array_column($attributes, 'uid');
 
         $productLanguageFieldName = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
-        $sysLanguageUid = (int)$result['databaseRow'][$productLanguageFieldName]['0'] ?? 0;
+        $sysLanguageUid = isset(
+            $result['databaseRow'][$productLanguageFieldName]['0']
+        ) ? (int)$result['databaseRow'][$productLanguageFieldName]['0'] : 0;
 
         $attrLangField = $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['languageField'] ?? null;
 
@@ -73,7 +75,10 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
                 unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
             } else {
                 // Make sure attributevalue has same language as edited product.
-                if ((int)$attributeValueResult['databaseRow'][$attrLangField][0] !== $sysLanguageUid) {
+                if (
+                    isset($attributeValueResult['databaseRow'][$attrLangField][0])
+                    && (int)$attributeValueResult['databaseRow'][$attrLangField][0] !== $sysLanguageUid
+                ) {
                     $attributeValueResult['databaseRow'][$attrLangField][0] = (string)$sysLanguageUid;
                 }
             }
@@ -137,12 +142,12 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
             'inlineParentFieldName' => 'attributes_values',
 
             // values of the top most parent element set on first level and not overridden on following levels
-            'inlineTopMostParentUid' => $result['inlineTopMostParentUid'] ?: $inlineTopMostParent['uid'],
+            'inlineTopMostParentUid' => $result['inlineTopMostParentUid'] ?: $inlineTopMostParent['uid'] ?? 0,
 
             // @codingStandardsIgnoreLine
-            'inlineTopMostParentTableName' => $result['inlineTopMostParentTableName'] ?: $inlineTopMostParent['table'],
+            'inlineTopMostParentTableName' => $result['inlineTopMostParentTableName'] ?: $inlineTopMostParent['table'] ?? '',
             // @codingStandardsIgnoreLine
-            'inlineTopMostParentFieldName' => $result['inlineTopMostParentFieldName'] ?: $inlineTopMostParent['field'],
+            'inlineTopMostParentFieldName' => $result['inlineTopMostParentFieldName'] ?: $inlineTopMostParent['field'] ?? '',
 
             'recordTypeValue' => $attribute['uid'],
             'databaseRow' => [

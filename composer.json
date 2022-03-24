@@ -13,25 +13,23 @@
     }
   ],
   "require": {
-    "php": "^7.4",
     "ext-intl" : "*",
-    "evoweb/extender": "^7.0",
-    "typo3/cms-core": "^10.4.6",
-    "pixelant/demander": "^0.1",
+    "evoweb/extender": "^7.0 || ^8.1",
+    "typo3/cms-core": "^10.4.6 || ^11.5",
+    "pixelant/demander": "^0.1 || ^0.2",
     "doctrine/dbal": "~2.13.1"
   },
   "require-dev": {
     "codeception/codeception": "^4.1.5",
     "friendsofphp/php-cs-fixer": "^2.16.3",
-    "helhum/typo3-composer-setup": "^0.5.6",
     "helmich/typo3-typoscript-lint": "^2.1.1",
     "j13k/yaml-lint": "1.1.x-dev",
-    "nimut/testing-framework": "^5.0.3",
+    "nimut/testing-framework": "^5.0.3 || ^6.0",
     "phpdocumentor/reflection-docblock": "<= 5.1 || > 5.2",
-    "phpunit/phpunit": "^7.5.20",
+    "phpunit/phpunit": "^7.5.20 || ^8.5",
     "squizlabs/php_codesniffer": "^3.5.5",
-    "typo3/cms-fluid-styled-content": "^9.5 || ^10.4",
-    "typo3/cms-seo": "^10.4.14",
+    "typo3/cms-fluid-styled-content": "^10.4 || ^11.5",
+    "typo3/cms-seo": "^10.4 || ^11.5",
     "seld/jsonlint": "^1.8"
   },
   "suggest": {
