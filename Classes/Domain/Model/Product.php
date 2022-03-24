@@ -1013,7 +1013,18 @@ class Product extends AbstractEntity
      */
     public function getMainImage(): ?Image
     {
-        return $this->findImageByType(Image::MAIN_IMAGE) ?? $this->images->current();
+        $image = null;
+        if ($this->findImageByType(Image::MAIN_IMAGE)) {
+            $image = $this->findImageByType(Image::MAIN_IMAGE);
+        } elseif (method_exists($this->images, 'current')) {
+            try {
+                $image = $this->images->current();
+            } catch (\Exception $exception) {
+                $image = null;
+            }
+        }
+
+        return $image;
     }
 
     /**
