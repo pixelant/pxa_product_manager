@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Attributes\ValueMapper;
 
 use Pixelant\PxaProductManager\Domain\Model\AttributeValue;
-use Pixelant\PxaProductManager\Domain\Model\Product;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Property\TypeConverter\FileReferenceConverter;
@@ -18,7 +17,7 @@ class FalMapper extends AbstractMapper
     /**
      * {@inheritdoc}
      */
-    public function map(Product $product, AttributeValue $attributeValue): void
+    public function map(AttributeValue $attributeValue): void
     {
         if (!empty($attributeValue)) {
             $fileRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\FileRepository::class);
