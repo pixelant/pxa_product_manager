@@ -1019,10 +1019,11 @@ class Product extends AbstractEntity
         } elseif (method_exists($this->images, 'current')) {
             try {
                 $image = $this->images->current();
-            } catch (\Exception $exception) { // phpcs:ignore
-                // Suppress Exception if no image is present
+            } catch (\Exception $exception) {
+                $image = null;
             }
         }
+
         return $image;
     }
 
