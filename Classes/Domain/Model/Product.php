@@ -1016,10 +1016,10 @@ class Product extends AbstractEntity
         $image = null;
         if ($this->findImageByType(Image::MAIN_IMAGE)) {
             $image = $this->findImageByType(Image::MAIN_IMAGE);
-        } else if (method_exists($this->images, 'current')) {
+        } elseif (method_exists($this->images, 'current')) {
             try {
                 $image = $this->images->current();
-            } catch (\Exception $exception) {
+            } catch (\Exception $exception) { // phpcs:ignore
                 // Suppress Exception if no image is present
             }
         }
