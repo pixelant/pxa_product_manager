@@ -191,10 +191,5 @@ jobs:
           - highest
         php-version:
           - 7.4
-          - 8.0
         typo3-version:
           - ^10.4
-          - ^11.5
-        exclude:
-          - typo3-version: "^10.4"
-            php-version: 8.0
