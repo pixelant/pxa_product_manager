@@ -30,9 +30,6 @@ plugin.tx_pxaproductmanager {
         pids {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pids/010; type=int+; label=Single view page
             singleViewPid = {$plugin.tx_pxaproductmanager.settings.pids.singleViewPid}
-
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_pids/020; type=int+; label=With list page
-            wishListPid = {$plugin.tx_pxaproductmanager.settings.pids.wishListPid}
         }
 
         # customsubcategory=pxaproductmanager_list_view=List view settings
@@ -63,20 +60,6 @@ plugin.tx_pxaproductmanager {
         seo {
             # cat=plugin.tx_pxaproductmanager/pxaproductmanager_seo/010; type=int+; label=Meta description max length
             metaDescriptionMaxLength = 150
-        }
-
-        # customsubcategory=pxaproductmanager_wishlist=Wish list
-        wishList {
-            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wishlist/010; type=int+; label=Maximum items in wish list
-            limitItems = 5
-
-            images {
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wishlist/020; type=string; label=Image max width
-                maxWidth = 220
-
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_wishlist/030; type=string; label=Image max height
-                maxHeight = 220
-            }
         }
 
         # customsubcategory=pxaproductmanager_main=General settings

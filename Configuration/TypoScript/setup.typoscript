@@ -143,7 +143,6 @@ plugin.tx_pxaproductmanager {
         # Pids
         pids {
             singleViewPid = {$plugin.tx_pxaproductmanager.settings.pids.singleViewPid}
-            wishListPid = {$plugin.tx_pxaproductmanager.settings.pids.wishListPid}
         }
 
         # Seo settings
@@ -209,15 +208,6 @@ plugin.tx_pxaproductmanager {
             filterCollapsible =
             # List of comma-separated page Id's that must be excluded from menu page tree.
             excludeUidList =
-        }
-
-        wishList {
-            limitItems = {$plugin.tx_pxaproductmanager.settings.wishList.limitItems}
-
-            images {
-                maxWidth = {$plugin.tx_pxaproductmanager.settings.wishList.images.maxWidth}
-                maxHeight = {$plugin.tx_pxaproductmanager.settings.wishList.images.maxHeight}
-            }
         }
 
         email {

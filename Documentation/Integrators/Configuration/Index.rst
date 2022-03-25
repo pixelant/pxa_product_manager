@@ -96,30 +96,6 @@ In order to change loading products event from page scrolling to “load more”
 
 .. figure:: ../../Images/Configuration/image4.png
 
-.. _WishList:
-
-Wish list
-^^^^^^^^^
-Wish list will just output a list of products that was added to wish list by user. Wish list product uids are saved in user cookies.
-You can enable wish list function using constant editor, or directly changing TypoScript constants:
-
-.. code-block:: typoscript
-
-    plugin.tx_pxaproductmanager.settings.wishList.enable = 0 // 1 - Enable / Disable
-    plugin.tx_pxaproductmanager.settings.wishList.limit = 10 // Limit of products can be added
-    plugin.tx_pxaproductmanager.settings.wishList.pagePid = 101 // Page UID with wish list plugin
-
-.. figure:: ../../Images/Configuration/image5.png
-
-Wish list cart is configured by TypoScript library. It’s used to count current number of products in wish list and as a link to wish list page.
-In order to get it displayed on a page use something like:
-
-.. code-block:: html
-
-    <f:cObject typoscriptObjectPath="lib.pxaProductManager.wishListCart"/>
-
-.. figure:: ../../Images/Configuration/image6.png
-
 .. _CompareView:
 
 Compare view

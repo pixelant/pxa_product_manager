@@ -253,12 +253,6 @@
 			</trans-unit>
 			<!--FlexForm:SingleView:END-->
 
-			<!--FlexForm:WishList:START-->
-			<trans-unit id="flexform.wish_list.enable_order_function">
-				<source>Enable order function</source>
-			</trans-unit>
-			<!--FlexForm:WishList:END-->
-
 			<!--FlexForm:CustomProductsList:START-->
 			<trans-unit id="flexform.custom_products_list.mode">
 				<source>Custom products list mode</source>

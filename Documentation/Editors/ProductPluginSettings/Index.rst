@@ -22,7 +22,7 @@ To edit an existing product plugin, select Page in the control panel and the pro
 
 Settings tab
 -------------
-The 'Settings' tab is where you set what type of listing that will be used in the frontend; filter listing (Lazy list) or navigation listing (List view). You will find this setting below the section 'Plugin mode' (1). There are also other settings, for example allowing you to place the detailed view of a product on a separate page, setting up a wishlist viewing page and a comparence page.
+The 'Settings' tab is where you set what type of listing that will be used in the frontend; filter listing (Lazy list) or navigation listing (List view). You will find this setting below the section 'Plugin mode' (1). There are also other settings, for example allowing you to place the detailed view of a product on a separate page, setting up a comparence page.
 
 To use a separate page for viewing the products, after creating the detail view page, you can assign it in the second field of the settings tab (2). Otherwise, the built in product page will be used. The reason to have a separate page, would be to create and show static content when in detailed product view.
 
@@ -87,4 +87,3 @@ This section sets the startingpoint of the product manager data, which is the fo
 .. figure:: ../../Images/Editors/4.10.png
 
     (4.10)
-    
