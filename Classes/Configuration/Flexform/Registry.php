@@ -68,14 +68,6 @@ class Registry
             'excludeFields' => [],
         ],
         [
-            'action' => 'Product->wishList;Product->finishOrder',
-            'label' => 'flexform.mode.product_wish_list',
-            'flexforms' => [
-                'EXT:pxa_product_manager/Configuration/FlexForms/Parts/flexform_with_list.xml',
-            ],
-            'excludeFields' => [],
-        ],
-        [
             'action' => 'Product->compareView',
             'label' => 'flexform.mode.product_compare_view',
             'flexforms' => [],

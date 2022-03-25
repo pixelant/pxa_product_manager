@@ -67,7 +67,6 @@ With the product module main features you can:
 - Add related products, accessories and sub productor to products
 - Use navigation through filter function, using side navigation based on categories or using the grouped view also based on categories
 - :ref:`Sorting products listing <product-plugin-settings>` on the frontend alphabetically or via date
-- Allows visitor to add products to wishlist
 - Allows visitor to compare products
 
 The product module standard feature does not support:
