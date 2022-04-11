@@ -2,6 +2,12 @@
   "name": "pixelant/pxa-product-manager",
   "type": "typo3-cms-extension",
   "description": "Create and list products on a site.",
+  "homepage": "https://extensions.typo3.org/extension/pxa_product_manager",
+  "support": {
+	"docs": "https://docs.typo3.org/p/pixelant/pxa-product-manager/master/en-us",
+	"issues": "https://github.com/pixelant/pxa_product_manager/issues",
+	"source": "https://github.com/pixelant/pxa_product_manager"
+  },
   "license": ["GPL-2.0-or-later"],
   "keywords": ["TYPO3 CMS"],
   "authors": [
