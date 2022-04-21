@@ -348,6 +348,24 @@ ul.product-list-menu-level-3 .product-list-menu-wrp {
     border: 1px solid var(--pm-border-color);
 }
 
+.gallery-video-embed-responsive {
+    padding-bottom: 100%;
+    position: relative;
+    display: block;
+    height: auto;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.gallery-video-embed-responsive iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    border: 0;
+}
 
 /*!
  * Include some used parts from Bootstrap Grid v5.0.0-beta1 (https://getbootstrap.com/)

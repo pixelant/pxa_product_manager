@@ -19,6 +19,15 @@
           </div>
         </f:if>
       </f:for>
+      <f:if condition="{product.assets}">
+          <f:for each="{product.assets}" as="asset" iteration="iteration">
+            <div class="pm-bs-col-md-4">
+              <div class="gallery-video-embed-responsive">
+                  <f:media file="{asset}" class="img-fluid" alt="{product.name}"/>
+              </div>
+            </div>
+          </f:for>
+      </f:if>
     </div>
   </f:alias>
 </div>
