@@ -17,6 +17,13 @@
                     </a>
                 </div>
             </f:for>
+            <f:if condition="{product.assets}">
+                <f:for each="{product.assets}" as="asset" iteration="iteration">
+                    <div class="swiper-slide product-video-slide embed-responsive">
+                        <f:media file="{asset}" class="img-fluid" alt="{product.name}"/>
+                    </div>
+                </f:for>
+            </f:if>
         </div>
     </div>
 
@@ -28,6 +35,15 @@
                     style="background-image:url({f:uri.image(src: '{image.uid}', treatIdAsReference: 1, maxWidth='120', absolute: 1)})">
                 </div>
             </f:for>
+            <f:if condition="{product.assets}">
+                <f:for each="{product.assets}" as="asset" iteration="iteration">
+                    <div class="swiper-slide product-gallery-video-thumbs-swiper-slide">
+                        <f:image image="{asset}" class="img-fluid"
+                          height="65"
+                          alt="{product.name}"/>
+                    </div>
+                </f:for>
+            </f:if>
         </div>
         <!-- Add Arrows -->
         <div class="swiper-button-next product-gallery-button-next"></div>

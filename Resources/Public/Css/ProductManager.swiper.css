@@ -138,3 +138,30 @@
 .tx-pxa-product-manager .swiper-container.product-relations {
     padding-bottom: 30px;
 }
+
+.product-video-slide.embed-responsive {
+    position: relative;
+    display: block;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    padding-bottom: 56.25%;
+    margin-top: 20%;
+}
+
+.product-video-slide.embed-responsive iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    border: 0;
+}
+
+.product-gallery-video-thumbs-swiper-slide img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
