@@ -601,7 +601,8 @@ class Product extends AbstractEntity
             /** @var ProductRepository $productRepository */
             $productRepository = $this->objectManager->get(ProductRepository::class);
             $query = $productRepository->createQuery();
-            $children = $query->matching($query->equals('parent', $this))->execute();
+            // Child products should always be connected to "default" parent product even if localized.
+            $children = $query->matching($query->equals('parent', $this->getUid()))->execute();
 
             $this->children = new ObjectStorage();
 
