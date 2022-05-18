@@ -71,7 +71,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         // don't display attributevalues for attributes not included for product type
         foreach ($result['processedTca']['columns']['attributes_values']['children'] as $key => $attributeValueResult) {
-            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'][0], $attributeUidList, true)) {
+            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'], $attributeUidList, true)) {
                 unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
             } else {
                 // Make sure attributevalue has same language as edited product.
@@ -86,7 +86,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         foreach ($attributes as $attribute) {
             foreach ($result['processedTca']['columns']['attributes_values']['children'] as $attributeValueResult) {
-                if ((int)$attributeValueResult['databaseRow']['attribute'][0] === $attribute['uid']) {
+                if ((int)$attributeValueResult['databaseRow']['attribute'] === $attribute['uid']) {
                     // Skip this $attribute if it exists in the record
                     continue 2;
                 }

@@ -103,21 +103,13 @@ return [
         'attribute' => [
             'label' => 'Attribute',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_pxaproductmanager_domain_model_attribute',
-                'minitems' => 0,
-                'maxitems' => 1,
+                'type' => 'passthrough',
             ],
         ],
         'product' => [
             'label' => 'product',
             'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'foreign_table' => 'tx_pxaproductmanager_domain_model_product',
-                'minitems' => 0,
-                'maxitems' => 1,
+                'type' => 'passthrough',
             ],
         ],
     ],

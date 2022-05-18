@@ -82,7 +82,7 @@ class AttributeValueFormDataProvider implements FormDataProviderInterface
 
         if (
             in_array(
-                'attribute.' . $attributeValue['attribute'][0],
+                'attribute.' . $attributeValue['attribute'],
                 DataInheritanceUtility::getInheritedFieldsForProductType((int)$product['product_type']),
                 true
             )

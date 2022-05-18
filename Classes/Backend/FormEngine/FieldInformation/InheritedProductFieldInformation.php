@@ -34,7 +34,7 @@ class InheritedProductFieldInformation extends AbstractNode
                 $attributeValue['product']
             );
 
-            $fieldName = 'attribute.' . $attributeValue['attribute'][0];
+            $fieldName = 'attribute.' . $attributeValue['attribute'];
             $productType = $product['product_type'];
         } else {
             return $result;
