@@ -103,13 +103,23 @@ return [
         'attribute' => [
             'label' => 'Attribute',
             'config' => [
-                'type' => 'passthrough',
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'tx_pxaproductmanager_domain_model_attribute',
+                'size' => 1,
+                'maxitems' => 1,
+                'minitems' => 0,
             ],
         ],
         'product' => [
             'label' => 'product',
             'config' => [
-                'type' => 'passthrough',
+                'type' => 'group',
+                'internal_type' => 'db',
+                'allowed' => 'tx_pxaproductmanager_domain_model_product',
+                'size' => 1,
+                'maxitems' => 1,
+                'minitems' => 0,
             ],
         ],
     ],

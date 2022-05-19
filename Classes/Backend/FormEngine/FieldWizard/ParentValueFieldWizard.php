@@ -42,7 +42,7 @@ class ParentValueFieldWizard extends AbstractNode
             $record = $this->data['databaseRow'];
             $parentRecord = AttributeUtility::findAttributeValue(
                 (int)$record['product'],
-                (int)$record['attribute'][0]
+                (int)$record['attribute'][0]['uid']
             );
         } else {
             return $result;

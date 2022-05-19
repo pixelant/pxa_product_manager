@@ -14,6 +14,7 @@ use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Backend\Form\InlineStackProcessor;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 
@@ -71,7 +72,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         // don't display attributevalues for attributes not included for product type
         foreach ($result['processedTca']['columns']['attributes_values']['children'] as $key => $attributeValueResult) {
-            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'], $attributeUidList, true)) {
+            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'][0]['uid'], $attributeUidList, true)) {
                 unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
             } else {
                 // Make sure attributevalue has same language as edited product.
@@ -86,7 +87,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         foreach ($attributes as $attribute) {
             foreach ($result['processedTca']['columns']['attributes_values']['children'] as $attributeValueResult) {
-                if ((int)$attributeValueResult['databaseRow']['attribute'] === $attribute['uid']) {
+                if ((int)$attributeValueResult['databaseRow']['attribute'][0]['uid'] === $attribute['uid']) {
                     // Skip this $attribute if it exists in the record
                     continue 2;
                 }
@@ -151,7 +152,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
             'recordTypeValue' => $attribute['uid'],
             'databaseRow' => [
-                'attribute' => [$attribute['uid']],
+                'attribute' => [$this->getAttributeArray($attribute)],
             ],
         ];
 
@@ -159,6 +160,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         // and $combinationChild is the child-child. For 1:n "normal" relations,
         // $mainChild is just the normal child record and $combinationChild is empty.
         $newChild = $formDataCompiler->compile($formDataCompilerInput);
+        $newChild['databaseRow']['attribute'] = [$this->getAttributeArray($attribute)];
 
         // This wizard sets the attribute type
         if ($newChild['processedTca']['columns']['value']['config']['type'] === 'inline') {
@@ -172,5 +174,19 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         }
 
         return $newChild;
+    }
+
+    protected function getAttributeArray(array $attribute): array
+    {
+        $tableName = 'tx_pxaproductmanager_domain_model_attribute';
+        $uid = $attribute['uid'];
+        $record = BackendUtility::getRecordWSOL($tableName, $uid);
+        $title = BackendUtility::getRecordTitle($tableName, $record, false, false);
+        return [
+            'table' => 'tx_pxaproductmanager_domain_model_attribute',
+            'uid' => $attribute['uid'] ?? null,
+            'title' => $title,
+            'row' => $record,
+        ];
     }
 }
