@@ -174,6 +174,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         $uid = $attributeId;
         $record = BackendUtility::getRecordWSOL($tableName, $uid);
         $title = BackendUtility::getRecordTitle($tableName, $record, false, false);
+
         return [
             'table' => 'tx_pxaproductmanager_domain_model_attribute',
             'uid' => $attributeId ?? null,
@@ -209,9 +210,9 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
     /**
      * Resolve attribute value key by attribute id.
      *
-     * @param integer $attributeId
+     * @param int $attributeId
      * @param array $children
-     * @return integer
+     * @return int
      */
     protected function resolveAttributeValueChildArrayKeyByAttributeId(int $attributeId, array $children): int
     {
