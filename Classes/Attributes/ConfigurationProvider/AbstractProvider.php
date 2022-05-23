@@ -137,7 +137,7 @@ abstract class AbstractProvider implements ProviderInterface
     protected function getAttributeConfiguration(): array
     {
         $configuration = $this->tca[$this->attribute['type']];
-        $configuration['label'] = $this->attribute['name'];
+        $configuration['label'] = $this->attribute['name'] . ' [' . $this->attribute['uid'] . ']';
 
         if (isset($this->attribute['default_value'])) {
             $configuration['config']['default'] = $this->attribute['default_value'];

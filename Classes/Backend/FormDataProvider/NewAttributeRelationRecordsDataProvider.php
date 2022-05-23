@@ -62,40 +62,29 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
 
         $attributes = AttributeUtility::findAttributesForProductType((int)$result['databaseRow']['product_type'][0]);
         $attributeUidList = array_column($attributes, 'uid');
+        $attributeUidList = array_unique($attributeUidList);
 
-        $productLanguageFieldName = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
-        $sysLanguageUid = isset(
-            $result['databaseRow'][$productLanguageFieldName]['0']
-        ) ? (int)$result['databaseRow'][$productLanguageFieldName]['0'] : 0;
+        $children = $this->removeInvalidAttributeValuesChildren(
+            $result['processedTca']['columns']['attributes_values']['children'],
+            $attributeUidList
+        );
 
-        $attrLangField = $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['languageField'] ?? null;
+        $children = $this->updateAttributeValues($result, $children);
 
-        // don't display attributevalues for attributes not included for product type
-        foreach ($result['processedTca']['columns']['attributes_values']['children'] as $key => $attributeValueResult) {
-            if (!in_array((int)$attributeValueResult['databaseRow']['attribute'][0]['uid'], $attributeUidList, true)) {
-                unset($result['processedTca']['columns']['attributes_values']['children'][$key]);
+        $irreChildren = [];
+        foreach ($attributeUidList as $attributeId) {
+            $childKey = $this->resolveAttributeValueChildArrayKeyByAttributeId(
+                $attributeId,
+                $children
+            );
+            if ($childKey < 0) {
+                $irreChildren[] = $this->generateNewAttributeValueChild($result, $attributeId);
             } else {
-                // Make sure attributevalue has same language as edited product.
-                if (
-                    isset($attributeValueResult['databaseRow'][$attrLangField][0])
-                    && (int)$attributeValueResult['databaseRow'][$attrLangField][0] !== $sysLanguageUid
-                ) {
-                    $attributeValueResult['databaseRow'][$attrLangField][0] = (string)$sysLanguageUid;
-                }
+                $irreChildren[] = $children[$childKey];
             }
         }
 
-        foreach ($attributes as $attribute) {
-            foreach ($result['processedTca']['columns']['attributes_values']['children'] as $attributeValueResult) {
-                if ((int)$attributeValueResult['databaseRow']['attribute'][0]['uid'] === $attribute['uid']) {
-                    // Skip this $attribute if it exists in the record
-                    continue 2;
-                }
-            }
-
-            $newChild = $this->generateNewAttributeValueChild($result, $attribute);
-            $result['processedTca']['columns']['attributes_values']['children'][] = $newChild;
-        }
+        $result['processedTca']['columns']['attributes_values']['children'] = $irreChildren;
 
         return $result;
     }
@@ -107,7 +96,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
      * @param array $attribute
      * @return array
      */
-    protected function generateNewAttributeValueChild(array $result, array $attribute)
+    protected function generateNewAttributeValueChild(array $result, int $attributeId)
     {
         $parentConfig = $result['processedTca']['columns']['attributes_values']['config'];
         $childTableName = $parentConfig['foreign_table'];
@@ -150,17 +139,14 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
             // @codingStandardsIgnoreLine
             'inlineTopMostParentFieldName' => $result['inlineTopMostParentFieldName'] ?: $inlineTopMostParent['field'] ?? '',
 
-            'recordTypeValue' => $attribute['uid'],
-            'databaseRow' => [
-                'attribute' => [$this->getAttributeArray($attribute)],
-            ],
+            'recordTypeValue' => $attributeId,
         ];
 
         // For foreign_selector with useCombination $mainChild is the mm record
         // and $combinationChild is the child-child. For 1:n "normal" relations,
         // $mainChild is just the normal child record and $combinationChild is empty.
         $newChild = $formDataCompiler->compile($formDataCompilerInput);
-        $newChild['databaseRow']['attribute'] = [$this->getAttributeArray($attribute)];
+        $newChild['databaseRow']['attribute'] = [$this->getAttributeArray($attributeId)];
 
         // This wizard sets the attribute type
         if ($newChild['processedTca']['columns']['value']['config']['type'] === 'inline') {
@@ -176,17 +162,94 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         return $newChild;
     }
 
-    protected function getAttributeArray(array $attribute): array
+    /**
+     * Get attribute array.
+     *
+     * @param int $attributeId
+     * @return array
+     */
+    protected function getAttributeArray(int $attributeId): array
     {
         $tableName = 'tx_pxaproductmanager_domain_model_attribute';
-        $uid = $attribute['uid'];
+        $uid = $attributeId;
         $record = BackendUtility::getRecordWSOL($tableName, $uid);
         $title = BackendUtility::getRecordTitle($tableName, $record, false, false);
         return [
             'table' => 'tx_pxaproductmanager_domain_model_attribute',
-            'uid' => $attribute['uid'] ?? null,
+            'uid' => $attributeId ?? null,
             'title' => $title,
             'row' => $record,
         ];
+    }
+
+    /**
+     * Remove invalid / duplicte attribute values.
+     *
+     * @param array $children
+     * @param array $validAttributeIdsList
+     * @return array
+     */
+    protected function removeInvalidAttributeValuesChildren(array $children, array $validAttributeIdsList): array
+    {
+        $addedAttributesUidList = [];
+        $attributeValueChildren = [];
+        foreach ($children as $key => $child) {
+            $attributeId = (int)$child['databaseRow']['attribute'][0]['uid'] ?? 0;
+            if ($attributeId > 0 && in_array($attributeId, $validAttributeIdsList, true)) {
+                if (!in_array($attributeId, $addedAttributesUidList, true)) {
+                    $addedAttributesUidList[] = $attributeId;
+                    $attributeValueChildren[$key] = $child;
+                }
+            }
+        }
+
+        return $attributeValueChildren;
+    }
+
+    /**
+     * Resolve attribute value key by attribute id.
+     *
+     * @param integer $attributeId
+     * @param array $children
+     * @return integer
+     */
+    protected function resolveAttributeValueChildArrayKeyByAttributeId(int $attributeId, array $children): int
+    {
+        foreach ($children as $key => $attributeValueResult) {
+            if ((int)$attributeValueResult['databaseRow']['attribute'][0]['uid'] === $attributeId) {
+                return (int)$key;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * Update attribute values if needed.
+     *
+     * @param array $result
+     * @param array $children
+     * @return array
+     */
+    protected function updateAttributeValues(array $result, array $children): array
+    {
+        $productLanguageFieldName = $GLOBALS['TCA'][ProductRepository::TABLE_NAME]['ctrl']['languageField'];
+        $sysLanguageUid = isset(
+            $result['databaseRow'][$productLanguageFieldName]['0']
+        ) ? (int)$result['databaseRow'][$productLanguageFieldName]['0'] : 0;
+
+        $attrLangField = $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['languageField'] ?? null;
+
+        foreach ($children as $key => $attributeValueResult) {
+            // Make sure attributevalue has same language as edited product.
+            if (
+                isset($attributeValueResult['databaseRow'][$attrLangField][0])
+                && (int)$attributeValueResult['databaseRow'][$attrLangField][0] !== $sysLanguageUid
+            ) {
+                $children[$key]['databaseRow'][$attrLangField][0] = (string)$sysLanguageUid;
+            }
+        }
+
+        return $children;
     }
 }

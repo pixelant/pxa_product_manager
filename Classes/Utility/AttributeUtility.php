@@ -174,7 +174,11 @@ class AttributeUtility
             $fieldTcaConfiguration
         );
 
-        return $relationHandler->getFromDB()[AttributeSetRepository::TABLE_NAME] ?? [];
+        $attributeSetOrder = $relationHandler->getValueArray();
+        $attributeSets = $relationHandler->getFromDB()[AttributeSetRepository::TABLE_NAME] ?? [];
+        $properOrderedArray = array_replace(array_flip($attributeSetOrder), $attributeSets) ?? [];
+
+        return $properOrderedArray;
     }
 
     /**
@@ -205,7 +209,11 @@ class AttributeUtility
             $fieldTcaConfiguration
         );
 
-        return $relationHandler->getFromDB()[AttributeRepository::TABLE_NAME] ?? [];
+        $attributesOrder = $relationHandler->getValueArray();
+        $attributes = $relationHandler->getFromDB()[AttributeRepository::TABLE_NAME] ?? [];
+        $properOrderedArray = array_replace(array_flip($attributesOrder), $attributes);
+
+        return $properOrderedArray ?? [];
     }
 
     /**
