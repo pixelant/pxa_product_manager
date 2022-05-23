@@ -74,7 +74,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
         $irreChildren = [];
         foreach ($attributeUidList as $attributeId) {
             $childKey = $this->resolveAttributeValueChildArrayKeyByAttributeId(
-                $attributeId,
+                (int)$attributeId,
                 $children
             );
             if ($childKey < 0) {
