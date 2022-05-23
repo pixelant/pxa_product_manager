@@ -28,7 +28,7 @@ class HiddenAttributeTypeValueFieldWizard extends AbstractNode
         $html = '<input type="hidden" ';
         $html .= 'name="data[' . AttributeValueRepository::TABLE_NAME . ']';
         $html .= '[' . $this->data['databaseRow']['uid'] . '][attribute]" ';
-        $html .= 'value="' . htmlspecialchars((string)$this->data['databaseRow']['attribute'][0]) . '" ';
+        $html .= 'value="' . htmlspecialchars((string)$this->data['databaseRow']['attribute'][0]['uid']) . '" ';
         $html .= '/>';
 
         $result['html'] = $html;
