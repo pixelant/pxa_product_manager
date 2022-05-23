@@ -78,7 +78,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
                 $children
             );
             if ($childKey < 0) {
-                $irreChildren[] = $this->generateNewAttributeValueChild($result, $attributeId);
+                $irreChildren[] = $this->generateNewAttributeValueChild($result, (int)$attributeId);
             } else {
                 $irreChildren[] = $children[$childKey];
             }
@@ -93,7 +93,7 @@ class NewAttributeRelationRecordsDataProvider implements FormDataProviderInterfa
      * Generate New AttributeValue Child.
      *
      * @param array $result
-     * @param array $attribute
+     * @param int $attributeId
      * @return array
      */
     protected function generateNewAttributeValueChild(array $result, int $attributeId)
