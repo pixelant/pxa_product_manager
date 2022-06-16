@@ -47,6 +47,11 @@ use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 class TceMain
 {
     /**
+     * @var array
+     */
+    protected static $clearedSerializedAttributeValuesForProducts = [];
+
+    /**
      * @param $fieldArray
      * @param $table
      * @param $id
@@ -79,6 +84,10 @@ class TceMain
             if (!empty($productData)) {
                 $fieldArray['serialized_attributes_values'] = serialize($productData);
                 $this->updateAttributeValues($id, $productData, $fieldArray);
+
+                if (!in_array((int)$id, static::$clearedSerializedAttributeValuesForProducts)) {
+                    static::$clearedSerializedAttributeValuesForProducts[] = (int)$id;
+                }
             }
         }
     }
@@ -92,10 +101,7 @@ class TceMain
      */
     protected function updateAttributeValues(int $productUid, array $productData, array $fieldArray)
     {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            'tx_pxaproductmanager_domain_model_attributevalue'
-        );
+        $queryBuilder = $this->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_attributevalue');
 
         $statement = $queryBuilder
             ->select('uid', 'value', 'attribute')
@@ -246,7 +252,7 @@ class TceMain
     // @codingStandardsIgnoreStart
     public function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj)
     {// @codingStandardsIgnoreEnd
-        if ($table == 'tx_pxaproductmanager_domain_model_product') {
+        if ($table === 'tx_pxaproductmanager_domain_model_product') {
             /** @var ProductRepository $productRepository */
             $productRepository = MainUtility::getObjectManager()->get(ProductRepository::class);
 
@@ -265,5 +271,35 @@ class TceMain
                 }
             }
         }
+
+        // Clear the attribute value's parent product's attribute value cache field if we are updating the attribute
+        // value without updating the product.
+        if ($table === 'tx_pxaproductmanager_domain_model_attributevalue') {
+            $attributeValueRow = BackendUtility::getRecord(
+                'tx_pxaproductmanager_domain_model_attributevalue',
+                (int)$id
+            );
+
+            if (!in_array((int)$attributeValueRow['product'], static::$clearedSerializedAttributeValuesForProducts)) {
+                $queryBuilder = $this->getQueryBuilderForTable('tx_pxaproductmanager_domain_model_product');
+
+                $queryBuilder
+                    ->update('tx_pxaproductmanager_domain_model_product')
+                    ->set('serialized_attributes_values', '')
+                    ->where(
+                        $queryBuilder->expr()->eq('uid', (int)$attributeValueRow['product'])
+                    )
+                    ->execute();
+            }
+        }
+    }
+
+    /**
+     * @param string $table
+     * @return QueryBuilder
+     */
+    private function getQueryBuilderForTable(string $table)
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 }
