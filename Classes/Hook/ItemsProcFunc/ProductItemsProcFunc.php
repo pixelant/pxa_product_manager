@@ -49,16 +49,18 @@ class ProductItemsProcFunc extends GeneralItemsProcFunc
                 $attributesFieldTca
             );
 
-            $attributeIds = array_column($relationHandler->getFromDB()[AttributeRepository::TABLE_NAME], 'uid');
+            if ($relationHandler->getFromDB()[AttributeRepository::TABLE_NAME] !== null) {
+                $attributeIds = array_column($relationHandler->getFromDB()[AttributeRepository::TABLE_NAME], 'uid');
 
-            foreach ($attributeIds as $attributeId) {
-                $attribute = BackendUtility::getRecord(AttributeRepository::TABLE_NAME, $attributeId);
+                foreach ($attributeIds as $attributeId) {
+                    $attribute = BackendUtility::getRecord(AttributeRepository::TABLE_NAME, $attributeId);
 
-                $configuration['items'][] = [
-                    $attribute['label'],
-                    'attribute.' . $attributeId,
-                    $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['iconfile'],
-                ];
+                    $configuration['items'][] = [
+                        $attribute['label'],
+                        'attribute.' . $attributeId,
+                        $GLOBALS['TCA'][AttributeRepository::TABLE_NAME]['ctrl']['iconfile'],
+                    ];
+                }
             }
         }
 
