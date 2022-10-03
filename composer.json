@@ -32,11 +32,12 @@
     "j13k/yaml-lint": "1.1.x-dev",
     "nimut/testing-framework": "^5.0.3 || ^6.0",
     "phpdocumentor/reflection-docblock": "<= 5.1 || > 5.2",
+    "phpspec/prophecy": "^1.15",
     "phpunit/phpunit": "^7.5.20 || ^8.5",
+    "seld/jsonlint": "^1.8",
     "squizlabs/php_codesniffer": "^3.5.5",
     "typo3/cms-fluid-styled-content": "^10.4 || ^11.5",
-    "typo3/cms-seo": "^10.4 || ^11.5",
-    "seld/jsonlint": "^1.8"
+    "typo3/cms-seo": "^10.4 || ^11.5"
   },
   "suggest": {
     "pixelant/pxa-pm-importer": "Import products data from different sources"
