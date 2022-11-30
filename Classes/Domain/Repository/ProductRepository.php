@@ -95,6 +95,8 @@ class ProductRepository extends AbstractDemandRepository
 
         $this->addLanguageRestriction($queryBuilder);
 
+        $this->addOrderings($queryBuilder, $demand);
+
         $this->demandService->getSortBy([
             'tx_pxaproductmanager_domain_model_product' => 'tx_pxaproductmanager_domain_model_product',
         ], $queryBuilder);
