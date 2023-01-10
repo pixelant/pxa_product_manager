@@ -102,6 +102,7 @@ class Product extends AbstractResource
         // Add additional attributes to result.
         $additionalAttributes = $this->settings['listView']['additionalAttributes'] ?? false;
         if (!empty($additionalAttributes)) {
+            $includeEmptyAdditionalAttributes = (bool)$this->settings['listView']['includeEmptyAdditionalAttributes'] ?? false;
             $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
             foreach ($additionalAttributesList as $attributeIdentifier) {
                 $attributeValue = $this->entity->getAttributeValue()[$attributeIdentifier];
@@ -110,8 +111,7 @@ class Product extends AbstractResource
                         'label' => $attributeValue->getAttribute()->getLabel() ?? $attributeValue->getAttribute()->getName(),
                         'data' => $attributeValue->getRenderValue(),
                     ];
-                } else {
-                    // Include attributevalue as empty to avoid js errors?
+                } elseif($includeEmptyAdditionalAttributes) {
                     $resource[$attributeIdentifier] = [
                         'label' => '',
                         'data' => '',
