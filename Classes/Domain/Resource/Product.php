@@ -104,41 +104,23 @@ class Product extends AbstractResource
         if (!empty($additionalAttributes)) {
             $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
             foreach ($additionalAttributesList as $attributeIdentifier) {
-                $attribute = $this->getEntityAttributeByAttributeIdentifier($attributeIdentifier);
-                if ($attribute !== null) {
-                    $resource[$attributeIdentifier] = $this->getResourceDataArray($attribute);
+                $attributeValue = $this->entity->getAttributeValue()[$attributeIdentifier];
+                if (!empty($attributeValue)) {
+                    $resource[$attributeIdentifier] = [
+                        'label' => $attributeValue->getAttribute()->getLabel() ?? $attributeValue->getAttribute()->getName(),
+                        'data' => $attributeValue->getRenderValue(),
+                    ];
+                } else {
+                    // Include attributevalue as empty to avoid js errors?
+                    $resource[$attributeIdentifier] = [
+                        'label' => '',
+                        'data' => '',
+                    ];
                 }
             }
         }
 
         return parent::extractProperties($resource + ($additional ?? []));
-    }
-
-    /**
-     * Get resource label and data array.
-     *
-     * @param Attribute $attribute
-     * @return array
-     */
-    protected function getResourceDataArray(Attribute $attribute): array
-    {
-        $data = '';
-
-        $attributeValue = AttributeUtility::findAttributeValue(
-            $this->entity->getUid(),
-            $attribute->getUid()
-        );
-
-        if (!empty($attributeValue)) {
-            $data = AttributeUtility::getAttributeValueRenderValue(
-                $attributeValue['uid']
-            );
-        }
-
-        return [
-            'label' => $attribute->getLabel() ?? $attribute->getName(),
-            'data' => $data,
-        ];
     }
 
     /**
@@ -197,21 +179,6 @@ class Product extends AbstractResource
         }
 
         return $values;
-    }
-
-    /**
-     * @param string $attributeIdentifier
-     * @return Attribute|null
-     */
-    protected function getEntityAttributeByAttributeIdentifier(string $attributeIdentifier): ?Attribute
-    {
-        foreach ($this->entity->getAttributes() as $attribute) {
-            if ($attribute->getIdentifier() === $attributeIdentifier) {
-                return $attribute;
-            }
-        }
-
-        return null;
     }
 
     /**
