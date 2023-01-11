@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaProductManager\Domain\Resource;
 
 use Pixelant\PxaProductManager\Configuration\Site\SettingsReader;
-use Pixelant\PxaProductManager\Domain\Model\Attribute;
 use Pixelant\PxaProductManager\Service\Url\UrlBuilderServiceInterface;
-use Pixelant\PxaProductManager\Utility\AttributeUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
@@ -102,25 +100,36 @@ class Product extends AbstractResource
         // Add additional attributes to result.
         $additionalAttributes = $this->settings['listView']['additionalAttributes'] ?? false;
         if (!empty($additionalAttributes)) {
-            $includeEmptyAdditionalAttributes = (bool)$this->settings['listView']['includeEmptyAdditionalAttributes'] ?? false;
-            $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
-            foreach ($additionalAttributesList as $attributeIdentifier) {
-                $attributeValue = $this->entity->getAttributeValue()[$attributeIdentifier];
-                if (!empty($attributeValue)) {
-                    $resource[$attributeIdentifier] = [
-                        'label' => $attributeValue->getAttribute()->getLabel() ?? $attributeValue->getAttribute()->getName(),
-                        'data' => $attributeValue->getRenderValue(),
-                    ];
-                } elseif ($includeEmptyAdditionalAttributes) {
-                    $resource[$attributeIdentifier] = [
-                        'label' => '',
-                        'data' => '',
-                    ];
-                }
-            }
+            $this->addAdditionalAttributes($resource, $additionalAttributes);
         }
 
         return parent::extractProperties($resource + ($additional ?? []));
+    }
+
+    /**
+     * Adds additional attributes to resource array.
+     * @param array $resource
+     * @param string $additionalAttributes
+     * @return void
+     */
+    protected function addAdditionalAttributes(array &$resource, string $additionalAttributes): void
+    {
+        $includeEmptyAdditionalAttributes = (bool)$this->settings['listView']['includeEmptyAdditionalAttributes'] ?? false;
+        $additionalAttributesList = GeneralUtility::trimExplode(',', $additionalAttributes, true);
+        foreach ($additionalAttributesList as $attributeIdentifier) {
+            $attributeValue = $this->entity->getAttributeValue()[$attributeIdentifier];
+            if (!empty($attributeValue)) {
+                $resource[$attributeIdentifier] = [
+                    'label' => $attributeValue->getAttribute()->getLabel() ?? $attributeValue->getAttribute()->getName(),
+                    'data' => $attributeValue->getRenderValue(),
+                ];
+            } elseif ($includeEmptyAdditionalAttributes) {
+                $resource[$attributeIdentifier] = [
+                    'label' => '',
+                    'data' => '',
+                ];
+            }
+        }
     }
 
     /**
