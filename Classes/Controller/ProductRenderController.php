@@ -56,6 +56,7 @@ class ProductRenderController extends AbstractController
         if ($filterIds) {
             $filters = $this->findRecordsByList($this->settings['filtering']['filters'], $this->filterRepository);
         }
+
         $this->view->assign('menu', $this->generateMenu());
         $this->view->assign('filters', $filters);
         $this->view->assign('orderBy', json_encode($this->createOrderByArray()));
@@ -95,6 +96,10 @@ class ProductRenderController extends AbstractController
                 'orderBy' => 'name',
                 'orderDirection' => 'asc',
             ];
+        }
+
+        if (empty($this->settings['limit'])) {
+            $this->settings['limit'] = $this->settings['listView']['limit'];
         }
 
         return [

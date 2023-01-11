@@ -34,11 +34,14 @@ plugin.tx_pxaproductmanager {
 
         # customsubcategory=pxaproductmanager_list_view=List view settings
         listView {
+            # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/010; type=string; label=Default limit in product list
+            limit = 12
+
             images {
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/010; type=string; label=Image max width
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/020; type=string; label=Image max width
                 maxWidth = 265
 
-                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/020; type=string; label=Image max height
+                # cat=plugin.tx_pxaproductmanager/pxaproductmanager_list_view/030; type=string; label=Image max height
                 maxHeight = 265
             }
         }
