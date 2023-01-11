@@ -111,7 +111,7 @@ class Product extends AbstractResource
                         'label' => $attributeValue->getAttribute()->getLabel() ?? $attributeValue->getAttribute()->getName(),
                         'data' => $attributeValue->getRenderValue(),
                     ];
-                } elseif($includeEmptyAdditionalAttributes) {
+                } elseif ($includeEmptyAdditionalAttributes) {
                     $resource[$attributeIdentifier] = [
                         'label' => '',
                         'data' => '',
