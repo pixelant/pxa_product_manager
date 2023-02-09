@@ -298,7 +298,7 @@ class ProductRepository extends AbstractDemandRepository
                     )
                 )
             )
-            ->groupBy('tpppm.uid_local');
+            ->groupBy('scrm.uid_foreign');
 
         return $subQuery->getSQL();
     }
