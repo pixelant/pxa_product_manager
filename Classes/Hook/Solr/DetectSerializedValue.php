@@ -25,6 +25,10 @@ class DetectSerializedValue implements SerializedValueDetector
      */
     public function isSerializedValue(array $indexingConfiguration, $solrFieldName): bool
     {
+        if (!array_key_exists('userFunc', $indexingConfiguration[$solrFieldName . '.'])) {
+            return false;
+        }
+
         $userFunc = $indexingConfiguration[$solrFieldName . '.']['userFunc'];
         if (empty($userFunc)) {
             return false;
