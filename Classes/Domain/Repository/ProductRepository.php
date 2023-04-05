@@ -161,7 +161,6 @@ class ProductRepository extends AbstractDemandRepository
                     )
                 )
             )
-            ->groupBy('tpppm.uid_local')
             ->getSQL();
     }
 
