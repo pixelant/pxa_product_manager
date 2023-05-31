@@ -198,6 +198,7 @@ return (function () {
                         ' AND (tx_pxaproductmanager_domain_model_attribute.sys_language_uid = 0 OR tx_pxaproductmanager_domain_model_attribute.l10n_parent = 0) ORDER BY tx_pxaproductmanager_domain_model_attribute.sorting',
                     'minitems' => 1,
                     'maxitems' => 1,
+                    'default' => 0,
                 ],
             ],
             'conjunction' => [
