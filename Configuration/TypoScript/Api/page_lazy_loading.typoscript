@@ -24,11 +24,6 @@ PAGE_LAZY_LOADING {
     }
 }
 
-# Add caching for Product List when Googlebot is crawling
-[request->getServerParams()['HTTP_USER_AGENT'] matches "/^Googlebot/"]
-    PAGE_LAZY_LOADING.config.no_cache = 0
-[END]
-
 PAGE_LAZY_FILTERS < PAGE_LAZY_LOADING
 PAGE_LAZY_FILTERS {
     typeNum = 1606131725
