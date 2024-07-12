@@ -1,4 +1,4 @@
-[page["doktype"] == 9]
+[page&&page["doktype"] == 9]
     lib.contentRender.45 = USER
     lib.contentRender.45 {
         stdWrap {
